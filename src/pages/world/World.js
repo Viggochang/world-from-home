@@ -7,7 +7,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 
-import Country from "./country/Country";
+import Country from "../country/Country";
 
 const BackgroundColorDiv = styled.div`
   width: 100%;
@@ -68,7 +68,6 @@ function MapTest(props) {
       map.zoomToMapObject(currentActiveCountry);
       currentActiveCountry.isActive = true;
       // setCurrentActive(currentActiveCountry);
-
       dispatch({
         type: "SET_TARGET_COUNTRY",
         payload: currentActiveCountry.dataItem.dataContext,

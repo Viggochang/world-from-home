@@ -97,6 +97,10 @@ export default function Login({display, innerRef}) {
     innerRef.current.style.display = 'none';
   } 
 
+  function handleToWorldPage() {
+    window.location = '/home';
+  }
+
   return (
     <SigninDiv ref={innerRef}>
       <BaseDiv>
@@ -143,6 +147,7 @@ export default function Login({display, innerRef}) {
                   borderRadius: "40px",
                   lineHeight: 1.5,
                 }}
+                onClick={handleToWorldPage}
               >enter
               </Button>
             </ThemeProvider>
