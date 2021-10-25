@@ -133,6 +133,20 @@ export default function Login({display, innerRef}) {
             </Button>
           </ThemeProvider>
           </SignInBtnArea>
+          <div>
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                color="white"
+                style={{
+                  marginTop: "30px",
+                  borderRadius: "40px",
+                  lineHeight: 1.5,
+                }}
+              >enter
+              </Button>
+            </ThemeProvider>
+          </div>
         </SignInChoiceDiv>
       </BaseDiv>
     </SigninDiv>
