@@ -4,6 +4,7 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import db from "./util/firebase";
 
 import WelcomePage from './pages/welcomPage/WelcomePage'
+import World from './pages/world/World'
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
             <WelcomePage/>
           </Route>
           <Route path="/home"> 
-
+            <World/>
           </Route>
         </Switch>
       </BrowserRouter>
