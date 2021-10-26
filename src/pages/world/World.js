@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 // import "./App.css";
@@ -7,7 +7,9 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 
+import ToMyPage from "./component/ToMyPage";
 import Country from "../country/Country";
+import GalleryQuestion from "../country/component/GalleryQuestion";
 
 const BackgroundColorDiv = styled.div`
   width: 100%;
@@ -23,7 +25,7 @@ const Chartdiv = styled.div`
 `;
 
 function MapTest(props) {
-  // const worldMap = useRef(null);
+  const galleryQuestionRef = useRef();
   const dispatch = useDispatch();
   // const targetCountry = useSelector((state) => state.targetCountry);
 
@@ -153,11 +155,12 @@ function MapTest(props) {
       setMaskDisplay("flex");
     }, 2000);
   }
-
+  console.log(galleryQuestionRef);
   return (
     <>
       <BackgroundColorDiv />
       <Chartdiv id="chartdiv" />
+      <ToMyPage/>
       <Country
         style={{
           visibility: maskVisibility,
@@ -166,7 +169,9 @@ function MapTest(props) {
           opacity: maskOpacity + 0.2
         }}
         back={handleClickBack}
+        galleryQuestionRef={galleryQuestionRef}
       />
+      <GalleryQuestion innerRef={galleryQuestionRef} />
     </>
   );
 }

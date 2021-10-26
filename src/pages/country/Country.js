@@ -2,7 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 
-import CountryShape from './component/CountryShape'
+import CountryShape from './component/CountryShape';
+import Weather from './component/Weather';
+import GalleryInCountry from "./component/GalleryInCountry";
 
 const CountryDiv = styled.div`
   width: calc(90% - 160px);
@@ -35,12 +37,6 @@ const CountryNameDiv = styled.div`
   position: absolute;
   bottom: 37%;
   left: 60px;
-`;
-
-const GalleryBackgroundDiv = styled.div`
-  width: calc(65% - 40px);
-  height: 57%;
-  background-color: #e0e0e0;
 `;
 
 const CountryInfoDiv = styled.div`
@@ -100,24 +96,23 @@ const BackDiv = styled.div`
   cursor: pointer;
 `;
 
-function Country(props) {
+function Country({style, back, galleryQuestionRef}) {
   const targetCountry = useSelector((state) => state.targetCountry);
+  console.log(galleryQuestionRef);
 
   return (
-    <CountryDiv style={props.style}>
-      {/* <FrameDiv>
-        <CountryNameDiv>{targetCountry.name}</CountryNameDiv>
-      </FrameDiv> */}
+    <CountryDiv style={style}>
       <CountryShape />
-      <CountryNameDiv>{targetCountry.name}</CountryNameDiv>
-      <GalleryBackgroundDiv>旅遊手記</GalleryBackgroundDiv>
-      <CountryInfoDiv />
+      <GalleryInCountry galleryQuestionRef={galleryQuestionRef}/>
+      <CountryInfoDiv>
+        {/* <Weather/> */}
+      </CountryInfoDiv>
       <FriendsContainerDiv>
         <OtherGalleryDiv>{`${targetCountry.name} from Others`}</OtherGalleryDiv>
         <TitleDiv>{`Friends in ${targetCountry.name}`}</TitleDiv>
         <MyFriends>my friends</MyFriends>
       </FriendsContainerDiv>
-      <BackDiv onClick={props.back}>Ｘ</BackDiv>
+      <BackDiv onClick={back}>Ｘ</BackDiv>
     </CountryDiv>
   );
 }

@@ -5,6 +5,7 @@ import db from "./util/firebase";
 
 import WelcomePage from './pages/welcomPage/WelcomePage'
 import World from './pages/world/World'
+import EditSpace from './pages/edit/EditSpace'
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
           </Route>
           <Route path="/home"> 
             <World/>
+          </Route>
+          <Route path="/edit"> 
+            <EditSpace/>
           </Route>
         </Switch>
       </BrowserRouter>

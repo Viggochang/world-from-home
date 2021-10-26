@@ -15,17 +15,16 @@ const CountryShapeFrameDiv = styled.div`
   padding: 10px;
 `;
 
-// const CountryNameDiv = styled.div`
-//   margin: 20px;
-//   font-size: 50px;
-//   font-weight: bold;
-//   color: white;
-//   text-align: left;
-//   position: absolute;
-//   bottom: 0;
-//   left: 0;
-//   z-index: 3;
-// `;
+const CountryNameDiv = styled.div`
+  margin: 20px;
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+  text-align: left;
+  position: absolute;
+  bottom: 0px;
+  left: 10px;
+`;
 
 export default function CountryShape() {
   const targetCountry = useSelector((state) => state.targetCountry);
@@ -39,6 +38,9 @@ export default function CountryShape() {
 
     polygonSeries.useGeodata = true;
     polygonSeries.include = [targetCountry.id];
+    
+    let polygonTemplate = polygonSeries.mapPolygons.template;
+    polygonTemplate.stroke = am4core.color("#3F3F3F");
 
     // Center on Pacic
     map.deltaLongitude = -12;
@@ -52,8 +54,10 @@ export default function CountryShape() {
 
   return (
     <>
-      <CountryShapeFrameDiv id="countryShape"></CountryShapeFrameDiv>
-      {/* <CountryNameDiv>{targetCountry.name}</CountryNameDiv> */}
+      <CountryShapeFrameDiv>
+        <div id="countryShape" style={{width: '100%', height: '100%'}}/>
+        <CountryNameDiv>{targetCountry.name}</CountryNameDiv>
+      </CountryShapeFrameDiv>
     </>
 
   )
