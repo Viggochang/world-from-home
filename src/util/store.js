@@ -9,6 +9,7 @@ const data = {
   activeObj: {},
   editUndo: [],
   editRedo: [],
+  userInfo: {}
 };
 
 const rootReducer = (state = data, action) => {
@@ -38,6 +39,11 @@ const rootReducer = (state = data, action) => {
         ...state,
         canvasId: {...state.canvasId, ...action.payload}
       };
+    case "SET_USER_INFO":
+      return {
+        ...state,
+        userInfo: action.payload
+      }
     default:
       return state;
   }

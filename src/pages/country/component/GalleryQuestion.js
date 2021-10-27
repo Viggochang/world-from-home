@@ -25,6 +25,16 @@ const theme = createTheme({
   },
 });
 
+const Mask = styled.div`
+  background-color: rgb(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+`;
+
 const GalleryQuestionDiv = styled.div`
   display: none;
   background-color: #667484;
@@ -36,6 +46,7 @@ const GalleryQuestionDiv = styled.div`
   left: 5%;
   z-index: 2;
   justify-content: space-between;
+  box-shadow: 0px 0px 10px #4F4F4F;
 `;
 
 const QuestionMapDiv = styled.div`
@@ -61,13 +72,15 @@ const QuestionDescriptionDiv = styled.div`
 
 const TextAreaDiv = styled.div`
   width: 90%;
-  height: 50%;
-  margin: 50px 0 auto;
+  height: calc(100% - 408px);
+  max-height: 50%;
+  margin: 50px 0 ;
   font-size: 20px;
 `;
 
 const ButtonsDiv = styled.div`
   margin-bottom: 50px;
+  margin-top: auto;
   display: flex;
   justify-content: space-around;
 `;
@@ -94,59 +107,61 @@ export default function GalleryQuestion({ innerRef }) {
   }
 
   return (
-    <GalleryQuestionDiv ref={innerRef}>
-      <BackDiv onClick={handleBack}>X</BackDiv>
-      <QuestionMapDiv>
-        <QuestionTitle>
-          <i className="fas fa-suitcase-rolling"></i> Where are you traveling
-        </QuestionTitle>
-        {/* <LeafletMap/> */}
-      </QuestionMapDiv>
-      <QuestionDescriptionDiv>
-        <QuestionTitle>
-          <i className="fas fa-pencil-alt"></i> Say something about your trip!
-        </QuestionTitle>
-        <TextAreaDiv>
-          <TextareaAutosize
-            aria-label="empty textarea"
-            placeholder=""
-            resize= 'none'
-            style={{ width: '100%', height: '100%', padding: '15px', resize:'none' }}
-          />
-        </TextAreaDiv>
-        <ButtonsDiv>
-          <ThemeProvider theme={theme}>
-            <Button
-              variant="contained"
-              color="white"
-              style={{
-                width: "200px",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                fontSize: "24px",
-                marginLeft: "250px",
-              }}
-              onClick={handleBack}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{
-                width: "200px",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                fontSize: "24px",
-                //margin: "auto",
-              }}
-              onClick={handleEdit}
-            >
-              Start！
-            </Button>
-          </ThemeProvider>
-        </ButtonsDiv>
-      </QuestionDescriptionDiv>
-    </GalleryQuestionDiv>
+    <>
+      <Mask ref={innerRef}/>
+      <GalleryQuestionDiv ref={innerRef}>
+        <BackDiv onClick={handleBack}>X</BackDiv>
+        <QuestionMapDiv>
+          <QuestionTitle>
+            <i className="fas fa-suitcase-rolling"></i> Where are you traveling
+          </QuestionTitle>
+          {/* <LeafletMap/> */}
+        </QuestionMapDiv>
+        <QuestionDescriptionDiv>
+          <QuestionTitle>
+            <i className="fas fa-pencil-alt"></i> Say something about your trip!
+          </QuestionTitle>
+          <TextAreaDiv>
+            <TextareaAutosize
+              aria-label="empty textarea"
+              placeholder=""
+              resize= 'none'
+              style={{ width: '100%', height: '100%', padding: '15px', resize:'none' }}
+            />
+          </TextAreaDiv>
+          <ButtonsDiv>
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                color="white"
+                style={{
+                  width: "200px",
+                  borderRadius: "40px",
+                  lineHeight: 1.5,
+                  fontSize: "24px",
+                  // marginLeft: "250px",
+                }}
+                onClick={handleBack}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{
+                  width: "200px",
+                  borderRadius: "40px",
+                  lineHeight: 1.5,
+                  fontSize: "24px",
+                }}
+                onClick={handleEdit}
+              >
+                Start！
+              </Button>
+            </ThemeProvider>
+          </ButtonsDiv>
+        </QuestionDescriptionDiv>
+      </GalleryQuestionDiv>
+    </>
   );
 }

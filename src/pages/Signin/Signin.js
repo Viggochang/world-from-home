@@ -1,9 +1,10 @@
-import { style } from '@material-ui/system';
-import React, {useRef} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import "firebase/auth";
 
+import {firebase} from "../../util/firebase";
 import signinImg from '../../image/signin.jpeg';
 
 const theme = createTheme({

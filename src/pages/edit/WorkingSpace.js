@@ -28,13 +28,6 @@ const PageContainer = styled.div`
   position: relative;
 `;
 
-const PageTitle = styled.div`
-  position: absolute;
-  top: 0;
-  left: -50px;
-  color: #3a4a58;
-`;
-
 const RemoveWindow = styled.div`
   position: absolute;
   top: 0;
@@ -266,9 +259,6 @@ function WorkingSpace({preview}) {
       }
     } else if (event.key === "Delete" || event.key === "Backspace") {
       handleDelete(event);
-
-      // console.log(activeCanvas.lowerCanvasEl.id);
-      // document.querySelector(`.${activeCanvas.lowerCanvasEl.id}-btn`).style.display = 'block';
     }
   }
 

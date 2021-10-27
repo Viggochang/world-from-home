@@ -1,15 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // import "./App.css";
 import styled from "styled-components";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
+// import 'firebase/firestore';
 
+// import firebase from "../../util/firebase";
+// import {db_userInfo} from "../../util/firebase";
 import ToMyPage from "./component/ToMyPage";
 import Country from "../country/Country";
 import GalleryQuestion from "../country/component/GalleryQuestion";
+
+// const db = firebase.firestore();
 
 const BackgroundColorDiv = styled.div`
   width: 100%;
@@ -24,7 +29,7 @@ const Chartdiv = styled.div`
   height: 98vh;
 `;
 
-function MapTest(props) {
+function World(props) {
   const galleryQuestionRef = useRef();
   const dispatch = useDispatch();
   // const targetCountry = useSelector((state) => state.targetCountry);
@@ -37,6 +42,13 @@ function MapTest(props) {
 
   let currentActiveCountry;
   useEffect(() => {
+    // db_userInfo.doc('yXtnB3CD0XAJDQ0Le51J').get().then(doc => {
+    //   dispatch({
+    //     type: 'SET_USER_INFO',
+    //     payload: doc.data()
+    //   });
+    // });
+
     let map = am4core.create("chartdiv", am4maps.MapChart);
     setMap(map);
     map.geodata = am4geodata_worldLow;
@@ -155,7 +167,7 @@ function MapTest(props) {
       setMaskDisplay("flex");
     }, 2000);
   }
-  console.log(galleryQuestionRef);
+
   return (
     <>
       <BackgroundColorDiv />
@@ -176,4 +188,4 @@ function MapTest(props) {
   );
 }
 
-export default MapTest;
+export default World;

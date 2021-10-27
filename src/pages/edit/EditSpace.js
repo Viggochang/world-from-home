@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
-import firebase from '../../util/firebase';
+import {db_gallery} from '../../util/firebase';
 import WorkingSpace from "./WorkingSpace";
 import Preview from "./component/Preview";
 
@@ -156,8 +156,6 @@ const allTemplate = {
 };
 let templateActive = allTemplate["full"].template;
 
-const db = firebase.firestore();
-
 function EditSpace() {
   const [toolActive, setToolActive] = useState("full");
   const [preview, setPreview] = useState(false);
@@ -212,7 +210,7 @@ function EditSpace() {
   }
 
   function handleSave(){
-    const id = db.collection('gallery').doc().id;
+    const id = db_gallery.doc().id;
     const body = {
       id, 
       timestamp: new Date(),
@@ -221,7 +219,7 @@ function EditSpace() {
         canvasState: JSON.stringify(canvasState)
       }
     }
-    db.collection('gallery').doc(id).set(body)
+    db_gallery.doc(id).set(body)
   }
 
   return (

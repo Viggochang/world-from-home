@@ -2,9 +2,9 @@
 import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
 
-import firebase from '../../../util/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
+import {storage} from '../../../util/firebase';
+// import 'firebase/firestore';
+// import 'firebase/storage';
 import Compressor from 'compressorjs';
 
 import styled from "styled-components";
@@ -70,7 +70,7 @@ export default function UploadImage({page, id}) {
       success(result) {  
         // Send the compressed image file to server with XMLHttpRequest.
         const metadata = {contentType: result.type};
-        const storageRef = firebase.storage().ref(`userId/${id}`);
+        const storageRef = storage.ref(`userId/${id}`);
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
             console.log(imageUrl);

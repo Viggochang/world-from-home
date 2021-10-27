@@ -28,17 +28,6 @@ const CountryDiv = styled.div`
 //   position: relative;
 // `;
 
-const CountryNameDiv = styled.div`
-  margin: 20px;
-  font-size: 50px;
-  font-weight: bold;
-  color: white;
-  text-align: left;
-  position: absolute;
-  bottom: 37%;
-  left: 60px;
-`;
-
 const CountryInfoDiv = styled.div`
   width: calc(50% - 20px);
   height: calc(43% - 60px);
@@ -98,7 +87,6 @@ const BackDiv = styled.div`
 
 function Country({style, back, galleryQuestionRef}) {
   const targetCountry = useSelector((state) => state.targetCountry);
-  console.log(galleryQuestionRef);
 
   return (
     <CountryDiv style={style}>
