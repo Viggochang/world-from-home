@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import TextField from "@mui/material/TextField";
 
-import MyGallery from "./component/MyGallery"
+import { db_userInfo } from "../../util/firebase";
+
+import MyGallery from "./component/MyGallery";
 import MyFriends from "./component/MyFriends";
+import MoreInfo from "./component/MoreInfo";
+
+const myUerId = "yXtnB3CD0XAJDQ0Le51J";
 
 const theme = createTheme({
   status: {
@@ -25,7 +31,7 @@ const theme = createTheme({
     },
     white: {
       main: "#ffffff",
-      font: "red",
+      font: "#3A4A58",
     },
   },
 });
@@ -60,12 +66,28 @@ const UpperDiv = styled.div`
   display: flex;
   width: calc(100vw - 160px);
   max-width: 1500px;
+  position: relative;
 `;
 
 const MyPhoto = styled.div`
   width: 450px;
   height: 450px;
   box-shadow: 0px 0px 20px #000000;
+  position: relative;
+  color: white;
+`;
+
+const EditMyPhoto = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-color: rgb(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
 `;
 
 const UserInfoDiv = styled.div`
@@ -75,6 +97,47 @@ const UserInfoDiv = styled.div`
   margin-left: 40px;
   max-width: calc(100vw - 704px);
   font-weight: bold;
+  line-height: 1.15;
+`;
+const CountryDiv = styled.div`
+  display: flex;
+`;
+const MyCountryDiv = styled.div`
+  display: flex;
+  align-items: baseline;
+`;
+const EditIcon = styled.div`
+  font-size: 24px;
+  cursor: pointer;
+  display: none;
+  margin-left: 10px;
+  :hover {
+    color: #3a4a58;
+  }
+`;
+const TextFieldDiv = styled.div`
+  align-self: center;
+`;
+const EditDiv = styled.div`
+  display: none;
+  align-items: flex-end;
+  height: 138px;
+`;
+const Submit = styled.div`
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: 10px;
+  :hover {
+    color: #3a4a58;
+  }
+`;
+const Cancel = styled.div`
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: 10px;
+  :hover {
+    color: #3a4a58;
+  }
 `;
 
 const ButtonsDiv = styled.div`
@@ -84,7 +147,7 @@ const ButtonsDiv = styled.div`
   font-size: 48px;
   position: fixed;
   top: 50px;
-  right: 80px
+  right: 80px;
 `;
 
 const HomeLink = styled(NavLink)`
@@ -108,21 +171,43 @@ const FriendGalleryBtnsDiv = styled.div`
 `;
 
 export default function MyPage() {
+  const editMyPhotoRef = useRef();
+  const myCountryRef = useRef();
+  const editMyCountryIconRef = useRef();
+  const editRef = useRef();
+  const countryInputRef = useRef();
+  const moreAboutMeBtnRef = useRef();
+  const moreInfoRef = useRef();
+  const [activeButton, setActiveButton] = useState("myWorld");
+  const [showMoreInfo, setShowMoreInfo] = useState(false);
   const userInfo = useSelector((state) => state.userInfo);
-  const { name, country, photo, birthday, background_photo } =
-    userInfo;
-  const age =
-  birthday ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear() : 0;
-
-  const [activeButton, setActiveButton] = useState('myWorld');
-
+  const { name, country, photo, birthday, background_photo } = userInfo;
+  const age = birthday
+    ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear()
+    : 0;
 
   function handleMyWorld() {
-    setActiveButton('myWorld');
+    setActiveButton("myWorld");
   }
 
   function handleMyFriends() {
-    setActiveButton('myFriends');
+    setActiveButton("myFriends");
+  }
+
+  function handleShow(ref) {
+    ref.current.style.display = "flex";
+  }
+  function handleDisappear(ref) {
+    ref.current.style.display = "none";
+  }
+
+  function handleMoreInfoBtn() {
+    setShowMoreInfo(showMoreInfo ? false : true);
+    if (!showMoreInfo) {
+      handleShow(moreInfoRef);
+    } else {
+      handleDisappear(moreInfoRef);
+    }
   }
 
   return (
@@ -143,31 +228,101 @@ export default function MyPage() {
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
-          />
+            onMouseEnter={() => handleShow(editMyPhotoRef)}
+            onMouseLeave={() => handleDisappear(editMyPhotoRef)}
+          >
+            <EditMyPhoto ref={editMyPhotoRef}>
+              <i className="fas fa-camera"></i>
+            </EditMyPhoto>
+          </MyPhoto>
           <UserInfoDiv>
             <div style={{ fontSize: 148 }}>{name}</div>
             <div style={{ fontSize: 36 }}>from</div>
-            <div style={{ fontSize: 120 }}>{country}</div>
+            <CountryDiv
+              onMouseEnter={() => handleShow(editMyCountryIconRef)}
+              onMouseLeave={() => handleDisappear(editMyCountryIconRef)}
+            >
+              <MyCountryDiv ref={myCountryRef}>
+                <div style={{ fontSize: 120 }}>{country}</div>
+                <EditIcon
+                  ref={editMyCountryIconRef}
+                  onClick={() => {
+                    handleShow(editRef);
+                    handleDisappear(myCountryRef);
+                  }}
+                >
+                  <i className="fas fa-pencil-alt"></i>
+                </EditIcon>
+              </MyCountryDiv>
+              <EditDiv ref={editRef}>
+                <TextFieldDiv>
+                  <TextField
+                    inputProps={{
+                      style: { width: 300, height: 60, fontSize: 50 },
+                    }}
+                    label="Edit country"
+                    placeholder={country}
+                    variant="outlined"
+                    ref={countryInputRef}
+                  />
+                </TextFieldDiv>
+                <Submit
+                  onClick={() => {
+                    db_userInfo
+                      .doc(myUerId)
+                      .update({
+                        country:
+                          countryInputRef.current.children[1].children[0].value,
+                      })
+                      .then(() => {
+                        handleShow(myCountryRef);
+                        handleDisappear(editRef);
+                      });
+                  }}
+                >
+                  <i className="fas fa-check-circle" />
+                </Submit>
+                <Cancel
+                  onClick={() => {
+                    handleDisappear(editRef);
+                    handleShow(myCountryRef);
+                  }}
+                >
+                  <i className="fas fa-times-circle" />
+                </Cancel>
+              </EditDiv>
+            </CountryDiv>
             <div
               style={{ fontSize: 36, marginBottom: "auto" }}
             >{`age: ${age}`}</div>
             <ThemeProvider theme={theme}>
               <Button
+                ref={moreAboutMeBtnRef}
+                onClick={() => {
+                  handleMoreInfoBtn();
+                }}
                 variant="contained"
-                color="white"
+                color={showMoreInfo ? "primary" : "white"}
+                // color={activeButton === "myFriends" ? "primary" : "white"}
                 style={{
                   width: "220px",
                   fontSize: "16px",
                   borderRadius: "40px",
                   lineHeight: 1.5,
                   fontWeight: "bold",
-                  color: "#3A4A58",
+                  color: showMoreInfo ? "white" : "#3A4A58",
                 }}
               >
                 More about Me
               </Button>
             </ThemeProvider>
           </UserInfoDiv>
+          <MoreInfo
+            innerRef={moreInfoRef}
+            handleMoreInfoBtn={handleMoreInfoBtn}
+            handleShow={handleShow}
+            handleDisappear={handleDisappear}
+          ></MoreInfo>
           <ButtonsDiv>
             <HomeLink to="home">
               <i className="fas fa-home"></i>
@@ -182,7 +337,7 @@ export default function MyPage() {
             <ThemeProvider theme={theme}>
               <Button
                 variant="contained"
-                color= {activeButton==='myWorld' ? "primary": "white" }
+                color={activeButton === "myWorld" ? "primary" : "white"}
                 style={{
                   width: "180px",
                   fontSize: "20px",
@@ -197,7 +352,7 @@ export default function MyPage() {
               </Button>
               <Button
                 variant="contained"
-                color={activeButton==='myFriends' ? "primary": "white" }
+                color={activeButton === "myFriends" ? "primary" : "white"}
                 style={{
                   width: "180px",
                   fontSize: "20px",
@@ -213,7 +368,11 @@ export default function MyPage() {
               </Button>
             </ThemeProvider>
           </FriendGalleryBtnsDiv>
-          {(activeButton==='myWorld') ? <MyGallery title={'My World'}/>:<MyFriends title={'My Friends'}/>}
+          {activeButton === "myWorld" ? (
+            <MyGallery title={"My World"} />
+          ) : (
+            <MyFriends title={"My Friends"} />
+          )}
         </LowerDiv>
       </MyPageDiv>
     </>

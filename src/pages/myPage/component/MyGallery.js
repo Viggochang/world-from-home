@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
 import { db_gallery } from "../../../util/firebase";
+import countryTrans from "../../../util/countryTrans";
 
 const MyGalleryContentDiv = styled.div`
   display: flex;
@@ -58,6 +59,7 @@ const AlbumCoverDiv = styled.div`
   width: 280px;
   height: 210px;
   box-shadow: 0px 0px 20px #4F4F4F;
+  cursor: pointer;
 `;
 
 const AlbumInfo = styled.div`
@@ -187,7 +189,7 @@ export default function MyGallery({title}) {
               }}
             ></AlbumCoverDiv>
             <AlbumInfo>
-              <AlbumCountry>{data.country}</AlbumCountry>
+              <AlbumCountry>{countryTrans[data.country].name_en}</AlbumCountry>
               <AlbumPosition><i className="fas fa-map-pin"></i> {data.position}</AlbumPosition>
               <AlbumIntroduction>{data.introduction}</AlbumIntroduction>
               <AlbumTime><i className="far fa-calendar-alt"></i> {new Date(data.timestamp.seconds*1000).toDateString()}</AlbumTime>

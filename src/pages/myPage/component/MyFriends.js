@@ -14,7 +14,6 @@ const MyFriendsContentDiv = styled.div`
   align-items: flex-end;
   margin-left: 50px;
   width: calc(100% - 320px);
-
 `;
 
 const FilterDiv = styled.div`
@@ -117,7 +116,7 @@ export default function MyFriends({title}) {
       <FilterDiv>
         <Title>{title}</Title>
         <RequestBtn>
-          <i class="fas fa-user-plus" style={{margin: 'auto'}}></i>
+          <i className="fas fa-user-plus" style={{margin: 'auto'}}></i>
         </RequestBtn>
         <SearchInput>
           <InputBase
