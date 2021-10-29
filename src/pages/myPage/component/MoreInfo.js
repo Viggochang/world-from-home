@@ -11,7 +11,7 @@ const MoreInfoDiv = styled.div`
   color: white;
   width: 320px;
   height: auto;
-  background-color: rgb(255, 255, 255, 0.5);
+  background-color: rgb(255, 255, 255, 0.7);
   box-shadow: 0px 0px 20px #4f4f4f;
   z-index: 2;
   display: none;
@@ -23,7 +23,7 @@ const MoreInfoDiv = styled.div`
 `;
 
 const CloseDiv = styled.div`
-  color: white;
+  color: #9D9D9D;
   position: absolute;
   top: 20px;
   right: 20px;
@@ -107,7 +107,7 @@ const IntroductionDiv = styled.div`
 
 export default function MoreInfo({
   innerRef,
-  handleMoreInfoBtn,
+  handleMoreInfo,
   handleShow,
   handleDisappear,
 }) {
@@ -164,7 +164,7 @@ export default function MoreInfo({
       <CloseDiv
         onClick={() => {
           handleCloseMoreInfo();
-          handleMoreInfoBtn();
+          handleMoreInfo();
           infoData.forEach(({ edit_ref, info_ref }) => {
             handleDisappear(edit_ref);
             handleShow(info_ref);

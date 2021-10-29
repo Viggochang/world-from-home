@@ -12,6 +12,8 @@ import { db_userInfo } from "../../util/firebase";
 import MyGallery from "./component/MyGallery";
 import MyFriends from "./component/MyFriends";
 import MoreInfo from "./component/MoreInfo";
+import AlbumFriendBtns from "./component/AlbumFriendBtns";
+import countryTrans from "../../util/countryTrans";
 
 const myUerId = "yXtnB3CD0XAJDQ0Le51J";
 
@@ -48,7 +50,7 @@ const Background = styled.div`
 const Mask = styled.div`
   width: 100vw;
   height: 100vh;
-  background: rgb(142, 142, 142, 0.7);
+  background: rgb(142, 142, 142, 0.6);
 `;
 
 const MyPageDiv = styled.div`
@@ -103,6 +105,7 @@ const CountryDiv = styled.div`
   display: flex;
 `;
 const MyCountryDiv = styled.div`
+  font-size: 120px;
   display: flex;
   align-items: baseline;
 `;
@@ -152,6 +155,9 @@ const ButtonsDiv = styled.div`
 
 const HomeLink = styled(NavLink)`
   color: white;
+  :hover{
+    color: #3A4A58;
+  }
 `;
 const SettingLink = styled(NavLink)`
   color: white;
@@ -165,7 +171,7 @@ const LowerDiv = styled.div`
   margin-top: 40px;
 `;
 
-const FriendGalleryBtnsDiv = styled.div`
+const AlbumFriendBtnsDiv = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -178,21 +184,14 @@ export default function MyPage() {
   const countryInputRef = useRef();
   const moreAboutMeBtnRef = useRef();
   const moreInfoRef = useRef();
-  const [activeButton, setActiveButton] = useState("myWorld");
+  const [activeButton, setActiveButton] = useState("Albums");
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const userInfo = useSelector((state) => state.userInfo);
-  const { name, country, photo, birthday, background_photo } = userInfo;
+
+  const { id, name, country, photo, birthday, background_photo } = userInfo;
   const age = birthday
     ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear()
-    : 0;
-
-  function handleMyWorld() {
-    setActiveButton("myWorld");
-  }
-
-  function handleMyFriends() {
-    setActiveButton("myFriends");
-  }
+    : '';
 
   function handleShow(ref) {
     ref.current.style.display = "flex";
@@ -201,7 +200,7 @@ export default function MyPage() {
     ref.current.style.display = "none";
   }
 
-  function handleMoreInfoBtn() {
+  function handleMoreInfo() {
     setShowMoreInfo(showMoreInfo ? false : true);
     if (!showMoreInfo) {
       handleShow(moreInfoRef);
@@ -243,7 +242,7 @@ export default function MyPage() {
               onMouseLeave={() => handleDisappear(editMyCountryIconRef)}
             >
               <MyCountryDiv ref={myCountryRef}>
-                <div style={{ fontSize: 120 }}>{country}</div>
+                {country ? countryTrans[country].name_en : ''}
                 <EditIcon
                   ref={editMyCountryIconRef}
                   onClick={() => {
@@ -293,17 +292,16 @@ export default function MyPage() {
               </EditDiv>
             </CountryDiv>
             <div
-              style={{ fontSize: 36, marginBottom: "auto" }}
+              style={{ fontSize: 36, marginBottom: "24px" }}
             >{`age: ${age}`}</div>
             <ThemeProvider theme={theme}>
               <Button
-                ref={moreAboutMeBtnRef}
                 onClick={() => {
-                  handleMoreInfoBtn();
+                  handleMoreInfo();
                 }}
                 variant="contained"
                 color={showMoreInfo ? "primary" : "white"}
-                // color={activeButton === "myFriends" ? "primary" : "white"}
+                // color={activeButton === "Friends" ? "primary" : "white"}
                 style={{
                   width: "220px",
                   fontSize: "16px",
@@ -319,7 +317,7 @@ export default function MyPage() {
           </UserInfoDiv>
           <MoreInfo
             innerRef={moreInfoRef}
-            handleMoreInfoBtn={handleMoreInfoBtn}
+            handleMoreInfo={handleMoreInfo}
             handleShow={handleShow}
             handleDisappear={handleDisappear}
           ></MoreInfo>
@@ -333,45 +331,11 @@ export default function MyPage() {
           </ButtonsDiv>
         </UpperDiv>
         <LowerDiv>
-          <FriendGalleryBtnsDiv>
-            <ThemeProvider theme={theme}>
-              <Button
-                variant="contained"
-                color={activeButton === "myWorld" ? "primary" : "white"}
-                style={{
-                  width: "180px",
-                  fontSize: "20px",
-                  borderRadius: "40px",
-                  lineHeight: 1.5,
-                  fontWeight: "bold",
-                }}
-                // ref={MyWorldBtnRef}
-                onClick={handleMyWorld}
-              >
-                My World
-              </Button>
-              <Button
-                variant="contained"
-                color={activeButton === "myFriends" ? "primary" : "white"}
-                style={{
-                  width: "180px",
-                  fontSize: "20px",
-                  borderRadius: "40px",
-                  lineHeight: 1.5,
-                  fontWeight: "bold",
-                  marginTop: "20px",
-                }}
-                // ref={MyFriendsBtnRef}
-                onClick={handleMyFriends}
-              >
-                My Friends
-              </Button>
-            </ThemeProvider>
-          </FriendGalleryBtnsDiv>
-          {activeButton === "myWorld" ? (
-            <MyGallery title={"My World"} />
+          <AlbumFriendBtns activeButton={activeButton} setActiveButton={setActiveButton} />
+          {activeButton === "Albums" ? (
+            <MyGallery title={"My Albums"} id={id} />
           ) : (
-            <MyFriends title={"My Friends"} />
+            <MyFriends title={"My Friends"} userInfo={userInfo}/>
           )}
         </LowerDiv>
       </MyPageDiv>

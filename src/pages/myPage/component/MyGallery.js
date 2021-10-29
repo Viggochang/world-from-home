@@ -95,14 +95,21 @@ const AlbumPraise = styled.div`
   right: 0;
 `;
 
-export default function MyGallery({title}) {
-  const userInfo = useSelector((state) => state.userInfo);
-  const [myWorldData, setMyWorldData] = useState([]);
-  const [myWorldDataFilter, setMyWorldDataFilter] = useState([]);
+const NoAlbumsDiv = styled.div`
+  font-size: 36px;
+  font-weight: bold;
+  margin: auto;
+  padding-bottom: 30px;
+  color: #3A4A58;
+`;
+
+export default function MyGallery({title, id}) {
+  // const userInfo = useSelector((state) => state.userInfo);
+  const [albumData, setAlbumData] = useState([]);
+  const [albumDataFilter, setAlbumDataFilter] = useState([]);
   const [albumCountry, setAlbumCountry] = useState("All");
   const [albumOrder, setAlbumOrder] = useState("New");
 
-  const { id } = userInfo;
   const order = {
     New: (a, b) => b.timestamp.seconds - a.timestamp.seconds,
     Old: (a, b) => a.timestamp.seconds - b.timestamp.seconds,
@@ -116,18 +123,18 @@ export default function MyGallery({title}) {
         .where("user_id", "==", id)
         .get()
         .then((querySnapshot) => {
-          setMyWorldData(querySnapshot.docs.map((doc) => doc.data()));
+          setAlbumData(querySnapshot.docs.map((doc) => doc.data()));
         });
     }
   }, [id]);
 
   useEffect(() => {
-    setMyWorldDataFilter(
-      myWorldData
+    setAlbumDataFilter(
+      albumData
       .filter(({country}) => albumCountry==='All' || country===albumCountry)
       .sort(order[albumOrder])
     )
-  }, [myWorldData, albumCountry, albumOrder])
+  }, [albumData, albumCountry, albumOrder])
 
   const handleAlbumCountry = (event) => {
     setAlbumCountry(event.target.value);
@@ -136,6 +143,8 @@ export default function MyGallery({title}) {
   const handleAlbumOrder = (event) => {
     setAlbumOrder(event.target.value);
   };
+
+  console.log(albumDataFilter);
 
   return (
     <MyGalleryContentDiv>
@@ -151,13 +160,12 @@ export default function MyGallery({title}) {
             onChange={handleAlbumCountry}
           >
             <MenuItem value={"All"}>All</MenuItem>
-            {Array.from(new Set(myWorldData.map(({ country }) => country))).map(
-              (country) => (
+            {Array.from(new Set(albumData.map(({ country }) => (
                 <MenuItem key={country} value={country}>
-                  {country}
+                  {countryTrans[country].name_en}
                 </MenuItem>
               )
-            )}
+            )))}
           </Select>
         </FormControl>
         <FormControl fullWidth variant="filled" style={selectStyle}>
@@ -178,7 +186,7 @@ export default function MyGallery({title}) {
       </FilterDiv>
       {/* <ContentDiv style={{height:`${240*myWorldDataFilter.length-30}px`}}> */}
       <ContentDiv>
-        {myWorldDataFilter.map((data, index) => (
+        {albumDataFilter.length ? albumDataFilter.map((data, index) => (
           <AlbumDiv key={index}>
             <AlbumCoverDiv
               key={data.id}
@@ -196,7 +204,7 @@ export default function MyGallery({title}) {
               <AlbumPraise><i className="fas fa-heart"></i> {data.praise.length}</AlbumPraise>
             </AlbumInfo>
           </AlbumDiv>
-        ))}
+        )) : <NoAlbumsDiv>No Albums！</NoAlbumsDiv>}
       </ContentDiv>
     </MyGalleryContentDiv>
   );
