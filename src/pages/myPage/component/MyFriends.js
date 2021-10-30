@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { nanoid } from "nanoid";
+import React, { useState, useEffect, useRef } from "react";
 
 import styled from "styled-components";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import Friend from "./Friend";
+
+import FriendSearchResults from "./FriendSearchResults";
+import FriendRequests from "./FriendRequests";
+import FriendList from "./FriendList";
 
 import { db_userInfo } from "../../../util/firebase";
-import countryTrans from "../../../util/countryTrans";
 
 const MyFriendsContentDiv = styled.div`
   display: flex;
@@ -35,8 +34,8 @@ const Title = styled.div`
 `;
 
 const RequestBtn = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   color: #3a4a58;
   font-size: 30px;
   outline: 1px #3a4a58 solid;
@@ -44,13 +43,27 @@ const RequestBtn = styled.div`
   display: flex;
   background-color: rgb(255, 255, 255, 0.7);
   cursor: pointer;
+  :hover {
+    background-color: #3a4a58;
+    color: white;
+  }
 `;
 const SearchInput = styled.div`
   outline: 1px #3a4a58 solid;
   border-radius: 22px;
-  padding-left: 15px;
+  padding: 0 40px 0 10px;
   background-color: rgb(255, 255, 255, 0.7);
   margin-left: 20px;
+  position: relative;
+  /* display: flex;
+  align-items: center; */
+`;
+
+const SearchIconDiv = styled.div`
+  font-size: 20px;
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 10px);
 `;
 
 const ContentDiv = styled.div`
@@ -60,46 +73,24 @@ const ContentDiv = styled.div`
   width: calc(100% - 60px);
   max-height: calc(100vh - 200px);
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: space-between;
   align-content: space-between;
   background-color: rgb(255, 255, 255, 0.5);
 `;
 
-const FriendResultDiv = styled.div`
-  border-bottom: 1px #3a4a58 solid;
-  margin-bottom: -1px;
-  width: 100%;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const FriendResult = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const ResultTitle = styled.div`
-  font-size: 36px;
-  font-weight: bold;
-  margin: auto;
-  margin-bottom: 30px;
-  color: #3a4a58;
-  text-align: center;
-`;
-
-export default function MyFriends({ title, userInfo }) {
-  // const userInfo = useSelector((state) => state.userInfo);
+export default function MyFriends({ title, userInfo, mypage }) {
   const [myFriends, setMyFriends] = useState([]);
+  const [myFriendRequests, setMyFriendRequests] = useState([]);
   const [searchInput, setSearchInput] = useState();
-  const { id, friends } = userInfo;
+  const [showFriendRequest, setShowFriendRequest] = useState(false);
+  const friendRequestsRef = useRef();
+  const { id } = userInfo;
 
   useEffect(() => {
     if (id) {
       db_userInfo
-        .where("friends", "array-contains", id)
+        .where("friends", "array-contains", { id: id, condition: "confirmed" })
         .onSnapshot((querySnapshot) => {
           const friends = [];
           querySnapshot.forEach((friend) => {
@@ -107,8 +98,30 @@ export default function MyFriends({ title, userInfo }) {
           });
           setMyFriends(friends);
         });
+      db_userInfo
+        .where("friends", "array-contains", {
+          id: id,
+          condition: "send_request",
+        })
+        .onSnapshot((querySnapshot) => {
+          const friendRequests = [];
+          querySnapshot.forEach((friend) => {
+            friendRequests.push(friend.data());
+          });
+          setMyFriendRequests(friendRequests);
+        });
     }
   }, [id]);
+
+  function handleFriendRequest() {
+    friendRequestsRef.current.style.backgroundColor = showFriendRequest
+      ? "white"
+      : "#3a4a58";
+    friendRequestsRef.current.style.color = showFriendRequest
+      ? "#3a4a58"
+      : "white";
+    setShowFriendRequest(showFriendRequest ? false : true);
+  }
 
   function handleSearch(e) {
     const searchInput = e.target.value;
@@ -119,61 +132,37 @@ export default function MyFriends({ title, userInfo }) {
     <MyFriendsContentDiv>
       <FilterDiv>
         <Title>{title}</Title>
-        <RequestBtn>
-          <i className="fas fa-user-plus" style={{ margin: "auto" }}></i>
-        </RequestBtn>
+        {mypage ? (
+          <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
+            <i className="fas fa-user-plus" style={{ margin: "auto" }}></i>
+          </RequestBtn>
+        ) : (
+          <></>
+        )}
         <SearchInput>
           <InputBase
             sx={{ ml: 1, flex: 1 }}
-            style={{ color: "black" }}
+            style={{ color: "#3a4a58" }}
             placeholder="Search My Friends"
             inputProps={{ "aria-label": "search google maps" }}
             onChange={(e) => handleSearch(e)}
           />
-          <IconButton sx={{ p: "10px" }} aria-label="search">
+          <SearchIconDiv>
+            <i className="fas fa-search"></i>
+          </SearchIconDiv>
+          {/* <IconButton sx={{ p: "10px" }} aria-label="search">
             <SearchIcon />
-          </IconButton>
+          </IconButton> */}
         </SearchInput>
       </FilterDiv>
-      {/* <ContentDiv style={{height:`${140*Math.ceil(myFriends.length/2)-40}px`}}> */}
+
       <ContentDiv>
-        {myFriends.length && searchInput ? (
-          <FriendResultDiv>
-            {myFriends.filter(({ name }) =>
-              name.toLowerCase().includes(searchInput.toLowerCase())
-            ).length ? (
-              <>
-                <ResultTitle>Results</ResultTitle>
-                <FriendResult>
-                  {myFriends
-                    .filter(({ name }) =>
-                      name.toLowerCase().includes(searchInput.toLowerCase())
-                    )
-                    .map((friend) => {
-                      return <Friend key={nanoid()} friend={friend} />;
-                    })}
-                </FriendResult>
-              </>
-            ) : (
-              <ResultTitle>No Results！</ResultTitle>
-            )}
-          </FriendResultDiv>
-        ) : (
-          <></>
-        )}
-        {myFriends.length ? (
-          myFriends
-            .filter(
-              ({ name }) =>
-                !searchInput ||
-                !name.toLowerCase().includes(searchInput.toLowerCase())
-            )
-            .map((friend) => {
-              return <Friend key={nanoid()} friend={friend} />;
-            })
-        ) : (
-          <ResultTitle>No Friends</ResultTitle>
-        )}
+        <FriendSearchResults myFriends={myFriends} searchInput={searchInput} />
+        <FriendRequests
+          myFriendRequests={myFriendRequests}
+          showFriendRequest={showFriendRequest}
+        />
+        <FriendList myFriends={myFriends} searchInput={searchInput} />
       </ContentDiv>
     </MyFriendsContentDiv>
   );

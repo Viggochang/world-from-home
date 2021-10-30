@@ -17,6 +17,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 const db_userInfo = db.collection('user_info');
+// const db_userInfo_group = db.collectionGroup('user_info');
 const db_gallery = db.collection('gallery');
 
 

@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import { db_userInfo } from "../../util/firebase";
+import FriendState from "../myPage/component/FriendState";
 import MoreInfo from "./component/MoreInfo";
 import UserWorld from "./component/UserWorld";
 import countryTrans from "../../util/countryTrans";
@@ -84,6 +85,7 @@ const UserInfoDiv = styled.div`
   max-width: calc(100vw - 704px);
   font-weight: bold;
   line-height: 1.15;
+  position: relative;
 `;
 const CountryDiv = styled.div`
   display: flex;
@@ -160,7 +162,7 @@ export default function UserPage() {
       .then((doc) => {
         setUserInfo(doc.data());
       });
-  }, [id]);
+  }, []);
 
   const { name, country, photo, birthday, background_photo } = userInfo;
   const age = birthday
@@ -232,12 +234,13 @@ export default function UserPage() {
                 More about Me
               </Button>
             </ThemeProvider>
+            <FriendState userInfo={userInfo}/>
           </UserInfoDiv>
           <MoreInfo
             innerRef={moreInfoRef}
             userInfo={userInfo}
             handleMoreInfo={handleMoreInfo}
-          ></MoreInfo>
+          />
         </UpperDiv>
         <MiddleDiv>
           <Title>{`World from ${name}`}</Title>
@@ -248,7 +251,7 @@ export default function UserPage() {
           {activeButton === "Albums" ? (
             <MyGallery title={`${name}'s Albums`} id={id}/>
           ) : (
-            <MyFriends title={`${name}'s Friends`} userInfo={userInfo}/>
+            <MyFriends title={`${name}'s Friends`} userInfo={userInfo} />
           )}
         </BottomDiv>
         <ButtonsDiv>
@@ -263,91 +266,3 @@ export default function UserPage() {
     </>
   );
 }
-
-// const UserPageDiv = styled.div`
-//   /* position: fixed;
-//   top: 0;
-//   left: 0; */
-//   padding: 50px 80px;
-//   display: flex;
-//   width: calc(100vw - 160px);
-//   justify-content: center;
-// `;
-
-// const Container = styled.div`
-//   display: flex;
-//   width: calc(100vw - 160px);
-//   max-width: 1500px;
-// `;
-
-// const LeftDiv = styled.div`
-// `;
-// const RightDiv = styled.div`
-//   margin-left: 40px;
-//   display: flex;
-//   flex-direction: column;
-// `;
-
-// const UserTitleDiv = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   color: white;
-// `;
-
-// const UserName = styled.div`
-//   font-size: 148px;
-//   font-weight: bold;
-// `;
-
-// const UserPhoto = styled.div`
-//   width: 450px;
-//   height: 450px;
-//   box-shadow: 0px 0px 20px #000000;
-//   position: relative;
-// `;
-
-// export default function UserPage() {
-//   const id  = new URLSearchParams(window.location.search).get('id');
-
-//   const [userInfo, setUserInfo] = useState({})
-//   useEffect(() => {
-//     db_userInfo.doc(id).get().then(doc => {
-//       setUserInfo(doc.data());
-//     })
-//   }, [id])
-
-//   const { name, country, photo, birthday, background_photo } = userInfo;
-
-//   return (
-//     <>
-//       <Background
-//         style={{
-//           backgroundImage: `url(${background_photo})`,
-//           backgroundSize: "cover",
-//         }}
-//       >
-//         <Mask />
-//       </Background>
-//       <UserPageDiv>
-//         <Container>
-//           <LeftDiv>
-//             <UserPhoto
-//               style={{
-//                 backgroundImage: `url(${photo})`,
-//                 backgroundSize: "cover",
-//                 backgroundPosition: "center",
-//               }}
-//             >
-//             </UserPhoto>
-//           </LeftDiv>
-//           <RightDiv>
-//             <UserTitleDiv>
-//               <div style={{fontSize: '72px'}}> World from </div>
-//               <UserName>{name}</UserName>
-//             </UserTitleDiv>
-//           </RightDiv>
-//         </Container>
-//       </UserPageDiv>
-//     </>
-//   )
-// }

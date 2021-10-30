@@ -186,9 +186,9 @@ export default function MyPage() {
   const moreInfoRef = useRef();
   const [activeButton, setActiveButton] = useState("Albums");
   const [showMoreInfo, setShowMoreInfo] = useState(false);
-  const userInfo = useSelector((state) => state.userInfo);
+  const myInfo = useSelector((state) => state.userInfo);
 
-  const { id, name, country, photo, birthday, background_photo } = userInfo;
+  const { id, name, country, photo, birthday, background_photo } = myInfo;
   const age = birthday
     ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear()
     : '';
@@ -335,7 +335,7 @@ export default function MyPage() {
           {activeButton === "Albums" ? (
             <MyGallery title={"My Albums"} id={id} />
           ) : (
-            <MyFriends title={"My Friends"} userInfo={userInfo}/>
+            <MyFriends title={"My Friends"} userInfo={myInfo} mypage={true} />
           )}
         </LowerDiv>
       </MyPageDiv>
