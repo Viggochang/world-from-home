@@ -96,21 +96,23 @@ const BackDiv = styled.div`
   cursor: pointer;
 `;
 
-function Country({style, back, galleryQuestionRef}) {
+function Country({style, handleClickBack, galleryQuestionRef}) {
   const targetCountry = useSelector((state) => state.targetCountry);
 
   const [captain, setCaptain] = useState({});
 
   useEffect(() => {
     console.log(targetCountry);
-    if (Object.keys(targetCountry).length){
-      fetch(`https://api.worldbank.org/v2/country/${targetCountry.id}?format=json`)
-        .then((res) => res.json())
-        .then((res) => {
+    
+    fetch(`https://api.worldbank.org/v2/country/${targetCountry.id}?format=json`)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res[1]) {
           const {capitalCity, longitude, latitude} = res[1][0];
           setCaptain({capitalCity, longitude, latitude});
-        });
-    }
+        }
+      });
+  
   }, [targetCountry]);
 
   return (
@@ -127,7 +129,7 @@ function Country({style, back, galleryQuestionRef}) {
         <TitleDiv>{`Friends in ${targetCountry.name}`}</TitleDiv>
         <MyFriends>my friends</MyFriends>
       </FriendsContainerDiv>
-      <BackDiv onClick={back}>Ｘ</BackDiv>
+      <BackDiv onClick={handleClickBack}><i className="fas fa-times"></i></BackDiv>
     </CountryDiv>
   );
 }

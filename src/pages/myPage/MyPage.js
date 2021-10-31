@@ -15,7 +15,7 @@ import MoreInfo from "./component/MoreInfo";
 import AlbumFriendBtns from "./component/AlbumFriendBtns";
 import countryTrans from "../../util/countryTrans";
 
-const myUerId = "yXtnB3CD0XAJDQ0Le51J";
+// const myUerId = "yXtnB3CD0XAJDQ0Le51J";
 
 const theme = createTheme({
   status: {
@@ -186,6 +186,7 @@ export default function MyPage() {
   const moreInfoRef = useRef();
   const [activeButton, setActiveButton] = useState("Albums");
   const [showMoreInfo, setShowMoreInfo] = useState(false);
+  const myUserId = useSelector(state => state.myUserId);
   const myInfo = useSelector((state) => state.userInfo);
 
   const { id, name, country, photo, birthday, background_photo } = myInfo;
@@ -268,7 +269,7 @@ export default function MyPage() {
                 <Submit
                   onClick={() => {
                     db_userInfo
-                      .doc(myUerId)
+                      .doc(myUserId)
                       .update({
                         country:
                           countryInputRef.current.children[1].children[0].value,

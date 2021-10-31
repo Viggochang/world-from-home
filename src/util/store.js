@@ -1,6 +1,7 @@
 import { createStore } from "redux";
 
 const data = {
+  myUserId: '',
   targetCountry: {},
   canvas: {},
   pageInfo: {},
@@ -15,6 +16,8 @@ const data = {
 const rootReducer = (state = data, action) => {
   console.log(state);
   switch (action.type) {
+    case "SET_MY_USER_ID":
+      return { ...state, myUserId: action.payload};
     case "SET_TARGET_COUNTRY":
       return { ...state, targetCountry: action.payload };
     case "SET_CANVAS":

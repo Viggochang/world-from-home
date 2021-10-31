@@ -52,7 +52,7 @@ export default function HomePage() {
     }, 2000);
   }
 
-  function handleBack() {
+  function handleMapBack() {
     map.goHome();
   }
 
@@ -65,7 +65,7 @@ export default function HomePage() {
         setMaskVisibility={setMaskVisibility}
         setMaskOpacity={setMaskOpacity}
       />
-      <BackBtn onClick={handleBack}>
+      <BackBtn onClick={handleClickBack}>
         <i className="fas fa-home"></i>
       </BackBtn>
       <ToMyPage />
@@ -76,7 +76,7 @@ export default function HomePage() {
           display: maskDisplay,
           opacity: maskOpacity + 0.2,
         }}
-        back={handleClickBack}
+        handleClickBack={handleClickBack}
         galleryQuestionRef={galleryQuestionRef}
       />
       <GalleryQuestion innerRef={galleryQuestionRef} />

@@ -41,6 +41,7 @@ export default function UserWorld({userInfo}) {
 
   function handleBack() {
     map.goHome();
+    currentActive.isActive = false;
   }
 
   return (
