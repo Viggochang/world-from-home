@@ -30,7 +30,7 @@ export default function FriendList({ myFriends, searchInput }) {
   return (
     <FriendListDiv>
       <ResultTitle>
-        {myFriends ? "Friends From The World！" : "No Friends"}
+        {myFriends.length ? "Friends From The World！" : "No Friends"}
       </ResultTitle>
       <FriendListContent>
         {myFriends

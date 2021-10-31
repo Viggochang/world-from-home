@@ -56,9 +56,6 @@ function App() {
           <Route path="/user">
             <UserPage />
           </Route>
-          {/* <Route path="/setting"> 
-            <Setting/>
-          </Route> */}
           {/* <Route path="/edit"> 
             <EditSpace/>
           </Route> */}

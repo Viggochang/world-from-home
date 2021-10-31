@@ -37,7 +37,7 @@ export default function FriendRequests({ myFriendRequests, showFriendRequest }) 
       </ResultTitle>
       <FriendRequestsContent>
         {myFriendRequests.map((friend) => (
-          <Friend key={friend.id} friend={friend} />
+          <Friend key={friend.id} friend={friend} request={true}/>
         ))}
       </FriendRequestsContent>
     </FriendRequeststDiv>

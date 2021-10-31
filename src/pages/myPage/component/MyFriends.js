@@ -40,6 +40,7 @@ const RequestBtn = styled.div`
   font-size: 30px;
   outline: 1px #3a4a58 solid;
   border-radius: 50%;
+  position: relative;
   display: flex;
   background-color: rgb(255, 255, 255, 0.7);
   cursor: pointer;
@@ -47,6 +48,20 @@ const RequestBtn = styled.div`
     background-color: #3a4a58;
     color: white;
   }
+`;
+const RequestAlert = styled.div`
+  width: 20px;
+  height: 20px;;
+  font-size: 16px;
+  background-color: #AE0000;
+  color: white;
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0;
+  bottom: 0;
 `;
 const SearchInput = styled.div`
   outline: 1px #3a4a58 solid;
@@ -135,6 +150,7 @@ export default function MyFriends({ title, userInfo, mypage }) {
         {mypage ? (
           <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
             <i className="fas fa-user-plus" style={{ margin: "auto" }}></i>
+            {myFriendRequests.length ? <RequestAlert>{myFriendRequests.length}</RequestAlert> : <></>}
           </RequestBtn>
         ) : (
           <></>

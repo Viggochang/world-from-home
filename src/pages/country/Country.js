@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 import CountryShape from './component/CountryShape';
+import CountryClock from "./component/CountryClock";
 import Weather from './component/Weather';
 import GalleryInCountry from "./component/GalleryInCountry";
 
@@ -32,6 +33,16 @@ const CountryInfoDiv = styled.div`
   width: calc(50% - 20px);
   height: calc(43% - 60px);
   border: 1px white solid;
+  color: white;
+  display: flex;
+`;
+
+const CaptainCity = styled.div`
+  margin: 20px;
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+  text-align: left;
 `;
 
 const FriendsContainerDiv = styled.div`
@@ -88,11 +99,27 @@ const BackDiv = styled.div`
 function Country({style, back, galleryQuestionRef}) {
   const targetCountry = useSelector((state) => state.targetCountry);
 
+  const [captain, setCaptain] = useState({});
+
+  useEffect(() => {
+    console.log(targetCountry);
+    if (Object.keys(targetCountry).length){
+      fetch(`https://api.worldbank.org/v2/country/${targetCountry.id}?format=json`)
+        .then((res) => res.json())
+        .then((res) => {
+          const {capitalCity, longitude, latitude} = res[1][0];
+          setCaptain({capitalCity, longitude, latitude});
+        });
+    }
+  }, [targetCountry]);
+
   return (
     <CountryDiv style={style}>
       <CountryShape />
       <GalleryInCountry galleryQuestionRef={galleryQuestionRef}/>
       <CountryInfoDiv>
+        <CaptainCity><i className="fas fa-archway">&emsp;{captain.capitalCity}</i> </CaptainCity>
+        <CountryClock captain={captain}/>
         {/* <Weather/> */}
       </CountryInfoDiv>
       <FriendsContainerDiv>
