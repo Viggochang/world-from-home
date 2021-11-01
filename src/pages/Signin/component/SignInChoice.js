@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useHistory } from 'react-router-dom';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -33,7 +33,7 @@ const theme = createTheme({
 const SignInChoiceDiv = styled.div`
   width: 400px;
   height: 100%;
-  display: flex;
+  display: flex; /* to-do */
   flex-direction: column;
   align-items: center;
 `;
@@ -50,6 +50,7 @@ const CrossDiv = styled.div`
 
 const SignTitleDiv = styled.div`
   font-size: 20px;
+  font-weight: bold;
   line-height: 40px;
   border-radius: 20px;
   background-color: white;
@@ -74,9 +75,13 @@ const SignInBtn = styledMui(Button)({
   borderRadius: "40px",
   lineHeight: 1.5,
   marginBottom: "20px",
-})
+});
 
-export default function SignInChoice({ signInRef, signInChoiceRef, moreInfoFormRef }) {
+export default function SignInChoice({
+  signInRef,
+  signInChoiceRef,
+  moreInfoFormRef,
+}) {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -85,7 +90,7 @@ export default function SignInChoice({ signInRef, signInChoiceRef, moreInfoFormR
   }
 
   function handleToWorldPage() {
-    history.push({pathname: 'home'});
+    history.push({ pathname: "home" });
   }
 
   const handleSignin = async (provider) => {
@@ -104,8 +109,8 @@ export default function SignInChoice({ signInRef, signInChoiceRef, moreInfoFormR
         if (snapshot.empty) {
           myUserId = db_userInfo.doc().id;
           db_userInfo.doc(myUserId).set({ email, name, photo });
-          signInChoiceRef.current.style.display = 'none';
-          moreInfoFormRef.current.style.display = 'flex';
+          signInChoiceRef.current.style.display = "none";
+          moreInfoFormRef.current.style.display = "flex";
         } else {
           snapshot.forEach((doc) => {
             myUserId = doc.id;
@@ -121,9 +126,10 @@ export default function SignInChoice({ signInRef, signInChoiceRef, moreInfoFormR
           payload: myUserId,
         });
         return newAccount;
-      }).then(newAccount => {
+      })
+      .then((newAccount) => {
         if (!newAccount) {
-          history.push({pathname: 'home'});
+          history.push({ pathname: "home" });
         }
       });
   };

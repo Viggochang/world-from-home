@@ -94,7 +94,7 @@ const ContentDiv = styled.div`
   background-color: rgb(255, 255, 255, 0.5);
 `;
 
-export default function MyFriends({ title, userInfo, mypage }) {
+export default function MyFriends({ title, userInfo, isMyPage }) {
   const [myFriends, setMyFriends] = useState([]);
   const [myFriendRequests, setMyFriendRequests] = useState([]);
   const [searchInput, setSearchInput] = useState();
@@ -147,7 +147,7 @@ export default function MyFriends({ title, userInfo, mypage }) {
     <MyFriendsContentDiv>
       <FilterDiv>
         <Title>{title}</Title>
-        {mypage ? (
+        {isMyPage ? (
           <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
             <i className="fas fa-user-plus" style={{ margin: "auto" }}></i>
             {myFriendRequests.length ? <RequestAlert>{myFriendRequests.length}</RequestAlert> : <></>}
@@ -178,7 +178,7 @@ export default function MyFriends({ title, userInfo, mypage }) {
           myFriendRequests={myFriendRequests}
           showFriendRequest={showFriendRequest}
         />
-        <FriendList myFriends={myFriends} searchInput={searchInput} />
+        <FriendList myFriends={myFriends} searchInput={searchInput} isMyPage={isMyPage}/>
       </ContentDiv>
     </MyFriendsContentDiv>
   );

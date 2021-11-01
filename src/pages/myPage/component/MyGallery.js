@@ -144,7 +144,7 @@ export default function MyGallery({title, id}) {
     setAlbumOrder(event.target.value);
   };
 
-  console.log(albumDataFilter);
+  // console.log(albumDataFilter);
 
   return (
     <MyGalleryContentDiv>

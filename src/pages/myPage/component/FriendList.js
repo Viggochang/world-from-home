@@ -26,7 +26,7 @@ const FriendListContent = styled.div`
   flex-wrap: wrap;
 `;
 
-export default function FriendList({ myFriends, searchInput }) {
+export default function FriendList({ myFriends, searchInput, isMyPage }) {
   return (
     <FriendListDiv>
       <ResultTitle>
@@ -40,7 +40,7 @@ export default function FriendList({ myFriends, searchInput }) {
               !name.toLowerCase().includes(searchInput.toLowerCase())
           )
           .map((friend) => (
-            <Friend key={friend.id} friend={friend} />
+            <Friend key={friend.id} friend={friend} isMyPage={isMyPage} />
           ))}
       </FriendListContent>
     </FriendListDiv>

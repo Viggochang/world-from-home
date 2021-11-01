@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 
 import styled from "styled-components";
 
@@ -23,7 +26,7 @@ const MoreInfoDiv = styled.div`
 `;
 
 const CloseDiv = styled.div`
-  color: #9D9D9D;
+  color: #9d9d9d;
   position: absolute;
   top: 20px;
   right: 20px;
@@ -124,6 +127,9 @@ export default function MoreInfo({
   const languageInputRef = useRef();
   const birthdayInputRef = useRef();
   const introductionInputRef = useRef();
+  const [birthday, setBirthday] = useState(
+    new Date(userInfo.birthday.seconds * 1000)
+  );
 
   const { email, language, introduction } = userInfo;
   const birthdayFormat = userInfo.birthday
@@ -176,6 +182,7 @@ export default function MoreInfo({
 
       <Title>Email</Title>
       <InfoTextDiv>{email}</InfoTextDiv>
+
       {infoData.map((info, index) => {
         const {
           title,
@@ -198,6 +205,12 @@ export default function MoreInfo({
                 onClick={() => {
                   handleShow(edit_ref);
                   handleDisappear(info_ref);
+                  infoData
+                    .filter((data) => data.title !== title)
+                    .forEach((data) => {
+                      handleDisappear(data.edit_ref);
+                      handleShow(data.info_ref);
+                    });
                 }}
               >
                 <i className="fas fa-pencil-alt"></i>
@@ -213,27 +226,45 @@ export default function MoreInfo({
               </InfoDiv>
               <EditDiv ref={edit_ref}>
                 <TextFieldDiv>
-                  <TextField
-                    inputProps={{
-                      style: {
-                        width: 200,
-                        height: title === "Introduction" ? 83 : 16,
-                        fontSize: 10,
-                      },
-                    }}
-                    label={`Edit ${title}`}
-                    size="small"
-                    placeholder={info_data}
-                    variant="outlined"
-                    ref={input_ref}
-                    multiline
-                  />
+                  {title === "Birthday" ? (
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        label="Birthday"
+                        value={birthday}
+                        onChange={(newValue) => {
+                          setBirthday(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                        inputProps={{
+                          style: { height: "1px" },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  ) : (
+                    <TextField
+                      inputProps={{
+                        style: {
+                          width: 200,
+                          height: title === "Introduction" ? 83 : 17,
+                          fontSize: 10,
+                        },
+                      }}
+                      label={`Edit ${title}`}
+                      size="small"
+                      placeholder={info_data}
+                      variant="outlined"
+                      ref={input_ref}
+                      multiline
+                    />
+                  )}
                 </TextFieldDiv>
                 <Submit
                   onClick={() => {
                     const updateData = {};
                     updateData[title.toLowerCase()] =
-                      input_ref.current.children[1].children[0].value;
+                      title === "Birthday"
+                        ? birthday
+                        : input_ref.current.children[1].children[0].value;
                     db_userInfo
                       .doc(myUerId)
                       .update(updateData)
@@ -242,8 +273,8 @@ export default function MoreInfo({
                         handleDisappear(edit_ref);
                       });
 
-                    // handleDisappear(edit_ref);
-                    // handleShow(info_ref);
+                    handleDisappear(edit_ref);
+                    handleShow(info_ref);
                     // console.log(
                     //   input_ref.current.children[1].children[0].value
                     // );

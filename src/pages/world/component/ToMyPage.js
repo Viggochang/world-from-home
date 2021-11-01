@@ -27,7 +27,7 @@ const MyName = styled.div`
 
 export default function ToMyPage() {
   const userInfo = useSelector((state) => state.userInfo);
-  console.log(userInfo);
+  // console.log(userInfo);
   return (
     <ToMyPageDiv>
       <MyPhoto

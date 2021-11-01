@@ -155,8 +155,8 @@ const ButtonsDiv = styled.div`
 
 const HomeLink = styled(NavLink)`
   color: white;
-  :hover{
-    color: #3A4A58;
+  :hover {
+    color: #3a4a58;
   }
 `;
 const SettingLink = styled(NavLink)`
@@ -180,19 +180,19 @@ export default function MyPage() {
   const editMyPhotoRef = useRef();
   const myCountryRef = useRef();
   const editMyCountryIconRef = useRef();
-  const editRef = useRef();
+  const editCountryRef = useRef();
   const countryInputRef = useRef();
   const moreAboutMeBtnRef = useRef();
   const moreInfoRef = useRef();
   const [activeButton, setActiveButton] = useState("Albums");
   const [showMoreInfo, setShowMoreInfo] = useState(false);
-  const myUserId = useSelector(state => state.myUserId);
+  const myUserId = useSelector((state) => state.myUserId);
   const myInfo = useSelector((state) => state.userInfo);
 
   const { id, name, country, photo, birthday, background_photo } = myInfo;
   const age = birthday
     ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear()
-    : '';
+    : "";
 
   function handleShow(ref) {
     ref.current.style.display = "flex";
@@ -208,6 +208,18 @@ export default function MyPage() {
     } else {
       handleDisappear(moreInfoRef);
     }
+  }
+
+  function handleSubmitCountry() {
+    db_userInfo
+      .doc(myUserId)
+      .update({
+        country: countryInputRef.current.children[1].children[0].value,
+      })
+      .then(() => {
+        handleShow(myCountryRef);
+        handleDisappear(editCountryRef);
+      });
   }
 
   return (
@@ -243,18 +255,18 @@ export default function MyPage() {
               onMouseLeave={() => handleDisappear(editMyCountryIconRef)}
             >
               <MyCountryDiv ref={myCountryRef}>
-                {country ? countryTrans[country].name_en : ''}
+                {country ? countryTrans[country].name_en : ""}
                 <EditIcon
                   ref={editMyCountryIconRef}
                   onClick={() => {
-                    handleShow(editRef);
+                    handleShow(editCountryRef);
                     handleDisappear(myCountryRef);
                   }}
                 >
                   <i className="fas fa-pencil-alt"></i>
                 </EditIcon>
               </MyCountryDiv>
-              <EditDiv ref={editRef}>
+              <EditDiv ref={editCountryRef}>
                 <TextFieldDiv>
                   <TextField
                     inputProps={{
@@ -266,25 +278,12 @@ export default function MyPage() {
                     ref={countryInputRef}
                   />
                 </TextFieldDiv>
-                <Submit
-                  onClick={() => {
-                    db_userInfo
-                      .doc(myUserId)
-                      .update({
-                        country:
-                          countryInputRef.current.children[1].children[0].value,
-                      })
-                      .then(() => {
-                        handleShow(myCountryRef);
-                        handleDisappear(editRef);
-                      });
-                  }}
-                >
+                <Submit onClick={handleSubmitCountry}>
                   <i className="fas fa-check-circle" />
                 </Submit>
                 <Cancel
                   onClick={() => {
-                    handleDisappear(editRef);
+                    handleDisappear(editCountryRef);
                     handleShow(myCountryRef);
                   }}
                 >
@@ -332,11 +331,14 @@ export default function MyPage() {
           </ButtonsDiv>
         </UpperDiv>
         <LowerDiv>
-          <AlbumFriendBtns activeButton={activeButton} setActiveButton={setActiveButton} />
+          <AlbumFriendBtns
+            activeButton={activeButton}
+            setActiveButton={setActiveButton}
+          />
           {activeButton === "Albums" ? (
             <MyGallery title={"My Albums"} id={id} />
           ) : (
-            <MyFriends title={"My Friends"} userInfo={myInfo} mypage={true} />
+            <MyFriends title={"My Friends"} userInfo={myInfo} isMyPage={true} />
           )}
         </LowerDiv>
       </MyPageDiv>

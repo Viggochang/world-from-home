@@ -72,9 +72,9 @@ function App() {
           <Route path="/user">
             <UserPage />
           </Route>
-          {/* <Route path="/edit"> 
+          <Route path="/edit"> 
             <EditSpace/>
-          </Route> */}
+          </Route>
         </Switch>
       </BrowserRouter>
     </div>

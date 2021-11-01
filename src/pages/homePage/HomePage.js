@@ -38,7 +38,7 @@ export default function HomePage() {
   const [maskOpacity, setMaskOpacity] = useState(0);
   const [maskDisplay, setMaskDisplay] = useState("flex");
   const [map, setMap] = useState(undefined);
-  const [currentActive, setCurrentActive] = useState(undefined);
+  const [currentActive, setCurrentActive] = useState({});
 
   function handleClickBack() {
     map.goHome();

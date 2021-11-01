@@ -33,6 +33,13 @@ const CloseDiv = styled.div`
   }
 `;
 
+const InfoDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+`;
+
 const Title = styled.div`
   font-size: 20px;
   font-weight: bold;
@@ -91,10 +98,10 @@ export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
       {infoData.map((info, index) => {
         const {title, info_data} = info;
         return(
-          <div key={index}>
+          <InfoDiv key={index}>
             <Title>{title}</Title>
             <InfoTextDiv>{info_data}</InfoTextDiv>
-          </div>
+          </InfoDiv>
         )
       })}
     </MoreInfoDiv>

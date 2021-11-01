@@ -109,6 +109,8 @@ function World({userInfo,setCurrentActive, setMap, setMaskVisibility, setMaskOpa
 
     // worldMap.current = map;
 
+    window.scrollTo(0, 0);
+
     return () => {
       map.dispose();
     };

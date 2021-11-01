@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
@@ -66,21 +66,20 @@ const RemoveBtn = styledMui(Button)({
   },
 });
 
-export default function Friend({ friend, request }) {
+export default function Friend({ friend, request, isMyPage }) {
   const { id: friendId, friends: friendFriends, photo, name, country } = friend;
   const acceptRef = useRef();
   const removeRef = useRef();
 
   const myInfo = useSelector((state) => state.userInfo);
-  const { friends: myFriends, id: myId} = myInfo
+  const { friends: myFriends, id: myId } = myInfo;
 
-
-  function handleAcceptRemove(e, type){
+  function handleAcceptRemove(e, type) {
     const myFriendsData = [
       ...myFriends.filter(({ id }) => id !== friendId),
       {
         id: friendId,
-        condition: (type === 'accept') ? 'confirmed' : 'none',
+        condition: type === "accept" ? "confirmed" : "none",
       },
     ];
     db_userInfo.doc(myId).update({ friends: myFriendsData });
@@ -89,7 +88,7 @@ export default function Friend({ friend, request }) {
       ...friendFriends.filter(({ id }) => id !== myId),
       {
         id: myId,
-        condition: (type === 'accept') ? 'confirmed' : 'none',
+        condition: type === "accept" ? "confirmed" : "none",
       },
     ];
     db_userInfo.doc(friendId).update({ friends: friendFriendsData });
@@ -112,10 +111,32 @@ export default function Friend({ friend, request }) {
           <i className="fas fa-globe"></i>{" "}
           {country ? countryTrans[country].name_en : ""}
         </FriendCountry>
-        <AcceptRemoveBtnsDiv>
+        {isMyPage ? (
+          <AcceptRemoveBtnsDiv>
+            {request ? (
+              <AcceptBtn
+                ref={acceptRef}
+                onClick={(e) => handleAcceptRemove(e, "accept")}
+              >
+                accept
+              </AcceptBtn>
+            ) : (
+              <></>
+            )}
+            <RemoveBtn
+              ref={removeRef}
+              onClick={(e) => handleAcceptRemove(e, "remove")}
+            >
+              remove
+            </RemoveBtn>
+          </AcceptRemoveBtnsDiv>
+        ) : (
+          <></>
+        )}
+        {/* <AcceptRemoveBtnsDiv>
           {request ? <AcceptBtn ref={acceptRef} onClick={e => handleAcceptRemove(e, 'accept')}>accept</AcceptBtn> : <></>}
           <RemoveBtn ref={removeRef} onClick={e => handleAcceptRemove(e, 'remove')}>remove</RemoveBtn>
-        </AcceptRemoveBtnsDiv>
+        </AcceptRemoveBtnsDiv> */}
       </FriendInfo>
     </FriendDiv>
   );

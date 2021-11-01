@@ -2,10 +2,11 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
+import { NavLink } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
-import {db_gallery} from '../../util/firebase';
+import { db_gallery } from "../../util/firebase";
 import WorkingSpace from "./WorkingSpace";
 import Preview from "./component/Preview";
 
@@ -44,6 +45,18 @@ const NavBarNav = styled.nav`
   top: 0;
   background-color: #667484;
   z-index: 3;
+  display: flex;
+  align-items: center;
+`;
+
+const HomeLink = styled(NavLink)`
+  font-size: 30px;
+  margin-left: auto;
+  margin-right: 20px;
+  color: white;
+  :hover{
+    color: #3A4A58;
+  }
 `;
 
 const ToolBarDiv = styled.div`
@@ -102,6 +115,9 @@ const ToolContainerDiv = styled.div`
   width: 240px;
   height: 100%;
   padding: 20px 24px 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: #3a4a58;
   position: fixed;
   z-index: 3;
@@ -145,9 +161,9 @@ const allTemplate = {
       [6, "photoText_5", photoText_5],
     ],
   },
-  text:{
+  text: {
     name: "文字",
-    template: [[1, "text_1", text_1]]
+    template: [[1, "text_1", text_1]],
   },
   slideShow: {
     name: "slide show",
@@ -202,29 +218,33 @@ function EditSpace() {
     setToolActive(key);
   }
 
-  function handlePreview(){
+  function handlePreview() {
     // Object.keys(canvasState).forEach((canvasId) => {
     // })
-    previewBtnRef.current.innerText = preview ? 'PREVIEW' : 'Edit';
-    setPreview(preview ? false: true); 
+    previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
+    setPreview(preview ? false : true);
   }
 
-  function handleSave(){
+  function handleSave() {
     const id = db_gallery.doc().id;
     const body = {
-      id, 
+      id,
       timestamp: new Date(),
       content: {
         pageInfo: JSON.stringify(pageInfo),
-        canvasState: JSON.stringify(canvasState)
-      }
-    }
-    db_gallery.doc(id).set(body)
+        canvasState: JSON.stringify(canvasState),
+      },
+    };
+    db_gallery.doc(id).set(body);
   }
 
   return (
     <div>
-      <NavBarNav />
+      <NavBarNav>
+        <HomeLink to="home">
+          <i className="fas fa-home"></i>
+        </HomeLink>
+      </NavBarNav>
       <ToolBarDiv>
         {Object.keys(allTemplate).map((tool) => (
           <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
@@ -274,7 +294,7 @@ function EditSpace() {
           ))}
         </ToolContainerDiv>
         <WorkingSpace preview={preview} />
-        <Preview preview={preview}/>
+        <Preview preview={preview} />
       </ContainerDiv>
     </div>
   );

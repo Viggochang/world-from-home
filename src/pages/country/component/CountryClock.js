@@ -2,45 +2,63 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Clock from "react-clock";
+import "react-clock/dist/Clock.css";
+import "./clock.css";
 
-export default function CountryClock({captain}) {
-  const [localTime, setLocalTime] = useState(new Date());
-  const { latitude, longitude } = captain;
+const ClockDiv = styled.div`
+  /* display: flex;
+  flex-direction: column; */
+  margin-left: 30px;
+  @media (min-height: 1080px) {
+    margin-left: 50px;
+  }
+`;
 
+const ClockText = styled.div`
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  width: 100%;
+  text-align: center;
+  @media (min-height: 1080px) {
+    margin-bottom: 20px;
+  }
+`;
+const ClockStyle = styled(Clock)`
+  /* margin-top: 20px;
+  @media (min-height: 1080px){ */
+  /* margin-top: 60px;
+  } */
+`;
+
+export default function CountryClock({ timezone }) {
+  // console.log(timezone);
+  // console.log(new Date(new Date().getTime()+(-28800+timezone)*1000));
+  const [localTime, setLocalTime] = useState(
+    new Date(new Date().getTime() + (-28800 + timezone) * 1000)
+  );
+  // console.log(localTime);
   useEffect(() => {
-    fetch(
-      `https://api.timezonedb.com/v2.1/get-time-zone?key=NHXNKFE6YNF9&format=json&by=position&lat=${latitude}&lng=${longitude}`
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(new Date(res.formatted));
-        setLocalTime(new Date(res.formatted));
-      });
-  }, [captain]);
+    const interval = setInterval(
+      () =>
+        setLocalTime(
+          new Date(new Date().getTime() + (-28800 + timezone) * 1000)
+        ),
+      1000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, [timezone]);
 
-  return <Clock value={new Date()}/>
-  // localTime ? (
-  //   <Clock value={new Date()}/>
-  // ) : (
-  //   <></>
-  // );
-  // const [value, setValue] = useState(new Date());
- 
-  // useEffect(() => {
-  //   const interval = setInterval(
-  //     () => setValue(new Date()),
-  //     1000
-  //   );
- 
-  //   return () => {
-  //     clearInterval(interval);
-  //   }
-  // }, []);
- 
-  // return (
-  //   <div>
-  //     {/* <p>Current time:</p> */}
-  //     <Clock value={new Date()} />
-  //   </div>
-  // )
+  return (
+    <ClockDiv>
+      <ClockText>
+        <div>{localTime.toDateString().slice(4)}</div>
+        <div>{ localTime.toTimeString().split("GMT")[0]} </div>
+      </ClockText>
+      <ClockStyle value={localTime} />
+    </ClockDiv>
+  );
 }

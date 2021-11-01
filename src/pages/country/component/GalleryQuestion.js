@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from 'react-router-dom';
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
@@ -98,12 +99,15 @@ const BackDiv = styled.div`
 `;
 
 export default function GalleryQuestion({ innerRef }) {
+  const history = useHistory();
+
   function handleBack() {
     innerRef.current.style.display = "none";
   }
 
   function handleEdit(){
-    window.location = '/edit'
+    history.push({pathname: 'edit'});
+    // window.location = '/edit'
   }
 
   return (

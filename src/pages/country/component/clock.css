@@ -1,0 +1,38 @@
+.react-clock__face {
+  width: 120px;
+  height: 120px;
+  border: 1px solid white;
+}
+
+.react-clock {
+  width: 120px !important;
+  height: 120px !important;
+}
+
+@media (min-height: 1080px){
+  .react-clock__face {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .react-clock {
+    width: 200px !important;
+    height: 200px !important;
+  }
+}
+
+.react-clock__mark__body {
+  background-color: white;
+}
+
+.react-clock__hour-hand__body{
+  background-color: white;
+}
+
+.react-clock__minute-hand__body{
+  background-color: white;
+}
+
+.react-clock__second-hand__body{
+  background-color: white;
+}
