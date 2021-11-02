@@ -11,7 +11,7 @@ import GalleryQuestion from "../country/component/GalleryQuestion";
 const HomePageDiv = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #3A4A58;
+  background-color: #3a4a58;
 `;
 
 const BackBtn = styled.div`
@@ -21,12 +21,12 @@ const BackBtn = styled.div`
   position: absolute;
   bottom: 220px;
   right: 45px;
-  color: #3A4A58;
+  color: #3a4a58;
   border-radius: 25%;
   outline: 2px solid #d9d9d9;
   cursor: pointer;
-  :hover{
-    background-color: #8E8E8E;
+  :hover {
+    background-color: #8e8e8e;
   }
 `;
 
@@ -50,10 +50,6 @@ export default function HomePage() {
     setTimeout(() => {
       setMaskDisplay("flex");
     }, 2000);
-  }
-
-  function handleMapBack() {
-    map.goHome();
   }
 
   return (

@@ -8,9 +8,9 @@ import "./clock.css";
 const ClockDiv = styled.div`
   /* display: flex;
   flex-direction: column; */
-  margin-left: 30px;
+  margin-left: 50px;
   @media (min-height: 1080px) {
-    margin-left: 50px;
+    margin-left: 80px;
   }
 `;
 
@@ -26,10 +26,10 @@ const ClockText = styled.div`
   }
 `;
 const ClockStyle = styled(Clock)`
-  /* margin-top: 20px;
-  @media (min-height: 1080px){ */
-  /* margin-top: 60px;
-  } */
+  margin-top: 20px;
+  @media (min-height: 1080px) {
+    margin-top: 40px;
+  }
 `;
 
 export default function CountryClock({ timezone }) {
@@ -56,7 +56,7 @@ export default function CountryClock({ timezone }) {
     <ClockDiv>
       <ClockText>
         <div>{localTime.toDateString().slice(4)}</div>
-        <div>{ localTime.toTimeString().split("GMT")[0]} </div>
+        <div>{localTime.toTimeString().split("GMT")[0]} </div>
       </ClockText>
       <ClockStyle value={localTime} />
     </ClockDiv>

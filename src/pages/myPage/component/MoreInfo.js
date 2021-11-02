@@ -128,7 +128,7 @@ export default function MoreInfo({
   const birthdayInputRef = useRef();
   const introductionInputRef = useRef();
   const [birthday, setBirthday] = useState(
-    new Date(userInfo.birthday.seconds * 1000)
+    userInfo.birthday ? new Date(userInfo.birthday.seconds * 1000) : undefined
   );
 
   const { email, language, introduction } = userInfo;

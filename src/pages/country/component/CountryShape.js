@@ -10,7 +10,7 @@ import am4geodata_usaLow from "@amcharts/amcharts4-geodata/usaLow";
 const CountryShapeFrameDiv = styled.div`
   width: 35%;
   height: 57%;
-  border: 1px white solid;
+  outline: 1px white solid;
   position: relative;
   padding: 10px;
 `;
@@ -30,37 +30,34 @@ export default function CountryShape() {
   const targetCountry = useSelector((state) => state.targetCountry);
 
   useEffect(() => {
-    
-      
-      let map = am4core.create("countryShape", am4maps.MapChart);
-      if (targetCountry.id === "US") {
-        map.geodata = am4geodata_usaLow;
-        map.projection = new am4maps.projections.AlbersUsa();
-        let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
-        polygonSeries.useGeodata = true;
+    let map = am4core.create("countryShape", am4maps.MapChart);
+    if (targetCountry.id === "US") {
+      map.geodata = am4geodata_usaLow;
+      map.projection = new am4maps.projections.AlbersUsa();
+      let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
+      polygonSeries.useGeodata = true;
 
-        let polygonTemplate = polygonSeries.mapPolygons.template;
-        polygonTemplate.stroke = am4core.color("#3F3F3F");
-      } else {
-        map.geodata = am4geodata_worldHigh;
-        map.projection = new am4maps.projections.Mercator();
-        let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
-        polygonSeries.useGeodata = true;
-        polygonSeries.include = [targetCountry.id];
+      let polygonTemplate = polygonSeries.mapPolygons.template;
+      polygonTemplate.stroke = am4core.color("#3F3F3F");
+    } else {
+      map.geodata = am4geodata_worldHigh;
+      map.projection = new am4maps.projections.Mercator();
+      let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
+      polygonSeries.useGeodata = true;
+      polygonSeries.include = [targetCountry.id];
 
-        let polygonTemplate = polygonSeries.mapPolygons.template;
-        polygonTemplate.stroke = am4core.color("#3F3F3F");
+      let polygonTemplate = polygonSeries.mapPolygons.template;
+      polygonTemplate.stroke = am4core.color("#3F3F3F");
 
-        // Center on Pacic
-        map.deltaLongitude = -12;
-        // let label = map.chartContainer.createChild(am4core.Label);
-        // label.text = targetCountry.name;
-        // label.fontSize = 50;
-        // label.fontWeight = 'bold';
-        // label.fill = "white";
-        // label.verticalCenter = "bottom";
-      }
-    
+      // Center on Pacic
+      map.deltaLongitude = -12;
+      // let label = map.chartContainer.createChild(am4core.Label);
+      // label.text = targetCountry.name;
+      // label.fontSize = 50;
+      // label.fontWeight = 'bold';
+      // label.fill = "white";
+      // label.verticalCenter = "bottom";
+    }
   }, [targetCountry]);
 
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
@@ -41,13 +41,14 @@ const GalleryQuestionDiv = styled.div`
   background-color: #667484;
   width: calc(90% - 160px);
   height: calc(90% - 160px);
-  padding: 60px 60px 30px;
+  /* height: 57%; */
+  padding: 60px 60px 40px;
   position: fixed;
   top: 5%;
   left: 5%;
   z-index: 2;
   justify-content: space-between;
-  box-shadow: 0px 0px 10px #4F4F4F;
+  box-shadow: 0px 0px 10px #4f4f4f;
 `;
 
 const QuestionMapDiv = styled.div`
@@ -75,7 +76,7 @@ const TextAreaDiv = styled.div`
   width: 90%;
   height: calc(100% - 408px);
   max-height: 50%;
-  margin: 50px 0 ;
+  margin: 50px 0;
   font-size: 20px;
 `;
 
@@ -87,15 +88,16 @@ const ButtonsDiv = styled.div`
 `;
 
 const BackDiv = styled.div`
-  width: 40px;
-  height: 40px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 20px;
   color: white;
   font-weight: bold;
   font-size: 25px;
   cursor: pointer;
+  :hover {
+    color: #b8c3d0;
+  }
 `;
 
 export default function GalleryQuestion({ innerRef }) {
@@ -105,16 +107,18 @@ export default function GalleryQuestion({ innerRef }) {
     innerRef.current.style.display = "none";
   }
 
-  function handleEdit(){
-    history.push({pathname: 'edit'});
+  function handleEdit() {
+    history.push({ pathname: "edit" });
     // window.location = '/edit'
   }
 
   return (
     <>
-      <Mask ref={innerRef}/>
+      <Mask ref={innerRef} />
       <GalleryQuestionDiv ref={innerRef}>
-        <BackDiv onClick={handleBack}>X</BackDiv>
+        <BackDiv onClick={handleBack}>
+          <i className="fas fa-times"></i>
+        </BackDiv>
         <QuestionMapDiv>
           <QuestionTitle>
             <i className="fas fa-suitcase-rolling"></i> Where are you traveling
@@ -129,8 +133,13 @@ export default function GalleryQuestion({ innerRef }) {
             <TextareaAutosize
               aria-label="empty textarea"
               placeholder=""
-              resize= 'none'
-              style={{ width: '100%', height: '100%', padding: '15px', resize:'none' }}
+              resize="none"
+              style={{
+                width: "100%",
+                height: "100%",
+                padding: "15px",
+                resize: "none",
+              }}
             />
           </TextAreaDiv>
           <ButtonsDiv>

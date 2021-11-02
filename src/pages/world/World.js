@@ -14,7 +14,13 @@ const Chartdiv = styled.div`
   height: 100%;
 `;
 
-function World({userInfo,setCurrentActive, setMap, setMaskVisibility, setMaskOpacity}) {
+function World({
+  userInfo,
+  setCurrentActive,
+  setMap,
+  setMaskVisibility,
+  setMaskOpacity,
+}) {
   const dispatch = useDispatch();
   // const userInfo = useSelector((state) => state.userInfo);
 
@@ -82,7 +88,7 @@ function World({userInfo,setCurrentActive, setMap, setMaskVisibility, setMaskOpa
 
     // Add some data
     const { travel_country } = userInfo;
-    if (travel_country){
+    if (travel_country) {
       polygonSeries.data = travel_country.map((countryCode) => ({
         id: countryCode,
         name: countryTrans[countryCode].name_en,
@@ -116,9 +122,7 @@ function World({userInfo,setCurrentActive, setMap, setMaskVisibility, setMaskOpa
     };
   }, [userInfo]);
 
-  return (
-    <Chartdiv id="chartdiv" />
-  );
+  return <Chartdiv id="chartdiv" />;
 }
 
 export default World;
