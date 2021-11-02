@@ -190,9 +190,12 @@ export default function MyPage() {
   const myInfo = useSelector((state) => state.userInfo);
 
   const { id, name, country, photo, birthday, background_photo } = myInfo;
-  const age = birthday
-    ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear()
-    : "";
+  const age =
+    new Date(birthday.seconds * 1000).toDateString() !==
+    new Date(0).toDateString()
+      ? new Date().getFullYear() -
+        new Date(1000 * birthday.seconds).getFullYear()
+      : "unknown";
 
   function handleShow(ref) {
     ref.current.style.display = "flex";

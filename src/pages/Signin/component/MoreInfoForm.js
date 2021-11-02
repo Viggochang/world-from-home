@@ -90,22 +90,37 @@ const IntroductionTextField = styledMui(TextField)({
   width: "100%",
 });
 
-export default function MoreInfoForm({ moreInfoFormRef }) {
+export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
   const history = useHistory();
   const myUserId = useSelector((state) => state.myUserId);
 
   const [country, setCountry] = useState("TW");
-  const [birthday, setBirthday] = useState();
+  const [birthday, setBirthday] = useState(new Date());
   const [language, setLanguage] = useState("");
   const [introduction, setIntroduction] = useState("");
 
   function handleToWorldPage() {
+    console.log(
+      new Date(birthday.seconds * 1000).toDateString(),
+      new Date().toDateString()
+    );
+    console.log(birthday, birthday.toDateString());
+
     db_userInfo
       .doc(myUserId)
-      .update({ country, birthday, language, introduction })
+      .update({
+        country,
+        language,
+        introduction,
+        birthday:
+          birthday.toDateString() === new Date().toDateString()
+            ? new Date(0)
+            : birthday,
+      })
       .then(() => {
         history.push({ pathname: "home" });
       });
+    signInRef.current.style.display = "none";
   }
 
   function handleSetValue(event, key) {
@@ -157,11 +172,11 @@ export default function MoreInfoForm({ moreInfoFormRef }) {
           >
             {Object.entries(countryTrans)
               .filter((country) => country.country !== "AQ")
-              .map((country) => {
-                return (
-                  <MenuItem value={country[0]}>{country[1].name_en}</MenuItem>
-                );
-              })}
+              .map((country, index) => (
+                <MenuItem key={index} value={country[0]}>
+                  {country[1].name_en}
+                </MenuItem>
+              ))}
           </CountrySelect>
         </FormControl>
 

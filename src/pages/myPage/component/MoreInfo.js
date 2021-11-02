@@ -132,13 +132,16 @@ export default function MoreInfo({
   );
 
   const { email, language, introduction } = userInfo;
-  const birthdayFormat = userInfo.birthday
-    ? new Date(userInfo.birthday.seconds * 1000).toDateString().slice(4)
-    : "";
+  const birthdayDate = new Date(
+    userInfo.birthday.seconds * 1000
+  ).toDateString();
+
+  const birthdayFormat =
+    birthdayDate !== new Date(0).toDateString() ? birthdayDate.slice(4) : "";
   const infoData = [
     {
       title: "Language",
-      info_data: language,
+      info_data: language || "unknown",
       info_ref: languageInfoRef,
       edit_icon_ref: languageEditIconRef,
       edit_ref: languageEditRef,
@@ -146,7 +149,7 @@ export default function MoreInfo({
     },
     {
       title: "Birthday",
-      info_data: birthdayFormat,
+      info_data: birthdayFormat || "unknown",
       info_ref: birthdayInfoRef,
       edit_icon_ref: birthdayEditIconRef,
       edit_ref: birthdayEditRef,
@@ -154,7 +157,7 @@ export default function MoreInfo({
     },
     {
       title: "Introduction",
-      info_data: introduction,
+      info_data: introduction || "",
       info_ref: introductionInfoRef,
       edit_icon_ref: introductionEditIconRef,
       edit_ref: introductionEditRef,

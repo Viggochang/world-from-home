@@ -95,43 +95,45 @@ export default function SignInChoice({
 
   const handleSignin = async (provider) => {
     const res = await socialMediaAuth(provider);
-    const {
-      email,
-      displayName: name,
-      photoURL: photo,
-    } = firebase.auth().currentUser;
-    db_userInfo
-      .where("email", "==", email)
-      .get()
-      .then((snapshot) => {
-        let newAccount = true;
-        let myUserId = "";
-        if (snapshot.empty) {
-          myUserId = db_userInfo.doc().id;
-          db_userInfo.doc(myUserId).set({ email, name, photo });
-          signInChoiceRef.current.style.display = "none";
-          moreInfoFormRef.current.style.display = "flex";
-        } else {
-          snapshot.forEach((doc) => {
-            myUserId = doc.id;
+    if (firebase.auth().currentUser) {
+      const {
+        email,
+        displayName: name,
+        photoURL: photo,
+      } = firebase.auth().currentUser;
+      db_userInfo
+        .where("email", "==", email)
+        .get()
+        .then((snapshot) => {
+          let newAccount = true;
+          let myUserId = "";
+          if (snapshot.empty) {
+            myUserId = db_userInfo.doc().id;
+            db_userInfo.doc(myUserId).set({ email, name, photo });
+            signInChoiceRef.current.style.display = "none";
+            moreInfoFormRef.current.style.display = "flex";
+          } else {
+            snapshot.forEach((doc) => {
+              myUserId = doc.id;
+            });
+            newAccount = false;
+          }
+          return [myUserId, newAccount];
+        })
+        .then(([myUserId, newAccount]) => {
+          console.log(myUserId);
+          dispatch({
+            type: "SET_MY_USER_ID",
+            payload: myUserId,
           });
-          newAccount = false;
-        }
-        return [myUserId, newAccount];
-      })
-      .then(([myUserId, newAccount]) => {
-        console.log(myUserId);
-        dispatch({
-          type: "SET_MY_USER_ID",
-          payload: myUserId,
+          return newAccount;
+        })
+        .then((newAccount) => {
+          if (!newAccount) {
+            history.push({ pathname: "home" });
+          }
         });
-        return newAccount;
-      })
-      .then((newAccount) => {
-        if (!newAccount) {
-          history.push({ pathname: "home" });
-        }
-      });
+    }
   };
 
   return (
@@ -159,7 +161,7 @@ export default function SignInChoice({
           </SignInBtn>
         </ThemeProvider>
       </SignInBtnArea>
-      <div>
+      {/* <div>
         <ThemeProvider theme={theme}>
           <Button
             variant="contained"
@@ -174,7 +176,7 @@ export default function SignInChoice({
             enter
           </Button>
         </ThemeProvider>
-      </div>
+      </div> */}
     </SignInChoiceDiv>
   );
 }

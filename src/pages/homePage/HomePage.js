@@ -8,6 +8,7 @@ import ToMyPage from "../world/component/ToMyPage";
 import Search from "../world/component/Search";
 import Country from "../country/Country";
 import GalleryQuestion from "../country/component/GalleryQuestion";
+import SigninDiv from "../Signin/Signin";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -45,6 +46,7 @@ const Title = styled.div`
 
 export default function HomePage() {
   const galleryQuestionRef = useRef();
+  const signinRef = useRef();
   const userInfo = useSelector((state) => state.userInfo);
 
   const [maskVisibility, setMaskVisibility] = useState("hidden");
@@ -65,6 +67,11 @@ export default function HomePage() {
     }, 2000);
   }
 
+  function handleSignIn() {
+    signinRef.current.style.display = "flex";
+    console.log("sign in");
+  }
+
   return (
     <HomePageDiv>
       <World
@@ -78,14 +85,14 @@ export default function HomePage() {
         <i className="fas fa-home"></i>
       </BackBtn>
 
-      <ToMyPage />
+      <ToMyPage handleSignIn={handleSignIn} />
       <Search
         setMaskVisibility={setMaskVisibility}
         setMaskOpacity={setMaskOpacity}
         map={map}
         setCurrentActive={setCurrentActive}
       />
-      <Title>{`World  from  ${userInfo.name}`}</Title>
+      <Title>{`World  from  ${userInfo.name || "Guest"}`}</Title>
       <Country
         style={{
           visibility: maskVisibility,
@@ -97,6 +104,7 @@ export default function HomePage() {
         galleryQuestionRef={galleryQuestionRef}
       />
       <GalleryQuestion innerRef={galleryQuestionRef} />
+      <SigninDiv innerRef={signinRef} />
     </HomePageDiv>
   );
 }
