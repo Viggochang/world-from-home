@@ -137,8 +137,8 @@ const ButtonsDiv = styled.div`
 
 const HomeLink = styled(NavLink)`
   color: white;
-  :hover{
-    color: #3A4A58;
+  :hover {
+    color: #3a4a58;
   }
 `;
 const SettingLink = styled(NavLink)`
@@ -167,7 +167,7 @@ export default function UserPage() {
   const { name, country, photo, birthday, background_photo } = userInfo;
   const age = birthday
     ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear()
-    : '';
+    : "";
 
   function handleShow(ref) {
     ref.current.style.display = "flex";
@@ -175,7 +175,7 @@ export default function UserPage() {
   function handleDisappear(ref) {
     ref.current.style.display = "none";
   }
-  
+
   function handleMoreInfo() {
     setShowMoreInfo(showMoreInfo ? false : true);
     if (!showMoreInfo) {
@@ -208,7 +208,9 @@ export default function UserPage() {
             <div style={{ fontSize: 148 }}>{name}</div>
             <div style={{ fontSize: 36 }}>from</div>
             <CountryDiv>
-              <MyCountryDiv>{country ? countryTrans[country].name_en : ''}</MyCountryDiv>
+              <MyCountryDiv>
+                {country ? countryTrans[country].name_en : ""}
+              </MyCountryDiv>
             </CountryDiv>
             <div
               style={{ fontSize: 36, marginBottom: "24px" }}
@@ -234,7 +236,7 @@ export default function UserPage() {
                 More about Me
               </Button>
             </ThemeProvider>
-            <FriendState userInfo={userInfo}/>
+            <FriendState userInfo={userInfo} />
           </UserInfoDiv>
           <MoreInfo
             innerRef={moreInfoRef}
@@ -244,12 +246,15 @@ export default function UserPage() {
         </UpperDiv>
         <MiddleDiv>
           <Title>{`World from ${name}`}</Title>
-          <UserWorld userInfo={userInfo}/>
+          <UserWorld userInfo={userInfo} />
         </MiddleDiv>
         <BottomDiv>
-          <AlbumFriendBtns activeButton={activeButton} setActiveButton={setActiveButton}/>
+          <AlbumFriendBtns
+            activeButton={activeButton}
+            setActiveButton={setActiveButton}
+          />
           {activeButton === "Albums" ? (
-            <MyGallery title={`${name}'s Albums`} id={id}/>
+            <MyGallery title={`${name}'s Albums`} id={id} />
           ) : (
             <MyFriends title={`${name}'s Friends`} userInfo={userInfo} />
           )}

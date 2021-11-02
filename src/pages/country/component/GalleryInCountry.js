@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { styled as styledMui } from "@mui/styles";
+import { autocompleteClasses } from "@material-ui/core";
 
 const theme = createTheme({
   status: {
@@ -83,12 +84,6 @@ const AlbumAdd = styled.div`
   display: flex;
 `;
 
-const AddBtn = styledMui(Button)({
-  lineHeight: 1.5,
-  fontSize: "36px",
-  margin: "auto",
-});
-
 export default function GalleryInCountry({ galleryQuestionRef }) {
   const targetCountry = useSelector((state) => state.targetCountry);
   const [album, setAlbum] = useState([]);
@@ -146,26 +141,28 @@ export default function GalleryInCountry({ galleryQuestionRef }) {
           <AlbumHere>
             <AlbumAdd>
               <ThemeProvider theme={theme}>
-                <AddBtn
+                <Button
                   variant="outlined"
                   color="primary"
                   onClick={handleGalleryQuestion}
+                  style={{ margin: "auto", lineHeight: 1.5, fontSize: "28px" }}
                 >
                   +&emsp; add my&emsp; <b>{targetCountry.name}</b>
-                </AddBtn>
+                </Button>
               </ThemeProvider>
             </AlbumAdd>
           </AlbumHere>
         </AlbumDiv>
       ) : (
         <ThemeProvider theme={theme}>
-          <AddBtn
+          <Button
             variant="outlined"
             color="primary"
             onClick={handleGalleryQuestion}
+            style={{ margin: "auto", lineHeight: 1.5, fontSize: "36px" }}
           >
             +&emsp; add my&emsp; <b>{targetCountry.name}</b>
-          </AddBtn>
+          </Button>
         </ThemeProvider>
       )}
     </GalleryBackgroundDiv>

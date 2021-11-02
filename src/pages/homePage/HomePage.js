@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import World from "../world/World";
 import ToMyPage from "../world/component/ToMyPage";
+import Search from "../world/component/Search";
 import Country from "../country/Country";
 import GalleryQuestion from "../country/component/GalleryQuestion";
 
@@ -28,6 +29,18 @@ const BackBtn = styled.div`
   :hover {
     background-color: #8e8e8e;
   }
+`;
+
+const Title = styled.div`
+  color: white;
+  font-size: 70px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  margin-right: auto;
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  z-index: 1;
 `;
 
 export default function HomePage() {
@@ -64,7 +77,15 @@ export default function HomePage() {
       <BackBtn onClick={handleClickBack}>
         <i className="fas fa-home"></i>
       </BackBtn>
+
       <ToMyPage />
+      <Search
+        setMaskVisibility={setMaskVisibility}
+        setMaskOpacity={setMaskOpacity}
+        map={map}
+        setCurrentActive={setCurrentActive}
+      />
+      <Title>{`World  from  ${userInfo.name}`}</Title>
       <Country
         style={{
           visibility: maskVisibility,

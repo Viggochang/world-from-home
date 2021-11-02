@@ -16,7 +16,7 @@ const FriendsContainerDiv = styled.div`
   align-items: flex-start;
   /* justify-content: space-between; */
   @media (min-height: 1080px) {
-    width: calc(100% - 710px);
+    width: calc(100% - 720px);
   }
 `;
 

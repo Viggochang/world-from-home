@@ -155,11 +155,13 @@ export default function MoreInfoForm({ moreInfoFormRef }) {
               handleSetValue(e, "country");
             }}
           >
-            {Object.entries(countryTrans).map((country) => {
-              return (
-                <MenuItem value={country[0]}>{country[1].name_en}</MenuItem>
-              );
-            })}
+            {Object.entries(countryTrans)
+              .filter((country) => country.country !== "AQ")
+              .map((country) => {
+                return (
+                  <MenuItem value={country[0]}>{country[1].name_en}</MenuItem>
+                );
+              })}
           </CountrySelect>
         </FormControl>
 

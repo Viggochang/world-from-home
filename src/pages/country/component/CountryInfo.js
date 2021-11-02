@@ -15,12 +15,14 @@ const CountryInfoDiv = styled.div`
 `;
 
 const LeftDiv = styled.div`
+  max-width: 320px;
   display: flex;
   flex-direction: column;
 `;
 
 const CaptainTitleDiv = styled.div`
-  width: 320px;
+  /* width: 320px; */
+  padding: 0 50px;
   outline: 1px white solid;
   font-size: 32px;
   line-height: 50px;
@@ -84,7 +86,7 @@ export default function CountryInfo() {
     <CountryInfoDiv>
       <LeftDiv>
         <CaptainTitleDiv>
-          <i className="fas fa-archway"></i>&ensp;Captain City
+          <i className="fas fa-archway"></i>&ensp;Capital City
         </CaptainTitleDiv>
         <CaptainCity>{captain.capitalCity}</CaptainCity>
         <Weather weatherData={weather} />
