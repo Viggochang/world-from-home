@@ -5,6 +5,7 @@ import CountryShape from "./component/CountryShape";
 import GalleryInCountry from "./component/GalleryInCountry";
 import CountryInfo from "./component/CountryInfo";
 import CountryFriend from "./component/CountryFriend";
+import countryTrans from "../../util/countryTrans";
 
 const CountryDiv = styled.div`
   width: calc(90% - 160px);

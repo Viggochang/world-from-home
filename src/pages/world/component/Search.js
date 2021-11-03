@@ -8,14 +8,14 @@ import countryTrans from "../../../util/countryTrans";
 
 const SearchDiv = styled.div`
   position: absolute;
-  top: 40px;
-  right: 160px;
+  top: 50px;
+  right: 140px;
   width: 200px;
   height: 40px;
   outline: 4px #b8c3d0 solid;
   border-radius: 22px;
   padding: 0 40px 0 10px;
-  background-color: rgb(255, 255, 255, 0.8);
+  background-color: rgb(102, 116, 132, 0.8);
   margin-left: 20px;
   display: flex;
 `;
@@ -24,16 +24,19 @@ const SearchIconDiv = styled.div`
   position: absolute;
   right: 10px;
   top: calc(50% - 10px);
-  color: #667484;
+  color: #b8c3d0;
   cursor: pointer;
   :hover {
-    color: #3a4a58;
+    color: white;
   }
 `;
 
 const Inputdiv = styled.input`
   :focus {
     outline: none;
+  }
+  ::placeholder {
+    color: #b8c3d0;
   }
 `;
 
@@ -86,13 +89,13 @@ export default function Search({
     <SearchDiv>
       <Inputdiv
         list="country-choice"
-        id="ice-cream-choice"
-        name="ice-cream-choice"
+        id="search-country"
+        name="search-country"
         placeholder="Discover the world"
         style={{
           border: "none",
           background: "none",
-          color: "#3A4A58",
+          color: "#B8C3D0",
           width: "100%",
         }}
         ref={searchRef}
@@ -100,10 +103,6 @@ export default function Search({
           e.target.parentNode.style.outline = "4px #b8c3d0 solid";
         }}
       />
-      <SearchIconDiv onClick={handleSearch}>
-        <i className="fas fa-search"></i>
-      </SearchIconDiv>
-
       <datalist id="country-choice">
         {Object.values(countryTrans)
           .filter((country) => country.country !== "AQ")
@@ -111,6 +110,9 @@ export default function Search({
             <option key={country.country} value={country.name_en} />
           ))}
       </datalist>
+      <SearchIconDiv onClick={handleSearch}>
+        <i className="fas fa-search"></i>
+      </SearchIconDiv>
     </SearchDiv>
   );
 }

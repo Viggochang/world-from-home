@@ -26,6 +26,10 @@ const theme = createTheme({
   },
 });
 
+const GalleryQuestionDiv = styled.div`
+  display: none;
+`;
+
 const Mask = styled.div`
   background-color: rgb(0, 0, 0, 0.6);
   position: fixed;
@@ -33,11 +37,11 @@ const Mask = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  display: none;
+  z-index: 2;
 `;
 
-const GalleryQuestionDiv = styled.div`
-  display: none;
+const GalleryQuestionContainer = styled.div`
+  display: flex;
   background-color: #667484;
   width: calc(90% - 160px);
   height: calc(90% - 160px);
@@ -113,9 +117,9 @@ export default function GalleryQuestion({ innerRef }) {
   }
 
   return (
-    <>
-      <Mask ref={innerRef} />
-      <GalleryQuestionDiv ref={innerRef}>
+    <GalleryQuestionDiv ref={innerRef}>
+      <Mask />
+      <GalleryQuestionContainer>
         <BackDiv onClick={handleBack}>
           <i className="fas fa-times"></i>
         </BackDiv>
@@ -174,7 +178,7 @@ export default function GalleryQuestion({ innerRef }) {
             </ThemeProvider>
           </ButtonsDiv>
         </QuestionDescriptionDiv>
-      </GalleryQuestionDiv>
-    </>
+      </GalleryQuestionContainer>
+    </GalleryQuestionDiv>
   );
 }

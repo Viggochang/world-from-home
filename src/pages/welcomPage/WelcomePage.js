@@ -97,6 +97,7 @@ export default function WelcomePage() {
                 borderRadius: "40px",
                 lineHeight: 1.5,
                 margin: "0 20px",
+                color: "#3A4A58",
               }}
               onClick={handleSignIn}
             >
@@ -112,6 +113,7 @@ export default function WelcomePage() {
                 borderRadius: "40px",
                 lineHeight: 1.5,
                 margin: "0 20px",
+                color: "#3A4A58",
               }}
               onClick={handleGuest}
             >

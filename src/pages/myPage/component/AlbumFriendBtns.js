@@ -33,7 +33,7 @@ const AlbumFriendBtnsDiv = styled.div`
   flex-direction: column;
 `;
 
-export default function AlbumFriendBtns({activeButton, setActiveButton}) {
+export default function AlbumFriendBtns({ activeButton, setActiveButton }) {
   // const [activeButton, setActiveButton] = useState("Albums");
 
   function handleAlbums() {
@@ -56,6 +56,11 @@ export default function AlbumFriendBtns({activeButton, setActiveButton}) {
             borderRadius: "40px",
             lineHeight: 1.5,
             fontWeight: "bold",
+            color: activeButton === "Albums" ? "white" : "#3A4A58",
+            outline:
+              activeButton === "Albums"
+                ? "3px white solid"
+                : "3px #3A4A58 solid",
           }}
           onClick={handleAlbums}
         >
@@ -71,6 +76,11 @@ export default function AlbumFriendBtns({activeButton, setActiveButton}) {
             lineHeight: 1.5,
             fontWeight: "bold",
             marginTop: "20px",
+            color: activeButton === "Friends" ? "white" : "#3A4A58",
+            outline:
+              activeButton === "Albums"
+                ? "3px #3A4A58 solid"
+                : "3px white solid",
           }}
           onClick={handleFriends}
         >

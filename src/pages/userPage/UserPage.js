@@ -14,6 +14,7 @@ import countryTrans from "../../util/countryTrans";
 import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
+// import { system } from "@amcharts/amcharts4/core";
 
 const theme = createTheme({
   status: {
@@ -141,19 +142,37 @@ const HomeLink = styled(NavLink)`
     color: #3a4a58;
   }
 `;
-const SettingLink = styled(NavLink)`
-  color: white;
+const MyPageLink = styled(NavLink)`
+  /* color: white; */
   margin-top: 20px;
+`;
+const MyPageIcon = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  outline: 3px white solid;
+`;
+const MyPageIconMask = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgb(225, 225, 225, 0);
+  :hover {
+    background-color: rgb(225, 225, 225, 0.3);
+  }
 `;
 
 export default function UserPage() {
   const id = new URLSearchParams(window.location.search).get("id");
+  const defaultBackground =
+    "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/user_background_photo%2Fdefault-background.jpg?alt=media&token=17d3a90e-1f80-45c2-9b1d-e641d7ee0b88";
 
   // const moreAboutMeBtnRef = useRef();
   const moreInfoRef = useRef();
   const [userInfo, setUserInfo] = useState({});
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [activeButton, setActiveButton] = useState("Albums");
+  const myInfo = useSelector((state) => state.userInfo);
 
   useEffect(() => {
     db_userInfo
@@ -166,8 +185,9 @@ export default function UserPage() {
 
   const { name, country, photo, birthday, background_photo } = userInfo;
   const age =
+    birthday &&
     new Date(birthday.seconds * 1000).toDateString() !==
-    new Date(0).toDateString()
+      new Date(0).toDateString()
       ? new Date().getFullYear() -
         new Date(1000 * birthday.seconds).getFullYear()
       : "unknown";
@@ -192,7 +212,9 @@ export default function UserPage() {
     <>
       <Background
         style={{
-          backgroundImage: `url(${background_photo})`,
+          backgroundImage: background_photo
+            ? `url(${background_photo})`
+            : `url(${defaultBackground})`,
           backgroundSize: "cover",
         }}
       >
@@ -266,9 +288,17 @@ export default function UserPage() {
           <HomeLink to="home">
             <i className="fas fa-home"></i>
           </HomeLink>
-          <SettingLink to="setting">
-            <i className="fas fa-cog"></i>
-          </SettingLink>
+          <MyPageLink to="myPage">
+            <MyPageIcon
+              style={{
+                backgroundImage: `url(${myInfo.photo})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <MyPageIconMask />
+            </MyPageIcon>
+          </MyPageLink>
         </ButtonsDiv>
       </MyPageDiv>
     </>

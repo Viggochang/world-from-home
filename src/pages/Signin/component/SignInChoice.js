@@ -101,6 +101,7 @@ export default function SignInChoice({
         displayName: name,
         photoURL: photo,
       } = firebase.auth().currentUser;
+
       db_userInfo
         .where("email", "==", email)
         .get()
@@ -109,7 +110,7 @@ export default function SignInChoice({
           let myUserId = "";
           if (snapshot.empty) {
             myUserId = db_userInfo.doc().id;
-            db_userInfo.doc(myUserId).set({ email, name, photo });
+            db_userInfo.doc(myUserId).set({ email, name, photo, id: myUserId });
             signInChoiceRef.current.style.display = "none";
             moreInfoFormRef.current.style.display = "flex";
           } else {
@@ -130,6 +131,7 @@ export default function SignInChoice({
         })
         .then((newAccount) => {
           if (!newAccount) {
+            signInRef.current.style.display = "none";
             history.push({ pathname: "home" });
           }
         });

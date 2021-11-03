@@ -51,14 +51,14 @@ const MoreInfoFormTitleDiv = styled.div`
   border-radius: 20px;
   background-color: white;
   padding: 0 30px;
-  margin-top: 80px;
+  margin-top: 40px;
 `;
 const MoreInfoFormArea = styled.div`
   background-color: white;
   width: 220px;
-  height: 260px;
+  height: 380px;
   overflow: scroll;
-  margin-top: 50px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -222,9 +222,11 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
             variant="contained"
             color="white"
             style={{
-              marginTop: "30px",
+              marginTop: "20px",
               borderRadius: "40px",
               lineHeight: 1.5,
+              color: "#3A4A58",
+              fontWeight: "bold",
             }}
             onClick={handleToWorldPage}
           >

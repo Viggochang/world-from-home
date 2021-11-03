@@ -70,13 +70,14 @@ const IntroductionDiv = styled.div`
 export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
   // const userInfo = useSelector((state) => state.userInfo);
 
-  const { email, language, introduction } = userInfo;
-  const birthdayDate = new Date(
-    userInfo.birthday.seconds * 1000
-  ).toDateString();
+  const { email, language, introduction, birthday } = userInfo;
+  const birthdayDate =
+    birthday && new Date(birthday.seconds * 1000).toDateString();
 
   const birthdayFormat =
-    birthdayDate !== new Date(0).toDateString() ? birthdayDate.slice(4) : "";
+    birthday && birthdayDate !== new Date(0).toDateString()
+      ? birthdayDate.slice(4)
+      : "";
 
   function handleCloseMoreInfo() {
     innerRef.current.style.display = "none";
