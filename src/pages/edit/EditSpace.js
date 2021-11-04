@@ -22,6 +22,8 @@ import photoText_4 from "../../image/template/photoText_4.jpeg";
 import photoText_5 from "../../image/template/photoText_5.jpeg";
 import text_1 from "../../image/template/text_1.jpeg";
 
+import ToMyPage from "../world/component/ToMyPage";
+
 const theme = createTheme({
   status: {
     danger: "#e53e3e",
@@ -40,22 +42,23 @@ const theme = createTheme({
 
 const NavBarNav = styled.nav`
   width: 100%;
-  height: 56px;
+  height: 72px;
   position: fixed;
   top: 0;
   background-color: #667484;
   z-index: 3;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 `;
 
 const HomeLink = styled(NavLink)`
-  font-size: 30px;
-  margin-left: auto;
+  font-size: 40px;
+  margin-left: 20px;
   margin-right: 20px;
   color: white;
-  :hover{
-    color: #3A4A58;
+  :hover {
+    color: #b8c3d0;
   }
 `;
 
@@ -64,7 +67,7 @@ const ToolBarDiv = styled.div`
   height: 100%;
   background-color: black;
   position: fixed;
-  top: 56px;
+  top: 72;
   left: 0;
   display: flex;
   flex-direction: column;
@@ -106,7 +109,7 @@ const ContainerDiv = styled.div`
   display: flex;
   /* padding: 56px 0 0 72px; */
   position: absolute;
-  top: 56px;
+  top: 72px;
   left: 72px;
   background-color: #b8c3d0;
 `;
@@ -128,7 +131,7 @@ const TitleBarDiv = styled.div`
   height: 38px;
   background-color: white;
   position: fixed;
-  top: 56px;
+  top: 72px;
   left: 72px;
   z-index: 3;
   display: flex;
@@ -241,6 +244,14 @@ function EditSpace() {
   return (
     <div>
       <NavBarNav>
+        <ToMyPage
+          style={{
+            width: "50px",
+            height: "50px",
+            position: "static",
+            borderRadius: "15px",
+          }}
+        />
         <HomeLink to="home">
           <i className="fas fa-home"></i>
         </HomeLink>

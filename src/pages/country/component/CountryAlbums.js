@@ -8,6 +8,9 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { styled as styledMui } from "@mui/styles";
 import { autocompleteClasses } from "@material-ui/core";
 
+import { db_userInfo } from "../../../util/firebase";
+import Album from "./CountryAlbum_album";
+
 const theme = createTheme({
   status: {
     danger: "#e53e3e",
@@ -52,30 +55,9 @@ const AlbumHere = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
 `;
 
-const AlbumPosition = styled.div`
-  margin-left: 5px;
-  font-weight: bold;
-  font-size: 30px;
-  line-height: 40px;
-`;
-const AlbumDate = styled.div`
-  margin-left: 5px;
-  font-size: 20px;
-  line-height: 30px;
-`;
-const AlbumPhoto = styled.div`
-  width: 500px;
-  height: 65%;
-  cursor: pointer;
-  margin-top: 10px;
-`;
-const AlbumPraise = styled.div`
-  margin: 10px 5px 0 auto;
-  font-size: 20px;
-  line-height: 30px;
-`;
 const AlbumAdd = styled.div`
   width: 500px;
   height: 65%;
@@ -84,7 +66,7 @@ const AlbumAdd = styled.div`
   display: flex;
 `;
 
-export default function GalleryInCountry({ galleryQuestionRef }) {
+export default function CountryAlbums({ galleryQuestionRef }) {
   const targetCountry = useSelector((state) => state.targetCountry);
   const [album, setAlbum] = useState([]);
 
@@ -101,9 +83,9 @@ export default function GalleryInCountry({ galleryQuestionRef }) {
         .then((querySnapshot) => {
           let albums = [];
           querySnapshot.forEach((album) => albums.push(album.data()));
-          console.log(albums);
+          // console.log(albums);
           setAlbum(albums);
-          console.log(albums);
+          // console.log(albums);
         });
     }
   }, [targetCountry]);
@@ -112,32 +94,17 @@ export default function GalleryInCountry({ galleryQuestionRef }) {
     <GalleryBackgroundDiv>
       {album.length ? (
         <AlbumDiv>
-          {album.map((album) => (
-            <AlbumHere key={album.id}>
-              <AlbumPosition>
-                <i className="fas fa-map-pin" />
-                &ensp;{album.position}
-              </AlbumPosition>
-              <AlbumDate>
-                <i className="far fa-calendar-alt" />
-                &ensp;{new Date(album.timestamp.seconds * 1000).toDateString()}
-              </AlbumDate>
-              <AlbumPhoto
-                style={{
-                  backgroundImage: `url(${album.cover_photo})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-                // to-do
-                // onClick={() => {
-                //   history.push({ pathname: "user", search: `?id=${friend.id}` });
-                // }}
+          {album.map((album) => {
+            //getOwnerPhoto(album.user_id);
+            return (
+              <Album
+                key={album.id}
+                album={album}
+                handleGalleryQuestion={handleGalleryQuestion}
+                targetCountry={targetCountry}
               />
-              <AlbumPraise>
-                <i className="fas fa-heart"></i> {album.praise.length}
-              </AlbumPraise>
-            </AlbumHere>
-          ))}
+            );
+          })}
           <AlbumHere>
             <AlbumAdd>
               <ThemeProvider theme={theme}>

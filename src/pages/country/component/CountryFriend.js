@@ -7,7 +7,7 @@ import { db_userInfo } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
 
 const FriendsContainerDiv = styled.div`
-  width: calc(100% - 610px);
+  width: calc(100% - 650px);
   height: calc(43% - 80px);
   margin: 20px 0 0 70px;
   color: white;
@@ -29,7 +29,7 @@ const CaptainTitleDiv = styled.div`
   text-align: center;
 `;
 
-const MyFriends = styled.div`
+const MyFriendsContainer = styled.div`
   width: 100%;
   height: calc(100% - 80px);
   margin: 30px 0 0 20px;
@@ -139,7 +139,7 @@ export default function CountryFriend() {
         <i className="fas fa-users"></i>
         &ensp;{`Friends in ${targetCountry.name}`}
       </CaptainTitleDiv>
-      <MyFriends>
+      <MyFriendsContainer>
         {friendHere.map((friend, index) => (
           <FriendHere key={`friend-here-${index}`}>
             <FriendHerePhoto
@@ -170,7 +170,7 @@ export default function CountryFriend() {
             </FriendHereInfo>
           </FriendHere>
         ))}
-      </MyFriends>
+      </MyFriendsContainer>
     </FriendsContainerDiv>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
@@ -14,6 +15,7 @@ import countryTrans from "../../util/countryTrans";
 import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
+import SigninDiv from "../Signin/Signin";
 // import { system } from "@amcharts/amcharts4/core";
 
 const theme = createTheme({
@@ -142,15 +144,21 @@ const HomeLink = styled(NavLink)`
     color: #3a4a58;
   }
 `;
-const MyPageLink = styled(NavLink)`
-  /* color: white; */
-  margin-top: 20px;
-`;
 const MyPageIcon = styled.div`
   width: 50px;
   height: 50px;
+  margin-top: 20px;
   border-radius: 50%;
   outline: 3px white solid;
+  color: white;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  :hover {
+    background-color: #667484;
+  }
 `;
 const MyPageIconMask = styled.div`
   width: 100%;
@@ -169,10 +177,12 @@ export default function UserPage() {
 
   // const moreAboutMeBtnRef = useRef();
   const moreInfoRef = useRef();
+  const signinRef = useRef();
   const [userInfo, setUserInfo] = useState({});
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [activeButton, setActiveButton] = useState("Albums");
   const myInfo = useSelector((state) => state.userInfo);
+  const history = useHistory();
 
   useEffect(() => {
     db_userInfo
@@ -205,6 +215,16 @@ export default function UserPage() {
       handleShow(moreInfoRef);
     } else {
       handleDisappear(moreInfoRef);
+    }
+  }
+
+  function handleToMyPage() {
+    console.log(myInfo);
+    if (Object.keys(myInfo).length) {
+      history.push({ pathname: "mypage" });
+    } else {
+      signinRef.current.style.display = "flex";
+      console.log("sign in");
     }
   }
 
@@ -261,7 +281,11 @@ export default function UserPage() {
                 More about Me
               </Button>
             </ThemeProvider>
-            <FriendState userInfo={userInfo} />
+            {Object.keys(myInfo).length ? (
+              <FriendState userInfo={userInfo} />
+            ) : (
+              <></>
+            )}
           </UserInfoDiv>
           <MoreInfo
             innerRef={moreInfoRef}
@@ -288,19 +312,24 @@ export default function UserPage() {
           <HomeLink to="home">
             <i className="fas fa-home"></i>
           </HomeLink>
-          <MyPageLink to="myPage">
-            <MyPageIcon
-              style={{
-                backgroundImage: `url(${myInfo.photo})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
+
+          <MyPageIcon
+            onClick={handleToMyPage}
+            style={{
+              backgroundImage: `url(${myInfo.photo})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            {myInfo.photo ? (
               <MyPageIconMask />
-            </MyPageIcon>
-          </MyPageLink>
+            ) : (
+              <i className="fas fa-user-alt"></i>
+            )}
+          </MyPageIcon>
         </ButtonsDiv>
       </MyPageDiv>
+      <SigninDiv innerRef={signinRef} />
     </>
   );
 }

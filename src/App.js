@@ -12,6 +12,7 @@ import World from "./pages/world/World";
 import EditSpace from "./pages/edit/EditSpace";
 import MyPage from "./pages/myPage/MyPage";
 import UserPage from "./pages/userPage/UserPage";
+import LeafletMap from "./pages/country/component/LeafletMap";
 
 // const myUserId = "yXtnB3CD0XAJDQ0Le51J";
 
@@ -73,6 +74,9 @@ function App() {
           </Route>
           <Route path="/edit">
             <EditSpace />
+          </Route>
+          <Route path="/leaflet">
+            <LeafletMap />
           </Route>
         </Switch>
       </BrowserRouter>

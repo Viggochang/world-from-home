@@ -156,6 +156,7 @@ export default function GalleryQuestion({ innerRef }) {
                   borderRadius: "40px",
                   lineHeight: 1.5,
                   fontSize: "24px",
+                  fontWeight: "bold",
                   // marginLeft: "250px",
                 }}
                 onClick={handleBack}
@@ -170,10 +171,11 @@ export default function GalleryQuestion({ innerRef }) {
                   borderRadius: "40px",
                   lineHeight: 1.5,
                   fontSize: "24px",
+                  fontWeight: "bold",
                 }}
                 onClick={handleEdit}
               >
-                Start！
+                Start&ensp;<i className="fas fa-arrow-right"></i>
               </Button>
             </ThemeProvider>
           </ButtonsDiv>

@@ -15,7 +15,7 @@ const CountryInfoDiv = styled.div`
 `;
 
 const LeftDiv = styled.div`
-  max-width: 320px;
+  /* max-width: 320px; */
   display: flex;
   flex-direction: column;
 `;
