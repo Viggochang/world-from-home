@@ -149,6 +149,7 @@ function WorkingSpace({ preview }) {
     };
   }, [canvas, editUndo, canvasState]);
 
+  // canvas有變動時執行
   function handleCanvasOn(canvas) {
     const record = {};
     record[canvas.lowerCanvasEl.id] = canvasState[canvas.lowerCanvasEl.id];
@@ -227,6 +228,7 @@ function WorkingSpace({ preview }) {
       } else {
         const latestState = editUndo[Object.keys(editUndo).length - 1];
         let redoRecord = {};
+        // 如果是刪除page，會存入pageId
         if (typeof latestState === "string") {
           console.log(latestState);
           const pageInfoObj = {};
@@ -358,7 +360,7 @@ function WorkingSpace({ preview }) {
                       key={`page${page}-canvas${id}`}
                       tabIndex="0"
                       onClick={(e) => {
-                        console.log(e.target.parentNode);
+                        console.log(e.target.parentNode.children[1]);
                       }}
                     >
                       <AddText page={page} id={id} />

@@ -103,9 +103,9 @@ export default function TextEditor({ innerRef, handleCanvasOn }) {
       <TextAlignDiv>
         <IconDiv
           onClick={() => handleFontStyleChange("left", "textAlign")}
-          // style={{
-          //   outline: style.textAlign === "left" ? "1px black solid" : "none",
-          // }}
+          style={{
+            outline: style.textAlign === "left" ? "1px black solid" : "none",
+          }}
         >
           <i className="fas fa-align-left" />
         </IconDiv>

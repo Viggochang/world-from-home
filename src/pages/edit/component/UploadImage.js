@@ -26,6 +26,7 @@ const ImgInputLabel = styled.label`
 `;
 
 export default function UploadImage({ page, id }) {
+  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
   const canvasState = useSelector((state) => state.canvasState);
   const editUndo = useSelector((state) => state.editUndo);
@@ -64,7 +65,7 @@ export default function UploadImage({ page, id }) {
     };
   };
 
-  function handleUploadImg(event, id) {
+  function handleUploadImg(event, canvasId) {
     const img = event.target.files[0];
 
     new Compressor(img, {
@@ -72,11 +73,14 @@ export default function UploadImage({ page, id }) {
       success(result) {
         // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };
-        const storageRef = storage.ref(`userId/${id}`);
+        const storageRef = storage.ref(
+          `userId/albums/${albumIdEditing}/${canvasId}`
+        );
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
             console.log(imageUrl);
-            addImg(event, imageUrl, canvas[id]);
+
+            addImg(event, imageUrl, canvas[canvasId]);
           });
         });
       },

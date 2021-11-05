@@ -1,8 +1,8 @@
 // 旅遊手記layout
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
@@ -178,39 +178,52 @@ let templateActive = allTemplate["full"].template;
 
 function EditSpace() {
   const [toolActive, setToolActive] = useState("full");
+
   const [preview, setPreview] = useState(false);
   const editUndo = useSelector((state) => state.editUndo);
 
   const dispatch = useDispatch();
+  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
 
   const previewBtnRef = useRef();
+  const history = useHistory();
 
+  useEffect(() => {
+    dispatch({
+      type: "SET_ALBUM_ID_EDITING",
+      payload: db_gallery.doc().id,
+    });
+  }, []);
   // const workingSpaceRef = useRef();
 
   function handleMoreWindow(canvasCount, templateId) {
-    let page = Object.keys(pageInfo).length ? Object.keys(pageInfo).length : 0;
+    if (preview === false) {
+      let page = Object.keys(pageInfo).length
+        ? Object.keys(pageInfo).length
+        : 0;
 
-    const pageInfoObj = {};
-    pageInfoObj[`page${page}`] = {
-      page,
-      canvasCount,
-      templateId,
-      display: true,
-    };
-    dispatch({
-      type: "SET_PAGE_INFO",
-      payload: pageInfoObj,
-    });
-    dispatch({
-      type: "UNDO",
-      payload: [...editUndo, `page${page}`],
-    });
-    dispatch({
-      type: "REDO",
-      payload: [],
-    });
+      const pageInfoObj = {};
+      pageInfoObj[`page${page}`] = {
+        page,
+        canvasCount,
+        templateId,
+        display: true,
+      };
+      dispatch({
+        type: "SET_PAGE_INFO",
+        payload: pageInfoObj,
+      });
+      dispatch({
+        type: "UNDO",
+        payload: [...editUndo, `page${page}`],
+      });
+      dispatch({
+        type: "REDO",
+        payload: [],
+      });
+    }
 
     // console.log(workingSpaceRef.current.offsetHeight);
     // window.scrollTo(0, workingSpaceRef.current.offsetHeight);
@@ -229,17 +242,23 @@ function EditSpace() {
     setPreview(preview ? false : true);
   }
 
-  function handleSave() {
-    const id = db_gallery.doc().id;
+  function handleSave(e, albumId) {
     const body = {
-      id,
-      timestamp: new Date(),
       content: {
         pageInfo: JSON.stringify(pageInfo),
         canvasState: JSON.stringify(canvasState),
       },
     };
-    db_gallery.doc(id).set(body);
+    db_gallery
+      .doc(albumId)
+      .update(body)
+      .then(() => {
+        dispatch({
+          type: "DISCARD_CANVAS_EDIT",
+          payload: "",
+        });
+        history.push({ pathname: "home" });
+      });
   }
 
   function handleDiscard() {
@@ -247,6 +266,7 @@ function EditSpace() {
       type: "DISCARD_CANVAS_EDIT",
       payload: "",
     });
+    history.push({ pathname: "home" });
   }
 
   return (
@@ -288,7 +308,7 @@ function EditSpace() {
             variant="contained"
             color="primary"
             style={{ marginRight: "10px" }}
-            onClick={handleSave}
+            onClick={(e) => handleSave(e, albumIdEditing)}
           >
             SAVE
           </Button>

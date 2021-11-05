@@ -27,11 +27,12 @@ function App() {
 
   useEffect(() => {
     dispatch({
-      type: "SER_ALBUM_ID_SHOW",
+      type: "SET_ALBUM_ID_SHOW",
       payload: new URL(window.location).searchParams.get("album_id_show"),
     });
   }, []);
 
+  //onAuthStateChanged
   useEffect(() => {
     console.log(firebase.auth().currentUser);
     if (firebase.auth().currentUser) {
@@ -49,7 +50,7 @@ function App() {
           });
         });
     }
-  }, []);
+  }, [firebase.auth().currentUser]);
 
   useEffect(() => {
     if (myUserId) {

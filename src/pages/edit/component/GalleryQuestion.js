@@ -1,16 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 
+import { db_gallery } from "../../../util/firebase";
 import "./AlbumQuestion.css";
 
 import countryTrans from "../../../util/countryTrans";
@@ -167,20 +167,13 @@ export default function GalleryQuestion() {
   const history = useHistory();
   const QuestionRef = useRef();
   const targetCountry = useSelector((state) => state.targetCountry);
+  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [cityInCountry, setCityInCountry] = useState([]);
   const [tripDate, setTripDate] = useState(new Date());
   const [tripMainCity, setTripMainCity] = useState("");
   const [tripIntroduction, setTripIntroduction] = useState("");
-
-  function handleBack() {
-    history.push({ pathname: "home" });
-    // innerRef.current.style.display = "none";
-  }
-
-  function handleStartEdit() {
-    QuestionRef.current.style.display = "none";
-    // history.push({ pathname: "edit" });
-  }
+  const myInfo = useSelector((state) => state.userInfo);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetch("https://countriesnow.space/api/v0.1/countries/states", {
@@ -193,6 +186,20 @@ export default function GalleryQuestion() {
         setCityInCountry(res.data ? res.data.states : []);
       });
   }, []);
+
+  function handleBack() {
+    dispatch({
+      type: "SET_ALBUM_ID_EDITING",
+      payload: "",
+    });
+    history.push({ pathname: "home" });
+    // innerRef.current.style.display = "none";
+  }
+
+  function handleStartEdit() {
+    QuestionRef.current.style.display = "none";
+    // history.push({ pathname: "edit" });
+  }
 
   return (
     <GalleryQuestionDiv ref={QuestionRef}>
@@ -243,7 +250,7 @@ export default function GalleryQuestion() {
                 list="country-choice"
                 id="search-country"
                 name="search-country"
-                placeholder="Choose your country"
+                placeholder="Main City"
                 style={{
                   border: "none",
                   background: "none",
@@ -263,7 +270,7 @@ export default function GalleryQuestion() {
               </datalist>
             </TextFieldDiv>
           </SearchDiv>
-          <QuestionTitle>Say something about your trip !</QuestionTitle>
+          <QuestionTitle>Introduction</QuestionTitle>
           <TextAreaDiv>
             <TextareaAutosize
               aria-label="empty textarea"
@@ -275,6 +282,7 @@ export default function GalleryQuestion() {
                 padding: "15px",
                 resize: "none",
                 backgroundColor: "rgb(255, 255, 255, 0.3)",
+                color: "white",
               }}
               onChange={(e) => {
                 setTripIntroduction(e.target.value);
@@ -313,10 +321,15 @@ export default function GalleryQuestion() {
               onClick={() => {
                 QuestionRef.current.style.display = "none";
                 let body = {
+                  id: albumIdEditing,
                   introduction: tripIntroduction,
                   timestamp: tripDate,
                   position: tripMainCity,
+                  user_id: myInfo.id,
+                  country: targetCountry.id,
+                  praise: [],
                 };
+                db_gallery.doc(albumIdEditing).set(body);
                 console.log(body);
                 // to-do
               }}

@@ -77,6 +77,7 @@ export default function Album({ album }) {
     let params = new URL(window.location).searchParams;
     params.append(key, value);
     history.push({ search: params.toString() });
+
     dispatch({
       type: "SET_ALBUM_ID_SHOW",
       payload: value,

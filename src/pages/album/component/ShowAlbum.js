@@ -1,14 +1,19 @@
+// 類似 Preview.js
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { templateStyle, allTemplateParams } from "./MyTemplate";
+import {
+  templateStyle,
+  allTemplateParams,
+} from "../../edit/component/MyTemplate";
 
-import firebase from "../../../util/firebase";
+// import { db_gallery } from "../../../util/firebase";
 
-const PreviewDiv = styled.div`
-  padding: 96px 0 100px 280px;
-  background-color: #b8c3d0;
+const ShowDiv = styled.div`
+  /* padding: 96px 0 100px 280px; */
+  margin-top: 30px;
+  /* background-color: #b8c3d0; */
   flex-grow: 1;
   display: none;
   flex-direction: column;
@@ -22,39 +27,53 @@ const PageContainer = styled.div`
 
 const PageCanvasContainer = styled.div``;
 
-const CanvasContainer = styled.div`
-  :focus {
-    outline: 1px #667484 solid;
-  }
-`;
+const CanvasContainer = styled.div``;
 
 const MyCanvas = styled.canvas``;
 
-export default function Preview({ preview }) {
+export default function ShowAlbum({ show, albumContent }) {
   const pageCanvasContainerRef = useRef();
-  const pageInfo = useSelector((state) => state.pageInfo);
-  const canvasState = useSelector((state) => state.canvasState);
+  // const pageInfo = useSelector((state) => state.pageInfo);
+  // const canvasState = useSelector((state) => state.canvasState);
+  const albumIdShow = useSelector((state) => state.albumIdShow);
+  const [pageInfo, setPageInfo] = useState({});
+  const [canvasState, setCanvasState] = useState({});
 
   useEffect(() => {
-    if (preview) {
-      const pageLength = Object.keys(pageInfo).length;
-      if (pageLength) {
+    setPageInfo(albumContent ? JSON.parse(albumContent.pageInfo) : {});
+    setCanvasState(albumContent ? JSON.parse(albumContent.canvasState) : {});
+    console.log(
+      albumContent
+        ? JSON.parse(JSON.parse(albumContent.canvasState)["page1-canvas0"])
+        : {}
+    );
+
+    // if (albumIdShow) {
+    //   db_gallery
+    //     .doc(albumIdShow)
+    //     .get()
+    //     .then((doc) => {
+    //       console.log(doc.data().content);
+    //       const albumContent = doc.data().content;
+    //       setPageInfo(
+    //         albumContent.pageInfo ? JSON.parse(albumContent.pageInfo) : {}
+    //       );
+    //       setCanvasState(
+    //         albumContent.canvasState ? JSON.parse(albumContent.canvasState) : {}
+    //       );
+    //     });
+    // }
+  }, [albumContent]);
+
+  useEffect(() => {
+    if (show) {
+      if (Object.keys(pageInfo).length) {
         Object.values(pageInfo).forEach((pageInfo) => {
           const { page, templateId } = pageInfo;
-          const CanvasInPage = allTemplateParams("preview")[templateId](page);
+          // console.log(pageInfo);
+          // console.log(page, templateId);
+          const CanvasInPage = allTemplateParams("show")[templateId](page);
           CanvasInPage.forEach((canvas) => {
-            let canvasId = canvas.lowerCanvasEl.id.split("preview-")[1];
-            const [canvasWeight, canvasHeight] = [
-              canvas.getWidth(),
-              canvas.getHeight(),
-            ];
-
-            let canvasObj = JSON.parse(canvasState[canvasId]);
-            canvasObj["objects"] = canvasObj["objects"].map((object) => {
-              if (object.type === "image") {
-                // object.scaleX=
-              }
-            });
             canvas.loadFromJSON(
               canvasState[canvas.lowerCanvasEl.id.split("preview-")[1]],
               () => {
@@ -65,24 +84,14 @@ export default function Preview({ preview }) {
                 canvas.renderAll();
               }
             ); //重新renader出畫布上的物件
-
-            // setTimeout(() => {
-            //   console.log(canvas.getObjects());
-            //   if (canvas.getObjects().length) {
-            //     canvas.getObjects().forEach((obj) => {
-            //       obj.selectable = false;
-            //     });
-            //   }
-            //   canvas.renderAll();
-            // }, 2000);
           });
         });
       }
     }
-  }, [preview]);
+  }, [show, pageInfo, canvasState]);
 
   return (
-    <PreviewDiv style={{ display: preview ? "flex" : "none" }}>
+    <ShowDiv style={{ display: show ? "flex" : "none" }}>
       {Object.values(pageInfo)
         .sort((a, b) => a.page - b.page)
         .map((pageInfo) => {
@@ -111,6 +120,6 @@ export default function Preview({ preview }) {
             </PageContainer>
           );
         })}
-    </PreviewDiv>
+    </ShowDiv>
   );
 }

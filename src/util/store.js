@@ -4,6 +4,7 @@ const data = {
   polygonSeries: {},
   myUserId: "",
   targetCountry: {},
+  albumIdEditing: "",
   canvas: {},
   pageInfo: {},
   canvasState: {},
@@ -24,6 +25,8 @@ const rootReducer = (state = data, action) => {
       return { ...state, myUserId: action.payload };
     case "SET_TARGET_COUNTRY":
       return { ...state, targetCountry: action.payload };
+    case "SET_ALBUM_ID_EDITING":
+      return { ...state, albumIdEditing: action.payload };
     case "SET_CANVAS":
       return { ...state, canvas: { ...state.canvas, ...action.payload } };
     case "SET_PAGE_INFO":
@@ -50,6 +53,7 @@ const rootReducer = (state = data, action) => {
     case "DISCARD_CANVAS_EDIT":
       return {
         ...state,
+        albumIdEditing: "",
         canvas: {},
         pageInfo: {},
         canvasState: {},
