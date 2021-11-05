@@ -7,8 +7,9 @@ import World from "../world/World";
 import ToMyPage from "../world/component/ToMyPage";
 import Search from "../world/component/Search";
 import Country from "../country/Country";
-import GalleryQuestion from "../country/component/GalleryQuestion";
+// import GalleryQuestion from "../country/component/GalleryQuestion";
 import SigninDiv from "../Signin/Signin";
+import Album from "../album/Album";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -101,10 +102,10 @@ export default function HomePage() {
           opacity: maskOpacity + 0.2,
         }}
         handleClickBack={handleClickBack}
-        galleryQuestionRef={galleryQuestionRef}
       />
-      <GalleryQuestion innerRef={galleryQuestionRef} />
+      {/* <GalleryQuestion innerRef={galleryQuestionRef} /> */}
       <SigninDiv innerRef={signinRef} />
+      <Album />
     </HomePageDiv>
   );
 }

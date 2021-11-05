@@ -34,7 +34,7 @@ const GuestIcon = styled.div`
   font-size: 40px;
 `;
 
-export default function ToMyPage({ handleSignIn, style }) {
+export default function ToMyPage({ handleSignIn, style, styleGuest }) {
   const userInfo = useSelector((state) => state.userInfo);
   // console.log(userInfo);
   if (userInfo.photo) {
@@ -51,7 +51,7 @@ export default function ToMyPage({ handleSignIn, style }) {
     );
   } else {
     return (
-      <GuestIcon onClick={handleSignIn}>
+      <GuestIcon style={style} onClick={handleSignIn}>
         <i className="fas fa-user-alt"></i>
       </GuestIcon>
     );

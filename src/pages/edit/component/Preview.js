@@ -4,8 +4,7 @@ import styled from "styled-components";
 
 import { templateStyle, allTemplateParams } from "./MyTemplate";
 
-import firebase from '../../../util/firebase';
-
+import firebase from "../../../util/firebase";
 
 const PreviewDiv = styled.div`
   padding: 96px 0 100px 280px;
@@ -15,7 +14,7 @@ const PreviewDiv = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  `;
+`;
 
 const PageContainer = styled.div`
   position: relative;
@@ -31,29 +30,30 @@ const CanvasContainer = styled.div`
 
 const MyCanvas = styled.canvas``;
 
-export default function Preview({preview}) {
+export default function Preview({ preview }) {
   const pageCanvasContainerRef = useRef();
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
 
   useEffect(() => {
-    if (preview){
+    if (preview) {
       const pageLength = Object.keys(pageInfo).length;
       if (pageLength) {
-        Object.values(pageInfo).forEach(pageInfo => {
-          const {page, templateId} = pageInfo;
-          const CanvasInPage = allTemplateParams('preview')[templateId](page);
-          CanvasInPage.forEach(canvas => {
-            canvas.loadFromJSON(canvasState[canvas.lowerCanvasEl.id.split('preview-')[1]])
-          })
-        })
+        Object.values(pageInfo).forEach((pageInfo) => {
+          const { page, templateId } = pageInfo;
+          const CanvasInPage = allTemplateParams("preview")[templateId](page);
+          CanvasInPage.forEach((canvas) => {
+            canvas.loadFromJSON(
+              canvasState[canvas.lowerCanvasEl.id.split("preview-")[1]]
+            ); //重新renader出畫布上的物件
+          });
+        });
       }
     }
-  }, [preview])
-
+  }, [preview]);
 
   return (
-    <PreviewDiv style={{display: preview ? 'flex' : 'none'}}> 
+    <PreviewDiv style={{ display: preview ? "flex" : "none" }}>
       {Object.values(pageInfo)
         .sort((a, b) => a.page - b.page)
         .map((pageInfo) => {
@@ -83,5 +83,5 @@ export default function Preview({preview}) {
           );
         })}
     </PreviewDiv>
-  )
+  );
 }

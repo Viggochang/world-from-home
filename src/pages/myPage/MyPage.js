@@ -18,6 +18,7 @@ import MyFriends from "./component/MyFriends";
 import MoreInfo from "./component/MoreInfo";
 import AlbumFriendBtns from "./component/AlbumFriendBtns";
 import countryTrans from "../../util/countryTrans";
+import Album from "../album/Album";
 
 // const myUerId = "yXtnB3CD0XAJDQ0Le51J";
 
@@ -510,6 +511,7 @@ export default function MyPage() {
           )}
         </LowerDiv>
       </MyPageDiv>
+      <Album />
     </>
   );
 }

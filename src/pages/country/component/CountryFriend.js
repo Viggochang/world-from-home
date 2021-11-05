@@ -16,7 +16,7 @@ const FriendsContainerDiv = styled.div`
   align-items: flex-start;
   /* justify-content: space-between; */
   @media (min-height: 1080px) {
-    width: calc(100% - 720px);
+    width: calc(100% - 790px);
   }
 `;
 
@@ -33,6 +33,7 @@ const MyFriendsContainer = styled.div`
   width: 100%;
   height: calc(100% - 80px);
   margin: 30px 0 0 20px;
+  padding: 5px 0 0 10px;
   /* background-color: #e0e0e0; */
   display: flex;
   align-items: center;
@@ -46,10 +47,11 @@ const FriendHere = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  @media (min-height: 1200px) {
+  align-items: flex-start;
+  /* align-items: center; */
+  /* @media (min-height: 1200px) {
     align-items: flex-start;
-  }
+  } */
 `;
 
 const FriendHerePhoto = styled.div`
@@ -58,18 +60,20 @@ const FriendHerePhoto = styled.div`
   aspect-ratio: 1;
   border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0px 0px 10px #bebebe;
   @media (min-height: 1080px) {
     height: calc(100% - 55px);
   }
   @media (min-height: 1200px) {
-    height: calc(100% - 80px);
+    height: calc(100% - 100px);
   }
 `;
 
 const FriendHereInfo = styled.div`
   /* text-align: start; */
-  position: absolute;
-  bottom: 0;
+  /* position: absolute;
+  bottom: 0; */
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

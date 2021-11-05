@@ -12,10 +12,11 @@ const data = {
   editUndo: [],
   editRedo: [],
   userInfo: {},
+  albumIdShow: "",
 };
 
 const rootReducer = (state = data, action) => {
-  console.log(state);
+  // console.log(state);
   switch (action.type) {
     case "SET_POLYGONSERIES":
       return { ...state, polygonSeries: action.payload };
@@ -45,10 +46,27 @@ const rootReducer = (state = data, action) => {
         ...state,
         canvasId: { ...state.canvasId, ...action.payload },
       };
+    // discard album編輯
+    case "DISCARD_CANVAS_EDIT":
+      return {
+        ...state,
+        canvas: {},
+        pageInfo: {},
+        canvasState: {},
+        activeCanvas: {},
+        activeObj: {},
+        editUndo: [],
+        editRedo: [],
+      };
     case "SET_USER_INFO":
       return {
         ...state,
         userInfo: action.payload,
+      };
+    case "SET_ALBUM_ID_SHOW":
+      return {
+        ...state,
+        albumIdShow: action.payload,
       };
     default:
       return state;

@@ -61,14 +61,14 @@ const PageCanvasContainer = styled.div`
 const CanvasContainer = styled.div`
   :focus {
     /* outline: 1px #667484 solid; */
-    box-shadow: 0px 0px 5px #6C6C6C;
+    box-shadow: 0px 0px 5px #6c6c6c;
     z-index: 2;
   }
 `;
 
 const MyCanvas = styled.canvas``;
 
-function WorkingSpace({preview}) {
+function WorkingSpace({ preview }) {
   const dispatch = useDispatch();
   const canvas = useSelector((state) => state.canvas);
   const pageInfo = useSelector((state) => state.pageInfo);
@@ -76,26 +76,32 @@ function WorkingSpace({preview}) {
   const activeCanvas = useSelector((state) => state.activeCanvas);
   const editUndo = useSelector((state) => state.editUndo);
   const editRedo = useSelector((state) => state.editRedo);
-  
+
   const workingSpaceRef = useRef();
   const pageCanvasContainerRef = useRef();
   const textEditorRef = useRef();
 
-  // // 畫布縮放功能在這
+  // 畫布縮放功能在這
   // useEffect(() => {
   //   window.onresize = () => {
-  //     Object.values(canvas).forEach(canvas => {
-  //       console.log(canvas.width, pageCanvasContainerRef.current.clientWidth, 800);
-  //       const newWidth = 800 * pageCanvasContainerRef.current.clientWidth / 820;
-  //       const newHeight = 600 * pageCanvasContainerRef.current.clientWidth / 820;
+  //     Object.values(canvas).forEach((canvas) => {
+  //       console.log(
+  //         canvas.width,
+  //         pageCanvasContainerRef.current.clientWidth,
+  //         800
+  //       );
+  //       const newWidth =
+  //         (800 * pageCanvasContainerRef.current.clientWidth) / 820;
+  //       const newHeight =
+  //         (600 * pageCanvasContainerRef.current.clientWidth) / 820;
   //       canvas.setWidth(newWidth).setHeight(newHeight);
-  //     })
+  //     });
   //   };
 
   //   return () => {
   //     window.onresize = null;
-  //   }
-  // }, [canvas])
+  //   };
+  // }, [canvas]);
 
   useEffect(() => {
     // const allCanvas = initCanvas();
@@ -324,7 +330,7 @@ function WorkingSpace({preview}) {
       onKeyDown={(e) => handleUndo(e)}
       onClick={(e) => getActiveCanvas(e)}
       tabIndex="0"
-      style={{display: preview ? 'none' : 'flex'}}
+      style={{ display: preview ? "none" : "flex" }}
       ref={workingSpaceRef}
     >
       <TextEditor innerRef={textEditorRef} handleCanvasOn={handleCanvasOn} />
@@ -351,6 +357,9 @@ function WorkingSpace({preview}) {
                       style={{ position: "relative" }}
                       key={`page${page}-canvas${id}`}
                       tabIndex="0"
+                      onClick={(e) => {
+                        console.log(e.target.parentNode);
+                      }}
                     >
                       <AddText page={page} id={id} />
                       <UploadImage page={page} id={id} />

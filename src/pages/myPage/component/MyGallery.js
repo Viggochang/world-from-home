@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 
 import styled from "styled-components";
 import InputLabel from "@mui/material/InputLabel";
@@ -47,7 +48,7 @@ const ContentDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: rgb(255,255,255, 0.5);
+  background-color: rgb(255, 255, 255, 0.5);
   overflow: scroll;
 `;
 
@@ -58,7 +59,7 @@ const AlbumDiv = styled.div`
 const AlbumCoverDiv = styled.div`
   width: 280px;
   height: 210px;
-  box-shadow: 0px 0px 20px #4F4F4F;
+  box-shadow: 0px 0px 20px #4f4f4f;
   cursor: pointer;
 `;
 
@@ -66,7 +67,7 @@ const AlbumInfo = styled.div`
   margin-left: 30px;
   display: flex;
   flex-direction: column;
-  color: #3A4A58;
+  color: #3a4a58;
   width: calc(100% - 310px);
   height: 210px;
   position: relative;
@@ -100,25 +101,27 @@ const NoAlbumsDiv = styled.div`
   font-weight: bold;
   margin: auto;
   padding-bottom: 30px;
-  color: #3A4A58;
+  color: #3a4a58;
 `;
 
-export default function MyGallery({title, id}) {
+export default function MyGallery({ title, id }) {
   // const userInfo = useSelector((state) => state.userInfo);
   const [albumData, setAlbumData] = useState([]);
   const [albumDataFilter, setAlbumDataFilter] = useState([]);
   const [albumCountry, setAlbumCountry] = useState("All");
   const [albumOrder, setAlbumOrder] = useState("New");
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const order = {
     New: (a, b) => b.timestamp.seconds - a.timestamp.seconds,
     Old: (a, b) => a.timestamp.seconds - b.timestamp.seconds,
     Popular: (a, b) => b.praise.length - a.praise.length,
     Unpopular: (a, b) => a.praise.length - b.praise.length,
-  }
+  };
 
   useEffect(() => {
-    if (id){
+    if (id) {
       db_gallery
         .where("user_id", "==", id)
         .get()
@@ -131,10 +134,12 @@ export default function MyGallery({title, id}) {
   useEffect(() => {
     setAlbumDataFilter(
       albumData
-      .filter(({country}) => albumCountry==='All' || country===albumCountry)
-      .sort(order[albumOrder])
-    )
-  }, [albumData, albumCountry, albumOrder])
+        .filter(
+          ({ country }) => albumCountry === "All" || country === albumCountry
+        )
+        .sort(order[albumOrder])
+    );
+  }, [albumData, albumCountry, albumOrder]);
 
   const handleAlbumCountry = (event) => {
     setAlbumCountry(event.target.value);
@@ -145,6 +150,15 @@ export default function MyGallery({title, id}) {
   };
 
   // console.log(albumDataFilter);
+  function handleShowAlbumId(key, value) {
+    let params = new URL(window.location).searchParams;
+    params.append(key, value);
+    history.push({ search: params.toString() });
+    dispatch({
+      type: "SET_ALBUM_ID_SHOW",
+      payload: value,
+    });
+  }
 
   return (
     <MyGalleryContentDiv>
@@ -160,12 +174,15 @@ export default function MyGallery({title, id}) {
             onChange={handleAlbumCountry}
           >
             <MenuItem value={"All"}>All</MenuItem>
-            {Array.from(new Set(albumData.map(({ country }) => (
-                <MenuItem key={country} value={country}>
-                  {countryTrans[country].name_en}
-                </MenuItem>
+            {Array.from(
+              new Set(
+                albumData.map(({ country }) => (
+                  <MenuItem key={country} value={country}>
+                    {countryTrans[country].name_en}
+                  </MenuItem>
+                ))
               )
-            )))}
+            )}
           </Select>
         </FormControl>
         <FormControl fullWidth variant="filled" style={selectStyle}>
@@ -177,7 +194,7 @@ export default function MyGallery({title, id}) {
             label="Order"
             onChange={handleAlbumOrder}
           >
-            <MenuItem value={"New"}>New</MenuItem>            
+            <MenuItem value={"New"}>New</MenuItem>
             <MenuItem value={"Old"}>Old</MenuItem>
             <MenuItem value={"Popular"}>Popular</MenuItem>
             <MenuItem value={"Unpopular"}>Unpopular</MenuItem>
@@ -186,25 +203,39 @@ export default function MyGallery({title, id}) {
       </FilterDiv>
       {/* <ContentDiv style={{height:`${240*myWorldDataFilter.length-30}px`}}> */}
       <ContentDiv>
-        {albumDataFilter.length ? albumDataFilter.map((data, index) => (
-          <AlbumDiv key={index}>
-            <AlbumCoverDiv
-              key={data.id}
-              style={{
-                background: `url(${data.cover_photo})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            ></AlbumCoverDiv>
-            <AlbumInfo>
-              <AlbumCountry>{countryTrans[data.country].name_en}</AlbumCountry>
-              <AlbumPosition><i className="fas fa-map-pin"></i> {data.position}</AlbumPosition>
-              <AlbumIntroduction>{data.introduction}</AlbumIntroduction>
-              <AlbumTime><i className="far fa-calendar-alt"></i> {new Date(data.timestamp.seconds*1000).toDateString()}</AlbumTime>
-              <AlbumPraise><i className="fas fa-heart"></i> {data.praise.length}</AlbumPraise>
-            </AlbumInfo>
-          </AlbumDiv>
-        )) : <NoAlbumsDiv>No Albums！</NoAlbumsDiv>}
+        {albumDataFilter.length ? (
+          albumDataFilter.map((album, index) => (
+            <AlbumDiv key={index}>
+              <AlbumCoverDiv
+                key={album.id}
+                style={{
+                  background: `url(${album.cover_photo})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+                onClick={() => handleShowAlbumId("album_id_show", album.id)}
+              ></AlbumCoverDiv>
+              <AlbumInfo>
+                <AlbumCountry>
+                  {countryTrans[album.country].name_en}
+                </AlbumCountry>
+                <AlbumPosition>
+                  <i className="fas fa-map-pin"></i> {album.position}
+                </AlbumPosition>
+                <AlbumIntroduction>{album.introduction}</AlbumIntroduction>
+                <AlbumTime>
+                  <i className="far fa-calendar-alt"></i>{" "}
+                  {new Date(album.timestamp.seconds * 1000).toDateString()}
+                </AlbumTime>
+                <AlbumPraise>
+                  <i className="fas fa-heart"></i> {album.praise.length}
+                </AlbumPraise>
+              </AlbumInfo>
+            </AlbumDiv>
+          ))
+        ) : (
+          <NoAlbumsDiv>No Albums！</NoAlbumsDiv>
+        )}
       </ContentDiv>
     </MyGalleryContentDiv>
   );

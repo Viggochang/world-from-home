@@ -16,6 +16,7 @@ import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
 import SigninDiv from "../Signin/Signin";
+import Album from "../album/Album";
 // import { system } from "@amcharts/amcharts4/core";
 
 const theme = createTheme({
@@ -330,6 +331,7 @@ export default function UserPage() {
         </ButtonsDiv>
       </MyPageDiv>
       <SigninDiv innerRef={signinRef} />
+      <Album />
     </>
   );
 }

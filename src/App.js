@@ -26,6 +26,13 @@ function App() {
   const myUserId = useSelector((state) => state.myUserId);
 
   useEffect(() => {
+    dispatch({
+      type: "SER_ALBUM_ID_SHOW",
+      payload: new URL(window.location).searchParams.get("album_id_show"),
+    });
+  }, []);
+
+  useEffect(() => {
     console.log(firebase.auth().currentUser);
     if (firebase.auth().currentUser) {
       const { email } = firebase.auth().currentUser;
@@ -75,9 +82,9 @@ function App() {
           <Route path="/edit">
             <EditSpace />
           </Route>
-          <Route path="/leaflet">
+          {/* <Route path="/leaflet">
             <LeafletMap />
-          </Route>
+          </Route> */}
         </Switch>
       </BrowserRouter>
     </div>

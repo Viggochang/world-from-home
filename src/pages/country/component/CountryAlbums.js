@@ -69,9 +69,15 @@ const AlbumAdd = styled.div`
 export default function CountryAlbums({ galleryQuestionRef }) {
   const targetCountry = useSelector((state) => state.targetCountry);
   const [album, setAlbum] = useState([]);
+  const history = useHistory();
 
-  function handleGalleryQuestion() {
-    galleryQuestionRef.current.style.display = "flex";
+  // function handleGalleryQuestion() {
+  //   galleryQuestionRef.current.style.display = "flex";
+  // }
+
+  function handleToEdit() {
+    history.push({ pathname: "edit" });
+    // window.location = '/edit'
   }
 
   useEffect(() => {
@@ -96,14 +102,7 @@ export default function CountryAlbums({ galleryQuestionRef }) {
         <AlbumDiv>
           {album.map((album) => {
             //getOwnerPhoto(album.user_id);
-            return (
-              <Album
-                key={album.id}
-                album={album}
-                handleGalleryQuestion={handleGalleryQuestion}
-                targetCountry={targetCountry}
-              />
-            );
+            return <Album key={album.id} album={album} />;
           })}
           <AlbumHere>
             <AlbumAdd>
@@ -111,7 +110,7 @@ export default function CountryAlbums({ galleryQuestionRef }) {
                 <Button
                   variant="outlined"
                   color="primary"
-                  onClick={handleGalleryQuestion}
+                  onClick={handleToEdit}
                   style={{ margin: "auto", lineHeight: 1.5, fontSize: "28px" }}
                 >
                   +&emsp; add my&emsp; <b>{targetCountry.name}</b>
@@ -125,7 +124,7 @@ export default function CountryAlbums({ galleryQuestionRef }) {
           <Button
             variant="outlined"
             color="primary"
-            onClick={handleGalleryQuestion}
+            onClick={handleToEdit}
             style={{ margin: "auto", lineHeight: 1.5, fontSize: "36px" }}
           >
             +&emsp; add my&emsp; <b>{targetCountry.name}</b>

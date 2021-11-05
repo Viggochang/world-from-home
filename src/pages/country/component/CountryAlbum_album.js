@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
@@ -58,8 +59,9 @@ const AlbumPraise = styled.div`
   line-height: 30px;
 `;
 
-export default function Album({ album, handleGalleryQuestion, targetCountry }) {
+export default function Album({ album }) {
   const [ownerPhoto, setOwnerPhoto] = useState("");
+  const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
@@ -70,6 +72,16 @@ export default function Album({ album, handleGalleryQuestion, targetCountry }) {
         setOwnerPhoto(doc.data().photo);
       });
   }, []);
+
+  function handleShowAlbumId(key, value) {
+    let params = new URL(window.location).searchParams;
+    params.append(key, value);
+    history.push({ search: params.toString() });
+    dispatch({
+      type: "SET_ALBUM_ID_SHOW",
+      payload: value,
+    });
+  }
 
   return (
     <AlbumHere key={album.id}>
@@ -102,10 +114,7 @@ export default function Album({ album, handleGalleryQuestion, targetCountry }) {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        // to-do
-        // onClick={() => {
-        //   history.push({ pathname: "user", search: `?id=${friend.id}` });
-        // }}
+        onClick={() => handleShowAlbumId("album_id_show", album.id)}
       />
       <AlbumPraise>
         <i className="fas fa-heart"></i> {album.praise.length}

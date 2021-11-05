@@ -23,6 +23,7 @@ import photoText_5 from "../../image/template/photoText_5.jpeg";
 import text_1 from "../../image/template/text_1.jpeg";
 
 import ToMyPage from "../world/component/ToMyPage";
+import GalleryQuestion from "./component/GalleryQuestion";
 
 const theme = createTheme({
   status: {
@@ -41,7 +42,7 @@ const theme = createTheme({
 });
 
 const NavBarNav = styled.nav`
-  width: 100%;
+  width: 100vw;
   height: 72px;
   position: fixed;
   top: 0;
@@ -67,7 +68,7 @@ const ToolBarDiv = styled.div`
   height: 100%;
   background-color: black;
   position: fixed;
-  top: 72;
+  top: 72px;
   left: 0;
   display: flex;
   flex-direction: column;
@@ -241,8 +242,16 @@ function EditSpace() {
     db_gallery.doc(id).set(body);
   }
 
+  function handleDiscard() {
+    dispatch({
+      type: "DISCARD_CANVAS_EDIT",
+      payload: "",
+    });
+  }
+
   return (
     <div>
+      <GalleryQuestion />
       <NavBarNav>
         <ToMyPage
           style={{
@@ -287,6 +296,7 @@ function EditSpace() {
             variant="contained"
             color="primary"
             style={{ marginRight: "10px" }}
+            onClick={handleDiscard}
           >
             DISCARD
           </Button>

@@ -4,27 +4,39 @@ import styled from "styled-components";
 
 import { SliderPicker, CompactPicker } from "react-color";
 
+const TextEditorDiv = styled.div`
+  /* outline: 1px black solid; */
+  box-shadow: 0px 0px 10px #bbbbbb;
+  padding: 10px;
+  position: fixed;
+  margin-right: auto;
+  top: 120px;
+  left: 360px;
+  z-index: 3;
+  background-color: white;
+`;
+
+const TextAlignDiv = styled.div`
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+`;
+
+const IconDiv = styled.div`
+  margin: 0 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 20px;
+`;
+
+const TextStyleDiv = styled.div`
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+`;
+
 export default function TextEditor({ innerRef, handleCanvasOn }) {
-  const TextEditor = styled.div`
-    /* outline: 1px black solid; */
-    box-shadow: 0px 0px 10px #bbbbbb;
-    padding: 10px;
-    position: fixed;
-    margin-right: auto;
-    top: 120px;
-    left: 360px;
-    z-index: 3;
-    background-color: white;
-  `;
-
-  const TextAlignDiv = styled.div`
-    font-size: '20px';
-  `;
-
-  const TextStyleDiv = styled.div`
-    font-size: '20px';
-  `;
-
   // const dispatch = useDispatch();
   const activeObj = useSelector((state) => state.activeObj);
   const activeCanvas = useSelector((state) => state.activeCanvas);
@@ -48,8 +60,8 @@ export default function TextEditor({ innerRef, handleCanvasOn }) {
     } else if (key === "textAlign") {
       fontStyle[key] = e;
     } else if (["fontWeight", "fontStyle"].includes(key)) {
-      fontStyle[key] = fontStyle[key] !== 'normal' ? 'normal' : e;
-    } else if (key === "underline"){
+      fontStyle[key] = fontStyle[key] !== "normal" ? "normal" : e;
+    } else if (key === "underline") {
       fontStyle[key] = fontStyle[key] ? false : true;
     } else {
       fontStyle[key] = e.target.value;
@@ -82,43 +94,37 @@ export default function TextEditor({ innerRef, handleCanvasOn }) {
   }, [activeObj]);
 
   return (
-    <TextEditor ref={innerRef} style={{ display: textEditorDisplay }}>
+    <TextEditorDiv ref={innerRef} style={{ display: textEditorDisplay }}>
       <CompactPicker
         color={style.fill}
         onChange={(e) => handleFontStyleChange(e, "fill")}
-        style={{margin:'5px'}}
+        style={{ margin: "5px" }}
       />
       <TextAlignDiv>
-        <i
-          className="fas fa-align-left"
+        <IconDiv
           onClick={() => handleFontStyleChange("left", "textAlign")}
-          style={{
-            outline: style.textAlign === "left" ? "1px black solid" : "none",
-            margin: '0 5px',
-            padding: '5px',
-            cursor: 'pointer',
-          }}
-        ></i>
-        <i
-          className="fas fa-align-center"
+          // style={{
+          //   outline: style.textAlign === "left" ? "1px black solid" : "none",
+          // }}
+        >
+          <i className="fas fa-align-left" />
+        </IconDiv>
+        <IconDiv
           onClick={() => handleFontStyleChange("center", "textAlign")}
           style={{
             outline: style.textAlign === "center" ? "1px black solid" : "none",
-            margin: '0 5px',
-            padding: '5px',
-            cursor: 'pointer',
           }}
-        ></i>
-        <i
-          className="fas fa-align-right"
+        >
+          <i className="fas fa-align-center" />
+        </IconDiv>
+        <IconDiv
           onClick={() => handleFontStyleChange("right", "textAlign")}
           style={{
             outline: style.textAlign === "right" ? "1px black solid" : "none",
-            margin: '0 5px',
-            padding: '5px',
-            cursor: 'pointer',
           }}
-        ></i>
+        >
+          <i className="fas fa-align-right" />
+        </IconDiv>
       </TextAlignDiv>
       <div>
         <label>Font size:</label>
@@ -146,40 +152,30 @@ export default function TextEditor({ innerRef, handleCanvasOn }) {
         />
       </div>
       <TextStyleDiv>
-        <i
-          className="fas fa-bold"
-          onClick={() => handleFontStyleChange('bold', "fontWeight")}
+        <IconDiv
+          onClick={() => handleFontStyleChange("bold", "fontWeight")}
           style={{
-            // outline: style.fontWeight === 'bold' ? "1px black solid" : "none",
-            backgroundColor: style.fontWeight === 'bold' ? "#D0D0D0" : "white",
-            margin: '0 5px',
-            padding: '5px',
-            cursor: 'pointer',
+            backgroundColor: style.fontWeight === "bold" ? "#D0D0D0" : "white",
           }}
-        ></i>
-        <i
-          className="fas fa-italic"
-          onClick={() => handleFontStyleChange('italic', "fontStyle")}
+        >
+          <i className="fas fa-bold" />
+        </IconDiv>
+        <IconDiv
+          onClick={() => handleFontStyleChange("italic", "fontStyle")}
           style={{
-            // outline: style.fontStyle === 'italic' ? "1px black solid" : "none",
-            backgroundColor: style.fontStyle === 'italic' ? "#D0D0D0" : "white",
-            margin: '0 5px',
-            padding: '5px',
-            cursor: 'pointer',
+            backgroundColor:
+              style.fontWeight === "italic" ? "#D0D0D0" : "white",
           }}
-        ></i>
-        <i
-          className="fas fa-underline"
-          onClick={() => handleFontStyleChange('true', "underline")}
-          style={{
-            // boxShadow: style.underline ? "0px 0px 10px #bbbbbb" : "none",
-            backgroundColor: style.underline ? "#D0D0D0" : "white",
-            margin: '0 5px',
-            padding: '5px',
-            cursor: 'pointer',
-          }}
-        ></i>
+        >
+          <i className="fas fa-italic" />
+        </IconDiv>
+        <IconDiv
+          onClick={() => handleFontStyleChange("true", "underline")}
+          style={{ backgroundColor: style.underline ? "#D0D0D0" : "white" }}
+        >
+          <i className="fas fa-underline" />
+        </IconDiv>
       </TextStyleDiv>
-    </TextEditor>
+    </TextEditorDiv>
   );
 }

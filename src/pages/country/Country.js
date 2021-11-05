@@ -52,7 +52,7 @@ function Country({ style, handleClickBack, galleryQuestionRef }) {
   return (
     <CountryDiv style={style}>
       <CountryShape />
-      <CountryAlbums galleryQuestionRef={galleryQuestionRef} />
+      <CountryAlbums />
       <CountryInfo />
       <CountryFriend />
       <BackDiv onClick={handleClickBack}>
