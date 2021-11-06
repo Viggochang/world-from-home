@@ -170,11 +170,30 @@ export default function GalleryQuestion() {
   const targetCountry = useSelector((state) => state.targetCountry);
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [cityInCountry, setCityInCountry] = useState([]);
+
+  const [newAlbum, setNewAlbum] = useState(false);
   const [tripDate, setTripDate] = useState(new Date());
   const [tripMainCity, setTripMainCity] = useState("");
   const [tripIntroduction, setTripIntroduction] = useState("");
   const myInfo = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (albumIdEditing) {
+      db_gallery
+        .doc(albumIdEditing)
+        .get()
+        .then((doc) => {
+          if (!doc.data().content) {
+            setNewAlbum(true);
+          } else {
+            setTripDate(new Date(doc.data().timestamp.seconds * 1000));
+            setTripMainCity(doc.data().position);
+            setTripIntroduction(doc.data().introduction);
+          }
+        });
+    }
+  }, [albumIdEditing]);
 
   useEffect(() => {
     fetch("https://countriesnow.space/api/v0.1/countries/states", {
@@ -193,7 +212,12 @@ export default function GalleryQuestion() {
       type: "SET_ALBUM_ID_EDITING",
       payload: "",
     });
-    history.push({ pathname: "home" });
+    db_gallery
+      .doc(albumIdEditing)
+      .delete()
+      .then(() => {
+        history.push({ pathname: "home" });
+      });
     // innerRef.current.style.display = "none";
   }
 
@@ -203,7 +227,6 @@ export default function GalleryQuestion() {
       cityInCountry.map((state) => state.name).includes(tripMainCity)
     ) {
       let body = {
-        id: albumIdEditing,
         introduction: tripIntroduction,
         timestamp: tripDate,
         position: tripMainCity,
@@ -214,7 +237,7 @@ export default function GalleryQuestion() {
       };
       db_gallery
         .doc(albumIdEditing)
-        .set(body)
+        .update(body)
         .then(() => {
           QuestionRef.current.style.display = "none";
         });
@@ -281,6 +304,7 @@ export default function GalleryQuestion() {
                   color: "white",
                   fontSize: "20px",
                 }}
+                value={tripMainCity}
                 onChange={(e) => {
                   setTripMainCity(e.target.value);
                   e.target.parentNode.parentNode.style.outline = "none";
@@ -307,6 +331,7 @@ export default function GalleryQuestion() {
                 backgroundColor: "rgb(255, 255, 255, 0.3)",
                 color: "white",
               }}
+              value={tripIntroduction}
               onChange={(e) => {
                 setTripIntroduction(e.target.value);
               }}
@@ -315,21 +340,26 @@ export default function GalleryQuestion() {
         </Form>
         <ThemeProvider theme={theme}>
           <ButtonsDiv>
-            <Button
-              variant="contained"
-              color="white"
-              style={{
-                width: "200px",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "#3A4A58",
-              }}
-              onClick={handleBack}
-            >
-              Cancel
-            </Button>
+            {newAlbum ? (
+              <Button
+                variant="contained"
+                color="white"
+                style={{
+                  width: "200px",
+                  borderRadius: "40px",
+                  lineHeight: 1.5,
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  color: "#3A4A58",
+                }}
+                onClick={handleBack}
+              >
+                Cancel
+              </Button>
+            ) : (
+              <></>
+            )}
+
             <Button
               variant="contained"
               color="white"
@@ -357,7 +387,8 @@ export default function GalleryQuestion() {
               //   db_gallery.doc(albumIdEditing).set(body);
               // }}
             >
-              Start&ensp;<i className="fas fa-arrow-right"></i>
+              {newAlbum ? "Start" : "Continue"}&ensp;
+              <i className="fas fa-arrow-right"></i>
             </Button>
           </ButtonsDiv>
         </ThemeProvider>

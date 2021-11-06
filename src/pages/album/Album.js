@@ -7,6 +7,8 @@ import { db_gallery, db_userInfo } from "../../util/firebase";
 import ShowAlbum from "./component/ShowAlbum";
 import { Tooltip } from "@mui/material";
 
+import countryTrans from "../../util/countryTrans";
+
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
   height: 100vh;
@@ -136,6 +138,24 @@ export default function Album() {
     setOwnerId("");
   }
 
+  function handleEdit() {
+    dispatch({
+      type: "SET_ALBUM_ID_SHOW",
+      payload: "",
+    });
+    dispatch({
+      type: "SET_TARGET_COUNTRY",
+      payload: {
+        id: albumData.country,
+        name: countryTrans[albumData.country].name_en,
+      },
+    });
+    history.push({
+      pathname: "edit",
+      search: `?album_id_edit=${albumIdShow}`,
+    });
+  }
+
   return (
     <AlbumDiv style={{ display: albumIdShow ? "flex" : "none" }}>
       <BackDiv onClick={handleClickBack}>
@@ -161,7 +181,7 @@ export default function Album() {
           placement="left"
           style={{ display: userInfo.id === ownerId ? "flex" : "none" }}
         >
-          <ButtonStyle>
+          <ButtonStyle onClick={handleEdit}>
             <i className="fas fa-pencil-alt" />
           </ButtonStyle>
         </Tooltip>
@@ -184,6 +204,10 @@ export default function Album() {
             backgroundPosition: "center",
           }}
           onClick={() => {
+            dispatch({
+              type: "SET_ALBUM_ID_SHOW",
+              payload: "",
+            });
             history.push({
               pathname: "user",
               search: `?id=${albumData.user_id}`,

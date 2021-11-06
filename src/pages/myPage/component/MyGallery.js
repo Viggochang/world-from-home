@@ -87,6 +87,8 @@ const ContentDivInner = styled.div`
   margin-top: 10px;
   padding: 20px 40px 0 20px;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
 `;
 
 const EditingSwitchDiv = styled.div`
@@ -148,7 +150,7 @@ const NoAlbumsDiv = styled.div`
   color: #3a4a58;
 `;
 
-export default function MyGallery({ title, id }) {
+export default function MyGallery({ title, id, isMyPage }) {
   // const userInfo = useSelector((state) => state.userInfo);
   const [albumData, setAlbumData] = useState([]);
   const [albumDataFilter, setAlbumDataFilter] = useState([]);
@@ -259,7 +261,7 @@ export default function MyGallery({ title, id }) {
       {/* <ContentDiv style={{height:`${240*myWorldDataFilter.length-30}px`}}> */}
       <ContentDiv>
         <ThemeProvider theme={theme}>
-          <EditingSwitchDiv>
+          <EditingSwitchDiv style={{ display: isMyPage ? "flex" : "none" }}>
             <EditLabel
               style={{
                 color: pending ? "#3a4a58" : "white",

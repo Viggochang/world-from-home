@@ -9,6 +9,7 @@ import AddText from "./component/AddText";
 import TextEditor from "./component/TextEditor";
 
 import { templateStyle, allTemplateParams } from "./component/MyTemplate";
+import { db_gallery } from "../../util/firebase";
 
 const WorkingSpaceDiv = styled.div`
   /* padding-left: 352px;
@@ -84,6 +85,7 @@ const MyCanvas = styled.canvas``;
 
 function WorkingSpace({ preview }) {
   const dispatch = useDispatch();
+  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
@@ -119,30 +121,116 @@ function WorkingSpace({ preview }) {
   // }, [canvas]);
 
   useEffect(() => {
+    if (albumIdEditing) {
+      db_gallery
+        .doc(albumIdEditing)
+        .get()
+        .then((doc) => {
+          if (doc.data().content) {
+            const pageInfo = JSON.parse(doc.data().content.pageInfo);
+            const canvasState = JSON.parse(doc.data().content.canvasState);
+            dispatch({
+              type: "SET_PAGE_INFO",
+              payload: pageInfo,
+            });
+            dispatch({
+              type: "SET_CANVAS_STATE",
+              payload: canvasState,
+            });
+
+            // 根據 pageInfo，將不在 canvas 裡的 canvas 做出來
+            Object.keys(pageInfo)
+              .filter(
+                (pageId) =>
+                  !Object.keys(canvas)
+                    .map((canvasId) => canvasId.split("-")[0])
+                    .includes(pageId)
+              )
+              .forEach((pageId) => {
+                const { page, templateId } = pageInfo[pageId];
+                allTemplateParams()
+                  [templateId](page)
+                  .forEach((canvas) => {
+                    const newCanvas = {};
+                    canvas.loadFromJSON(
+                      canvasState[canvas.lowerCanvasEl.id],
+                      () => {
+                        canvas.renderAll();
+                        newCanvas[canvas.lowerCanvasEl.id] = canvas;
+                        dispatch({
+                          type: "SET_CANVAS",
+                          payload: newCanvas,
+                        });
+                      }
+                    );
+                  });
+              });
+          }
+        });
+    }
+  }, [albumIdEditing]);
+
+  useEffect(() => {
     // const allCanvas = initCanvas();
     const pageLength = Object.keys(pageInfo).length;
     if (pageLength) {
-      const { page, templateId } = Object.values(pageInfo).sort(
-        (a, b) => a.page - b.page
-      )[pageLength - 1];
-      const newCanvas = allTemplateParams()[templateId](page);
-      // 儲存每一個canvas
+      // 根據 pageInfo，將不在 canvas 裡的 canvas 做出來
+      const newCanvas = {};
+      Object.keys(pageInfo)
+        .filter(
+          (pageId) =>
+            !Object.keys(canvas)
+              .map((canvasId) => canvasId.split("-")[0])
+              .includes(pageId)
+        )
+        .forEach((pageId) => {
+          const { page, templateId } = pageInfo[pageId];
+          allTemplateParams()
+            [templateId](page)
+            .forEach((canvas) => {
+              newCanvas[canvas.lowerCanvasEl.id] = canvas;
+            });
+        });
+
       dispatch({
         type: "SET_CANVAS",
-        payload: newCanvas.reduce((acc, cur) => {
-          acc[cur.lowerCanvasEl.id] = cur;
-          return acc;
-        }, {}),
+        payload: newCanvas,
       });
-      // 儲存初始狀態
+
+      // 將不在 canvasState 裡的 canvas 加進去
+      let newCanvasState = Object.keys({ ...canvas, ...newCanvas })
+        .filter((canvasId) => !Object.keys(canvasState).includes(canvasId))
+        .reduce((acc, cur) => {
+          acc[cur] = JSON.stringify({ ...canvas, ...newCanvas }[cur].toJSON());
+          return acc;
+        }, {});
+
       dispatch({
         type: "SET_CANVAS_STATE",
-        payload: newCanvas.reduce((acc, cur) => {
-          // acc[cur.lowerCanvasEl.id] = cur.toJSON();
-          acc[cur.lowerCanvasEl.id] = JSON.stringify(cur.toJSON());
-          return acc;
-        }, {}),
+        payload: newCanvasState,
       });
+
+      // const { page, templateId } = Object.values(pageInfo).sort(
+      //   (a, b) => a.page - b.page
+      // )[pageLength - 1];
+      // const newCanvas = allTemplateParams()[templateId](page);
+      // // 儲存每一個canvas
+      // dispatch({
+      //   type: "SET_CANVAS",
+      //   payload: newCanvas.reduce((acc, cur) => {
+      //     acc[cur.lowerCanvasEl.id] = cur;
+      //     return acc;
+      //   }, {}),
+      // });
+      // // 儲存初始狀態
+      // dispatch({
+      //   type: "SET_CANVAS_STATE",
+      //   payload: newCanvas.reduce((acc, cur) => {
+      //     // acc[cur.lowerCanvasEl.id] = cur.toJSON();
+      //     acc[cur.lowerCanvasEl.id] = JSON.stringify(cur.toJSON());
+      //     return acc;
+      //   }, {}),
+      // });
     }
     workingSpaceInnerRef.current.scrollTop =
       workingSpaceInnerRef.current.scrollHeight;
@@ -363,7 +451,6 @@ function WorkingSpace({ preview }) {
                 key={`page${page}`}
                 style={{ display: display ? "block" : "none" }}
               >
-                {/* <PageTitle>{`第${page + 1}頁`}</PageTitle> */}
                 <RemoveWindow onClick={(e) => handleRemoveWindow(e, page)}>
                   <i className="fas fa-trash-alt"></i>
                 </RemoveWindow>

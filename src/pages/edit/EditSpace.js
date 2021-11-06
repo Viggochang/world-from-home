@@ -244,10 +244,24 @@ function EditSpace() {
   const history = useHistory();
 
   useEffect(() => {
+    const albumIdEditing = new URLSearchParams(window.location.search).get(
+      "album_id_edit"
+    );
+    const newAlbumIdEditing = db_gallery.doc().id;
     dispatch({
       type: "SET_ALBUM_ID_EDITING",
-      payload: db_gallery.doc().id,
+      payload: albumIdEditing || newAlbumIdEditing,
     });
+    if (!albumIdEditing) {
+      db_gallery
+        .doc(newAlbumIdEditing)
+        .set({ id: albumIdEditing, condition: "pending" })
+        .then(() => {
+          let params = new URL(window.location).searchParams;
+          params.append("album_id_edit", albumIdEditing);
+          history.push({ search: params.toString() });
+        });
+    }
   }, []);
   // const workingSpaceRef = useRef();
 

@@ -505,7 +505,7 @@ export default function MyPage() {
             setActiveButton={setActiveButton}
           />
           {activeButton === "Albums" ? (
-            <MyGallery title={"My Albums"} id={id} />
+            <MyGallery title={"My Albums"} id={id} isMyPage={true} />
           ) : (
             <MyFriends title={"My Friends"} userInfo={myInfo} isMyPage={true} />
           )}
