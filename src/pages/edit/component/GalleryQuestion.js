@@ -166,6 +166,7 @@ const Inputdiv = styled.input`
 export default function GalleryQuestion() {
   const history = useHistory();
   const QuestionRef = useRef();
+  const mainCityInputRef = useRef();
   const targetCountry = useSelector((state) => state.targetCountry);
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [cityInCountry, setCityInCountry] = useState([]);
@@ -197,7 +198,30 @@ export default function GalleryQuestion() {
   }
 
   function handleStartEdit() {
-    QuestionRef.current.style.display = "none";
+    if (
+      !cityInCountry.map((state) => state.name).length ||
+      cityInCountry.map((state) => state.name).includes(tripMainCity)
+    ) {
+      let body = {
+        id: albumIdEditing,
+        introduction: tripIntroduction,
+        timestamp: tripDate,
+        position: tripMainCity,
+        user_id: myInfo.id,
+        country: targetCountry.id,
+        praise: [],
+        condition: "pending",
+      };
+      db_gallery
+        .doc(albumIdEditing)
+        .set(body)
+        .then(() => {
+          QuestionRef.current.style.display = "none";
+        });
+    } else {
+      mainCityInputRef.current.style.outline = "4px #AE0000 solid";
+    }
+
     // history.push({ pathname: "edit" });
   }
 
@@ -243,7 +267,7 @@ export default function GalleryQuestion() {
           {/* </ThemeProvider> */}
 
           <QuestionTitle>Main City</QuestionTitle>
-          <SearchDiv>
+          <SearchDiv ref={mainCityInputRef}>
             <i className="fas fa-search"></i>
             <TextFieldDiv>
               <Inputdiv
@@ -257,10 +281,9 @@ export default function GalleryQuestion() {
                   color: "white",
                   fontSize: "20px",
                 }}
-                // ref={countryInputRef}
                 onChange={(e) => {
                   setTripMainCity(e.target.value);
-                  // e.target.parentNode.parentNode.style.outline = "none";
+                  e.target.parentNode.parentNode.style.outline = "none";
                 }}
               />
               <datalist id="country-choice">
@@ -318,21 +341,21 @@ export default function GalleryQuestion() {
                 fontWeight: "bold",
                 color: "#3A4A58",
               }}
-              onClick={() => {
-                QuestionRef.current.style.display = "none";
-                let body = {
-                  id: albumIdEditing,
-                  introduction: tripIntroduction,
-                  timestamp: tripDate,
-                  position: tripMainCity,
-                  user_id: myInfo.id,
-                  country: targetCountry.id,
-                  praise: [],
-                };
-                db_gallery.doc(albumIdEditing).set(body);
-                console.log(body);
-                // to-do
-              }}
+              onClick={handleStartEdit}
+              //   () => {
+              //   QuestionRef.current.style.display = "none";
+              //   let body = {
+              //     id: albumIdEditing,
+              //     introduction: tripIntroduction,
+              //     timestamp: tripDate,
+              //     position: tripMainCity,
+              //     user_id: myInfo.id,
+              //     country: targetCountry.id,
+              //     praise: [],
+              //     condition: "pending",
+              //   };
+              //   db_gallery.doc(albumIdEditing).set(body);
+              // }}
             >
               Start&ensp;<i className="fas fa-arrow-right"></i>
             </Button>

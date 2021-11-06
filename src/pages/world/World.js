@@ -76,7 +76,7 @@ function World({
 
     polygonSeries.exclude = ["AQ"];
     //test
-    console.log("displatch polygonSeries", polygonSeries);
+    // console.log("displatch polygonSeries", polygonSeries);
     dispatch({
       type: "SET_POLYGONSERIES",
       payload: polygonSeries,

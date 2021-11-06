@@ -97,9 +97,9 @@ const EditMyPhoto = styled.div`
   cursor: pointer;
 `;
 const EditBackgroundImage = styled.div`
-  position: fixed;
-  top: 50px;
-  right: 160px;
+  position: absolute;
+  top: 0px;
+  right: 90px;
   display: flex;
   align-items: center;
   outline: 1px white solid;

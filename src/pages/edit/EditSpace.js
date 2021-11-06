@@ -2,9 +2,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { Alert, Stack } from "@mui/material";
 
 import { db_gallery } from "../../util/firebase";
 import WorkingSpace from "./WorkingSpace";
@@ -22,7 +23,7 @@ import photoText_4 from "../../image/template/photoText_4.jpeg";
 import photoText_5 from "../../image/template/photoText_5.jpeg";
 import text_1 from "../../image/template/text_1.jpeg";
 
-import ToMyPage from "../world/component/ToMyPage";
+// import ToMyPage from "../world/component/ToMyPage";
 import GalleryQuestion from "./component/GalleryQuestion";
 
 const theme = createTheme({
@@ -41,6 +42,11 @@ const theme = createTheme({
   },
 });
 
+const AlertDiv = styled.div`
+  margin: 20px calc(50% - 150px);
+  position: relative;
+`;
+
 const NavBarNav = styled.nav`
   width: 100vw;
   height: 72px;
@@ -53,11 +59,30 @@ const NavBarNav = styled.nav`
   justify-content: flex-end;
 `;
 
-const HomeLink = styled(NavLink)`
+const MyPageDiv = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px #bebebe;
+  outline: 3px #b8c3d0 solid;
+  cursor: pointer;
+`;
+const MyPageIconMask = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgb(225, 225, 225, 0);
+  :hover {
+    background-color: rgb(225, 225, 225, 0.3);
+  }
+`;
+
+const HomeDiv = styled.div`
   font-size: 40px;
   margin-left: 20px;
   margin-right: 20px;
   color: white;
+  cursor: pointer;
   :hover {
     color: #b8c3d0;
   }
@@ -65,20 +90,21 @@ const HomeLink = styled(NavLink)`
 
 const ToolBarDiv = styled.div`
   width: 72px;
-  height: 100%;
-  background-color: black;
+  height: calc(100vh - 160px);
+  background-color: #f0f0f0;
   position: fixed;
-  top: 72px;
-  left: 0;
+  top: 140px;
+  left: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 2;
+  box-shadow: 0px 0px 10px #8e8e8e;
 `;
 
 const ToolIconDiv = styled.div`
   width: 100%;
-  padding: 15px 0;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -94,49 +120,68 @@ const IconDiv = styled.div`
 const ToolNameDiv = styled.div`
   text-align: center;
   line-height: 18px;
-  color: #b8c3d0;
+  color: #667484;
+`;
+
+const ContainerDiv = styled.div`
+  width: 100vw;
+  min-height: calc(100% - 56px);
+  display: flex;
+  /* padding: 56px 0 0 72px; */
+  position: fixed;
+  top: 120px;
+  left: 0;
+  background-color: #b8c3d0;
+`;
+
+const ToolContainerDiv = styled.div`
+  width: 200px;
+  height: calc(100vh - 220px);
+  padding: 30px 24px 30px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f0f0;
+  position: fixed;
+  top: 140px;
+  left: 110px;
+  z-index: 3;
+  box-shadow: 0px 0px 10px #8e8e8e;
+`;
+
+const ToolContainerDivInner = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: scroll;
 `;
 
 const TemplateIcon = styled.img`
   width: 120px;
   margin: 20px 0;
-  box-shadow: 0px 0px 10px #272727;
+  box-shadow: 0px 0px 10px #667484;
   cursor: pointer;
 `;
 
-const ContainerDiv = styled.div`
-  width: calc(100% - 72px);
-  min-height: calc(100% - 56px);
-  display: flex;
-  /* padding: 56px 0 0 72px; */
-  position: absolute;
-  top: 72px;
-  left: 72px;
-  background-color: #b8c3d0;
-`;
-
-const ToolContainerDiv = styled.div`
-  width: 240px;
-  height: 100%;
-  padding: 20px 24px 0 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #3a4a58;
-  position: fixed;
-  z-index: 3;
-`;
-
 const TitleBarDiv = styled.div`
-  width: calc(100vw - 72px);
+  width: 100vw;
   height: 38px;
   background-color: white;
   position: fixed;
   top: 72px;
-  left: 72px;
+  left: 0;
   z-index: 3;
   display: flex;
+  align-items: center;
   padding: 5px 0;
+`;
+
+const Country = styled.div`
+  color: #3a4a58;
+  font-weight: bold;
+  font-size: 30px;
+  margin-left: 20px;
 `;
 
 const allTemplate = {
@@ -174,20 +219,28 @@ const allTemplate = {
     template: [],
   },
 };
-let templateActive = allTemplate["full"].template;
+// let templateActive = allTemplate["full"].template;
 
 function EditSpace() {
-  const [toolActive, setToolActive] = useState("full");
+  const [templateActive, setTemplateActive] = useState(
+    allTemplate["full"].template
+  );
 
   const [preview, setPreview] = useState(false);
+  const [country, setCountry] = useState("");
+
   const editUndo = useSelector((state) => state.editUndo);
 
   const dispatch = useDispatch();
+  const myInfo = useSelector((state) => state.userInfo);
+  const targetCountry = useSelector((state) => state.targetCountry);
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
 
   const previewBtnRef = useRef();
+  const saveAlertRef = useRef();
+  const deleteAlertRef = useRef();
   const history = useHistory();
 
   useEffect(() => {
@@ -231,18 +284,32 @@ function EditSpace() {
 
   function handleClickTool(key) {
     // console.log(key);
-    templateActive = allTemplate[key].template;
-    setToolActive(key);
+    setTemplateActive(allTemplate[key].template);
+    // setToolActive(key);
   }
 
-  function handlePreview() {
-    // Object.keys(canvasState).forEach((canvasId) => {
-    // })
-    previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
-    setPreview(preview ? false : true);
+  function handleMyPage(e, albumId) {
+    saveAlertRef.current.style.zIndex = 5;
+    const body = {
+      content: {
+        pageInfo: JSON.stringify(pageInfo),
+        canvasState: JSON.stringify(canvasState),
+      },
+    };
+    db_gallery
+      .doc(albumId)
+      .update(body)
+      .then(() => {
+        dispatch({
+          type: "DISCARD_CANVAS_EDIT",
+          payload: "",
+        });
+        history.push({ pathname: "mypage" });
+      });
   }
 
-  function handleSave(e, albumId) {
+  function handleHome(e, albumId) {
+    saveAlertRef.current.style.zIndex = 5;
     const body = {
       content: {
         pageInfo: JSON.stringify(pageInfo),
@@ -261,30 +328,129 @@ function EditSpace() {
       });
   }
 
-  function handleDiscard() {
-    dispatch({
-      type: "DISCARD_CANVAS_EDIT",
-      payload: "",
-    });
-    history.push({ pathname: "home" });
+  function handlePreview(e, albumId) {
+    // Object.keys(canvasState).forEach((canvasId) => {
+    // })
+    previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
+    setPreview(!preview);
+
+    const body = {
+      content: {
+        pageInfo: JSON.stringify(pageInfo),
+        canvasState: JSON.stringify(canvasState),
+      },
+    };
+
+    if (!preview) {
+      db_gallery
+        .doc(albumId)
+        .update(body)
+        .then(() => {
+          saveAlertRef.current.style.zIndex = 5;
+          setTimeout(() => {
+            saveAlertRef.current.style.zIndex = 0;
+          }, 2000);
+        });
+    }
+  }
+
+  function handleSave(e, albumId) {
+    const body = {
+      content: {
+        pageInfo: JSON.stringify(pageInfo),
+        canvasState: JSON.stringify(canvasState),
+      },
+    };
+    db_gallery
+      .doc(albumId)
+      .update(body)
+      .then(() => {
+        saveAlertRef.current.style.zIndex = 5;
+        setTimeout(() => {
+          saveAlertRef.current.style.zIndex = 0;
+        }, 2000);
+      });
+  }
+
+  // function handleComplete() {
+  //   const body = {
+  //     content: {
+  //       pageInfo: JSON.stringify(pageInfo),
+  //       canvasState: JSON.stringify(canvasState),
+  //     },
+  //     condition: "completed",
+  //   };
+  //   db_gallery
+  //     .doc(albumId)
+  //     .update(body)
+  //     .then(() => {
+  //       dispatch({
+  //         type: "DISCARD_CANVAS_EDIT",
+  //         payload: "",
+  //       });
+  //       // history.push({ pathname: "home" });
+  //       saveAlertRef.current.style.zIndex = 5;
+  //       setTimeout(() => {
+  //         saveAlertRef.current.style.zIndex = 0;
+  //       }, 2000);
+  //     });
+  // }
+
+  function handleDiscard(e, albumId) {
+    deleteAlertRef.current.style.zIndex = 5;
+    const body = {
+      condition: "discard",
+    };
+    db_gallery
+      .doc(albumId)
+      .update(body)
+      .then(() => {
+        dispatch({
+          type: "DISCARD_CANVAS_EDIT",
+          payload: "",
+        });
+        history.push({ pathname: "home" });
+      });
   }
 
   return (
     <div>
       <GalleryQuestion />
+      <AlertDiv>
+        <Stack sx={{ width: "300px" }} spacing={2}>
+          <Alert
+            severity="success"
+            style={{ position: "absolute", margin: 0 }}
+            ref={saveAlertRef}
+          >
+            Album saved !
+          </Alert>
+          <Alert
+            severity="warning"
+            style={{ position: "absolute", margin: 0 }}
+            ref={deleteAlertRef}
+          >
+            Album deleted !
+          </Alert>
+        </Stack>
+      </AlertDiv>
+
       <NavBarNav>
-        <ToMyPage
+        <MyPageDiv
           style={{
-            width: "50px",
-            height: "50px",
-            position: "static",
-            borderRadius: "15px",
+            backgroundImage: `url(${myInfo.photo})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
-        />
-        <HomeLink to="home">
+          onClick={(e) => handleMyPage(e, albumIdEditing)}
+        >
+          <MyPageIconMask />
+        </MyPageDiv>
+        <HomeDiv onClick={(e) => handleHome(e, albumIdEditing)}>
           <i className="fas fa-home"></i>
-        </HomeLink>
+        </HomeDiv>
       </NavBarNav>
+
       <ToolBarDiv>
         {Object.keys(allTemplate).map((tool) => (
           <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
@@ -293,13 +459,18 @@ function EditSpace() {
           </ToolIconDiv>
         ))}
       </ToolBarDiv>
+
       <TitleBarDiv>
+        <Country>
+          <i className="fas fa-globe"></i>
+          &ensp;{targetCountry.name}
+        </Country>
         <ThemeProvider theme={theme}>
           <Button
             variant="contained"
             color="primary"
             style={{ marginLeft: "auto", marginRight: "10px" }}
-            onClick={handlePreview}
+            onClick={(e) => handlePreview(e, albumIdEditing)}
             ref={previewBtnRef}
           >
             PREVIEW
@@ -316,7 +487,15 @@ function EditSpace() {
             variant="contained"
             color="primary"
             style={{ marginRight: "10px" }}
-            onClick={handleDiscard}
+            // onClick={(e) => handleComplete(e, albumIdEditing)}
+          >
+            COMPLETE
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginRight: "10px" }}
+            onClick={(e) => handleDiscard(e, albumIdEditing)}
           >
             DISCARD
           </Button>
@@ -325,14 +504,19 @@ function EditSpace() {
 
       <ContainerDiv>
         <ToolContainerDiv>
-          {templateActive.map((template) => (
-            <div
-              onClick={() => handleMoreWindow(template[0], template[1])}
-              key={template[1]}
-            >
-              <TemplateIcon alt={`template-${template[1]}`} src={template[2]} />
-            </div>
-          ))}
+          <ToolContainerDivInner>
+            {templateActive.map((template) => (
+              <div
+                onClick={() => handleMoreWindow(template[0], template[1])}
+                key={template[1]}
+              >
+                <TemplateIcon
+                  alt={`template-${template[1]}`}
+                  src={template[2]}
+                />
+              </div>
+            ))}
+          </ToolContainerDivInner>
         </ToolContainerDiv>
         <WorkingSpace preview={preview} />
         <Preview preview={preview} />

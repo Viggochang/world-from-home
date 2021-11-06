@@ -34,7 +34,7 @@ const GuestIcon = styled.div`
   font-size: 40px;
 `;
 
-export default function ToMyPage({ handleSignIn, style, styleGuest }) {
+export default function ToMyPage({ handleSignIn, style }) {
   const userInfo = useSelector((state) => state.userInfo);
   // console.log(userInfo);
   if (userInfo.photo) {

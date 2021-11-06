@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { db_gallery, db_userInfo } from "../../util/firebase";
 
 import ShowAlbum from "./component/ShowAlbum";
+import { Tooltip } from "@mui/material";
 
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
@@ -30,6 +31,32 @@ const BackDiv = styled.div`
   cursor: pointer;
   :hover {
     color: #b8c3d0;
+  }
+`;
+
+const ButtonsDiv = styled.div`
+  position: fixed;
+  top: 150px;
+  right: 50px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ButtonStyle = styled.div`
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 25px;
+  color: #3a4a58;
+  background-color: white;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px #d0d0d0;
+  :hover {
+    color: #667484;
   }
 `;
 
@@ -67,10 +94,12 @@ const AlbumDate = styled.div`
 
 export default function Album() {
   const albumIdShow = useSelector((state) => state.albumIdShow);
+  const userInfo = useSelector((state) => state.userInfo);
   const history = useHistory();
   const dispatch = useDispatch();
   const [albumData, setAlbumData] = useState({});
   const [ownerPhoto, setOwnerPhoto] = useState("");
+  const [ownerId, setOwnerId] = useState("");
 
   const { content, position, timestamp, user_id } = albumData || {};
 
@@ -88,6 +117,7 @@ export default function Album() {
             .get()
             .then((doc) => {
               setOwnerPhoto(doc.data().photo);
+              setOwnerId(doc.data().id);
             });
         });
     }
@@ -103,6 +133,7 @@ export default function Album() {
     dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
     setAlbumData({});
     setOwnerPhoto("");
+    setOwnerId("");
   }
 
   return (
@@ -110,6 +141,40 @@ export default function Album() {
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times"></i>
       </BackDiv>
+      <ButtonsDiv>
+        <Tooltip title="Like" placement="left">
+          <ButtonStyle>
+            <i className="fas fa-thumbs-up" />
+          </ButtonStyle>
+        </Tooltip>
+        <Tooltip
+          title="Add Friend"
+          placement="left"
+          style={{ display: userInfo.id === ownerId ? "none" : "flex" }}
+        >
+          <ButtonStyle>
+            <i className="fas fa-user-plus"></i>
+          </ButtonStyle>
+        </Tooltip>
+        <Tooltip
+          title="Edit"
+          placement="left"
+          style={{ display: userInfo.id === ownerId ? "flex" : "none" }}
+        >
+          <ButtonStyle>
+            <i className="fas fa-pencil-alt" />
+          </ButtonStyle>
+        </Tooltip>
+        <Tooltip
+          title="Delete"
+          placement="left"
+          style={{ display: userInfo.id === ownerId ? "flex" : "none" }}
+        >
+          <ButtonStyle>
+            <i className="fas fa-trash-alt"></i>
+          </ButtonStyle>
+        </Tooltip>
+      </ButtonsDiv>
 
       <AlbumInfo>
         <AlbumOwner

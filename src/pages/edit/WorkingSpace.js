@@ -13,13 +13,23 @@ import { templateStyle, allTemplateParams } from "./component/MyTemplate";
 const WorkingSpaceDiv = styled.div`
   /* padding-left: 352px;
   padding-top: 48px; */
-  padding: 96px 0 100px 280px;
   background-color: #b8c3d0;
+  padding-left: 360px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
+`;
+
+const WorkingSpaceDivInner = styled.div`
+  height: calc(100vh - 160px);
+  width: calc(100vw - 360px);
+  margin: 20px 0;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const PageContainer = styled.div`
@@ -36,6 +46,9 @@ const RemoveWindow = styled.div`
   color: #3a4a58;
   line-height: 30px;
   cursor: pointer;
+  :hover {
+    color: white;
+  }
 `;
 
 const PageCanvasContainer = styled.div`
@@ -59,6 +72,7 @@ const PageCanvasContainer = styled.div`
 `;
 
 const CanvasContainer = styled.div`
+  box-shadow: 0px 0px 2px #8e8e8e;
   :focus {
     /* outline: 1px #667484 solid; */
     box-shadow: 0px 0px 5px #6c6c6c;
@@ -77,7 +91,8 @@ function WorkingSpace({ preview }) {
   const editUndo = useSelector((state) => state.editUndo);
   const editRedo = useSelector((state) => state.editRedo);
 
-  const workingSpaceRef = useRef();
+  const workingSpaceInnerRef = useRef();
+
   const pageCanvasContainerRef = useRef();
   const textEditorRef = useRef();
 
@@ -129,7 +144,9 @@ function WorkingSpace({ preview }) {
         }, {}),
       });
     }
-    window.scrollTo(0, workingSpaceRef.current.offsetHeight);
+    workingSpaceInnerRef.current.scrollTop =
+      workingSpaceInnerRef.current.scrollHeight;
+    // window.scrollTo(0, workingSpaceInnerRef.current.offsetHeight);
   }, [pageInfo]);
 
   useEffect(() => {
@@ -276,6 +293,7 @@ function WorkingSpace({ preview }) {
       thisCanvas.remove(thisCanvas.getActiveObject());
       handleCanvasOn(thisCanvas);
     }
+    textEditorRef.current.style.display = "none";
   }
 
   function getActiveCanvas(e) {
@@ -333,46 +351,47 @@ function WorkingSpace({ preview }) {
       onClick={(e) => getActiveCanvas(e)}
       tabIndex="0"
       style={{ display: preview ? "none" : "flex" }}
-      ref={workingSpaceRef}
     >
       <TextEditor innerRef={textEditorRef} handleCanvasOn={handleCanvasOn} />
-      {Object.values(pageInfo)
-        .sort((a, b) => a.page - b.page)
-        .map((pageInfo) => {
-          const { page, canvasCount, templateId, display } = pageInfo;
-          return (
-            <PageContainer
-              key={`page${page}`}
-              style={{ display: display ? "block" : "none" }}
-            >
-              {/* <PageTitle>{`第${page + 1}頁`}</PageTitle> */}
-              <RemoveWindow onClick={(e) => handleRemoveWindow(e, page)}>
-                <i className="fas fa-trash-alt"></i>
-              </RemoveWindow>
-              <PageCanvasContainer
-                ref={pageCanvasContainerRef}
-                style={templateStyle[templateId]}
+      <WorkingSpaceDivInner ref={workingSpaceInnerRef}>
+        {Object.values(pageInfo)
+          .sort((a, b) => a.page - b.page)
+          .map((pageInfo) => {
+            const { page, canvasCount, templateId, display } = pageInfo;
+            return (
+              <PageContainer
+                key={`page${page}`}
+                style={{ display: display ? "block" : "none" }}
               >
-                {Array.from(new Array(canvasCount).keys()).map((id) => {
-                  return (
-                    <CanvasContainer
-                      style={{ position: "relative" }}
-                      key={`page${page}-canvas${id}`}
-                      tabIndex="0"
-                      onClick={(e) => {
-                        console.log(e.target.parentNode.children[1]);
-                      }}
-                    >
-                      <AddText page={page} id={id} />
-                      <UploadImage page={page} id={id} />
-                      <MyCanvas id={`page${page}-canvas${id}`} />
-                    </CanvasContainer>
-                  );
-                })}
-              </PageCanvasContainer>
-            </PageContainer>
-          );
-        })}
+                {/* <PageTitle>{`第${page + 1}頁`}</PageTitle> */}
+                <RemoveWindow onClick={(e) => handleRemoveWindow(e, page)}>
+                  <i className="fas fa-trash-alt"></i>
+                </RemoveWindow>
+                <PageCanvasContainer
+                  ref={pageCanvasContainerRef}
+                  style={templateStyle[templateId]}
+                >
+                  {Array.from(new Array(canvasCount).keys()).map((id) => {
+                    return (
+                      <CanvasContainer
+                        style={{ position: "relative" }}
+                        key={`page${page}-canvas${id}`}
+                        tabIndex="0"
+                        onClick={(e) => {
+                          console.log(e.target.parentNode.children[1]);
+                        }}
+                      >
+                        <AddText page={page} id={id} />
+                        <UploadImage page={page} id={id} />
+                        <MyCanvas id={`page${page}-canvas${id}`} />
+                      </CanvasContainer>
+                    );
+                  })}
+                </PageCanvasContainer>
+              </PageContainer>
+            );
+          })}
+      </WorkingSpaceDivInner>
     </WorkingSpaceDiv>
   );
 }

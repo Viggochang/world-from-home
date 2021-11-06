@@ -42,11 +42,6 @@ export default function ShowAlbum({ show, albumContent }) {
   useEffect(() => {
     setPageInfo(albumContent ? JSON.parse(albumContent.pageInfo) : {});
     setCanvasState(albumContent ? JSON.parse(albumContent.canvasState) : {});
-    console.log(
-      albumContent
-        ? JSON.parse(JSON.parse(albumContent.canvasState)["page1-canvas0"])
-        : {}
-    );
 
     // if (albumIdShow) {
     //   db_gallery
@@ -81,6 +76,7 @@ export default function ShowAlbum({ show, albumContent }) {
                 canvas.getObjects().forEach((obj) => {
                   obj.selectable = false;
                 });
+                canvas.backgroundColor = "#ffffff";
                 canvas.renderAll();
               }
             ); //重新renader出畫布上的物件

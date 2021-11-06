@@ -100,10 +100,12 @@ export default function CountryAlbums({ galleryQuestionRef }) {
     <GalleryBackgroundDiv>
       {album.length ? (
         <AlbumDiv>
-          {album.map((album) => {
-            //getOwnerPhoto(album.user_id);
-            return <Album key={album.id} album={album} />;
-          })}
+          {album
+            .filter((album) => album.condition === "completed")
+            .map((album) => {
+              //getOwnerPhoto(album.user_id);
+              return <Album key={album.id} album={album} />;
+            })}
           <AlbumHere>
             <AlbumAdd>
               <ThemeProvider theme={theme}>

@@ -57,7 +57,7 @@ const templateStyle = {
 
 function FullCanvas(templateObjStyle, preview = false) {
   fabric.Object.NUM_FRACTION_DIGITS = 8;
-  let canvasBackgroundColor = "#E0E0E0";
+  let canvasBackgroundColor = "#F0F0F0";
   return function (page) {
     const canvasId = preview
       ? `preview-page${page}-canvas0`
@@ -81,7 +81,7 @@ function FullCanvas(templateObjStyle, preview = false) {
 
 function CompositionCanvas(templateObjStyle, preview = false) {
   fabric.Object.NUM_FRACTION_DIGITS = 8;
-  let canvasBackgroundColor = "#E0E0E0";
+  let canvasBackgroundColor = "#F0F0F0";
   return function (page) {
     return Object.values(templateObjStyle).map((objStyle, index) => {
       const canvasId = preview
@@ -99,7 +99,7 @@ function CompositionCanvas(templateObjStyle, preview = false) {
 
 function PhotoTextCanvas(templateObjStyle, style, preview = false) {
   fabric.Object.NUM_FRACTION_DIGITS = 8;
-  let canvasBackgroundColor = "#E0E0E0";
+  let canvasBackgroundColor = "#F0F0F0";
   const colorStyle = (index) => [
     index % 2 ? canvasBackgroundColor : "white",
     index % 2 ? "white" : canvasBackgroundColor,
