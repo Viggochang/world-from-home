@@ -67,14 +67,14 @@ function FullCanvas(templateObjStyle, preview = false) {
       backgroundColor: canvasBackgroundColor,
       preserveObjectStacking: true,
     });
-    const title = new fabric.IText("新增標題", {
-      ...templateObjStyle.t1,
-    });
-    const subtitle = new fabric.Textbox("新增副標題", {
-      ...templateObjStyle.t2,
-    });
-    coverCanvas.add(title);
-    coverCanvas.add(subtitle);
+    // const title = new fabric.IText("新增標題", {
+    //   ...templateObjStyle.t1,
+    // });
+    // const subtitle = new fabric.Textbox("新增副標題", {
+    //   ...templateObjStyle.t2,
+    // });
+    // coverCanvas.add(title);
+    // coverCanvas.add(subtitle);
     return [coverCanvas];
   };
 }
@@ -154,23 +154,23 @@ const allTemplateParams = (preview) => ({
   full_1: FullCanvas(
     {
       c: { height: 230, width: 800 },
-      t1: { left: 240, top: 50, fontSize: 80 },
-      t2: { left: 325, top: 150, fontSize: 30 },
+      // t1: { left: 240, top: 50, fontSize: 80 },
+      // t2: { left: 325, top: 150, fontSize: 30 },
     },
     preview
   ),
   full_2: FullCanvas(
     {
       c: { height: 600, width: 800 },
-      t1: {
-        left: 240,
-        top: 300,
-        fontSize: 80,
-        fontWeight: "bold",
-        fontStyle: "italic",
-        textAlign: "right",
-      },
-      t2: { left: 325, top: 400, fontSize: 30 },
+      // t1: {
+      //   left: 240,
+      //   top: 300,
+      //   fontSize: 80,
+      //   fontWeight: "bold",
+      //   fontStyle: "italic",
+      //   textAlign: "right",
+      // },
+      // t2: { left: 325, top: 400, fontSize: 30 },
     },
     preview
   ),

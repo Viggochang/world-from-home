@@ -10,6 +10,7 @@ import TextEditor from "./component/TextEditor";
 
 import { templateStyle, allTemplateParams } from "./component/MyTemplate";
 import { db_gallery } from "../../util/firebase";
+import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
 
 const WorkingSpaceDiv = styled.div`
   /* padding-left: 352px;
@@ -83,7 +84,7 @@ const CanvasContainer = styled.div`
 
 const MyCanvas = styled.canvas``;
 
-function WorkingSpace({ preview }) {
+function WorkingSpace({ preview, addWindow }) {
   const dispatch = useDispatch();
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
@@ -120,6 +121,58 @@ function WorkingSpace({ preview }) {
   //   };
   // }, [canvas]);
 
+  // useEffect(() => {
+  //   if (albumIdEditing) {
+  //     db_gallery
+  //       .doc(albumIdEditing)
+  //       .get()
+  //       .then((doc) => {
+  //         if (doc.data().content) {
+  //           const pageInfo = JSON.parse(doc.data().content.pageInfo);
+  //           const canvasState = JSON.parse(doc.data().content.canvasState);
+  //           dispatch({
+  //             type: "SET_PAGE_INFO",
+  //             payload: pageInfo,
+  //           });
+  //           dispatch({
+  //             type: "SET_CANVAS_STATE",
+  //             payload: canvasState,
+  //           });
+
+  //           // 根據 pageInfo，將不在 canvas 裡的 canvas 做出來
+  //           const newCanvas = {};
+  //           console.log(Object.keys(canvas));
+  //           Object.keys(pageInfo)
+  //             .filter((pageId) => {
+  //               console.log(pageId);
+  //               return !Object.keys(canvas)
+  //                 .map((canvasId) => canvasId.split("-")[0])
+  //                 .includes(pageId);
+  //             })
+  //             .forEach((pageId) => {
+  //               const { page, templateId } = pageInfo[pageId];
+  //               allTemplateParams()
+  //                 [templateId](page)
+  //                 .forEach((canvas) => {
+  //                   canvas.loadFromJSON(
+  //                     canvasState[canvas.lowerCanvasEl.id],
+  //                     () => {
+  //                       canvas.renderAll();
+  //                       newCanvas[canvas.lowerCanvasEl.id] = canvas;
+  //                     }
+  //                   );
+  //                 });
+  //             });
+  //           console.log(newCanvas);
+  //           dispatch({
+  //             type: "SET_CANVAS",
+  //             payload: newCanvas,
+  //           });
+  //         }
+  //       });
+  //   }
+  // }, [albumIdEditing]);
+
   useEffect(() => {
     if (albumIdEditing) {
       db_gallery
@@ -138,33 +191,39 @@ function WorkingSpace({ preview }) {
               payload: canvasState,
             });
 
-            // 根據 pageInfo，將不在 canvas 裡的 canvas 做出來
-            Object.keys(pageInfo)
-              .filter(
-                (pageId) =>
-                  !Object.keys(canvas)
-                    .map((canvasId) => canvasId.split("-")[0])
-                    .includes(pageId)
-              )
-              .forEach((pageId) => {
-                const { page, templateId } = pageInfo[pageId];
-                allTemplateParams()
-                  [templateId](page)
-                  .forEach((canvas) => {
-                    const newCanvas = {};
-                    canvas.loadFromJSON(
-                      canvasState[canvas.lowerCanvasEl.id],
-                      () => {
-                        canvas.renderAll();
-                        newCanvas[canvas.lowerCanvasEl.id] = canvas;
-                        dispatch({
-                          type: "SET_CANVAS",
-                          payload: newCanvas,
-                        });
-                      }
-                    );
-                  });
-              });
+            Object.keys(pageInfo).forEach((pageId) => {
+              const { page, templateId } = pageInfo[pageId];
+              allTemplateParams()
+                [templateId](page)
+                .forEach((canvas) => {
+                  const newCanvas = {};
+                  canvas.loadFromJSON(
+                    canvasState[canvas.lowerCanvasEl.id],
+                    () => {
+                      newCanvas[canvas.lowerCanvasEl.id] = canvas;
+                      canvas.getObjects().forEach((obj) => {
+                        if (obj.type === "i-text") {
+                          obj.setControlsVisibility({
+                            mt: false,
+                            mb: false,
+                            ml: false,
+                            mr: false,
+                            bl: false,
+                            br: false,
+                            tl: false,
+                            tr: false,
+                          });
+                        }
+                      });
+                      canvas.renderAll();
+                      dispatch({
+                        type: "SET_CANVAS",
+                        payload: newCanvas,
+                      });
+                    }
+                  );
+                });
+            });
           }
         });
     }
@@ -173,69 +232,99 @@ function WorkingSpace({ preview }) {
   useEffect(() => {
     // const allCanvas = initCanvas();
     const pageLength = Object.keys(pageInfo).length;
-    if (pageLength) {
-      // 根據 pageInfo，將不在 canvas 裡的 canvas 做出來
-      const newCanvas = {};
-      Object.keys(pageInfo)
-        .filter(
-          (pageId) =>
-            !Object.keys(canvas)
-              .map((canvasId) => canvasId.split("-")[0])
-              .includes(pageId)
-        )
-        .forEach((pageId) => {
-          const { page, templateId } = pageInfo[pageId];
-          allTemplateParams()
-            [templateId](page)
-            .forEach((canvas) => {
-              newCanvas[canvas.lowerCanvasEl.id] = canvas;
-            });
-        });
-
+    if (addWindow && pageLength) {
+      const { page, templateId } = Object.values(pageInfo).sort(
+        (a, b) => a.page - b.page
+      )[pageLength - 1];
+      const newCanvas = allTemplateParams()[templateId](page);
+      // 儲存每一個canvas
       dispatch({
         type: "SET_CANVAS",
-        payload: newCanvas,
-      });
-
-      // 將不在 canvasState 裡的 canvas 加進去
-      let newCanvasState = Object.keys({ ...canvas, ...newCanvas })
-        .filter((canvasId) => !Object.keys(canvasState).includes(canvasId))
-        .reduce((acc, cur) => {
-          acc[cur] = JSON.stringify({ ...canvas, ...newCanvas }[cur].toJSON());
+        payload: newCanvas.reduce((acc, cur) => {
+          acc[cur.lowerCanvasEl.id] = cur;
           return acc;
-        }, {});
-
+        }, {}),
+      });
+      // 儲存初始狀態
       dispatch({
         type: "SET_CANVAS_STATE",
-        payload: newCanvasState,
+        payload: newCanvas.reduce((acc, cur) => {
+          // acc[cur.lowerCanvasEl.id] = cur.toJSON();
+          acc[cur.lowerCanvasEl.id] = JSON.stringify(cur.toJSON());
+          return acc;
+        }, {}),
       });
-
-      // const { page, templateId } = Object.values(pageInfo).sort(
-      //   (a, b) => a.page - b.page
-      // )[pageLength - 1];
-      // const newCanvas = allTemplateParams()[templateId](page);
-      // // 儲存每一個canvas
-      // dispatch({
-      //   type: "SET_CANVAS",
-      //   payload: newCanvas.reduce((acc, cur) => {
-      //     acc[cur.lowerCanvasEl.id] = cur;
-      //     return acc;
-      //   }, {}),
-      // });
-      // // 儲存初始狀態
-      // dispatch({
-      //   type: "SET_CANVAS_STATE",
-      //   payload: newCanvas.reduce((acc, cur) => {
-      //     // acc[cur.lowerCanvasEl.id] = cur.toJSON();
-      //     acc[cur.lowerCanvasEl.id] = JSON.stringify(cur.toJSON());
-      //     return acc;
-      //   }, {}),
-      // });
     }
     workingSpaceInnerRef.current.scrollTop =
       workingSpaceInnerRef.current.scrollHeight;
-    // window.scrollTo(0, workingSpaceInnerRef.current.offsetHeight);
   }, [pageInfo]);
+
+  // useEffect(() => {
+  //   // const allCanvas = initCanvas();
+  //   const pageLength = Object.keys(pageInfo).length;
+  //   if (pageLength) {
+  //     // 根據 pageInfo，將不在 canvas 裡的 canvas 做出來
+  //     const newCanvas = {};
+  //     Object.keys(pageInfo)
+  //       .filter(
+  //         (pageId) =>
+  //           !Object.keys(canvas)
+  //             .map((canvasId) => canvasId.split("-")[0])
+  //             .includes(pageId)
+  //       )
+  //       .forEach((pageId) => {
+  //         const { page, templateId } = pageInfo[pageId];
+  //         allTemplateParams()
+  //           [templateId](page)
+  //           .forEach((canvas) => {
+  //             newCanvas[canvas.lowerCanvasEl.id] = canvas;
+  //           });
+  //       });
+
+  //     dispatch({
+  //       type: "SET_CANVAS",
+  //       payload: newCanvas,
+  //     });
+
+  //     // 將不在 canvasState 裡的 canvas 加進去
+  //     let newCanvasState = Object.keys({ ...canvas, ...newCanvas })
+  //       .filter((canvasId) => !Object.keys(canvasState).includes(canvasId))
+  //       .reduce((acc, cur) => {
+  //         acc[cur] = JSON.stringify({ ...canvas, ...newCanvas }[cur].toJSON());
+  //         return acc;
+  //       }, {});
+
+  //     dispatch({
+  //       type: "SET_CANVAS_STATE",
+  //       payload: newCanvasState,
+  //     });
+
+  //     // const { page, templateId } = Object.values(pageInfo).sort(
+  //     //   (a, b) => a.page - b.page
+  //     // )[pageLength - 1];
+  //     // const newCanvas = allTemplateParams()[templateId](page);
+  //     // // 儲存每一個canvas
+  //     // dispatch({
+  //     //   type: "SET_CANVAS",
+  //     //   payload: newCanvas.reduce((acc, cur) => {
+  //     //     acc[cur.lowerCanvasEl.id] = cur;
+  //     //     return acc;
+  //     //   }, {}),
+  //     // });
+  //     // // 儲存初始狀態
+  //     // dispatch({
+  //     //   type: "SET_CANVAS_STATE",
+  //     //   payload: newCanvas.reduce((acc, cur) => {
+  //     //     // acc[cur.lowerCanvasEl.id] = cur.toJSON();
+  //     //     acc[cur.lowerCanvasEl.id] = JSON.stringify(cur.toJSON());
+  //     //     return acc;
+  //     //   }, {}),
+  //     // });
+  //   }
+  //   workingSpaceInnerRef.current.scrollTop =
+  //     workingSpaceInnerRef.current.scrollHeight;
+  //   // window.scrollTo(0, workingSpaceInnerRef.current.offsetHeight);
+  // }, [pageInfo]);
 
   useEffect(() => {
     const modified = {
@@ -385,11 +474,13 @@ function WorkingSpace({ preview }) {
   }
 
   function getActiveCanvas(e) {
+    console.log(canvas);
     let [thisCanvasId, activeCanvas, activeObj] = [undefined, {}, {}];
 
     if (e.target.classList.contains("upper-canvas")) {
       thisCanvasId = e.target.parentNode.children[0].id;
       if (thisCanvasId) {
+        console.log(canvas, thisCanvasId);
         activeCanvas = canvas[thisCanvasId];
         if (activeCanvas.getActiveObject()) {
           activeObj = activeCanvas.getActiveObject();

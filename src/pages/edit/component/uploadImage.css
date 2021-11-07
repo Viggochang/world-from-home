@@ -1,0 +1,19 @@
+.App {
+  font-family: sans-serif;
+  /* text-align: center; */
+  height: 500px;
+}
+.image-item {
+  display: flex;
+  margin: 10px 10px;
+  height: 200px;
+  width: 400px;
+}
+.image-item__btn-wrapper {
+  display: none;
+  flex-direction: column;
+  margin-left: 10px;
+}
+/* button {
+  height: 40px;
+} */

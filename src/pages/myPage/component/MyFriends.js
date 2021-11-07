@@ -51,9 +51,9 @@ const RequestBtn = styled.div`
 `;
 const RequestAlert = styled.div`
   width: 20px;
-  height: 20px;;
+  height: 20px;
   font-size: 16px;
-  background-color: #AE0000;
+  background-color: #ae0000;
   color: white;
   border-radius: 50%;
   position: absolute;
@@ -150,7 +150,11 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
         {isMyPage ? (
           <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
             <i className="fas fa-user-plus" style={{ margin: "auto" }}></i>
-            {myFriendRequests.length ? <RequestAlert>{myFriendRequests.length}</RequestAlert> : <></>}
+            {myFriendRequests.length ? (
+              <RequestAlert>{myFriendRequests.length}</RequestAlert>
+            ) : (
+              <></>
+            )}
           </RequestBtn>
         ) : (
           <></>
@@ -177,8 +181,13 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
         <FriendRequests
           myFriendRequests={myFriendRequests}
           showFriendRequest={showFriendRequest}
+          isMyPage={isMyPage}
         />
-        <FriendList myFriends={myFriends} searchInput={searchInput} isMyPage={isMyPage}/>
+        <FriendList
+          myFriends={myFriends}
+          searchInput={searchInput}
+          isMyPage={isMyPage}
+        />
       </ContentDiv>
     </MyFriendsContentDiv>
   );

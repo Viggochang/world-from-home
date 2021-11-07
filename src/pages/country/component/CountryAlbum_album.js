@@ -27,6 +27,12 @@ const AlbumOwner = styled.div`
   border-radius: 50%;
   margin-right: 10px;
   cursor: pointer;
+  background-color: #b8c3d0;
+  color: white;
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const AlbumPositionData = styled.div`
@@ -71,7 +77,7 @@ export default function Album({ album }) {
       .then((doc) => {
         setOwnerPhoto(doc.data().photo);
       });
-  }, []);
+  }, [album]);
 
   function handleShowAlbumId(key, value) {
     let params = new URL(window.location).searchParams;
@@ -96,7 +102,9 @@ export default function Album({ album }) {
           onClick={() => {
             history.push({ pathname: "user", search: `?id=${album.user_id}` });
           }}
-        />
+        >
+          {ownerPhoto ? "" : <i className="fas fa-user-alt"></i>}
+        </AlbumOwner>
         <AlbumPositionData>
           <AlbumPosition>
             <i className="fas fa-map-pin" />

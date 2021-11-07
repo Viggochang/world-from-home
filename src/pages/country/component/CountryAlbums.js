@@ -83,16 +83,16 @@ export default function CountryAlbums({ galleryQuestionRef }) {
   useEffect(() => {
     console.log(targetCountry);
     if (Object.keys(targetCountry).length) {
-      db_gallery
+      let unsubscribe = db_gallery
         .where("country", "==", targetCountry.id)
-        .get()
-        .then((querySnapshot) => {
+        .onSnapshot((querySnapshot) => {
           let albums = [];
           querySnapshot.forEach((album) => albums.push(album.data()));
-          // console.log(albums);
           setAlbum(albums);
-          // console.log(albums);
         });
+      return () => {
+        unsubscribe();
+      };
     }
   }, [targetCountry]);
 

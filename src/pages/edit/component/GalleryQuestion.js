@@ -15,7 +15,6 @@ import "./AlbumQuestion.css";
 
 import countryTrans from "../../../util/countryTrans";
 
-import LeafletMap from "../../country/component/LeafletMap";
 import { rgb } from "@amcharts/amcharts4/.internal/core/utils/Colors";
 
 const theme = createTheme({
@@ -84,30 +83,42 @@ const QuestionMapDiv = styled.div`
   height: 100%;
 `;
 
-const QuestionTitle = styled.div`
+const Form = styled.div`
   margin-top: 20px;
+  padding: 0 30px;
+  width: 92%;
+  height: 50vmin;
+  outline: 1px white solid;
   color: white;
-  font-size: 36px;
-  line-height: 60px;
 `;
 
-const QuestionDescriptionDiv = styled.div`
-  /* outline: 1px solid white; */
-  width: calc(50% - 20px);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+const QuestionTitle = styled.div`
+  margin-top: 10px;
+  font-size: 28px;
+  line-height: 40px;
+  @media (min-height: 1080px) {
+    margin-top: 20px;
+    font-size: 36px;
+    line-height: 60px;
+  }
 `;
 
 const TextAreaDiv = styled.div`
-  color: white;
-  width: calc(100% - 40px);
-  height: calc(100% - 408px);
+  width: 100%;
+  height: calc(100% - 264px);
   max-height: 50%;
-  /* margin: 50px 0; */
   font-size: 20px;
+  overflow-y: scroll;
+  @media (min-height: 1080px) {
+    height: calc(100% - 408px);
+    width: calc(100% - 40px);
+  }
+  /* margin: 50px 0; */
 `;
+
+// const TextAreaInner = styled.div`
+
+// `;
 
 const ButtonsDiv = styled.div`
   width: 100%;
@@ -118,23 +129,21 @@ const ButtonsDiv = styled.div`
 `;
 
 const Title = styled.div`
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  @media (min-height: 1080px) {
+    font-size: 48px;
+  }
+`;
+const TitleCountry = styled.div`
   font-size: 48px;
   font-weight: bold;
   text-align: center;
-`;
-const TitleCountry = styled.div`
-  font-size: 64px;
-  font-weight: bold;
-  text-align: center;
   margin: 10px;
-`;
-
-const Form = styled.div`
-  margin-top: 20px;
-  padding: 0 30px;
-  width: 92%;
-  height: 50vmin;
-  outline: 1px white solid;
+  @media (min-height: 1080px) {
+    font-size: 64px;
+  }
 `;
 
 const SearchDiv = styled.div`
@@ -179,17 +188,22 @@ export default function GalleryQuestion() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(albumIdEditing);
     if (albumIdEditing) {
       db_gallery
         .doc(albumIdEditing)
         .get()
         .then((doc) => {
-          if (!doc.data().content) {
+          if (!doc.data()) {
             setNewAlbum(true);
           } else {
-            setTripDate(new Date(doc.data().timestamp.seconds * 1000));
-            setTripMainCity(doc.data().position);
-            setTripIntroduction(doc.data().introduction);
+            setTripDate(
+              doc.data().timestamp
+                ? new Date(doc.data().timestamp.seconds * 1000)
+                : new Date()
+            );
+            setTripMainCity(doc.data().position || "");
+            setTripIntroduction(doc.data().introduction || "");
           }
         });
     }
@@ -233,6 +247,7 @@ export default function GalleryQuestion() {
         user_id: myInfo.id,
         country: targetCountry.id,
         praise: [],
+        tourist_spot: [],
         condition: "pending",
       };
       db_gallery
@@ -319,12 +334,13 @@ export default function GalleryQuestion() {
           </SearchDiv>
           <QuestionTitle>Introduction</QuestionTitle>
           <TextAreaDiv>
+            {/* <div> */}
             <TextareaAutosize
               aria-label="empty textarea"
               placeholder=""
               resize="none"
               style={{
-                width: "100%",
+                width: "calc(100% - 30px)",
                 height: "100%",
                 padding: "15px",
                 resize: "none",
@@ -336,6 +352,7 @@ export default function GalleryQuestion() {
                 setTripIntroduction(e.target.value);
               }}
             />
+            {/* </div> */}
           </TextAreaDiv>
         </Form>
         <ThemeProvider theme={theme}>
@@ -372,20 +389,6 @@ export default function GalleryQuestion() {
                 color: "#3A4A58",
               }}
               onClick={handleStartEdit}
-              //   () => {
-              //   QuestionRef.current.style.display = "none";
-              //   let body = {
-              //     id: albumIdEditing,
-              //     introduction: tripIntroduction,
-              //     timestamp: tripDate,
-              //     position: tripMainCity,
-              //     user_id: myInfo.id,
-              //     country: targetCountry.id,
-              //     praise: [],
-              //     condition: "pending",
-              //   };
-              //   db_gallery.doc(albumIdEditing).set(body);
-              // }}
             >
               {newAlbum ? "Start" : "Continue"}&ensp;
               <i className="fas fa-arrow-right"></i>

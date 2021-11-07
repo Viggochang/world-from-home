@@ -25,6 +25,7 @@ import text_1 from "../../image/template/text_1.jpeg";
 
 // import ToMyPage from "../world/component/ToMyPage";
 import GalleryQuestion from "./component/GalleryQuestion";
+import CompleteQuestion from "./component/CompleteQuestion";
 
 const theme = createTheme({
   status: {
@@ -227,7 +228,10 @@ function EditSpace() {
   );
 
   const [preview, setPreview] = useState(false);
-  const [country, setCountry] = useState("");
+  const [addWindow, setAddWindow] = useState(false);
+  const [complete, setComplete] = useState(false);
+  const [longitude, setLongitude] = useState(121.5);
+  const [latitude, setLatitude] = useState(25.04);
 
   const editUndo = useSelector((state) => state.editUndo);
 
@@ -241,7 +245,21 @@ function EditSpace() {
   const previewBtnRef = useRef();
   const saveAlertRef = useRef();
   const deleteAlertRef = useRef();
+  const completeQuestionRef = useRef();
   const history = useHistory();
+
+  useEffect(() => {
+    fetch(
+      `https://api.worldbank.org/v2/country/${targetCountry.id}?format=json`
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        if (res[1]) {
+          setLongitude(res[1][0].longitude);
+          setLatitude(res[1][0].latitude);
+        }
+      });
+  });
 
   useEffect(() => {
     const albumIdEditing = new URLSearchParams(window.location.search).get(
@@ -255,15 +273,24 @@ function EditSpace() {
     if (!albumIdEditing) {
       db_gallery
         .doc(newAlbumIdEditing)
-        .set({ id: albumIdEditing, condition: "pending" })
+        .set({ id: newAlbumIdEditing, condition: "pending" })
         .then(() => {
           let params = new URL(window.location).searchParams;
-          params.append("album_id_edit", albumIdEditing);
+          params.append("album_id_edit", newAlbumIdEditing);
           history.push({ search: params.toString() });
         });
     }
   }, []);
   // const workingSpaceRef = useRef();
+
+  useEffect(() => {
+    if (complete) {
+      saveAlertRef.current.style.zIndex = 5;
+      setTimeout(() => {
+        history.push({ pathname: "home" });
+      }, 500);
+    }
+  }, [complete]);
 
   function handleMoreWindow(canvasCount, templateId) {
     if (preview === false) {
@@ -290,10 +317,11 @@ function EditSpace() {
         type: "REDO",
         payload: [],
       });
+      setAddWindow(true);
     }
 
-    // console.log(workingSpaceRef.current.offsetHeight);
-    // window.scrollTo(0, workingSpaceRef.current.offsetHeight);
+    // console.log(workingSpaceRef.current.scrollHeight);
+    // window.scrollTo(0, workingSpaceRef.current.scrollHeight);
   }
 
   function handleClickTool(key) {
@@ -362,8 +390,10 @@ function EditSpace() {
         .then(() => {
           saveAlertRef.current.style.zIndex = 5;
           setTimeout(() => {
-            saveAlertRef.current.style.zIndex = 0;
-          }, 2000);
+            if (saveAlertRef.current) {
+              saveAlertRef.current.style.zIndex = 0;
+            }
+          }, 1000);
         });
     }
   }
@@ -381,34 +411,38 @@ function EditSpace() {
       .then(() => {
         saveAlertRef.current.style.zIndex = 5;
         setTimeout(() => {
-          saveAlertRef.current.style.zIndex = 0;
-        }, 2000);
+          if (saveAlertRef.current) {
+            saveAlertRef.current.style.zIndex = 0;
+          }
+        }, 1000);
       });
   }
 
-  // function handleComplete() {
-  //   const body = {
-  //     content: {
-  //       pageInfo: JSON.stringify(pageInfo),
-  //       canvasState: JSON.stringify(canvasState),
-  //     },
-  //     condition: "completed",
-  //   };
-  //   db_gallery
-  //     .doc(albumId)
-  //     .update(body)
-  //     .then(() => {
-  //       dispatch({
-  //         type: "DISCARD_CANVAS_EDIT",
-  //         payload: "",
-  //       });
-  //       // history.push({ pathname: "home" });
-  //       saveAlertRef.current.style.zIndex = 5;
-  //       setTimeout(() => {
-  //         saveAlertRef.current.style.zIndex = 0;
-  //       }, 2000);
-  //     });
-  // }
+  function handleComplete(e, albumId) {
+    completeQuestionRef.current.style.display = "flex";
+    handleSave(e, albumId);
+
+    // const body = {
+    //   content: {
+    //     pageInfo: JSON.stringify(pageInfo),
+    //     canvasState: JSON.stringify(canvasState),
+    //   },
+    // };
+    // db_gallery
+    //   .doc(albumId)
+    //   .update(body)
+    //   .then(() => {
+    //     dispatch({
+    //       type: "DISCARD_CANVAS_EDIT",
+    //       payload: "",
+    //     });
+    //     // history.push({ pathname: "home" });
+    //     saveAlertRef.current.style.zIndex = 5;
+    //     setTimeout(() => {
+    //       saveAlertRef.current.style.zIndex = 0;
+    //     }, 1000);
+    //   });
+  }
 
   function handleDiscard(e, albumId) {
     deleteAlertRef.current.style.zIndex = 5;
@@ -430,6 +464,12 @@ function EditSpace() {
   return (
     <div>
       <GalleryQuestion />
+      <CompleteQuestion
+        completeQuestionRef={completeQuestionRef}
+        longitude={longitude}
+        latitude={latitude}
+        setComplete={setComplete}
+      />
       <AlertDiv>
         <Stack sx={{ width: "300px" }} spacing={2}>
           <Alert
@@ -437,14 +477,14 @@ function EditSpace() {
             style={{ position: "absolute", margin: 0 }}
             ref={saveAlertRef}
           >
-            Album saved !
+            {setComplete ? "Album Complete !" : "Album Saved !"}
           </Alert>
           <Alert
             severity="warning"
             style={{ position: "absolute", margin: 0 }}
             ref={deleteAlertRef}
           >
-            Album deleted !
+            Album Deleted !
           </Alert>
         </Stack>
       </AlertDiv>
@@ -501,7 +541,7 @@ function EditSpace() {
             variant="contained"
             color="primary"
             style={{ marginRight: "10px" }}
-            // onClick={(e) => handleComplete(e, albumIdEditing)}
+            onClick={(e) => handleComplete(e, albumIdEditing)}
           >
             COMPLETE
           </Button>
@@ -532,7 +572,7 @@ function EditSpace() {
             ))}
           </ToolContainerDivInner>
         </ToolContainerDiv>
-        <WorkingSpace preview={preview} />
+        <WorkingSpace preview={preview} addWindow={addWindow} />
         <Preview preview={preview} />
       </ContainerDiv>
     </div>

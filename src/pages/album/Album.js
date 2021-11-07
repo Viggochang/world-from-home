@@ -11,7 +11,7 @@ import countryTrans from "../../util/countryTrans";
 
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
-  height: 100vh;
+  height: calc(100vh - 80px);
   background-color: rgb(0, 0, 0, 0.85);
   display: none;
   z-index: 5;
@@ -58,7 +58,8 @@ const ButtonStyle = styled.div`
   cursor: pointer;
   box-shadow: 0px 0px 10px #d0d0d0;
   :hover {
-    color: #667484;
+    /* color: #667484; */
+    box-shadow: 0px 0px 22px #d0d0d0;
   }
 `;
 
@@ -96,14 +97,19 @@ const AlbumDate = styled.div`
 
 export default function Album() {
   const albumIdShow = useSelector((state) => state.albumIdShow);
-  const userInfo = useSelector((state) => state.userInfo);
+  const myInfo = useSelector((state) => state.userInfo);
   const history = useHistory();
   const dispatch = useDispatch();
   const [albumData, setAlbumData] = useState({});
   const [ownerPhoto, setOwnerPhoto] = useState("");
   const [ownerId, setOwnerId] = useState("");
+  const [ownerFriendData, setOwnerFriendData] = useState([]);
+  const [liked, setLiked] = useState(false);
+  const [friendCondition, setFriendCondition] = useState("none");
+  const [myAlbun, setMyAlbum] = useState(false);
 
   const { content, position, timestamp, user_id } = albumData || {};
+  console.log(ownerId, myInfo.id, ownerId === myInfo.id);
 
   useEffect(() => {
     console.log(albumIdShow);
@@ -120,10 +126,28 @@ export default function Album() {
             .then((doc) => {
               setOwnerPhoto(doc.data().photo);
               setOwnerId(doc.data().id);
+              setOwnerFriendData(doc.data().friends);
             });
         });
     }
   }, [albumIdShow]);
+
+  useEffect(() => {
+    if (albumData.praise) {
+      setLiked(albumData.praise.includes(myInfo.id));
+    }
+  }, [albumData.praise]);
+
+  useEffect(() => {
+    if (myInfo.friends) {
+      myInfo.friends.forEach((friend) => {
+        if (ownerId === friend.id) {
+          setFriendCondition(friend.condition);
+        }
+      });
+    }
+    setMyAlbum(myInfo.id === ownerId);
+  }, [myInfo.friends, ownerId]);
 
   function handleClickBack() {
     let params = new URL(window.location).searchParams;
@@ -136,6 +160,49 @@ export default function Album() {
     setAlbumData({});
     setOwnerPhoto("");
     setOwnerId("");
+  }
+
+  function handleLike() {
+    setLiked(!liked);
+    db_gallery.doc(albumIdShow).update({
+      praise: !liked
+        ? [...albumData.praise, myInfo.id]
+        : albumData.praise.filter((id) => id !== myInfo.id),
+    });
+  }
+
+  function handleFriend() {
+    const newMyFriendData = myInfo.friends.filter(
+      (friend) => friend.id !== ownerId
+    );
+    const newOwnerFriendData = ownerFriendData.filter(
+      (friend) => friend.id !== myInfo.id
+    );
+
+    if (friendCondition === "none") {
+      db_userInfo.doc(myInfo.id).update({
+        friends: [
+          ...newMyFriendData,
+          { id: ownerId, condition: "send_request" },
+        ],
+      });
+      db_userInfo.doc(ownerId).update({
+        friends: [
+          ...newOwnerFriendData,
+          { id: myInfo.id, condition: "get_request" },
+        ],
+      });
+    } else if (friendCondition === "get_request") {
+      db_userInfo.doc(myInfo.id).update({
+        friends: [...newMyFriendData, { id: ownerId, condition: "confirmed" }],
+      });
+      db_userInfo.doc(ownerId).update({
+        friends: [
+          ...newOwnerFriendData,
+          { id: myInfo.id, condition: "confirmed" },
+        ],
+      });
+    }
   }
 
   function handleEdit() {
@@ -156,41 +223,66 @@ export default function Album() {
     });
   }
 
+  function handleDelete() {
+    db_gallery.doc(albumIdShow).update({ condition: "discard" });
+    handleClickBack();
+  }
+
+  const addFriendText = {
+    none: "Add Friend",
+    get_request: "Add Friend",
+    send_request: "Request sended",
+    confirmed: "You are Friend !",
+  };
+
   return (
     <AlbumDiv style={{ display: albumIdShow ? "flex" : "none" }}>
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times"></i>
       </BackDiv>
       <ButtonsDiv>
-        <Tooltip title="Like" placement="left">
-          <ButtonStyle>
+        <Tooltip title={liked ? "Liked" : "Like"} placement="left">
+          <ButtonStyle
+            onClick={handleLike}
+            style={liked ? { backgroundColor: "#3A4A58", color: "white" } : {}}
+          >
             <i className="fas fa-thumbs-up" />
           </ButtonStyle>
         </Tooltip>
+
         <Tooltip
-          title="Add Friend"
+          title={addFriendText[friendCondition]}
           placement="left"
-          style={{ display: userInfo.id === ownerId ? "none" : "flex" }}
+          style={{ display: myAlbun ? "none" : "flex" }}
         >
-          <ButtonStyle>
+          <ButtonStyle
+            onClick={handleFriend}
+            style={
+              friendCondition === "confirmed"
+                ? { backgroundColor: "#3A4A58", color: "white" }
+                : {}
+            }
+          >
             <i className="fas fa-user-plus"></i>
           </ButtonStyle>
         </Tooltip>
+
         <Tooltip
           title="Edit"
           placement="left"
-          style={{ display: userInfo.id === ownerId ? "flex" : "none" }}
+          style={{ display: myAlbun ? "flex" : "none" }}
         >
           <ButtonStyle onClick={handleEdit}>
             <i className="fas fa-pencil-alt" />
           </ButtonStyle>
         </Tooltip>
+
         <Tooltip
           title="Delete"
           placement="left"
-          style={{ display: userInfo.id === ownerId ? "flex" : "none" }}
+          style={{ display: myAlbun ? "flex" : "none" }}
         >
-          <ButtonStyle>
+          <ButtonStyle onClick={handleDelete}>
             <i className="fas fa-trash-alt"></i>
           </ButtonStyle>
         </Tooltip>

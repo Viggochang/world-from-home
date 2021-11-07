@@ -1,16 +1,40 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "proj4leaflet";
 import L from "leaflet";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.markercluster";
 import * as ELG from "esri-leaflet-geocoder";
-import "proj4leaflet";
 import "esri-leaflet";
 import "esri-leaflet-vector";
 // import "./Map.css";
+import { db_gallery } from "../../util/firebase";
 
 function LeafletMap() {
+  const [allSpot, setAllSpot] = useState([]);
+  const myInfo = useSelector((state) => state.userInfo);
+
+  // useEffect(() => {
+  //   db_gallery.get().then(
+  //     (snapshot) =>
+  //       snapshot.docs
+  //         .filter((doc) => doc.user_id === myInfo.id)
+  //         .forEach(({ tourist_spot }) => {
+  //           tourist_spot.forEach(([lat, lng]) => {
+  //             setAllSpot((allSpot) => [...allSpot, { x: lng, y: lat }]);
+  //           });
+  //         })
+
+  //     // .forEach({(tourist_sppot}) => {
+  //     //   tourist_sppot.forEach(([lat, lng]) => {
+  //     //     spotArr.push([lat, lng])
+  //     //   })
+  //     // })
+  //   );
+  // }, []);
+
   useEffect(() => {
     // let crs = new L.Proj.CRS(
     //   "EPSG:54003",
@@ -44,7 +68,7 @@ function LeafletMap() {
     // );
     let map = L.map("map", {
       minZoom: 2.5,
-    }).setView([23.5, 121], 8);
+    }).setView([23.5, 121], 2);
 
     // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     //   attribution:
@@ -95,36 +119,70 @@ function LeafletMap() {
       }
     });
 
-    function random(min, max) {
-      return Math.random() * (max - min) + min;
-    }
+    // function random(min, max) {
+    //   return Math.random() * (max - min) + min;
+    // }
 
-    function CreatePoint(count, arr) {
-      // count為產生的點數量
-      for (let i = 0; i < count; i++) {
-        let longitude = random(120.5, 121.4); // 經度介於120.5~121.4
-        let latitude = random(23, 24.6); // 緯度介於23~24.6
+    // function CreatePoint(count, arr) {
+    //   // count為產生的點數量
+    //   for (let i = 0; i < count; i++) {
+    //     let longitude = random(120.5, 121.4); // 經度介於120.5~121.4
+    //     let latitude = random(23, 24.6); // 緯度介於23~24.6
 
-        arr.push({ x: longitude, y: latitude });
-      }
-    }
-    let arr = [];
-    CreatePoint(1500, arr);
-    console.log(arr);
+    //     arr.push({ x: longitude, y: latitude });
+    //   }
+    // }
+    // let arr = [];
+    // CreatePoint(1500, arr);
+    // console.log(arr);
 
     // arr
     //   .map((item) => L.marker(new L.LatLng(item.y, item.x)))
     //   .forEach((item) => map.addLayer(item));
 
     let markers = L.markerClusterGroup();
-    arr
-      .map((item) =>
-        L.marker(new L.LatLng(item.y, item.x)) // 新增Marker
-          .bindPopup(`<p>經度: ${item.x}</p><p>緯度: ${item.y}</p>`)
-      ) // 資訊視窗
-      .forEach((item) => markers.addLayer(item)); // 把marker加入 L.markerClusterGroup中
-    map.addLayer(markers);
-  }, []);
+
+    const arr = [];
+    db_gallery
+      .get()
+      .then((snapshot) =>
+        snapshot.docs
+          .filter((doc) => doc.data().user_id === "yXtnB3CD0XAJDQ0Le51J")
+          .forEach((doc) => {
+            console.log(doc.data());
+            doc.data().tourist_spot.forEach((spot) => {
+              setAllSpot((allSpot) => [
+                ...allSpot,
+                { x: spot.lng, y: spot.lat, text: spot.text },
+              ]);
+              arr.push({ x: spot.lng, y: spot.lat, text: spot.text });
+            });
+          })
+      )
+      .then(() => {
+        console.log(arr);
+        arr
+          .map((item) =>
+            L.marker(new L.LatLng(item.y, item.x)) // 新增Marker
+              .bindPopup(item.text)
+          ) // 資訊視窗
+          .forEach((item) => markers.addLayer(item)); // 把marker加入 L.markerClusterGroup中
+        map.addLayer(markers);
+      });
+
+    // allSpot
+    //   .map((item) =>
+    //     L.marker(new L.LatLng(item.y, item.x)) // 新增Marker
+    //       .bindPopup(`<p>經度: ${item.x}</p><p>緯度: ${item.y}</p>`)
+    //   ) // 資訊視窗
+    //   .forEach((item) => markers.addLayer(item)); // 把marker加入 L.markerClusterGroup中
+    // map.addLayer(markers);
+
+    return () => {
+      map.off();
+      map.remove();
+    };
+  }, [myInfo]);
 
   return (
     <div id="map" style={{ margin: "50px", height: "800px" }} />

@@ -169,12 +169,14 @@ export default function MyGallery({ title, id, isMyPage }) {
 
   useEffect(() => {
     if (id) {
-      db_gallery
+      let unsubscribe = db_gallery
         .where("user_id", "==", id)
-        .get()
-        .then((querySnapshot) => {
+        .onSnapshot((querySnapshot) => {
           setAlbumData(querySnapshot.docs.map((doc) => doc.data()));
         });
+      return () => {
+        unsubscribe();
+      };
     }
   }, [id]);
 
