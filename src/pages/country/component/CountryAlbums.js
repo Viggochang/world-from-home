@@ -98,7 +98,7 @@ export default function CountryAlbums({ galleryQuestionRef }) {
 
   return (
     <GalleryBackgroundDiv>
-      {album.length ? (
+      {album.filter((album) => album.condition === "completed").length ? (
         <AlbumDiv>
           {album
             .filter((album) => album.condition === "completed")

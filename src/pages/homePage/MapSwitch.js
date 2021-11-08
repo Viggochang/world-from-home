@@ -32,7 +32,7 @@ const EditingSwitchDiv = styled.div`
   position: fixed;
   top: 50px;
   right: 400px;
-  z-index: 5;
+  z-index: 2;
 `;
 
 const EditLabel = styled.div`

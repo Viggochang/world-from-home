@@ -72,7 +72,7 @@ const EditLabel = styled.div`
 
 const ContentDiv = styled.div`
   outline: 2px #3a4a58 solid;
-  padding: 10px 30px 0;
+  padding: 10px 30px 30px;
   margin-top: 15px;
   width: calc(100% - 60px);
   max-height: calc(100vh - 170px);

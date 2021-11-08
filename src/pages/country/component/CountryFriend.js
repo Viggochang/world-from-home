@@ -156,7 +156,7 @@ export default function CountryFriend() {
                 history.push({ pathname: "user", search: `?id=${friend.id}` });
               }}
             />
-            <FriendHereInfo>
+            {/* <FriendHereInfo>
               <FriendHereInfoName
                 onClick={() => {
                   history.push({
@@ -171,7 +171,7 @@ export default function CountryFriend() {
                 <i className="fas fa-globe"></i>
                 &ensp;{countryTrans[friend.country].name_en}
               </FriendHereInfoCountry>
-            </FriendHereInfo>
+            </FriendHereInfo> */}
           </FriendHere>
         ))}
       </MyFriendsContainer>

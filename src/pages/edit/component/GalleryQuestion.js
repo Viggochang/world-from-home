@@ -194,7 +194,7 @@ export default function GalleryQuestion() {
         .doc(albumIdEditing)
         .get()
         .then((doc) => {
-          if (!doc.data()) {
+          if (!doc.data().country) {
             setNewAlbum(true);
           } else {
             setTripDate(
@@ -247,7 +247,6 @@ export default function GalleryQuestion() {
         user_id: myInfo.id,
         country: targetCountry.id,
         praise: [],
-        tourist_spot: [],
         condition: "pending",
       };
       db_gallery

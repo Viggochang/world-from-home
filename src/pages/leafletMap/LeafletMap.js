@@ -144,6 +144,7 @@ function LeafletMap({ mapType }) {
       .then((snapshot) =>
         snapshot.docs
           .filter((doc) => doc.data().user_id === "yXtnB3CD0XAJDQ0Le51J")
+          .filter((doc) => doc.condition === "completed")
           .forEach((doc) => {
             console.log(doc.data());
             doc.data().tourist_spot.forEach((spot) => {

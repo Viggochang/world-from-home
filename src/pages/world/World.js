@@ -26,6 +26,7 @@ function World({
   setMap,
   setMaskVisibility,
   setMaskOpacity,
+  userPage,
 }) {
   const dispatch = useDispatch();
   // const userInfo = useSelector((state) => state.userInfo);
@@ -125,7 +126,13 @@ function World({
   }, [userInfo]);
 
   return (
-    <Chartdiv id="chartdiv" style={{ display: mapType ? "block" : "none" }} />
+    <Chartdiv
+      id="chartdiv"
+      style={{
+        display: userPage || mapType ? "block" : "none",
+        position: userPage ? "static" : "fixed",
+      }}
+    />
   );
 }
 

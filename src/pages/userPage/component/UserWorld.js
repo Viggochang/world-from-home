@@ -23,16 +23,16 @@ const BackBtn = styled.div`
   position: absolute;
   bottom: 220px;
   right: 45px;
-  color: #3A4A58;
+  color: #3a4a58;
   border-radius: 25%;
   outline: 2px solid #d9d9d9;
   cursor: pointer;
-  :hover{
-    background-color: #8E8E8E;
+  :hover {
+    background-color: #8e8e8e;
   }
 `;
 
-export default function UserWorld({userInfo}) {
+export default function UserWorld({ userInfo }) {
   const [maskVisibility, setMaskVisibility] = useState("hidden");
   const [maskOpacity, setMaskOpacity] = useState(0);
   const [maskDisplay, setMaskDisplay] = useState("flex");
@@ -52,6 +52,7 @@ export default function UserWorld({userInfo}) {
         setMap={setMap}
         setMaskVisibility={setMaskVisibility}
         setMaskOpacity={setMaskOpacity}
+        userPage={true}
       />
       <BackBtn onClick={handleBack}>
         <i className="fas fa-home"></i>
