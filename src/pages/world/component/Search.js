@@ -18,6 +18,7 @@ const SearchDiv = styled.div`
   background-color: rgb(102, 116, 132, 0.8);
   margin-left: 20px;
   display: flex;
+  z-index: 1;
 `;
 const SearchIconDiv = styled.div`
   font-size: 20px;
@@ -45,6 +46,7 @@ export default function Search({
   setMaskVisibility,
   map,
   setCurrentActive,
+  mapType,
 }) {
   const searchRef = useRef();
   const dispatch = useDispatch();
@@ -86,7 +88,7 @@ export default function Search({
   }
 
   return (
-    <SearchDiv>
+    <SearchDiv style={{ display: mapType ? "flex" : "none" }}>
       <Inputdiv
         list="country-choice"
         id="search-country"

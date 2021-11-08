@@ -4,12 +4,14 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import World from "../world/World";
+import LeafletMap from "../leafletMap/LeafletMap";
 import ToMyPage from "../world/component/ToMyPage";
 import Search from "../world/component/Search";
 import Country from "../country/Country";
 // import GalleryQuestion from "../country/component/GalleryQuestion";
 import SigninDiv from "../Signin/Signin";
 import Album from "../album/Album";
+import MapSwitch from "./MapSwitch";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -28,6 +30,7 @@ const BackBtn = styled.div`
   border-radius: 25%;
   outline: 2px solid #d9d9d9;
   cursor: pointer;
+  z-index: 1;
   :hover {
     background-color: #8e8e8e;
   }
@@ -55,6 +58,7 @@ export default function HomePage() {
   const [maskDisplay, setMaskDisplay] = useState("flex");
   const [map, setMap] = useState(undefined);
   const [currentActive, setCurrentActive] = useState({});
+  const [mapType, setMapType] = useState(true);
 
   function handleClickBack() {
     map.goHome();
@@ -75,25 +79,35 @@ export default function HomePage() {
 
   return (
     <HomePageDiv>
+      <MapSwitch setMapType={setMapType} mapType={mapType} />
+      <LeafletMap mapType={mapType} />
       <World
+        mapType={mapType}
         userInfo={userInfo}
         setCurrentActive={setCurrentActive}
         setMap={setMap}
         setMaskVisibility={setMaskVisibility}
         setMaskOpacity={setMaskOpacity}
       />
-      <BackBtn onClick={handleClickBack}>
+      <ToMyPage handleSignIn={handleSignIn} />
+      <Title style={{ color: mapType ? "white" : "#3A4A58" }}>
+        {`World  from  ${userInfo.name || "Guest"}`}
+      </Title>
+
+      <BackBtn
+        style={{ display: mapType ? "block" : "none" }}
+        onClick={handleClickBack}
+      >
         <i className="fas fa-home"></i>
       </BackBtn>
 
-      <ToMyPage handleSignIn={handleSignIn} />
       <Search
         setMaskVisibility={setMaskVisibility}
         setMaskOpacity={setMaskOpacity}
         map={map}
         setCurrentActive={setCurrentActive}
+        mapType={mapType}
       />
-      <Title>{`World  from  ${userInfo.name || "Guest"}`}</Title>
       <Country
         style={{
           visibility: maskVisibility,
@@ -103,7 +117,6 @@ export default function HomePage() {
         }}
         handleClickBack={handleClickBack}
       />
-      {/* <GalleryQuestion innerRef={galleryQuestionRef} /> */}
       <SigninDiv innerRef={signinRef} />
       <Album />
     </HomePageDiv>

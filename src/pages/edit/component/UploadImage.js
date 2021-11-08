@@ -74,7 +74,7 @@ export default function UploadImage({ page, id }) {
         // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };
         const storageRef = storage.ref(
-          `userId/albums/${albumIdEditing}/${canvasId}`
+          `userId/albums/${albumIdEditing}/${canvasId}_${Date.now()}`
         );
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {

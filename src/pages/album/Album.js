@@ -106,10 +106,9 @@ export default function Album() {
   const [ownerFriendData, setOwnerFriendData] = useState([]);
   const [liked, setLiked] = useState(false);
   const [friendCondition, setFriendCondition] = useState("none");
-  const [myAlbun, setMyAlbum] = useState(false);
+  const [isMyAlbun, setIsMyAlbum] = useState(false);
 
   const { content, position, timestamp, user_id } = albumData || {};
-  console.log(ownerId, myInfo.id, ownerId === myInfo.id);
 
   useEffect(() => {
     console.log(albumIdShow);
@@ -146,7 +145,7 @@ export default function Album() {
         }
       });
     }
-    setMyAlbum(myInfo.id === ownerId);
+    setIsMyAlbum(myInfo.id === ownerId);
   }, [myInfo.friends, ownerId]);
 
   function handleClickBack() {
@@ -250,17 +249,17 @@ export default function Album() {
           </ButtonStyle>
         </Tooltip>
 
-        <Tooltip
-          title={addFriendText[friendCondition]}
-          placement="left"
-          style={{ display: myAlbun ? "none" : "flex" }}
-        >
+        <Tooltip title={addFriendText[friendCondition]} placement="left">
           <ButtonStyle
             onClick={handleFriend}
             style={
               friendCondition === "confirmed"
-                ? { backgroundColor: "#3A4A58", color: "white" }
-                : {}
+                ? {
+                    backgroundColor: "#3A4A58",
+                    color: "white",
+                    display: isMyAlbun ? "none" : "flex",
+                  }
+                : { display: isMyAlbun ? "none" : "flex" }
             }
           >
             <i className="fas fa-user-plus"></i>
@@ -270,7 +269,7 @@ export default function Album() {
         <Tooltip
           title="Edit"
           placement="left"
-          style={{ display: myAlbun ? "flex" : "none" }}
+          style={{ display: isMyAlbun ? "flex" : "none" }}
         >
           <ButtonStyle onClick={handleEdit}>
             <i className="fas fa-pencil-alt" />
@@ -280,7 +279,7 @@ export default function Album() {
         <Tooltip
           title="Delete"
           placement="left"
-          style={{ display: myAlbun ? "flex" : "none" }}
+          style={{ display: isMyAlbun ? "flex" : "none" }}
         >
           <ButtonStyle onClick={handleDelete}>
             <i className="fas fa-trash-alt"></i>

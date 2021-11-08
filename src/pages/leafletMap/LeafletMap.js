@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import styled from "styled-components";
+
 import "proj4leaflet";
 import L from "leaflet";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -12,7 +14,15 @@ import "esri-leaflet-vector";
 // import "./Map.css";
 import { db_gallery } from "../../util/firebase";
 
-function LeafletMap() {
+const LeafletMapDiv = styled.div`
+  height: "100vh";
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1 !important;
+`;
+
+function LeafletMap({ mapType }) {
   const [allSpot, setAllSpot] = useState([]);
   const myInfo = useSelector((state) => state.userInfo);
 
@@ -49,26 +59,12 @@ function LeafletMap() {
     //     resolutions: [8192, 4096, 2048], // 3 example zoom level resolutions
     //   }
     // );
-
-    // let crs = new L.Proj.CRS(
-    //   "EPSG:27700",
-    //   "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs",
-    //   {
-    //     origin: [-5781523.997920001, 4883853.592504997],
-    //     resolutions: [
-    //       132291.9312505292, 66145.9656252646, 26458.386250105836,
-    //       19843.789687579378, 13229.193125052918, 6614.596562526459,
-    //       2645.8386250105837, 1322.9193125052918, 661.4596562526459,
-    //       264.5838625010584, 132.2919312505292, 66.1459656252646,
-    //       26.458386250105836, 19.843789687579378, 13.229193125052918,
-    //       6.614596562526459, 2.6458386250105836, 1.3229193125052918,
-    //       0.6614596562526459,
-    //     ],
-    //   }
-    // );
-    let map = L.map("map", {
+    let map = new L.map("map", {
       minZoom: 2.5,
-    }).setView([23.5, 121], 2);
+      zoomControl: false,
+    }).setView([23.5, 0], 2);
+
+    new L.Control.Zoom({ position: "bottomright" }).addTo(map);
 
     // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     //   attribution:
@@ -87,37 +83,37 @@ function LeafletMap() {
       attribution: cartodbAttribution,
     }).addTo(map);
 
-    let searchControl = ELG.geosearch({
-      position: "topright",
-      placeholder: "Enter an address or place e.g. 1 York St",
-      useMapBounds: false,
-      providers: [
-        ELG.arcgisOnlineProvider({
-          apikey:
-            "AAPK8ba779cc01594743abbd245136a3f366gM55ZxvACBdAwG_RwlwTIts1NHYDcL4AT8N9qKcMqVXEj53qqGCJvnk_GHFLmUvU", // replace with your api key - https://developers.arcgis.com
-          nearby: {
-            lat: -33.8688,
-            lng: 151.2093,
-          },
-        }),
-      ],
-    }).addTo(map);
+    // let searchControl = ELG.geosearch({
+    //   position: "topright",
+    //   placeholder: "Search",
+    //   useMapBounds: false,
+    //   providers: [
+    //     ELG.arcgisOnlineProvider({
+    //       apikey:
+    //         "AAPK8ba779cc01594743abbd245136a3f366gM55ZxvACBdAwG_RwlwTIts1NHYDcL4AT8N9qKcMqVXEj53qqGCJvnk_GHFLmUvU", // replace with your api key - https://developers.arcgis.com
+    //       nearby: {
+    //         lat: -33.8688,
+    //         lng: 151.2093,
+    //       },
+    //     }),
+    //   ],
+    // }).addTo(map);
 
-    let results = L.layerGroup().addTo(map);
+    // let results = L.layerGroup().addTo(map);
 
-    searchControl.on("results", function (data) {
-      console.log(data);
-      results.clearLayers();
-      for (let i = data.results.length - 1; i >= 0; i--) {
-        L.marker(data.results[i].latlng)
-          .addTo(results)
-          .bindPopup(data.text)
-          .openPopup();
-        results
-          .addLayer(L.marker(data.results[i].latlng).bindPopup(data.text))
-          .openPopup();
-      }
-    });
+    // searchControl.on("results", function (data) {
+    //   console.log(data);
+    //   results.clearLayers();
+    //   for (let i = data.results.length - 1; i >= 0; i--) {
+    //     L.marker(data.results[i].latlng)
+    //       .addTo(results)
+    //       .bindPopup(data.text)
+    //       .openPopup();
+    //     results
+    //       .addLayer(L.marker(data.results[i].latlng).bindPopup(data.text))
+    //       .openPopup();
+    //   }
+    // });
 
     // function random(min, max) {
     //   return Math.random() * (max - min) + min;
@@ -140,7 +136,7 @@ function LeafletMap() {
     //   .map((item) => L.marker(new L.LatLng(item.y, item.x)))
     //   .forEach((item) => map.addLayer(item));
 
-    let markers = L.markerClusterGroup();
+    let markers = new L.markerClusterGroup();
 
     const arr = [];
     db_gallery
@@ -185,7 +181,7 @@ function LeafletMap() {
   }, [myInfo]);
 
   return (
-    <div id="map" style={{ margin: "50px", height: "800px" }} />
+    <LeafletMapDiv id="map" style={{ zIndex: mapType ? 0 : 1 }} />
     // <MapContainer
     //   style={{ height: "1000px" }}
     //   center={[51.505, -0.09]}

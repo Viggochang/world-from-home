@@ -14,6 +14,7 @@ const MyPhoto = styled(NavLink)`
   right: 40px;
   border-radius: 20px;
   cursor: pointer;
+  z-index: 5;
 `;
 
 const GuestIcon = styled.div`
@@ -32,6 +33,7 @@ const GuestIcon = styled.div`
   align-items: center;
   color: white;
   font-size: 40px;
+  z-index: 5;
 `;
 
 export default function ToMyPage({ handleSignIn, style }) {

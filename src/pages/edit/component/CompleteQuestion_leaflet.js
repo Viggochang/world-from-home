@@ -10,19 +10,19 @@ import * as ELG from "esri-leaflet-geocoder";
 import "proj4leaflet";
 import "esri-leaflet";
 import "esri-leaflet-vector";
-// import "./Map.css";
+import "../../country/component/Map.css";
 
 const LeafletMapDiv = styled.div`
   width: 100%;
   height: 100%;
 `;
 
-function LeafletMap({ longitude, latitude, setTouristSpot }) {
+function LeafletMap({ longitude, latitude, setTouristSpot, touristSpot }) {
   useEffect(() => {
     // let map = undefined;
     let map = L.map("map", {
       minZoom: 1.5,
-    }).setView([latitude, longitude], 5);
+    }).setView([latitude, longitude], 6);
 
     let cartodbAttribution =
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CARTO</a>';
@@ -30,6 +30,8 @@ function LeafletMap({ longitude, latitude, setTouristSpot }) {
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
       attribution: cartodbAttribution,
     }).addTo(map);
+
+    map.invalidateSize(true);
 
     let searchControl = ELG.geosearch({
       position: "topright",
@@ -48,9 +50,17 @@ function LeafletMap({ longitude, latitude, setTouristSpot }) {
     }).addTo(map);
     let results = L.layerGroup().addTo(map);
 
+    // if (touristSpot.length) {
+    //   touristSpot.forEach((data) =>
+    //     L.marker(new L.LatLng(data.lat, data.lng)) // 新增Marker
+    //       .bindPopup(data.text)
+    //       .addTo(map)
+    //   );
+    // }
+
     searchControl.on("results", function (data) {
       console.log(data);
-      results.clearLayers();
+      // results.clearLayers();
       for (let i = data.results.length - 1; i >= 0; i--) {
         L.marker(data.results[i].latlng)
           .addTo(results)

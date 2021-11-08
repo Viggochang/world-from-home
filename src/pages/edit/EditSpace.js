@@ -419,7 +419,7 @@ function EditSpace() {
   }
 
   function handleComplete(e, albumId) {
-    completeQuestionRef.current.style.display = "flex";
+    completeQuestionRef.current.style.zIndex = 5;
     handleSave(e, albumId);
 
     // const body = {

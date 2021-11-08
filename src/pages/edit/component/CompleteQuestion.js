@@ -14,8 +14,8 @@ const CompleteQuestionDiv = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 5;
-  display: none;
+  z-index: -1;
+  display: flex;
 `;
 
 const CompleteQuestionContainer = styled.div`
@@ -95,6 +95,7 @@ const TouristSpotMapDiv = styled.div`
 `;
 
 const TouristSpotDiv = styled.div`
+  padding: 10px;
   margin-top: 30px;
   width: 100%;
   height: 100%;
@@ -243,7 +244,7 @@ export default function CompleteQuestion({
   }
 
   function handleCancel() {
-    completeQuestionRef.current.style.display = "none";
+    completeQuestionRef.current.style.zIndex = -1;
   }
 
   return (
@@ -257,6 +258,7 @@ export default function CompleteQuestion({
                 longitude={longitude}
                 latitude={latitude}
                 setTouristSpot={setTouristSpot}
+                touristSpot={touristSpot}
               />
             </TouristSpotMapDiv>
           </Question>

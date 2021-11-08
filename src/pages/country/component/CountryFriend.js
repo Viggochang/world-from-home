@@ -9,7 +9,7 @@ import countryTrans from "../../../util/countryTrans";
 const FriendsContainerDiv = styled.div`
   width: calc(100% - 650px);
   height: calc(43% - 80px);
-  margin: 20px 0 0 70px;
+  margin: 20px 0 0 50px;
   color: white;
   display: flex;
   flex-direction: column;
@@ -56,7 +56,7 @@ const FriendHere = styled.div`
 
 const FriendHerePhoto = styled.div`
   height: 100%;
-  margin-right: 10px;
+  margin: 0 auto;
   aspect-ratio: 1;
   border-radius: 50%;
   cursor: pointer;
@@ -73,7 +73,7 @@ const FriendHereInfo = styled.div`
   /* text-align: start; */
   /* position: absolute;
   bottom: 0; */
-  margin-top: 10px;
+  margin: 10px auto 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -272,7 +272,7 @@ export default function MyGallery({ title, id, isMyPage }) {
                   : "rgb(58, 74, 88, 1)",
               }}
             >
-              completed
+              complete
             </EditLabel>
             <Switch
               checked={pending}

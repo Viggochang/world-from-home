@@ -12,9 +12,15 @@ import countryTrans from "../../util/countryTrans";
 const Chartdiv = styled.div`
   width: 100%;
   height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #3a4a58;
 `;
 
 function World({
+  mapType,
   userInfo,
   setCurrentActive,
   setMap,
@@ -118,7 +124,9 @@ function World({
     };
   }, [userInfo]);
 
-  return <Chartdiv id="chartdiv" />;
+  return (
+    <Chartdiv id="chartdiv" style={{ display: mapType ? "block" : "none" }} />
+  );
 }
 
 export default World;
