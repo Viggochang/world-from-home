@@ -13,6 +13,7 @@ import EditSpace from "./pages/edit/EditSpace";
 import MyPage from "./pages/myPage/MyPage";
 import UserPage from "./pages/userPage/UserPage";
 import LeafletMap from "./pages/leafletMap/LeafletMap";
+import MuiStyle from "./util/MuiStyle";
 
 // const myUserId = "yXtnB3CD0XAJDQ0Le51J";
 
@@ -57,8 +58,8 @@ function App() {
       console.log(myUserId);
       db_userInfo.doc(myUserId).onSnapshot((querySnapshot) => {
         dispatch({
-          type: "SET_USER_INFO",
-          payload: querySnapshot.data(),
+          type: "SET_USER_INFO", // 使用者的資訊
+          payload: querySnapshot.data() || {},
         });
       });
     }
@@ -85,6 +86,9 @@ function App() {
           </Route>
           <Route path="/leaflet">
             <LeafletMap />
+          </Route>
+          <Route path="/muitest">
+            <MuiStyle />
           </Route>
         </Switch>
       </BrowserRouter>

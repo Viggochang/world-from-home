@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -6,6 +6,7 @@ import { db_gallery, db_userInfo } from "../../util/firebase";
 
 import ShowAlbum from "./component/ShowAlbum";
 import { Tooltip } from "@mui/material";
+import { Alert, Stack } from "@mui/material";
 
 import countryTrans from "../../util/countryTrans";
 
@@ -21,6 +22,11 @@ const AlbumDiv = styled.div`
   flex-direction: column;
   padding: 40px 100px;
   overflow: scroll;
+`;
+
+const AlertDiv = styled.div`
+  margin: 20px calc(50% - 150px);
+  position: relative;
 `;
 
 const BackDiv = styled.div`
@@ -107,6 +113,7 @@ export default function Album() {
   const [liked, setLiked] = useState(false);
   const [friendCondition, setFriendCondition] = useState("none");
   const [isMyAlbun, setIsMyAlbum] = useState(false);
+  const deleteAlertRef = useRef();
 
   const { content, position, timestamp, user_id } = albumData || {};
 
@@ -224,7 +231,11 @@ export default function Album() {
 
   function handleDelete() {
     db_gallery.doc(albumIdShow).update({ condition: "discard" });
-    handleClickBack();
+    deleteAlertRef.current.style.display = "flex";
+    setTimeout(() => {
+      deleteAlertRef.current.style.display = "none";
+      handleClickBack();
+    }, 1000);
   }
 
   const addFriendText = {
@@ -236,6 +247,17 @@ export default function Album() {
 
   return (
     <AlbumDiv style={{ display: albumIdShow ? "flex" : "none" }}>
+      <AlertDiv>
+        <Stack sx={{ width: "300px" }} spacing={2}>
+          <Alert
+            severity="error"
+            style={{ position: "absolute", margin: 0, display: "none" }}
+            ref={deleteAlertRef}
+          >
+            Album Deleted !
+          </Alert>
+        </Stack>
+      </AlertDiv>
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times"></i>
       </BackDiv>

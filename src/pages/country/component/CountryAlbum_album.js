@@ -126,7 +126,7 @@ export default function Album({ album }) {
         onClick={() => handleShowAlbumId("album_id_show", album.id)}
       />
       <AlbumPraise>
-        <i className="fas fa-heart"></i> {album.praise.length}
+        <i className="fas fa-thumbs-up"></i> {album.praise.length}
       </AlbumPraise>
     </AlbumHere>
   );

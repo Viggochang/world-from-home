@@ -27,7 +27,15 @@ const theme = createTheme({
   },
 });
 
-const WelcomePageDiv = styled.div``;
+const WelcomePageDiv = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(128, 128, 128);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+`;
 
 const BackgroundVideo = styled.video`
   position: fixed;
@@ -35,15 +43,6 @@ const BackgroundVideo = styled.video`
   bottom: 0;
   width: 100%;
   height: 100%;
-`;
-
-const BaseDiv = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background-color: rgb(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;
 
 const TitleDiv = styled.div`
@@ -69,7 +68,7 @@ export default function WelcomePage() {
   const signinRef = useRef();
 
   function handleSignIn() {
-    signinRef.current.style.display = "flex";
+    signinRef.current.style.zIndex = 2;
     console.log("sign in");
   }
 
@@ -82,47 +81,45 @@ export default function WelcomePage() {
       {/* <BackgroundVideo autoplay id="myVideo">
         <source src={welcomePage} type="video/mp4"/>
       </BackgroundVideo> */}
-      <BaseDiv>
-        <TitleDiv> WORLD </TitleDiv>
-        <Title2Div> FROM&ensp;HOME </Title2Div>
-        <ThemeProvider theme={theme}>
-          <ButtonsDiv>
-            <Button
-              variant="contained"
-              color="white"
-              style={{
-                width: "200px",
-                fontSize: "24px",
-                fontWeight: "bold",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                margin: "0 20px",
-                color: "#3A4A58",
-              }}
-              onClick={handleSignIn}
-            >
-              Sign in
-            </Button>
-            <Button
-              variant="contained"
-              color="white"
-              style={{
-                width: "200px",
-                fontSize: "24px",
-                fontWeight: "bold",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                margin: "0 20px",
-                color: "#3A4A58",
-              }}
-              onClick={handleGuest}
-            >
-              Guest
-            </Button>
-          </ButtonsDiv>
-        </ThemeProvider>
-        <SigninDiv innerRef={signinRef} />
-      </BaseDiv>
+      <TitleDiv> WORLD </TitleDiv>
+      <Title2Div> FROM&ensp;HOME </Title2Div>
+      <ThemeProvider theme={theme}>
+        <ButtonsDiv>
+          <Button
+            variant="contained"
+            color="white"
+            style={{
+              width: "200px",
+              fontSize: "24px",
+              fontWeight: "bold",
+              borderRadius: "40px",
+              lineHeight: 1.5,
+              margin: "0 20px",
+              color: "#3A4A58",
+            }}
+            onClick={handleSignIn}
+          >
+            Sign in
+          </Button>
+          <Button
+            variant="contained"
+            color="white"
+            style={{
+              width: "200px",
+              fontSize: "24px",
+              fontWeight: "bold",
+              borderRadius: "40px",
+              lineHeight: 1.5,
+              margin: "0 20px",
+              color: "#3A4A58",
+            }}
+            onClick={handleGuest}
+          >
+            Guest
+          </Button>
+        </ButtonsDiv>
+      </ThemeProvider>
+      <SigninDiv signinRef={signinRef} />
     </WelcomePageDiv>
   );
 }

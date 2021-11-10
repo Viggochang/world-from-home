@@ -15,6 +15,9 @@ const MyPhoto = styled(NavLink)`
   border-radius: 20px;
   cursor: pointer;
   z-index: 5;
+  :hover {
+    box-shadow: 0px 0px 16px #bebebe;
+  }
 `;
 
 const GuestIcon = styled.div`
@@ -34,6 +37,9 @@ const GuestIcon = styled.div`
   color: white;
   font-size: 40px;
   z-index: 5;
+  :hover {
+    box-shadow: 0px 0px 20px #bebebe;
+  }
 `;
 
 export default function ToMyPage({ handleSignIn, style }) {

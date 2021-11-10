@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router";
 
 import { styled as styledMui } from "@mui/styles";
 import Button from "@material-ui/core/Button";
@@ -70,6 +70,8 @@ export default function Friend({ friend, request, isMyPage }) {
   const { id: friendId, friends: friendFriends, photo, name, country } = friend;
   const acceptRef = useRef();
   const removeRef = useRef();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const myInfo = useSelector((state) => state.userInfo);
   const { friends: myFriends, id: myId } = myInfo;
@@ -94,17 +96,26 @@ export default function Friend({ friend, request, isMyPage }) {
     db_userInfo.doc(friendId).update({ friends: friendFriendsData });
   }
 
+  function handleQueryUserId() {
+    dispatch({
+      type: "SET_QUERY_USER_ID",
+      payload: friendId,
+    });
+    history.push({ pathname: "user", search: `?id=${friendId}` });
+  }
+
   return (
     <FriendDiv>
-      <NavLink to={`/user?id=${friendId}`}>
-        <FriendPhoto
-          style={{
-            background: `url(${photo})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></FriendPhoto>
-      </NavLink>
+      {/* <NavLink to={`/user?id=${friendId}`}> */}
+      <FriendPhoto
+        style={{
+          background: `url(${photo})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        onClick={handleQueryUserId}
+      ></FriendPhoto>
+      {/* </NavLink> */}
       <FriendInfo>
         <FriendName>{name}</FriendName>
         <FriendCountry>

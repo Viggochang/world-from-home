@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
+import { styled as styledMui } from "@mui/styles";
 
 import { db_gallery } from "../../../util/firebase";
 import "./AlbumQuestion.css";
@@ -16,6 +17,7 @@ import "./AlbumQuestion.css";
 import countryTrans from "../../../util/countryTrans";
 
 import { rgb } from "@amcharts/amcharts4/.internal/core/utils/Colors";
+import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
 
 const theme = createTheme({
   status: {
@@ -88,13 +90,15 @@ const Form = styled.div`
   padding: 0 30px;
   width: 92%;
   height: 50vmin;
-  outline: 1px white solid;
-  color: white;
+  /* outline: 1px white solid; */
+  color: #3a4a58;
+  background-color: rgb(255, 255, 255, 0.5);
 `;
 
 const QuestionTitle = styled.div`
   margin-top: 10px;
   font-size: 28px;
+  font-weight: 400;
   line-height: 40px;
   @media (min-height: 1080px) {
     margin-top: 20px;
@@ -106,6 +110,7 @@ const QuestionTitle = styled.div`
 const TextAreaDiv = styled.div`
   width: 100%;
   height: calc(100% - 264px);
+  padding-top: 5px;
   max-height: 50%;
   font-size: 20px;
   overflow-y: scroll;
@@ -152,6 +157,7 @@ const SearchDiv = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 20px;
+  margin-top: 5px;
   border-radius: 27px;
   background-color: rgb(255, 255, 255, 0.3);
 `;
@@ -160,6 +166,11 @@ const TextFieldDiv = styled.div`
   margin-left: 20px;
   align-self: center;
 `;
+
+const IntroductionTextField = styledMui(TextField)({
+  width: "100%",
+});
+
 const Inputdiv = styled.input`
   color: white;
   width: 240px;
@@ -176,6 +187,7 @@ export default function GalleryQuestion() {
   const history = useHistory();
   const QuestionRef = useRef();
   const mainCityInputRef = useRef();
+  const textAreaRef = useRef();
   const targetCountry = useSelector((state) => state.targetCountry);
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [cityInCountry, setCityInCountry] = useState([]);
@@ -184,8 +196,14 @@ export default function GalleryQuestion() {
   const [tripDate, setTripDate] = useState(new Date());
   const [tripMainCity, setTripMainCity] = useState("");
   const [tripIntroduction, setTripIntroduction] = useState("");
+  const [textAreaHeight, setTextAreaHeight] = useState(1);
+
   const myInfo = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setTextAreaHeight(Math.floor((textAreaRef.current.offsetHeight - 40) / 21));
+  }, [textAreaRef]);
 
   useEffect(() => {
     console.log(albumIdEditing);
@@ -332,9 +350,9 @@ export default function GalleryQuestion() {
             </TextFieldDiv>
           </SearchDiv>
           <QuestionTitle>Introduction</QuestionTitle>
-          <TextAreaDiv>
+          <TextAreaDiv ref={textAreaRef}>
             {/* <div> */}
-            <TextareaAutosize
+            {/* <TextareaAutosize
               aria-label="empty textarea"
               placeholder=""
               resize="none"
@@ -349,6 +367,25 @@ export default function GalleryQuestion() {
               value={tripIntroduction}
               onChange={(e) => {
                 setTripIntroduction(e.target.value);
+              }}
+            /> */}
+            <IntroductionTextField
+              inputProps={{
+                style: {
+                  fontSize: 16,
+                  // height: 100,
+                },
+              }}
+              maxRows={textAreaHeight}
+              label="introduce the trip"
+              size="small"
+              placeholder="introduce the trip"
+              variant="outlined"
+              // ref={input_ref}
+              multiline
+              onChange={(e) => {
+                setTripIntroduction(e.target.value);
+                console.log(textAreaRef.current.offsetHeight);
               }}
             />
             {/* </div> */}

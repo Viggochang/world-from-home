@@ -35,30 +35,37 @@ const ClockStyle = styled(Clock)`
 export default function CountryClock({ timezone }) {
   // console.log(timezone);
   // console.log(new Date(new Date().getTime()+(-28800+timezone)*1000));
-  const [localTime, setLocalTime] = useState(
-    new Date(new Date().getTime() + (-28800 + timezone) * 1000)
-  );
+  const [localTime, setLocalTime] = useState(new Date());
   // console.log(localTime);
+
   useEffect(() => {
-    const interval = setInterval(
-      () =>
-        setLocalTime(
-          new Date(new Date().getTime() + (-28800 + timezone) * 1000)
-        ),
-      1000
-    );
-    return () => {
-      clearInterval(interval);
-    };
+    if (timezone !== "No Data") {
+      const interval = setInterval(
+        () =>
+          setLocalTime(
+            new Date(new Date().getTime() + (-28800 + timezone) * 1000)
+          ),
+        1000
+      );
+      return () => {
+        clearInterval(interval);
+      };
+    }
   }, [timezone]);
 
   return (
     <ClockDiv>
-      <ClockText>
-        <div>{localTime.toDateString().slice(4)}</div>
-        <div>{localTime.toTimeString().split("GMT")[0]} </div>
-      </ClockText>
-      <ClockStyle value={localTime} />
+      {timezone !== "No Data" ? (
+        <>
+          <ClockText>
+            <div>{localTime.toDateString().slice(4)}</div>
+            <div>{localTime.toTimeString().split("GMT")[0]} </div>
+          </ClockText>
+          <ClockStyle value={localTime} />
+        </>
+      ) : (
+        <ClockText>No data</ClockText>
+      )}
     </ClockDiv>
   );
 }

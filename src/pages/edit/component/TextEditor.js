@@ -6,12 +6,12 @@ import { SliderPicker, CompactPicker } from "react-color";
 
 const TextEditorDiv = styled.div`
   /* outline: 1px black solid; */
-  box-shadow: 0px 0px 10px #bbbbbb;
+  box-shadow: 0px 0px 15px #3a4a58;
   padding: 10px;
   position: fixed;
   margin-right: auto;
-  top: 120px;
-  left: 360px;
+  top: 140px;
+  left: 260px;
   z-index: 3;
   background-color: white;
 `;

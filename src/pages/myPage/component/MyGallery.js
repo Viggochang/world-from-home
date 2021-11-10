@@ -168,6 +168,11 @@ export default function MyGallery({ title, id, isMyPage }) {
   };
 
   useEffect(() => {
+    setAlbumCountry("All");
+    setAlbumOrder("New");
+  }, [pending]);
+
+  useEffect(() => {
     if (id) {
       let unsubscribe = db_gallery
         .where("user_id", "==", id)
@@ -232,7 +237,14 @@ export default function MyGallery({ title, id, isMyPage }) {
           >
             <MenuItem value={"All"}>All</MenuItem>
             {Array.from(
-              new Set(albumDataFilter.map((data) => data.country))
+              new Set(
+                albumData
+                  .filter(
+                    ({ condition }) =>
+                      condition === (pending ? "pending" : "completed")
+                  )
+                  .map((data) => data.country)
+              )
             ).map((country) => (
               <MenuItem key={country} value={country}>
                 {countryTrans[country].name_en}

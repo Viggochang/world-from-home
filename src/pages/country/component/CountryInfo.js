@@ -72,10 +72,10 @@ export default function CountryInfo() {
           )
             .then((res) => res.json())
             .then((res) => {
-              setTimezone(res.timezone);
+              setTimezone(res.timezone || "No Data");
               setWeather({
-                temp: res.main.temp,
-                weather: res.weather[0].description,
+                temp: res.main ? res.main.temp : "No Data",
+                weather: res.weather ? res.weather[0].description : "No Data",
               });
             });
         }

@@ -14,8 +14,8 @@ const SigninDiv = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  display: none;
-  z-index: 2;
+  display: flex;
+  z-index: -1;
 `;
 
 const BaseDiv = styled.div`
@@ -35,19 +35,14 @@ const PhotoDiv = styled.div`
   background-position: 60%;
 `;
 
-export default function Login({ innerRef }) {
-  const moreInfoFormRef = useRef();
-  const signInChoiceRef = useRef();
+export default function Login({ signinRef }) {
+  // const signInChoiceRef = useRef();
+
   return (
-    <SigninDiv ref={innerRef}>
+    <SigninDiv ref={signinRef}>
       <BaseDiv>
         <PhotoDiv></PhotoDiv>
-        <SignInChoice
-          signInRef={innerRef}
-          signInChoiceRef={signInChoiceRef}
-          moreInfoFormRef={moreInfoFormRef}
-        />
-        <MoreInfoForm signInRef={innerRef} moreInfoFormRef={moreInfoFormRef} />
+        <SignInChoice signinRef={signinRef} />
       </BaseDiv>
     </SigninDiv>
   );

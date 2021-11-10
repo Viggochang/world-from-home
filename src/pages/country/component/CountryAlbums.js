@@ -66,7 +66,8 @@ const AlbumAdd = styled.div`
   display: flex;
 `;
 
-export default function CountryAlbums({ galleryQuestionRef }) {
+export default function CountryAlbums({ signinRef }) {
+  const myUserId = useSelector((state) => state.myUserId);
   const targetCountry = useSelector((state) => state.targetCountry);
   const [album, setAlbum] = useState([]);
   const history = useHistory();
@@ -76,8 +77,11 @@ export default function CountryAlbums({ galleryQuestionRef }) {
   // }
 
   function handleToEdit() {
-    history.push({ pathname: "edit" });
-    // window.location = '/edit'
+    if (!myUserId) {
+      signinRef.current.style.zIndex = 3;
+    } else {
+      history.push({ pathname: "edit" });
+    }
   }
 
   useEffect(() => {

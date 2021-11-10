@@ -480,7 +480,7 @@ function EditSpace() {
             {setComplete ? "Album Complete !" : "Album Saved !"}
           </Alert>
           <Alert
-            severity="warning"
+            severity="error"
             style={{ position: "absolute", margin: 0 }}
             ref={deleteAlertRef}
           >

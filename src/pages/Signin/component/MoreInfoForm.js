@@ -43,6 +43,7 @@ const MoreInfoFormDiv = styled.div`
   display: none; /* to-do */
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 const MoreInfoFormTitleDiv = styled.div`
   font-size: 20px;
@@ -52,10 +53,11 @@ const MoreInfoFormTitleDiv = styled.div`
   background-color: white;
   padding: 0 30px;
   margin-top: 40px;
+  color: #3a4a58;
 `;
 const MoreInfoFormArea = styled.div`
   background-color: white;
-  width: 220px;
+  width: 260px;
   height: 380px;
   overflow: scroll;
   margin-top: 30px;
@@ -90,7 +92,22 @@ const IntroductionTextField = styledMui(TextField)({
   width: "100%",
 });
 
-export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
+const BackDiv = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+`;
+
+export default function MoreInfoForm({
+  signinRef,
+  signInFormRef,
+  moreInfoFormRef,
+  currentUser,
+}) {
   const history = useHistory();
   const myUserId = useSelector((state) => state.myUserId);
 
@@ -108,7 +125,11 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
 
     db_userInfo
       .doc(myUserId)
-      .update({
+      .set({
+        id: myUserId,
+        email: currentUser.email,
+        name: currentUser.displayName,
+        photo: currentUser.photoURL,
         country,
         language,
         introduction,
@@ -118,9 +139,9 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
             : birthday,
       })
       .then(() => {
+        signinRef.current.style.display = "none";
         history.push({ pathname: "home" });
       });
-    signInRef.current.style.display = "none";
   }
 
   function handleSetValue(event, key) {
@@ -137,6 +158,11 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
       default:
         break;
     }
+  }
+
+  function handleBack() {
+    signInFormRef.current.style.display = "flex";
+    moreInfoFormRef.current.style.display = "none";
   }
 
   return (
@@ -216,24 +242,25 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
           }}
         />
       </MoreInfoFormArea>
-      <div>
-        <ThemeProvider theme={theme}>
-          <Button
-            variant="contained"
-            color="white"
-            style={{
-              marginTop: "20px",
-              borderRadius: "40px",
-              lineHeight: 1.5,
-              color: "#3A4A58",
-              fontWeight: "bold",
-            }}
-            onClick={handleToWorldPage}
-          >
-            enter
-          </Button>
-        </ThemeProvider>
-      </div>
+      <ThemeProvider theme={theme}>
+        <Button
+          variant="contained"
+          color="white"
+          style={{
+            marginTop: "20px",
+            borderRadius: "40px",
+            lineHeight: 1.5,
+            color: "#3A4A58",
+            fontWeight: "bold",
+          }}
+          onClick={handleToWorldPage}
+        >
+          enter
+        </Button>
+      </ThemeProvider>
+      <BackDiv onClick={handleBack}>
+        <i className="fas fa-arrow-left"></i>
+      </BackDiv>
     </MoreInfoFormDiv>
   );
 }

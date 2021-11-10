@@ -79,6 +79,7 @@ const SearchIconDiv = styled.div`
   position: absolute;
   right: 10px;
   top: calc(50% - 10px);
+  color: #3a4a58;
 `;
 
 const ContentDiv = styled.div`

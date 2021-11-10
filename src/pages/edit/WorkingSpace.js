@@ -365,7 +365,7 @@ function WorkingSpace({ preview, addWindow }) {
     });
   }
 
-  function handleUndo(event) {
+  function handleKeyDown(event) {
     // redo
     if (
       (event.ctrlKey || event.metaKey) &&
@@ -526,7 +526,7 @@ function WorkingSpace({ preview, addWindow }) {
 
   return (
     <WorkingSpaceDiv
-      onKeyDown={(e) => handleUndo(e)}
+      onKeyDown={(e) => handleKeyDown(e)}
       onClick={(e) => getActiveCanvas(e)}
       tabIndex="0"
       style={{ display: preview ? "none" : "flex" }}

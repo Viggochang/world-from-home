@@ -64,6 +64,7 @@ const MyPageDiv = styled.div`
   flex-direction: column;
   align-items: center;
   width: calc(100vw - 160px);
+  /* z-index: 1; */
 `;
 
 const UpperDiv = styled.div`
@@ -172,7 +173,6 @@ const MyPageIconMask = styled.div`
 `;
 
 export default function UserPage() {
-  const id = new URLSearchParams(window.location.search).get("id");
   const defaultBackground =
     "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/user_background_photo%2Fdefault-background.jpg?alt=media&token=17d3a90e-1f80-45c2-9b1d-e641d7ee0b88";
 
@@ -183,16 +183,27 @@ export default function UserPage() {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [activeButton, setActiveButton] = useState("Albums");
   const myInfo = useSelector((state) => state.userInfo);
+  const queryUserId = useSelector((state) => state.queryUserId);
   const history = useHistory();
 
+  // if (id === myInfo.id) {
+  //   history.push({ pathname: "mypage" });
+  // }
+
   useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("id");
+    console.log(id);
+    if (queryUserId === myInfo.id || id === myInfo.id) {
+      history.push({ pathname: "mypage" });
+    }
+
     db_userInfo
       .doc(id)
       .get()
       .then((doc) => {
         setUserInfo(doc.data());
       });
-  }, []);
+  }, [queryUserId]);
 
   const { name, country, photo, birthday, background_photo } = userInfo;
   const age =
@@ -304,7 +315,7 @@ export default function UserPage() {
             setActiveButton={setActiveButton}
           />
           {activeButton === "Albums" ? (
-            <MyGallery title={`${name}'s Albums`} id={id} />
+            <MyGallery title={`${name}'s Albums`} id={userInfo.id} />
           ) : (
             <MyFriends title={`${name}'s Friends`} userInfo={userInfo} />
           )}
@@ -330,7 +341,7 @@ export default function UserPage() {
           </MyPageIcon>
         </ButtonsDiv>
       </MyPageDiv>
-      <SigninDiv innerRef={signinRef} />
+      {/* <SigninDiv innerRef={signinRef} /> */}
       <Album />
     </>
   );

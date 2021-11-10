@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
 
@@ -60,10 +60,16 @@ export default function HomePage() {
   const [currentActive, setCurrentActive] = useState({});
   const [mapType, setMapType] = useState(true);
 
+  const dispatch = useDispatch();
+
   function handleClickBack() {
     map.goHome();
     // polygonSeries.getPolygonById(`${currentActive.dataItem.dataContext.id}`).isActive = false;
     currentActive.isActive = false;
+    dispatch({
+      type: "SET_TARGET_COUNTRY",
+      payload: {},
+    });
     setMaskOpacity(0);
     setMaskVisibility("hidden");
     setMaskDisplay("none");
@@ -73,12 +79,19 @@ export default function HomePage() {
   }
 
   function handleSignIn() {
-    signinRef.current.style.display = "flex";
+    signinRef.current.style.zIndex = 2;
     console.log("sign in");
   }
 
+  function handleEsc(event) {
+    console.log(event.key);
+    if (event.key === "Escape") {
+      handleClickBack();
+    }
+  }
+
   return (
-    <HomePageDiv>
+    <HomePageDiv onKeyDown={handleEsc} tabIndex="0">
       <MapSwitch setMapType={setMapType} mapType={mapType} />
       <LeafletMap mapType={mapType} />
       <World
@@ -116,8 +129,9 @@ export default function HomePage() {
           opacity: maskOpacity + 0.2,
         }}
         handleClickBack={handleClickBack}
+        signinRef={signinRef}
       />
-      <SigninDiv innerRef={signinRef} />
+      <SigninDiv signinRef={signinRef} />
       <Album />
     </HomePageDiv>
   );

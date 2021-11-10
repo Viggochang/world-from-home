@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import styled from "styled-components";
+import "./leafletMap.css";
 
 import "proj4leaflet";
 import L from "leaflet";
@@ -25,6 +26,7 @@ const LeafletMapDiv = styled.div`
 function LeafletMap({ mapType }) {
   const [allSpot, setAllSpot] = useState([]);
   const myInfo = useSelector((state) => state.userInfo);
+  const myUserId = useSelector((state) => state.myUserId);
 
   // useEffect(() => {
   //   db_gallery.get().then(
@@ -60,7 +62,7 @@ function LeafletMap({ mapType }) {
     //   }
     // );
     let map = new L.map("map", {
-      minZoom: 2.5,
+      minZoom: 3,
       zoomControl: false,
     }).setView([23.5, 0], 2);
 
@@ -138,15 +140,15 @@ function LeafletMap({ mapType }) {
 
     let markers = new L.markerClusterGroup();
 
+    // if (myUserId) {
     const arr = [];
     db_gallery
       .get()
       .then((snapshot) =>
         snapshot.docs
-          .filter((doc) => doc.data().user_id === "yXtnB3CD0XAJDQ0Le51J")
-          .filter((doc) => doc.condition === "completed")
+          // .filter((doc) => doc.data().user_id === myUserId)
+          .filter((doc) => doc.data().condition === "completed")
           .forEach((doc) => {
-            console.log(doc.data());
             doc.data().tourist_spot.forEach((spot) => {
               setAllSpot((allSpot) => [
                 ...allSpot,
@@ -161,11 +163,12 @@ function LeafletMap({ mapType }) {
         arr
           .map((item) =>
             L.marker(new L.LatLng(item.y, item.x)) // 新增Marker
-              .bindPopup(item.text)
+              .bindPopup(`<h2>${item.text}</h2>`)
           ) // 資訊視窗
           .forEach((item) => markers.addLayer(item)); // 把marker加入 L.markerClusterGroup中
         map.addLayer(markers);
       });
+    // }
 
     // allSpot
     //   .map((item) =>

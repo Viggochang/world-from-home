@@ -64,6 +64,12 @@ export default function Search({
     setCountry2id(country2id);
   }, []);
 
+  function handleEnter(event) {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  }
+
   function handleSearch() {
     if (country2id[searchRef.current.value]) {
       const currentActiveCountry = polygonSeries.mapPolygons.values.filter(
@@ -88,7 +94,10 @@ export default function Search({
   }
 
   return (
-    <SearchDiv style={{ display: mapType ? "flex" : "none" }}>
+    <SearchDiv
+      style={{ display: mapType ? "flex" : "none" }}
+      onKeyDown={handleEnter}
+    >
       <Inputdiv
         list="country-choice"
         id="search-country"

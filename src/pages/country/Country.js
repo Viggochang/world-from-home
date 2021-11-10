@@ -5,7 +5,6 @@ import CountryShape from "./component/CountryShape";
 import CountryAlbums from "./component/CountryAlbums";
 import CountryInfo from "./component/CountryInfo";
 import CountryFriend from "./component/CountryFriend";
-import countryTrans from "../../util/countryTrans";
 
 const CountryDiv = styled.div`
   width: calc(90% - 160px);
@@ -48,11 +47,11 @@ const BackDiv = styled.div`
   }
 `;
 
-function Country({ style, handleClickBack, galleryQuestionRef }) {
+function Country({ style, handleClickBack, signinRef }) {
   return (
     <CountryDiv style={style}>
       <CountryShape />
-      <CountryAlbums />
+      <CountryAlbums signinRef={signinRef} />
       <CountryInfo />
       <CountryFriend />
       <BackDiv onClick={handleClickBack}>

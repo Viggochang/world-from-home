@@ -3,6 +3,7 @@ import { createStore } from "redux";
 const data = {
   polygonSeries: {},
   myUserId: "",
+  queryUserId: "",
   targetCountry: {},
   albumIdEditing: "",
   canvas: {},
@@ -23,6 +24,8 @@ const rootReducer = (state = data, action) => {
       return { ...state, polygonSeries: action.payload };
     case "SET_MY_USER_ID":
       return { ...state, myUserId: action.payload };
+    case "SET_QUERY_USER_ID":
+      return { ...state, queryUserId: action.payload };
     case "SET_TARGET_COUNTRY":
       return { ...state, targetCountry: action.payload };
     case "SET_ALBUM_ID_EDITING":

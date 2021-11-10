@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // import "./App.css";
@@ -8,6 +8,7 @@ import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 
 import countryTrans from "../../util/countryTrans";
+import { db_gallery, db_userInfo } from "../../util/firebase";
 
 const Chartdiv = styled.div`
   width: 100%;
@@ -30,6 +31,24 @@ function World({
 }) {
   const dispatch = useDispatch();
   // const userInfo = useSelector((state) => state.userInfo);
+  const [myTravelCountries, setMyTravelCountries] = useState([]);
+
+  useEffect(() => {
+    let unsubscribe = db_gallery
+      .where("user_id", "==", userInfo.id || null)
+      .onSnapshot((myAlbums) => {
+        setMyTravelCountries(
+          myAlbums.docs
+            .filter((album) => album.data().condition === "completed")
+            .map((album) => album.data().country)
+          // .push(userInfo.country)
+        );
+        console.log(myAlbums.docs.map((album) => album.data().country));
+      });
+    return () => {
+      unsubscribe();
+    };
+  }, [userInfo]);
 
   let currentActiveCountry;
   useEffect(() => {
@@ -91,8 +110,12 @@ function World({
 
     // Add some data
     const { travel_country } = userInfo;
-    if (travel_country) {
-      polygonSeries.data = travel_country.map((countryCode) => ({
+    if (myTravelCountries.length) {
+      polygonSeries.data = (
+        userInfo.country
+          ? [...myTravelCountries, userInfo.country]
+          : myTravelCountries
+      ).map((countryCode) => ({
         id: countryCode,
         name: countryTrans[countryCode].name_en,
         fill: am4core.color("#ffffff"),
@@ -123,7 +146,7 @@ function World({
     return () => {
       map.dispose();
     };
-  }, [userInfo]);
+  }, [userInfo, myTravelCountries]);
 
   return (
     <Chartdiv

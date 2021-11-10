@@ -42,7 +42,7 @@ export default function Weather({ weatherData }) {
         <TempIcon>
           <i className="fas fa-temperature-high"></i>
         </TempIcon>
-        <div>{temp} ℃ </div>
+        <div>{temp !== "No Data" ? temp + "℃" : temp}</div>
       </WeatherTemp>
     </WeatherDiv>
   );
