@@ -96,6 +96,7 @@ export default function WelcomePage() {
               lineHeight: 1.5,
               margin: "0 20px",
               color: "#3A4A58",
+              outline: "3px #3A4A58 solid",
             }}
             onClick={handleSignIn}
           >
@@ -112,6 +113,7 @@ export default function WelcomePage() {
               lineHeight: 1.5,
               margin: "0 20px",
               color: "#3A4A58",
+              outline: "3px #3A4A58 solid",
             }}
             onClick={handleGuest}
           >

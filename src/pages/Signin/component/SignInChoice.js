@@ -39,11 +39,12 @@ const CrossDiv = styled.div`
   font-weight: bold;
   font-size: 20px;
   cursor: pointer;
+  :hover {
+    color: #3a4a58;
+  }
 `;
 
 export default function SignInChoice({ signinRef }) {
-  const dispatch = useDispatch();
-  const history = useHistory();
   const signInFormRef = useRef();
   const moreInfoFormRef = useRef();
 

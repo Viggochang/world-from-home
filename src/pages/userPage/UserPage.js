@@ -6,9 +6,12 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { moreInfoBtnTheme } from "../../util/muiTheme";
 
 import { db_userInfo } from "../../util/firebase";
 import FriendState from "../myPage/component/FriendState";
+
+import Background from "../myPage/background/Background";
 import MoreInfo from "./component/MoreInfo";
 import UserWorld from "./component/UserWorld";
 import countryTrans from "../../util/countryTrans";
@@ -39,21 +42,6 @@ const theme = createTheme({
     },
   },
 });
-
-const Background = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-`;
-
-const Mask = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background: rgb(142, 142, 142, 0.6);
-`;
 
 const MyPageDiv = styled.div`
   /* position: fixed;
@@ -133,22 +121,30 @@ const BottomDiv = styled.div`
 const ButtonsDiv = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-left: auto;
-  font-size: 48px;
+  font-size: 36px;
   position: fixed;
-  top: 50px;
+  top: 42px;
   right: 80px;
 `;
 
 const HomeLink = styled(NavLink)`
   color: white;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 50%;
   :hover {
-    color: #3a4a58;
+    background-color: rgb(184, 195, 208, 0.3);
   }
 `;
 const MyPageIcon = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   margin-top: 20px;
   border-radius: 50%;
   outline: 3px white solid;
@@ -173,9 +169,6 @@ const MyPageIconMask = styled.div`
 `;
 
 export default function UserPage() {
-  const defaultBackground =
-    "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/user_background_photo%2Fdefault-background.jpg?alt=media&token=17d3a90e-1f80-45c2-9b1d-e641d7ee0b88";
-
   // const moreAboutMeBtnRef = useRef();
   const moreInfoRef = useRef();
   const signinRef = useRef();
@@ -242,16 +235,7 @@ export default function UserPage() {
 
   return (
     <>
-      <Background
-        style={{
-          backgroundImage: background_photo
-            ? `url(${background_photo})`
-            : `url(${defaultBackground})`,
-          backgroundSize: "cover",
-        }}
-      >
-        <Mask />
-      </Background>
+      <Background background_photo={background_photo} />
       <MyPageDiv>
         <UpperDiv>
           <MyPhoto
@@ -273,13 +257,13 @@ export default function UserPage() {
               style={{ fontSize: 36, marginBottom: "24px" }}
             >{`age: ${age}`}</div>
 
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={moreInfoBtnTheme}>
               <Button
                 onClick={() => {
                   handleMoreInfo();
                 }}
                 variant="contained"
-                color={showMoreInfo ? "primary" : "white"}
+                color={showMoreInfo ? "primary" : "secondary"}
                 // color={activeButton === "Friends" ? "primary" : "white"}
                 style={{
                   width: "220px",
@@ -288,6 +272,9 @@ export default function UserPage() {
                   lineHeight: 1.5,
                   fontWeight: "bold",
                   color: showMoreInfo ? "white" : "#3A4A58",
+                  outline: showMoreInfo
+                    ? "3px white solid"
+                    : "3px #3A4A58 solid",
                 }}
               >
                 More about Me

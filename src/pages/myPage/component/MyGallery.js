@@ -64,7 +64,7 @@ const selectStyle = {
 const EditLabel = styled.div`
   font-weight: bold;
   font-size: 20px;
-  padding: 0 10px;
+  padding: 0 12px;
   line-height: 30px;
   border-radius: 15px;
   background-color: rgb(255, 255, 255, 0.7);

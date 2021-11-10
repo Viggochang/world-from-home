@@ -7,7 +7,7 @@ import DatePicker from "@mui/lab/DatePicker";
 
 import styled from "styled-components";
 
-import { db_userInfo } from "../../../util/firebase";
+import { db_userInfo } from "../../../../util/firebase";
 const myUerId = "yXtnB3CD0XAJDQ0Le51J";
 
 const MoreInfoDiv = styled.div`
@@ -19,10 +19,12 @@ const MoreInfoDiv = styled.div`
   z-index: 2;
   display: none;
   position: absolute;
+  top: 0;
   right: 90px;
   padding: 30px;
   flex-direction: column;
   align-items: flex-start;
+  font-weight: 400;
 `;
 
 const CloseDiv = styled.div`
@@ -269,6 +271,7 @@ export default function MoreInfo({
                           fontSize: 10,
                         },
                       }}
+                      style={{ borderRadius: "17px" }}
                       label={`Edit ${title}`}
                       size="small"
                       placeholder={info_data}

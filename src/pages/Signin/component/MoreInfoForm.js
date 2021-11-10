@@ -100,6 +100,9 @@ const BackDiv = styled.div`
   font-weight: bold;
   font-size: 20px;
   cursor: pointer;
+  :hover {
+    color: #3a4a58;
+  }
 `;
 
 export default function MoreInfoForm({

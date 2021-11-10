@@ -33,12 +33,12 @@ const BackDiv = styled.div`
   position: fixed;
   top: 25px;
   right: 30px;
-  color: white;
+  color: #9d9d9d;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 28px;
   cursor: pointer;
   :hover {
-    color: #b8c3d0;
+    color: white;
   }
 `;
 
@@ -55,10 +55,10 @@ const ButtonStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 45px;
-  height: 45px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  font-size: 25px;
+  font-size: 30px;
   color: #3a4a58;
   background-color: white;
   cursor: pointer;
@@ -259,7 +259,7 @@ export default function Album() {
         </Stack>
       </AlertDiv>
       <BackDiv onClick={handleClickBack}>
-        <i className="fas fa-times"></i>
+        <i className="fas fa-times-circle" />
       </BackDiv>
       <ButtonsDiv>
         <Tooltip title={liked ? "Liked" : "Like"} placement="left">

@@ -38,12 +38,12 @@ const BackDiv = styled.div`
   position: absolute;
   top: 15px;
   right: 20px;
-  color: white;
+  color: #9d9d9d;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 28px;
   cursor: pointer;
   :hover {
-    color: #b8c3d0;
+    color: white;
   }
 `;
 
@@ -55,7 +55,7 @@ function Country({ style, handleClickBack, signinRef }) {
       <CountryInfo />
       <CountryFriend />
       <BackDiv onClick={handleClickBack}>
-        <i className="fas fa-times"></i>
+        <i className="fas fa-times-circle" />
       </BackDiv>
     </CountryDiv>
   );
