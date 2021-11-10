@@ -12,7 +12,10 @@ const SigninDiv = styled.div`
   height: 100vh;
   background-color: rgb(0, 0, 0, 0.8);
   position: fixed;
+  top: 0;
+  left: 0;
   display: none;
+  z-index: 2;
 `;
 
 const BaseDiv = styled.div`
@@ -44,7 +47,7 @@ export default function Login({ innerRef }) {
           signInChoiceRef={signInChoiceRef}
           moreInfoFormRef={moreInfoFormRef}
         />
-        <MoreInfoForm moreInfoFormRef={moreInfoFormRef}/>
+        <MoreInfoForm signInRef={innerRef} moreInfoFormRef={moreInfoFormRef} />
       </BaseDiv>
     </SigninDiv>
   );

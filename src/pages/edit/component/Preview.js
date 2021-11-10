@@ -4,18 +4,27 @@ import styled from "styled-components";
 
 import { templateStyle, allTemplateParams } from "./MyTemplate";
 
-import firebase from '../../../util/firebase';
-
+import firebase from "../../../util/firebase";
 
 const PreviewDiv = styled.div`
-  padding: 96px 0 100px 280px;
   background-color: #b8c3d0;
+  padding-left: 360px;
   flex-grow: 1;
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  `;
+`;
+
+const WorkingSpaceDivInner = styled.div`
+  height: calc(100vh - 160px);
+  width: calc(100vw - 360px);
+  margin: 20px 0;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const PageContainer = styled.div`
   position: relative;
@@ -31,57 +40,79 @@ const CanvasContainer = styled.div`
 
 const MyCanvas = styled.canvas``;
 
-export default function Preview({preview}) {
+export default function Preview({ preview }) {
   const pageCanvasContainerRef = useRef();
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
 
   useEffect(() => {
-    if (preview){
+    if (preview) {
       const pageLength = Object.keys(pageInfo).length;
       if (pageLength) {
-        Object.values(pageInfo).forEach(pageInfo => {
-          const {page, templateId} = pageInfo;
-          const CanvasInPage = allTemplateParams('preview')[templateId](page);
-          CanvasInPage.forEach(canvas => {
-            canvas.loadFromJSON(canvasState[canvas.lowerCanvasEl.id.split('preview-')[1]])
-          })
-        })
+        Object.values(pageInfo).forEach((pageInfo) => {
+          const { page, templateId } = pageInfo;
+          const CanvasInPage = allTemplateParams("preview")[templateId](page);
+          CanvasInPage.forEach((canvas) => {
+            // let canvasId = canvas.lowerCanvasEl.id.split("preview-")[1];
+            // const [canvasWeight, canvasHeight] = [
+            //   canvas.getWidth(),
+            //   canvas.getHeight(),
+            // ];
+
+            // let canvasObj = JSON.parse(canvasState[canvasId]);
+            // canvasObj["objects"] = canvasObj["objects"].map((object) => {
+            //   if (object.type === "image") {
+            //     // object.scaleX=
+            //   }
+            // });
+            canvas.loadFromJSON(
+              canvasState[canvas.lowerCanvasEl.id.split("preview-")[1]],
+              () => {
+                canvas.selectable = false;
+                canvas.getObjects().forEach((obj) => {
+                  obj.selectable = false;
+                });
+                canvas.renderAll();
+              }
+            ); //重新renader出畫布上的物件
+          });
+        });
       }
     }
-  }, [preview])
-
+  }, [preview]);
 
   return (
-    <PreviewDiv style={{display: preview ? 'flex' : 'none'}}> 
-      {Object.values(pageInfo)
-        .sort((a, b) => a.page - b.page)
-        .map((pageInfo) => {
-          const { page, canvasCount, templateId, display } = pageInfo;
-          return (
-            <PageContainer
-              key={`page${page}`}
-              style={{ display: display ? "block" : "none" }}
-            >
-              <PageCanvasContainer
-                ref={pageCanvasContainerRef}
-                style={templateStyle[templateId]}
+    <PreviewDiv style={{ display: preview ? "flex" : "none" }}>
+      <WorkingSpaceDivInner>
+        {Object.values(pageInfo)
+          .sort((a, b) => a.page - b.page)
+          .map((pageInfo) => {
+            const { page, canvasCount, templateId, display } = pageInfo;
+            return (
+              <PageContainer
+                key={`page${page}`}
+                style={{ display: display ? "block" : "none" }}
               >
-                {Array.from(new Array(canvasCount).keys()).map((id) => {
-                  return (
-                    <CanvasContainer
-                      style={{ position: "relative" }}
-                      key={`page${page}-canvas${id}`}
-                      tabIndex="0"
-                    >
-                      <MyCanvas id={`preview-page${page}-canvas${id}`} />
-                    </CanvasContainer>
-                  );
-                })}
-              </PageCanvasContainer>
-            </PageContainer>
-          );
-        })}
+                <PageCanvasContainer
+                  ref={pageCanvasContainerRef}
+                  style={templateStyle[templateId]}
+                >
+                  {Array.from(new Array(canvasCount).keys()).map((id) => {
+                    return (
+                      <CanvasContainer
+                        style={{ position: "relative" }}
+                        key={`page${page}-canvas${id}`}
+                        tabIndex="0"
+                      >
+                        <MyCanvas id={`preview-page${page}-canvas${id}`} />
+                      </CanvasContainer>
+                    );
+                  })}
+                </PageCanvasContainer>
+              </PageContainer>
+            );
+          })}
+      </WorkingSpaceDivInner>
     </PreviewDiv>
-  )
+  );
 }

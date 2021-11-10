@@ -12,6 +12,7 @@ import World from "./pages/world/World";
 import EditSpace from "./pages/edit/EditSpace";
 import MyPage from "./pages/myPage/MyPage";
 import UserPage from "./pages/userPage/UserPage";
+import LeafletMap from "./pages/leafletMap/LeafletMap";
 
 // const myUserId = "yXtnB3CD0XAJDQ0Le51J";
 
@@ -24,6 +25,14 @@ function App() {
   const dispatch = useDispatch();
   const myUserId = useSelector((state) => state.myUserId);
 
+  useEffect(() => {
+    dispatch({
+      type: "SET_ALBUM_ID_SHOW",
+      payload: new URL(window.location).searchParams.get("album_id_show"),
+    });
+  }, []);
+
+  //onAuthStateChanged
   useEffect(() => {
     console.log(firebase.auth().currentUser);
     if (firebase.auth().currentUser) {
@@ -41,7 +50,7 @@ function App() {
           });
         });
     }
-  }, []);
+  }, [firebase.auth().currentUser]);
 
   useEffect(() => {
     if (myUserId) {
@@ -73,6 +82,9 @@ function App() {
           </Route>
           <Route path="/edit">
             <EditSpace />
+          </Route>
+          <Route path="/leaflet">
+            <LeafletMap />
           </Route>
         </Switch>
       </BrowserRouter>

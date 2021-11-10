@@ -131,14 +131,18 @@ export default function MoreInfo({
     userInfo.birthday ? new Date(userInfo.birthday.seconds * 1000) : undefined
   );
 
-  const { email, language, introduction } = userInfo;
-  const birthdayFormat = userInfo.birthday
-    ? new Date(userInfo.birthday.seconds * 1000).toDateString().slice(4)
-    : "";
+  const { email, language, introduction, birthday: birthdayData } = userInfo;
+  const birthdayDate =
+    birthdayData && new Date(birthdayData.seconds * 1000).toDateString();
+
+  const birthdayFormat =
+    birthdayData && birthdayDate !== new Date(0).toDateString()
+      ? birthdayDate.slice(4)
+      : "";
   const infoData = [
     {
       title: "Language",
-      info_data: language,
+      info_data: language || "unknown",
       info_ref: languageInfoRef,
       edit_icon_ref: languageEditIconRef,
       edit_ref: languageEditRef,
@@ -146,7 +150,7 @@ export default function MoreInfo({
     },
     {
       title: "Birthday",
-      info_data: birthdayFormat,
+      info_data: birthdayFormat || "unknown",
       info_ref: birthdayInfoRef,
       edit_icon_ref: birthdayEditIconRef,
       edit_ref: birthdayEditRef,
@@ -154,7 +158,7 @@ export default function MoreInfo({
     },
     {
       title: "Introduction",
-      info_data: introduction,
+      info_data: introduction || "",
       info_ref: introductionInfoRef,
       edit_icon_ref: introductionEditIconRef,
       edit_ref: introductionEditRef,
@@ -165,6 +169,22 @@ export default function MoreInfo({
   function handleCloseMoreInfo() {
     innerRef.current.style.display = "none";
   }
+
+  function handleUpdateDate(title, input_ref, info_ref, edit_ref) {
+    const updateData = {};
+    updateData[title.toLowerCase()] =
+      title === "Birthday"
+        ? birthday
+        : input_ref.current.children[1].children[0].value;
+    db_userInfo
+      .doc(myUerId)
+      .update(updateData)
+      .then(() => {
+        handleShow(info_ref);
+        handleDisappear(edit_ref);
+      });
+  }
+
   return (
     <MoreInfoDiv ref={innerRef}>
       <CloseDiv
@@ -245,7 +265,7 @@ export default function MoreInfo({
                       inputProps={{
                         style: {
                           width: 200,
-                          height: title === "Introduction" ? 83 : 17,
+                          height: title === "Introduction" ? 83 : 16,
                           fontSize: 10,
                         },
                       }}
@@ -260,24 +280,9 @@ export default function MoreInfo({
                 </TextFieldDiv>
                 <Submit
                   onClick={() => {
-                    const updateData = {};
-                    updateData[title.toLowerCase()] =
-                      title === "Birthday"
-                        ? birthday
-                        : input_ref.current.children[1].children[0].value;
-                    db_userInfo
-                      .doc(myUerId)
-                      .update(updateData)
-                      .then(() => {
-                        handleShow(info_ref);
-                        handleDisappear(edit_ref);
-                      });
-
+                    handleUpdateDate(title, input_ref, info_ref, edit_ref);
                     handleDisappear(edit_ref);
                     handleShow(info_ref);
-                    // console.log(
-                    //   input_ref.current.children[1].children[0].value
-                    // );
                   }}
                 >
                   <i className="fas fa-check-circle" />

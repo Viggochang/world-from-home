@@ -2,9 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 import CountryShape from "./component/CountryShape";
-import GalleryInCountry from "./component/GalleryInCountry";
+import CountryAlbums from "./component/CountryAlbums";
 import CountryInfo from "./component/CountryInfo";
 import CountryFriend from "./component/CountryFriend";
+import countryTrans from "../../util/countryTrans";
 
 const CountryDiv = styled.div`
   width: calc(90% - 160px);
@@ -51,7 +52,7 @@ function Country({ style, handleClickBack, galleryQuestionRef }) {
   return (
     <CountryDiv style={style}>
       <CountryShape />
-      <GalleryInCountry galleryQuestionRef={galleryQuestionRef} />
+      <CountryAlbums />
       <CountryInfo />
       <CountryFriend />
       <BackDiv onClick={handleClickBack}>

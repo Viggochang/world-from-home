@@ -51,14 +51,14 @@ const MoreInfoFormTitleDiv = styled.div`
   border-radius: 20px;
   background-color: white;
   padding: 0 30px;
-  margin-top: 80px;
+  margin-top: 40px;
 `;
 const MoreInfoFormArea = styled.div`
   background-color: white;
   width: 220px;
-  height: 260px;
+  height: 380px;
   overflow: scroll;
-  margin-top: 50px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -90,22 +90,37 @@ const IntroductionTextField = styledMui(TextField)({
   width: "100%",
 });
 
-export default function MoreInfoForm({ moreInfoFormRef }) {
+export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
   const history = useHistory();
   const myUserId = useSelector((state) => state.myUserId);
 
   const [country, setCountry] = useState("TW");
-  const [birthday, setBirthday] = useState();
+  const [birthday, setBirthday] = useState(new Date());
   const [language, setLanguage] = useState("");
   const [introduction, setIntroduction] = useState("");
 
   function handleToWorldPage() {
+    console.log(
+      new Date(birthday.seconds * 1000).toDateString(),
+      new Date().toDateString()
+    );
+    console.log(birthday, birthday.toDateString());
+
     db_userInfo
       .doc(myUserId)
-      .update({ country, birthday, language, introduction })
+      .update({
+        country,
+        language,
+        introduction,
+        birthday:
+          birthday.toDateString() === new Date().toDateString()
+            ? new Date(0)
+            : birthday,
+      })
       .then(() => {
         history.push({ pathname: "home" });
       });
+    signInRef.current.style.display = "none";
   }
 
   function handleSetValue(event, key) {
@@ -155,11 +170,13 @@ export default function MoreInfoForm({ moreInfoFormRef }) {
               handleSetValue(e, "country");
             }}
           >
-            {Object.entries(countryTrans).map((country) => {
-              return (
-                <MenuItem value={country[0]}>{country[1].name_en}</MenuItem>
-              );
-            })}
+            {Object.entries(countryTrans)
+              .filter((country) => country.country !== "AQ")
+              .map((country, index) => (
+                <MenuItem key={index} value={country[0]}>
+                  {country[1].name_en}
+                </MenuItem>
+              ))}
           </CountrySelect>
         </FormControl>
 
@@ -205,9 +222,11 @@ export default function MoreInfoForm({ moreInfoFormRef }) {
             variant="contained"
             color="white"
             style={{
-              marginTop: "30px",
+              marginTop: "20px",
               borderRadius: "40px",
               lineHeight: 1.5,
+              color: "#3A4A58",
+              fontWeight: "bold",
             }}
             onClick={handleToWorldPage}
           >

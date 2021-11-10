@@ -5,8 +5,11 @@ import styled from "styled-components";
 
 import World from "../world/World";
 import ToMyPage from "../world/component/ToMyPage";
+import Search from "../world/component/Search";
 import Country from "../country/Country";
-import GalleryQuestion from "../country/component/GalleryQuestion";
+// import GalleryQuestion from "../country/component/GalleryQuestion";
+import SigninDiv from "../Signin/Signin";
+import Album from "../album/Album";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -30,8 +33,21 @@ const BackBtn = styled.div`
   }
 `;
 
+const Title = styled.div`
+  color: white;
+  font-size: 70px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  margin-right: auto;
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  z-index: 1;
+`;
+
 export default function HomePage() {
   const galleryQuestionRef = useRef();
+  const signinRef = useRef();
   const userInfo = useSelector((state) => state.userInfo);
 
   const [maskVisibility, setMaskVisibility] = useState("hidden");
@@ -52,6 +68,11 @@ export default function HomePage() {
     }, 2000);
   }
 
+  function handleSignIn() {
+    signinRef.current.style.display = "flex";
+    console.log("sign in");
+  }
+
   return (
     <HomePageDiv>
       <World
@@ -64,7 +85,15 @@ export default function HomePage() {
       <BackBtn onClick={handleClickBack}>
         <i className="fas fa-home"></i>
       </BackBtn>
-      <ToMyPage />
+
+      <ToMyPage handleSignIn={handleSignIn} />
+      <Search
+        setMaskVisibility={setMaskVisibility}
+        setMaskOpacity={setMaskOpacity}
+        map={map}
+        setCurrentActive={setCurrentActive}
+      />
+      <Title>{`World  from  ${userInfo.name || "Guest"}`}</Title>
       <Country
         style={{
           visibility: maskVisibility,
@@ -73,9 +102,10 @@ export default function HomePage() {
           opacity: maskOpacity + 0.2,
         }}
         handleClickBack={handleClickBack}
-        galleryQuestionRef={galleryQuestionRef}
       />
-      <GalleryQuestion innerRef={galleryQuestionRef} />
+      {/* <GalleryQuestion innerRef={galleryQuestionRef} /> */}
+      <SigninDiv innerRef={signinRef} />
+      <Album />
     </HomePageDiv>
   );
 }

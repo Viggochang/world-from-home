@@ -26,8 +26,11 @@ const FriendRequestsContent = styled.div`
   flex-wrap: wrap;
 `;
 
-export default function FriendRequests({ myFriendRequests, showFriendRequest }) {
-
+export default function FriendRequests({
+  myFriendRequests,
+  showFriendRequest,
+  isMyPage,
+}) {
   return (
     <FriendRequeststDiv
       style={{ display: showFriendRequest ? "flex" : "none" }}
@@ -37,7 +40,12 @@ export default function FriendRequests({ myFriendRequests, showFriendRequest }) 
       </ResultTitle>
       <FriendRequestsContent>
         {myFriendRequests.map((friend) => (
-          <Friend key={friend.id} friend={friend} request={true}/>
+          <Friend
+            key={friend.id}
+            friend={friend}
+            request={true}
+            isMyPage={isMyPage}
+          />
         ))}
       </FriendRequestsContent>
     </FriendRequeststDiv>

@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { styled as styledMui } from "@mui/styles";
 
 import welcomePage from "../../image/welcomePage.mp4";
 import SigninDiv from "../Signin/Signin";
@@ -57,14 +59,22 @@ const Title2Div = styled.div`
   font-weight: bold;
 `;
 
+const ButtonsDiv = styled.div`
+  display: flex;
+  margin: auto 0 72px;
+`;
+
 export default function WelcomePage() {
-  const [signInDisplay, setSignInDisplay] = useState(false);
+  const history = useHistory();
   const signinRef = useRef();
 
-  function handleSignIn(){
-    // setSignInDisplay(true);
-    signinRef.current.style.display = 'flex';
-    console.log('sign in');
+  function handleSignIn() {
+    signinRef.current.style.display = "flex";
+    console.log("sign in");
+  }
+
+  function handleGuest() {
+    history.push({ pathname: "home" });
   }
 
   return (
@@ -76,23 +86,42 @@ export default function WelcomePage() {
         <TitleDiv> WORLD </TitleDiv>
         <Title2Div> FROM&ensp;HOME </Title2Div>
         <ThemeProvider theme={theme}>
-          <Button
-            variant="contained"
-            color="white"
-            style={{
-              width: "200px",
-              fontSize: "24px",
-              borderRadius: "40px",
-              lineHeight: 1.5,
-              position: "fixed",
-              bottom: "72px",
-            }}
-            onClick = {handleSignIn}
-          >
-            Sign in
-          </Button>
+          <ButtonsDiv>
+            <Button
+              variant="contained"
+              color="white"
+              style={{
+                width: "200px",
+                fontSize: "24px",
+                fontWeight: "bold",
+                borderRadius: "40px",
+                lineHeight: 1.5,
+                margin: "0 20px",
+                color: "#3A4A58",
+              }}
+              onClick={handleSignIn}
+            >
+              Sign in
+            </Button>
+            <Button
+              variant="contained"
+              color="white"
+              style={{
+                width: "200px",
+                fontSize: "24px",
+                fontWeight: "bold",
+                borderRadius: "40px",
+                lineHeight: 1.5,
+                margin: "0 20px",
+                color: "#3A4A58",
+              }}
+              onClick={handleGuest}
+            >
+              Guest
+            </Button>
+          </ButtonsDiv>
         </ThemeProvider>
-        <SigninDiv display={signInDisplay} innerRef={signinRef}/>
+        <SigninDiv innerRef={signinRef} />
       </BaseDiv>
     </WelcomePageDiv>
   );

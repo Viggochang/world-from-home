@@ -22,7 +22,7 @@ const MoreInfoDiv = styled.div`
 `;
 
 const CloseDiv = styled.div`
-  color: #9D9D9D;
+  color: #9d9d9d;
   position: absolute;
   top: 20px;
   right: 20px;
@@ -70,10 +70,14 @@ const IntroductionDiv = styled.div`
 export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
   // const userInfo = useSelector((state) => state.userInfo);
 
-  const { email, language, introduction } = userInfo;
-  const birthdayFormat = userInfo.birthday
-    ? new Date(userInfo.birthday.seconds * 1000).toDateString().slice(4)
-    : "";
+  const { email, language, introduction, birthday } = userInfo;
+  const birthdayDate =
+    birthday && new Date(birthday.seconds * 1000).toDateString();
+
+  const birthdayFormat =
+    birthday && birthdayDate !== new Date(0).toDateString()
+      ? birthdayDate.slice(4)
+      : "";
 
   function handleCloseMoreInfo() {
     innerRef.current.style.display = "none";
@@ -83,7 +87,10 @@ export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
     { title: "Email", info_data: email },
     { title: "Language", info_data: language },
     { title: "Birthday", info_data: birthdayFormat },
-    { title: "Introduction", info_data: <IntroductionDiv>{introduction}</IntroductionDiv> },
+    {
+      title: "Introduction",
+      info_data: <IntroductionDiv>{introduction}</IntroductionDiv>,
+    },
   ];
   return (
     <MoreInfoDiv ref={innerRef}>
@@ -96,13 +103,13 @@ export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
         <i className="fas fa-times-circle"></i>
       </CloseDiv>
       {infoData.map((info, index) => {
-        const {title, info_data} = info;
-        return(
+        const { title, info_data } = info;
+        return (
           <InfoDiv key={index}>
             <Title>{title}</Title>
             <InfoTextDiv>{info_data}</InfoTextDiv>
           </InfoDiv>
-        )
+        );
       })}
     </MoreInfoDiv>
   );

@@ -64,16 +64,6 @@ function World({
           type: "SET_TARGET_COUNTRY",
           payload: currentActiveCountry.dataItem.dataContext,
         });
-        // home button
-        // let button = map.chartContainer.createChild(am4core.Button);
-        // button.label.text = "home";
-        // button.padding(5, 5, 5, 5);
-        // button.width = 80;
-        // button.align = "right";
-        // button.marginRight = 15;
-        // button.events.on("hit", function () {
-
-        console.log(ev.target.dataItem.dataContext.id);
         setMaskOpacity(0.8);
         setMaskVisibility("visible");
       },
@@ -85,6 +75,12 @@ function World({
     hs.properties.fill = am4core.color("#B8C3D0");
 
     polygonSeries.exclude = ["AQ"];
+    //test
+    // console.log("displatch polygonSeries", polygonSeries);
+    dispatch({
+      type: "SET_POLYGONSERIES",
+      payload: polygonSeries,
+    });
 
     // Add some data
     const { travel_country } = userInfo;

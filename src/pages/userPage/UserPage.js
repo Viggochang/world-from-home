@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
@@ -14,6 +15,9 @@ import countryTrans from "../../util/countryTrans";
 import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
+import SigninDiv from "../Signin/Signin";
+import Album from "../album/Album";
+// import { system } from "@amcharts/amcharts4/core";
 
 const theme = createTheme({
   status: {
@@ -137,23 +141,49 @@ const ButtonsDiv = styled.div`
 
 const HomeLink = styled(NavLink)`
   color: white;
-  :hover{
-    color: #3A4A58;
+  :hover {
+    color: #3a4a58;
   }
 `;
-const SettingLink = styled(NavLink)`
-  color: white;
+const MyPageIcon = styled.div`
+  width: 50px;
+  height: 50px;
   margin-top: 20px;
+  border-radius: 50%;
+  outline: 3px white solid;
+  color: white;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  :hover {
+    background-color: #667484;
+  }
+`;
+const MyPageIconMask = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgb(225, 225, 225, 0);
+  :hover {
+    background-color: rgb(225, 225, 225, 0.3);
+  }
 `;
 
 export default function UserPage() {
   const id = new URLSearchParams(window.location.search).get("id");
+  const defaultBackground =
+    "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/user_background_photo%2Fdefault-background.jpg?alt=media&token=17d3a90e-1f80-45c2-9b1d-e641d7ee0b88";
 
   // const moreAboutMeBtnRef = useRef();
   const moreInfoRef = useRef();
+  const signinRef = useRef();
   const [userInfo, setUserInfo] = useState({});
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [activeButton, setActiveButton] = useState("Albums");
+  const myInfo = useSelector((state) => state.userInfo);
+  const history = useHistory();
 
   useEffect(() => {
     db_userInfo
@@ -165,9 +195,13 @@ export default function UserPage() {
   }, []);
 
   const { name, country, photo, birthday, background_photo } = userInfo;
-  const age = birthday
-    ? new Date().getFullYear() - new Date(1000 * birthday.seconds).getFullYear()
-    : '';
+  const age =
+    birthday &&
+    new Date(birthday.seconds * 1000).toDateString() !==
+      new Date(0).toDateString()
+      ? new Date().getFullYear() -
+        new Date(1000 * birthday.seconds).getFullYear()
+      : "unknown";
 
   function handleShow(ref) {
     ref.current.style.display = "flex";
@@ -175,7 +209,7 @@ export default function UserPage() {
   function handleDisappear(ref) {
     ref.current.style.display = "none";
   }
-  
+
   function handleMoreInfo() {
     setShowMoreInfo(showMoreInfo ? false : true);
     if (!showMoreInfo) {
@@ -185,11 +219,23 @@ export default function UserPage() {
     }
   }
 
+  function handleToMyPage() {
+    console.log(myInfo);
+    if (Object.keys(myInfo).length) {
+      history.push({ pathname: "mypage" });
+    } else {
+      signinRef.current.style.display = "flex";
+      console.log("sign in");
+    }
+  }
+
   return (
     <>
       <Background
         style={{
-          backgroundImage: `url(${background_photo})`,
+          backgroundImage: background_photo
+            ? `url(${background_photo})`
+            : `url(${defaultBackground})`,
           backgroundSize: "cover",
         }}
       >
@@ -208,7 +254,9 @@ export default function UserPage() {
             <div style={{ fontSize: 148 }}>{name}</div>
             <div style={{ fontSize: 36 }}>from</div>
             <CountryDiv>
-              <MyCountryDiv>{country ? countryTrans[country].name_en : ''}</MyCountryDiv>
+              <MyCountryDiv>
+                {country ? countryTrans[country].name_en : ""}
+              </MyCountryDiv>
             </CountryDiv>
             <div
               style={{ fontSize: 36, marginBottom: "24px" }}
@@ -234,7 +282,11 @@ export default function UserPage() {
                 More about Me
               </Button>
             </ThemeProvider>
-            <FriendState userInfo={userInfo}/>
+            {Object.keys(myInfo).length ? (
+              <FriendState userInfo={userInfo} />
+            ) : (
+              <></>
+            )}
           </UserInfoDiv>
           <MoreInfo
             innerRef={moreInfoRef}
@@ -244,12 +296,15 @@ export default function UserPage() {
         </UpperDiv>
         <MiddleDiv>
           <Title>{`World from ${name}`}</Title>
-          <UserWorld userInfo={userInfo}/>
+          <UserWorld userInfo={userInfo} />
         </MiddleDiv>
         <BottomDiv>
-          <AlbumFriendBtns activeButton={activeButton} setActiveButton={setActiveButton}/>
+          <AlbumFriendBtns
+            activeButton={activeButton}
+            setActiveButton={setActiveButton}
+          />
           {activeButton === "Albums" ? (
-            <MyGallery title={`${name}'s Albums`} id={id}/>
+            <MyGallery title={`${name}'s Albums`} id={id} />
           ) : (
             <MyFriends title={`${name}'s Friends`} userInfo={userInfo} />
           )}
@@ -258,11 +313,25 @@ export default function UserPage() {
           <HomeLink to="home">
             <i className="fas fa-home"></i>
           </HomeLink>
-          <SettingLink to="setting">
-            <i className="fas fa-cog"></i>
-          </SettingLink>
+
+          <MyPageIcon
+            onClick={handleToMyPage}
+            style={{
+              backgroundImage: `url(${myInfo.photo})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            {myInfo.photo ? (
+              <MyPageIconMask />
+            ) : (
+              <i className="fas fa-user-alt"></i>
+            )}
+          </MyPageIcon>
         </ButtonsDiv>
       </MyPageDiv>
+      <SigninDiv innerRef={signinRef} />
+      <Album />
     </>
   );
 }

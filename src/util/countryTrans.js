@@ -47,12 +47,6 @@ const countryTrans = {
     name_tw: "荷屬安的列斯 ",
     name_en: "Netherlands Antilles",
   },
-  ANO: {
-    country: "ANO",
-    iso_3166_1: "ANO",
-    name_tw: "澳洲與大洋洲 ",
-    name_en: "Australia & Oceania",
-  },
   AO: {
     country: "AO",
     iso_3166_1: "AGO",
@@ -76,12 +70,6 @@ const countryTrans = {
     iso_3166_1: "ASM",
     name_tw: "美屬薩摩亞 ",
     name_en: "American Samoa",
-  },
-  ASIA: {
-    country: "ASIA",
-    iso_3166_1: "ASI",
-    name_tw: "亞洲 ",
-    name_en: "Asia",
   },
   AT: {
     country: "AT",
@@ -403,12 +391,6 @@ const countryTrans = {
     name_en: "Ethiopia",
   },
   EU: { country: "EU", iso_3166_1: "EU", name_tw: "歐盟", name_en: "EU" },
-  EUR: {
-    country: "EUR",
-    iso_3166_1: "EUR",
-    name_tw: "歐洲",
-    name_en: "Europe",
-  },
   FI: {
     country: "FI",
     iso_3166_1: "FIN",

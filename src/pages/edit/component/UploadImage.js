@@ -2,10 +2,10 @@
 import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
 
-import {storage} from '../../../util/firebase';
+import { storage } from "../../../util/firebase";
 // import 'firebase/firestore';
 // import 'firebase/storage';
-import Compressor from 'compressorjs';
+import Compressor from "compressorjs";
 
 import styled from "styled-components";
 
@@ -25,7 +25,8 @@ const ImgInputLabel = styled.label`
   cursor: pointer;
 `;
 
-export default function UploadImage({page, id}) {
+export default function UploadImage({ page, id }) {
+  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
   const canvasState = useSelector((state) => state.canvasState);
   const editUndo = useSelector((state) => state.editUndo);
@@ -37,11 +38,13 @@ export default function UploadImage({page, id}) {
     newImg.src = url;
     newImg.onload = () => {
       let imgObj = new fabric.Image(newImg);
-      const scale = Math.max(...[canvi.height/imgObj.height, canvi.width/imgObj.width]);
+      const scale = Math.max(
+        ...[canvi.height / imgObj.height, canvi.width / imgObj.width]
+      );
       imgObj.set({
         scaleX: scale,
         scaleY: scale,
-      })
+      });
       canvi.add(imgObj);
       canvi.sendToBack(imgObj);
       canvi.renderAll();
@@ -59,23 +62,26 @@ export default function UploadImage({page, id}) {
         type: "SET_CANVAS_STATE",
         payload: stateChange,
       });
-    }
+    };
   };
 
-  function handleUploadImg(event, id){
+  function handleUploadImg(event, canvasId) {
     const img = event.target.files[0];
 
     new Compressor(img, {
       quality: 0.6,
-      success(result) {  
+      success(result) {
         // Send the compressed image file to server with XMLHttpRequest.
-        const metadata = {contentType: result.type};
-        const storageRef = storage.ref(`userId/${id}`);
+        const metadata = { contentType: result.type };
+        const storageRef = storage.ref(
+          `userId/albums/${albumIdEditing}/${canvasId}`
+        );
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
             console.log(imageUrl);
-            addImg(event, imageUrl, canvas[id])
-          })
+
+            addImg(event, imageUrl, canvas[canvasId]);
+          });
         });
       },
       error(err) {
@@ -87,7 +93,12 @@ export default function UploadImage({page, id}) {
   return (
     <UploadImgDiv>
       <ImgInputLabel>
-        <input type="file" accept="image/*" style={{display: 'none'}} onChange={e => handleUploadImg(e, `page${page}-canvas${id}`)}/>
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={(e) => handleUploadImg(e, `page${page}-canvas${id}`)}
+        />
         <i className="far fa-image"></i>
       </ImgInputLabel>
     </UploadImgDiv>
