@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
+import InputBase from "@mui/material/InputBase";
 
 import styled from "styled-components";
+import "./input.css";
 
 import { db_userInfo } from "../../../../util/firebase";
 const myUerId = "yXtnB3CD0XAJDQ0Le51J";
@@ -15,13 +16,13 @@ const MoreInfoDiv = styled.div`
   width: 320px;
   height: auto;
   background-color: rgb(255, 255, 255, 0.7);
-  box-shadow: 0px 0px 20px #4f4f4f;
+  box-shadow: 3px 2px 15px #5b5b5b;
   z-index: 2;
   display: none;
   position: absolute;
   top: 0;
-  right: 90px;
-  padding: 30px;
+  right: 80px;
+  padding: 30px 30px 0;
   flex-direction: column;
   align-items: flex-start;
   font-weight: 400;
@@ -45,25 +46,42 @@ const TitleDiv = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   line-height: 28px;
-  padding: 0 12px;
-  border-radius: 14px;
-  background-color: #3a4a58;
-  margin-bottom: 10px;
+  color: #3a4a58;
+  margin-bottom: 3px;
 `;
 
 const InfoDiv = styled.div`
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
+  margin-bottom: 20px;
+`;
+
+const InfoIcon = styled.div`
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 50%;
+  background-color: #3a4a58;
+  color: white;
+  margin: 5.5px 20px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const InfoText = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 70px);
 `;
 
 const InfoTextDiv = styled.div`
   font-size: 20px;
-  margin-bottom: 20px;
-  color: #3a4a58;
-  padding-left: 5px;
+  color: #5b5b5b;
+  line-height: 34px;
 `;
 
 const EditIcon = styled.div`
@@ -78,14 +96,10 @@ const EditIcon = styled.div`
 const EditDiv = styled.div`
   display: none;
   align-items: flex-end;
-  /* height: 138px; */
-`;
-
-const TextFieldDiv = styled.div`
-  margin-bottom: 9px;
 `;
 
 const Submit = styled.div`
+  margin-bottom: 9px;
   cursor: pointer;
   margin-left: 10px;
   :hover {
@@ -93,6 +107,7 @@ const Submit = styled.div`
   }
 `;
 const Cancel = styled.div`
+  margin-bottom: 9px;
   cursor: pointer;
   margin-left: 10px;
   :hover {
@@ -102,21 +117,15 @@ const Cancel = styled.div`
 
 const IntroductionDiv = styled.div`
   width: 100%;
-  height: 89px;
-  color: #3a4a58;
+  height: 114px;
+  color: #5b5b5b;
   overflow: scroll;
   padding-left: 5px;
   font-size: 20px;
   line-height: 30px;
 `;
 
-export default function MoreInfo({
-  innerRef,
-  handleMoreInfo,
-  handleShow,
-  handleDisappear,
-}) {
-  const userInfo = useSelector((state) => state.userInfo);
+export default function MoreInfo({ innerRef, handleMoreInfo, userInfo }) {
   const languageInfoRef = useRef();
   const birthdayInfoRef = useRef();
   const introductionInfoRef = useRef();
@@ -143,6 +152,7 @@ export default function MoreInfo({
       : "";
   const infoData = [
     {
+      icon: <i className="fas fa-globe"></i>,
       title: "Language",
       info_data: language || "unknown",
       info_ref: languageInfoRef,
@@ -151,6 +161,7 @@ export default function MoreInfo({
       input_ref: languageInputRef,
     },
     {
+      icon: <i className="fas fa-birthday-cake"></i>,
       title: "Birthday",
       info_data: birthdayFormat || "unknown",
       info_ref: birthdayInfoRef,
@@ -159,6 +170,7 @@ export default function MoreInfo({
       input_ref: birthdayInputRef,
     },
     {
+      icon: <i className="fas fa-smile"></i>,
       title: "Introduction",
       info_data: introduction || "",
       info_ref: introductionInfoRef,
@@ -187,6 +199,13 @@ export default function MoreInfo({
       });
   }
 
+  function handleShow(ref) {
+    ref.current.style.display = "flex";
+  }
+  function handleDisappear(ref) {
+    ref.current.style.display = "none";
+  }
+
   return (
     <MoreInfoDiv ref={innerRef}>
       <CloseDiv
@@ -202,11 +221,19 @@ export default function MoreInfo({
         <i className="fas fa-times-circle"></i>
       </CloseDiv>
 
-      <Title>Email</Title>
-      <InfoTextDiv>{email}</InfoTextDiv>
+      <InfoDiv>
+        <InfoIcon>
+          <i className="fas fa-envelope"></i>
+        </InfoIcon>
+        <InfoText>
+          <Title>Email</Title>
+          <InfoTextDiv>{email}</InfoTextDiv>
+        </InfoText>
+      </InfoDiv>
 
       {infoData.map((info, index) => {
         const {
+          icon,
           title,
           info_data,
           info_ref,
@@ -215,43 +242,46 @@ export default function MoreInfo({
           input_ref,
         } = info;
         return (
-          <div
+          <InfoDiv
             key={index}
             onMouseEnter={() => handleShow(edit_icon_ref)}
             onMouseLeave={() => handleDisappear(edit_icon_ref)}
           >
-            <TitleDiv>
-              <Title>{title}</Title>
-              <EditIcon
-                ref={edit_icon_ref}
-                onClick={() => {
-                  handleShow(edit_ref);
-                  handleDisappear(info_ref);
-                  infoData
-                    .filter((data) => data.title !== title)
-                    .forEach((data) => {
-                      handleDisappear(data.edit_ref);
-                      handleShow(data.info_ref);
-                    });
-                }}
-              >
-                <i className="fas fa-pencil-alt"></i>
-              </EditIcon>
-            </TitleDiv>
-            <div>
-              <InfoDiv ref={info_ref}>
+            <InfoIcon>{icon}</InfoIcon>
+            <InfoText>
+              <TitleDiv>
+                <Title>{title}</Title>
+                <EditIcon
+                  ref={edit_icon_ref}
+                  onClick={() => {
+                    handleShow(edit_ref);
+                    handleDisappear(info_ref);
+                    infoData
+                      .filter((data) => data.title !== title)
+                      .forEach((data) => {
+                        handleDisappear(data.edit_ref);
+                        handleShow(data.info_ref);
+                      });
+                  }}
+                >
+                  <i className="fas fa-pencil-alt"></i>
+                </EditIcon>
+              </TitleDiv>
+              <div>
+                {/* <InfoDiv ref={info_ref}> */}
                 {title === "Introduction" ? (
-                  <IntroductionDiv>{info_data}</IntroductionDiv>
+                  <IntroductionDiv ref={info_ref}>{info_data}</IntroductionDiv>
                 ) : (
-                  <InfoTextDiv>{info_data}</InfoTextDiv>
+                  <InfoTextDiv ref={info_ref}>{info_data}</InfoTextDiv>
                 )}
-              </InfoDiv>
-              <EditDiv ref={edit_ref}>
-                <TextFieldDiv>
+                {/* </InfoDiv> */}
+
+                <EditDiv ref={edit_ref}>
+                  {/* <TextFieldDiv> */}
                   {title === "Birthday" ? (
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
-                        label="Birthday"
+                        // label="Birthday"
                         value={birthday}
                         onChange={(newValue) => {
                           setBirthday(newValue);
@@ -259,48 +289,56 @@ export default function MoreInfo({
                         renderInput={(params) => <TextField {...params} />}
                         inputProps={{
                           style: { height: "1px" },
+                          color: "#3a4a58",
+                          outline: "1px rgb(58, 74, 88, 0.5) solid",
                         }}
                       />
                     </LocalizationProvider>
                   ) : (
-                    <TextField
+                    //<ThemeProvider theme={primaryPaletteTheme}>
+                    <InputBase
                       inputProps={{
                         style: {
-                          width: 200,
-                          height: title === "Introduction" ? 83 : 16,
-                          fontSize: 10,
+                          height: title === "Introduction" ? 104 : 24,
+                          fontSize: 16,
+                          outline: "1px rgb(58, 74, 88, 0.5) solid",
+                          padding: "4px 10px 0",
+                          backgroundColor: "rgb(255, 255, 255, 0.4)",
+                          borderRadius: "4px",
                         },
                       }}
-                      style={{ borderRadius: "17px" }}
-                      label={`Edit ${title}`}
+                      // label={`Edit ${title}`}
                       size="small"
                       placeholder={info_data}
                       variant="outlined"
                       ref={input_ref}
                       multiline
                     />
+                    //</ThemeProvider>
                   )}
-                </TextFieldDiv>
-                <Submit
-                  onClick={() => {
-                    handleUpdateDate(title, input_ref, info_ref, edit_ref);
-                    handleDisappear(edit_ref);
-                    handleShow(info_ref);
-                  }}
-                >
-                  <i className="fas fa-check-circle" />
-                </Submit>
-                <Cancel
-                  onClick={() => {
-                    handleDisappear(edit_ref);
-                    handleShow(info_ref);
-                  }}
-                >
-                  <i className="fas fa-times-circle" />
-                </Cancel>
-              </EditDiv>
-            </div>
-          </div>
+                  {/* </TextFieldDiv> */}
+
+                  <Submit
+                    onClick={() => {
+                      handleUpdateDate(title, input_ref, info_ref, edit_ref);
+                      handleDisappear(edit_ref);
+                      handleShow(info_ref);
+                    }}
+                  >
+                    <i className="fas fa-check-circle" />
+                  </Submit>
+                  <Cancel
+                    onClick={() => {
+                      handleDisappear(edit_ref);
+                      handleShow(info_ref);
+                    }}
+                  >
+                    <i className="fas fa-times-circle" />
+                  </Cancel>
+                </EditDiv>
+              </div>
+            </InfoText>
+          </InfoDiv>
         );
       })}
     </MoreInfoDiv>

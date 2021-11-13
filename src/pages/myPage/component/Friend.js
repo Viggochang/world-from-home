@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useHistory } from "react-router";
 
-import { styled as styledMui } from "@mui/styles";
 import Button from "@material-ui/core/Button";
 
 import countryTrans from "../../../util/countryTrans";
@@ -18,9 +17,21 @@ const FriendPhoto = styled.div`
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  box-shadow: 0px 0px 20px #4f4f4f;
+  box-shadow: 4px 4px 20px #4f4f4f;
   cursor: pointer;
+  :hover {
+    box-shadow: 4px 4px 20px #3c3c3c;
+  }
 `;
+const FriendMask = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  :hover {
+    background-color: rgb(225, 225, 225, 0.2);
+  }
+`;
+
 const FriendInfo = styled.div`
   margin-left: 30px;
   display: flex;
@@ -40,31 +51,9 @@ const FriendCountry = styled.div`
   line-height: 40px;
 `;
 
-const AcceptRemoveBtnsDiv = styled.div``;
-const AcceptBtn = styledMui(Button)({
-  outline: "1px	#006000 solid",
-  color: "#006000",
-  padding: "0 10px",
-  borderRadius: "20px",
-  marginRight: "15px",
-  fontSize: "12px",
-  "&:hover": {
-    backgroundColor: "#006000",
-    color: "white",
-  },
-});
-const RemoveBtn = styledMui(Button)({
-  outline: "1px #AE0000 solid",
-  color: "#AE0000",
-  padding: "0 10px",
-  borderRadius: "20px",
-  marginRight: "15px",
-  fontSize: "12px",
-  "&:hover": {
-    backgroundColor: "#AE0000",
-    color: "white",
-  },
-});
+const AcceptRemoveBtnsDiv = styled.div`
+  display: flex;
+`;
 
 export default function Friend({ friend, request, isMyPage }) {
   const { id: friendId, friends: friendFriends, photo, name, country } = friend;
@@ -114,10 +103,12 @@ export default function Friend({ friend, request, isMyPage }) {
           backgroundPosition: "center",
         }}
         onClick={handleQueryUserId}
-      ></FriendPhoto>
+      >
+        <FriendMask />
+      </FriendPhoto>
       {/* </NavLink> */}
       <FriendInfo>
-        <FriendName>{name}</FriendName>
+        <FriendName onClick={handleQueryUserId}>{name}</FriendName>
         <FriendCountry>
           <i className="fas fa-globe"></i>{" "}
           {country ? countryTrans[country].name_en : ""}
@@ -125,21 +116,48 @@ export default function Friend({ friend, request, isMyPage }) {
         {isMyPage ? (
           <AcceptRemoveBtnsDiv>
             {request ? (
-              <AcceptBtn
+              <Button
                 ref={acceptRef}
                 onClick={(e) => handleAcceptRemove(e, "accept")}
+                sx={{
+                  outline: "1px	#006000 solid",
+                  color: "#006000",
+                  padding: "0 10px",
+                  borderRadius: "20px",
+                  marginRight: "15px",
+                  fontSize: "12px",
+                  "&:hover": {
+                    backgroundColor: "#006000",
+                    color: "white",
+                  },
+                }}
               >
                 accept
-              </AcceptBtn>
+              </Button>
             ) : (
               <></>
             )}
-            <RemoveBtn
+            <Button
               ref={removeRef}
               onClick={(e) => handleAcceptRemove(e, "remove")}
+              sx={{
+                outline: "1px #AE0000 solid",
+                color: "#AE0000",
+                padding: "0 10px",
+                borderRadius: "20px",
+                marginRight: "15px",
+                fontSize: "12px",
+                // display: "flex",
+                // alignItem: "center",
+                // justifyContent: "center",
+                "&:hover": {
+                  backgroundColor: "#AE0000",
+                  color: "white",
+                },
+              }}
             >
               remove
-            </RemoveBtn>
+            </Button>
           </AcceptRemoveBtnsDiv>
         ) : (
           <></>

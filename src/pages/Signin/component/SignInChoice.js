@@ -1,30 +1,8 @@
 import React, { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import SignInForm from "./SignInForm";
 import MoreInfoForm from "./MoreInfoForm";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-    },
-  },
-});
 
 const SignInChoiceDiv = styled.div`
   width: 400px;
@@ -32,6 +10,9 @@ const SignInChoiceDiv = styled.div`
 `;
 
 const CrossDiv = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   position: absolute;
   top: 10px;
   right: 15px;
@@ -39,8 +20,11 @@ const CrossDiv = styled.div`
   font-weight: bold;
   font-size: 20px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   :hover {
-    color: #3a4a58;
+    background-color: rgb(255, 255, 255, 0.2);
   }
 `;
 
@@ -71,22 +55,6 @@ export default function SignInChoice({ signinRef }) {
       <CrossDiv onClick={handleClose}>
         <i className="fas fa-times"></i>
       </CrossDiv>
-      {/* <div>
-        <ThemeProvider theme={theme}>
-          <Button
-            variant="contained"
-            color="white"
-            style={{
-              marginTop: "30px",
-              borderRadius: "40px",
-              lineHeight: 1.5,
-            }}
-            onClick={handleToWorldPage}
-          >
-            enter
-          </Button>
-        </ThemeProvider>
-      </div> */}
     </SignInChoiceDiv>
   );
 }

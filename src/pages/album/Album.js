@@ -5,10 +5,25 @@ import { useHistory } from "react-router";
 import { db_gallery, db_userInfo } from "../../util/firebase";
 
 import ShowAlbum from "./component/ShowAlbum";
-import { Tooltip } from "@mui/material";
-import { Alert, Stack } from "@mui/material";
+import { Tooltip, tooltipClasses } from "@mui/material";
+import { styled as styledMui } from "@mui/material/styles";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import "./alertButton.css";
 
 import countryTrans from "../../util/countryTrans";
+
+const MyTooltip = styledMui(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "rgb(255, 255, 255, 0.9)",
+    color: "#3a4a58",
+    boxShadow: theme.shadows[1],
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+}));
 
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
@@ -22,11 +37,6 @@ const AlbumDiv = styled.div`
   flex-direction: column;
   padding: 40px 100px;
   overflow: scroll;
-`;
-
-const AlertDiv = styled.div`
-  margin: 20px calc(50% - 150px);
-  position: relative;
 `;
 
 const BackDiv = styled.div`
@@ -230,12 +240,33 @@ export default function Album() {
   }
 
   function handleDelete() {
-    db_gallery.doc(albumIdShow).update({ condition: "discard" });
-    deleteAlertRef.current.style.display = "flex";
-    setTimeout(() => {
-      deleteAlertRef.current.style.display = "none";
-      handleClickBack();
-    }, 1000);
+    const MySwal = withReactContent(Swal);
+
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        db_gallery.doc(albumIdShow).update({ condition: "discard" });
+        MySwal.fire("Deleted!", "Your album has been deleted.", "success").then(
+          (result) => {
+            if (result.isConfirmed) {
+              handleClickBack();
+            }
+          }
+        );
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Cancelled", "Your album is safe :)", "error");
+      }
+    });
   }
 
   const addFriendText = {
@@ -247,31 +278,24 @@ export default function Album() {
 
   return (
     <AlbumDiv style={{ display: albumIdShow ? "flex" : "none" }}>
-      <AlertDiv>
-        <Stack sx={{ width: "300px" }} spacing={2}>
-          <Alert
-            severity="error"
-            style={{ position: "absolute", margin: 0, display: "none" }}
-            ref={deleteAlertRef}
-          >
-            Album Deleted !
-          </Alert>
-        </Stack>
-      </AlertDiv>
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times-circle" />
       </BackDiv>
       <ButtonsDiv>
-        <Tooltip title={liked ? "Liked" : "Like"} placement="left">
+        <MyTooltip
+          title={liked ? "Liked" : "Like"}
+          placement="left"
+          sx={{ fontSize: "16px" }}
+        >
           <ButtonStyle
             onClick={handleLike}
             style={liked ? { backgroundColor: "#3A4A58", color: "white" } : {}}
           >
             <i className="fas fa-thumbs-up" />
           </ButtonStyle>
-        </Tooltip>
+        </MyTooltip>
 
-        <Tooltip title={addFriendText[friendCondition]} placement="left">
+        <MyTooltip title={addFriendText[friendCondition]} placement="left">
           <ButtonStyle
             onClick={handleFriend}
             style={
@@ -286,9 +310,9 @@ export default function Album() {
           >
             <i className="fas fa-user-plus"></i>
           </ButtonStyle>
-        </Tooltip>
+        </MyTooltip>
 
-        <Tooltip
+        <MyTooltip
           title="Edit"
           placement="left"
           style={{ display: isMyAlbun ? "flex" : "none" }}
@@ -296,9 +320,9 @@ export default function Album() {
           <ButtonStyle onClick={handleEdit}>
             <i className="fas fa-pencil-alt" />
           </ButtonStyle>
-        </Tooltip>
+        </MyTooltip>
 
-        <Tooltip
+        <MyTooltip
           title="Delete"
           placement="left"
           style={{ display: isMyAlbun ? "flex" : "none" }}
@@ -306,7 +330,7 @@ export default function Album() {
           <ButtonStyle onClick={handleDelete}>
             <i className="fas fa-trash-alt"></i>
           </ButtonStyle>
-        </Tooltip>
+        </MyTooltip>
       </ButtonsDiv>
 
       <AlbumInfo>

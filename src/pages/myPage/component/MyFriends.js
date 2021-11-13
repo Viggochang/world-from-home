@@ -34,18 +34,18 @@ const Title = styled.div`
 `;
 
 const RequestBtn = styled.div`
-  width: 55px;
-  height: 55px;
+  width: 60px;
+  height: 60px;
   color: #3a4a58;
   font-size: 30px;
-  outline: 1px #3a4a58 solid;
+  /* outline: 2px #3a4a58 solid; */
   border-radius: 50%;
   position: relative;
   display: flex;
   background-color: rgb(255, 255, 255, 0.7);
   cursor: pointer;
   :hover {
-    background-color: #3a4a58;
+    background-color: #b8c3d0;
     color: white;
   }
 `;
@@ -83,7 +83,7 @@ const SearchIconDiv = styled.div`
 `;
 
 const ContentDiv = styled.div`
-  outline: 2px #3a4a58 solid;
+  /* outline: 2px #3a4a58 solid; */
   padding: 30px 30px 0;
   margin-top: 15px;
   width: calc(100% - 60px);
@@ -93,6 +93,7 @@ const ContentDiv = styled.div`
   justify-content: space-between;
   align-content: space-between;
   background-color: rgb(255, 255, 255, 0.5);
+  border-radius: 10px;
 `;
 
 export default function MyFriends({ title, userInfo, isMyPage }) {
@@ -136,6 +137,9 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
     friendRequestsRef.current.style.color = showFriendRequest
       ? "#3a4a58"
       : "white";
+    // friendRequestsRef.current.style.outline = showFriendRequest
+    //   ? "2px #3a4a58 solid"
+    //   : "2px white solid";
     setShowFriendRequest(showFriendRequest ? false : true);
   }
 

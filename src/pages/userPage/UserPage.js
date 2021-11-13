@@ -12,13 +12,13 @@ import { db_userInfo } from "../../util/firebase";
 import FriendState from "../myPage/component/FriendState";
 
 import Background from "../myPage/background/Background";
-import MoreInfo from "./component/MoreInfo";
+import MoreInformation from "./moreInformation/MoreInformation";
 import UserWorld from "./component/UserWorld";
 import countryTrans from "../../util/countryTrans";
 import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
-import SigninDiv from "../Signin/Signin";
+
 import Album from "../album/Album";
 // import { system } from "@amcharts/amcharts4/core";
 
@@ -65,9 +65,10 @@ const UpperDiv = styled.div`
 const MyPhoto = styled.div`
   width: 450px;
   height: 450px;
-  box-shadow: 0px 0px 20px #000000;
+  box-shadow: 2px 2px 20px #4f4f4f;
   position: relative;
   color: white;
+  border-radius: 20px;
 `;
 
 const UserInfoDiv = styled.div`
@@ -78,7 +79,6 @@ const UserInfoDiv = styled.div`
   max-width: calc(100vw - 704px);
   font-weight: bold;
   line-height: 1.15;
-  position: relative;
 `;
 const CountryDiv = styled.div`
   display: flex;
@@ -207,22 +207,6 @@ export default function UserPage() {
         new Date(1000 * birthday.seconds).getFullYear()
       : "unknown";
 
-  function handleShow(ref) {
-    ref.current.style.display = "flex";
-  }
-  function handleDisappear(ref) {
-    ref.current.style.display = "none";
-  }
-
-  function handleMoreInfo() {
-    setShowMoreInfo(showMoreInfo ? false : true);
-    if (!showMoreInfo) {
-      handleShow(moreInfoRef);
-    } else {
-      handleDisappear(moreInfoRef);
-    }
-  }
-
   function handleToMyPage() {
     console.log(myInfo);
     if (Object.keys(myInfo).length) {
@@ -257,40 +241,13 @@ export default function UserPage() {
               style={{ fontSize: 36, marginBottom: "24px" }}
             >{`age: ${age}`}</div>
 
-            <ThemeProvider theme={moreInfoBtnTheme}>
-              <Button
-                onClick={() => {
-                  handleMoreInfo();
-                }}
-                variant="contained"
-                color={showMoreInfo ? "primary" : "secondary"}
-                // color={activeButton === "Friends" ? "primary" : "white"}
-                style={{
-                  width: "220px",
-                  fontSize: "16px",
-                  borderRadius: "40px",
-                  lineHeight: 1.5,
-                  fontWeight: "bold",
-                  color: showMoreInfo ? "white" : "#3A4A58",
-                  outline: showMoreInfo
-                    ? "3px white solid"
-                    : "3px #3A4A58 solid",
-                }}
-              >
-                More about Me
-              </Button>
-            </ThemeProvider>
+            <MoreInformation />
             {Object.keys(myInfo).length ? (
               <FriendState userInfo={userInfo} />
             ) : (
               <></>
             )}
           </UserInfoDiv>
-          <MoreInfo
-            innerRef={moreInfoRef}
-            userInfo={userInfo}
-            handleMoreInfo={handleMoreInfo}
-          />
         </UpperDiv>
         <MiddleDiv>
           <Title>{`World from ${name}`}</Title>

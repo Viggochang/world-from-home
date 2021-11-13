@@ -6,10 +6,13 @@ import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { Alert, Stack } from "@mui/material";
+import { signInBtnTheme } from "../../util/muiTheme";
 
 import { db_gallery } from "../../util/firebase";
 import WorkingSpace from "./WorkingSpace";
 import Preview from "./component/Preview";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import full_1 from "../../image/template/full_1.jpeg";
 import full_2 from "../../image/template/full_2.jpeg";
@@ -183,6 +186,7 @@ const Country = styled.div`
   font-weight: bold;
   font-size: 30px;
   margin-left: 20px;
+  margin-right: auto;
 `;
 
 const allTemplate = {
@@ -244,7 +248,6 @@ function EditSpace() {
 
   const previewBtnRef = useRef();
   const saveAlertRef = useRef();
-  const deleteAlertRef = useRef();
   const completeQuestionRef = useRef();
   const history = useHistory();
 
@@ -265,20 +268,11 @@ function EditSpace() {
     const albumIdEditing = new URLSearchParams(window.location.search).get(
       "album_id_edit"
     );
-    const newAlbumIdEditing = db_gallery.doc().id;
-    dispatch({
-      type: "SET_ALBUM_ID_EDITING",
-      payload: albumIdEditing || newAlbumIdEditing,
-    });
-    if (!albumIdEditing) {
-      db_gallery
-        .doc(newAlbumIdEditing)
-        .set({ id: newAlbumIdEditing, condition: "pending" })
-        .then(() => {
-          let params = new URL(window.location).searchParams;
-          params.append("album_id_edit", newAlbumIdEditing);
-          history.push({ search: params.toString() });
-        });
+    if (albumIdEditing) {
+      dispatch({
+        type: "SET_ALBUM_ID_EDITING",
+        payload: albumIdEditing,
+      });
     }
   }, []);
   // const workingSpaceRef = useRef();
@@ -287,6 +281,7 @@ function EditSpace() {
     if (complete) {
       saveAlertRef.current.style.zIndex = 5;
       setTimeout(() => {
+        setComplete(false);
         history.push({ pathname: "home" });
       }, 500);
     }
@@ -445,21 +440,55 @@ function EditSpace() {
   }
 
   function handleDiscard(e, albumId) {
-    deleteAlertRef.current.style.zIndex = 5;
-    const body = {
-      condition: "discard",
-    };
-    db_gallery
-      .doc(albumId)
-      .update(body)
-      .then(() => {
-        dispatch({
-          type: "DISCARD_CANVAS_EDIT",
-          payload: "",
-        });
-        history.push({ pathname: "home" });
-      });
+    // deleteAlertRef.current.style.zIndex = 5;
+    const MySwal = withReactContent(Swal);
+
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const body = {
+          condition: "discard",
+        };
+        db_gallery
+          .doc(albumId)
+          .update(body)
+          .then(() => {
+            MySwal.fire(
+              "Deleted!",
+              "Your album has been deleted.",
+              "success"
+            ).then((result) => {
+              if (result.isConfirmed) {
+                dispatch({
+                  type: "DISCARD_CANVAS_EDIT",
+                  payload: "",
+                });
+                history.push({ pathname: "home" });
+              }
+            });
+          });
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Cancelled", "Your album is safe :)", "error");
+      }
+    });
   }
+
+  const SignInBtnStyle = {
+    // width: "100%",
+    // marginBottom: "20px",
+    boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
+    marginRight: "10px",
+  };
 
   return (
     <div>
@@ -477,14 +506,7 @@ function EditSpace() {
             style={{ position: "absolute", margin: 0 }}
             ref={saveAlertRef}
           >
-            {setComplete ? "Album Complete !" : "Album Saved !"}
-          </Alert>
-          <Alert
-            severity="error"
-            style={{ position: "absolute", margin: 0 }}
-            ref={deleteAlertRef}
-          >
-            Album Deleted !
+            {complete ? "Album Complete !" : "Album Saved !"}
           </Alert>
         </Stack>
       </AlertDiv>
@@ -519,11 +541,32 @@ function EditSpace() {
           <i className="fas fa-globe"></i>
           &ensp;{targetCountry.name}
         </Country>
-        <ThemeProvider theme={theme}>
+        {/* 
+        <ThemeProvider theme={signInBtnTheme}>
           <Button
             variant="contained"
             color="primary"
-            style={{ marginLeft: "auto", marginRight: "10px" }}
+            sx={SignInBtnStyle}
+            onClick={() => handleSignin(googleProvider)}
+          >
+            <i className="fab fa-google"></i> &emsp;&emsp; Sign in with Google
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={SignInBtnStyle}
+            onClick={() => handleSignin(facebookProvider)}
+          >
+            <i className="fab fa-facebook"></i> &emsp;&emsp; Sign in with
+            Facebook
+          </Button>
+        </ThemeProvider> */}
+
+        <ThemeProvider theme={signInBtnTheme}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={SignInBtnStyle}
             onClick={(e) => handlePreview(e, albumIdEditing)}
             ref={previewBtnRef}
           >
@@ -532,7 +575,7 @@ function EditSpace() {
           <Button
             variant="contained"
             color="primary"
-            style={{ marginRight: "10px" }}
+            sx={SignInBtnStyle}
             onClick={(e) => handleSave(e, albumIdEditing)}
           >
             SAVE
@@ -540,7 +583,7 @@ function EditSpace() {
           <Button
             variant="contained"
             color="primary"
-            style={{ marginRight: "10px" }}
+            sx={SignInBtnStyle}
             onClick={(e) => handleComplete(e, albumIdEditing)}
           >
             COMPLETE
@@ -548,7 +591,7 @@ function EditSpace() {
           <Button
             variant="contained"
             color="primary"
-            style={{ marginRight: "10px" }}
+            sx={SignInBtnStyle}
             onClick={(e) => handleDiscard(e, albumIdEditing)}
           >
             DISCARD

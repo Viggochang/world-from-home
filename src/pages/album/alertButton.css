@@ -1,0 +1,17 @@
+.swal2-styled.swal2-confirm{
+  background-color: #3a4a58;
+  border-radius: 19px;
+}
+
+.swal2-styled.swal2-confirm:focus{
+  box-shadow: 0 0 0 3px #B8C3D0;
+}
+
+.swal2-styled.swal2-cancel{
+  background-color: #B8C3D0;
+  border-radius: 19px;
+}
+
+.swal2-styled.swal2-cancel:focus{
+  box-shadow: 0 0 0 3px #B8C3D0;
+}

@@ -16,10 +16,14 @@ export default function AlbumFriendBtns({ activeButton, setActiveButton }) {
   }
 
   const albumFriendButtonStyle = () => ({
-    width: "180px",
+    width: "190px",
     margin: "4px 0 24px",
-    outline: `3px #ffffff solid`,
+    border: `2px #ffffff solid`,
     color: "#ffffff",
+    boxShadow: "4px 6px 10px rgb(50, 50, 50, 0.7)",
+    ":hover": {
+      boxShadow: "4px 6px 5px rgb(50, 50, 50, 0.7)",
+    },
   });
 
   return (

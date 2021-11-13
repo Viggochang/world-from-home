@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { db_gallery } from "../../../util/firebase";
 import styled from "styled-components";
@@ -71,6 +71,7 @@ export default function CountryAlbums({ signinRef }) {
   const targetCountry = useSelector((state) => state.targetCountry);
   const [album, setAlbum] = useState([]);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   // function handleGalleryQuestion() {
   //   galleryQuestionRef.current.style.display = "flex";
@@ -80,7 +81,19 @@ export default function CountryAlbums({ signinRef }) {
     if (!myUserId) {
       signinRef.current.style.zIndex = 3;
     } else {
-      history.push({ pathname: "edit" });
+      const newAlbumIdEditing = db_gallery.doc().id;
+      dispatch({
+        type: "SET_ALBUM_ID_EDITING",
+        payload: newAlbumIdEditing,
+      });
+      db_gallery
+        .doc(newAlbumIdEditing)
+        .set({ id: newAlbumIdEditing, condition: "pending" })
+        .then(() => {
+          let params = new URL(window.location).searchParams;
+          params.append("album_id_edit", newAlbumIdEditing);
+          history.push({ pathname: "edit", search: params.toString() });
+        });
     }
   }
 

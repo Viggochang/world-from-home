@@ -1,3 +1,36 @@
 .leaflet-control-zoom{
-  margin: 0 40px 22.22px 0 !important;
+  /* margin: 0 40px 22.22px 0 ; */
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
 }
+
+.leaflet-container {
+  width: 100%;
+  height: 100vh;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+  color: #3a4a58;
+}  
+
+.geocoder-control {
+  margin: 0 !important;
+  width: 250px !important; 
+  position: fixed;
+  top: 50px;
+  right: 140px;
+}
+
+.geocoder-control-input {
+  height: 42px !important;
+  border-radius: 20px !important;
+  padding: 0 10px;
+  background-color: rgb(255, 255, 255, 0.8);
+  /* outline: 4px #3a4a58 solid;
+  outline-offset: -2px; */
+}
+
+/* geocoder-control leaflet-control */

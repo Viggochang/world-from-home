@@ -14,7 +14,7 @@ const MyPhoto = styled(NavLink)`
   right: 40px;
   border-radius: 20px;
   cursor: pointer;
-  z-index: 5;
+  z-index: 2;
   :hover {
     box-shadow: 0px 0px 16px #bebebe;
   }
@@ -36,7 +36,7 @@ const GuestIcon = styled.div`
   align-items: center;
   color: white;
   font-size: 40px;
-  z-index: 5;
+  z-index: 2;
   :hover {
     box-shadow: 0px 0px 20px #bebebe;
   }

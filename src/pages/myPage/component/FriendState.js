@@ -10,7 +10,7 @@ const RequestBtnDiv = styled.div`
   align-items: center;
   position: absolute;
   bottom: 0px;
-  left: 250px;
+  left: 720px;
 `;
 
 const RequestBtn = styled.div`
@@ -35,7 +35,7 @@ const RemoveRequest = styled.div`
   bottom: 20px;
   cursor: pointer;
   :hover {
-    color: #AE0000;  /*red*/
+    color: #ae0000; /*red*/
   }
 `;
 
@@ -56,7 +56,7 @@ export default function FriendState({ userInfo }) {
     none: {
       text: "add friend",
       text_change: "send request",
-      color_change: "#3A4A58",  //green
+      color_change: "#3A4A58", //green
       style: {
         backgroundColor: "white",
         color: "#b8c3d0",
@@ -70,7 +70,7 @@ export default function FriendState({ userInfo }) {
     send_request: {
       text: "request sended",
       text_change: "remove request",
-      color_change: "#AE0000",   //red
+      color_change: "#AE0000", //red
       style: {
         backgroundColor: "#b8c3d0",
         color: "white",
@@ -98,7 +98,7 @@ export default function FriendState({ userInfo }) {
     confirmed: {
       text: "friend",
       text_change: "remove friend",
-      color_change: "#AE0000",  //red
+      color_change: "#AE0000", //red
       style: {
         backgroundColor: "#3A4A58",
         color: "white",
@@ -187,18 +187,18 @@ export default function FriendState({ userInfo }) {
     const stateText = stateTextRef.current;
     if (type === "enter") {
       stateText.innerText = "remove request";
-      stateText.style.color = "#AE0000";  //red
+      stateText.style.color = "#AE0000"; //red
     }
   }
-  function handleRemoveRequesState(){
+  function handleRemoveRequesState() {
     const stateText = stateTextRef.current;
     stateText.style.color = "white";
-    setFriendState('none');
+    setFriendState("none");
     const myFriendsData = [
       ...myFriends.filter(({ id }) => id !== friendId),
       {
         id: friendId,
-        condition: 'none',
+        condition: "none",
       },
     ];
     db_userInfo.doc(myId).update({ friends: myFriendsData });
@@ -207,7 +207,7 @@ export default function FriendState({ userInfo }) {
       ...friendFriends.filter(({ id }) => id !== myId),
       {
         id: myId,
-        condition: 'none',
+        condition: "none",
       },
     ];
     db_userInfo.doc(friendId).update({ friends: friendFriendsData });

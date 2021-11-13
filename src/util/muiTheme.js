@@ -1,5 +1,18 @@
 import { createTheme } from "@material-ui/core/styles";
 
+const primaryPaletteTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#3A4A58",
+      darker: "#053e85",
+    },
+    secondary: {
+      main: "rgb(255, 255, 255, 0.9)",
+      darker: "#053e85",
+    },
+  },
+});
+
 const albumFriendBtnTheme = createTheme({
   palette: {
     primary: {
@@ -21,12 +34,7 @@ const albumFriendBtnTheme = createTheme({
 });
 
 const changeBackgroundBtnTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-  },
+  ...primaryPaletteTheme,
   shape: { borderRadius: 20 },
   typography: {
     button: {
@@ -39,16 +47,7 @@ const changeBackgroundBtnTheme = createTheme({
 });
 
 const moreInfoBtnTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    secondary: {
-      main: "#ffffff",
-      darker: "#053e85",
-    },
-  },
+  ...primaryPaletteTheme,
   shape: { borderRadius: 24 },
   typography: {
     button: {
@@ -57,5 +56,45 @@ const moreInfoBtnTheme = createTheme({
     },
   },
 });
+const signInBtnTheme = createTheme({
+  ...primaryPaletteTheme,
+  shape: { borderRadius: 15 },
+  typography: {
+    button: {
+      fontSize: 14,
+      fontWeight: 600,
+      lineHeight: 1.6,
+      textTransform: "none",
+    },
+  },
+});
 
-export { albumFriendBtnTheme, changeBackgroundBtnTheme, moreInfoBtnTheme };
+const signInEnterTheme = createTheme({
+  ...primaryPaletteTheme,
+  shape: { borderRadius: 24 },
+  typography: {
+    button: {
+      fontSize: 16,
+      fontWeight: 700,
+      lineHeight: 1.2,
+    },
+  },
+});
+
+const whiteBtnTheme = createTheme({
+  palette: {
+    white: {
+      main: "#ffffff",
+    },
+  },
+});
+
+export {
+  primaryPaletteTheme,
+  albumFriendBtnTheme,
+  changeBackgroundBtnTheme,
+  moreInfoBtnTheme,
+  signInBtnTheme,
+  signInEnterTheme,
+  whiteBtnTheme,
+};

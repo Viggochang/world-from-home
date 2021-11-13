@@ -9,6 +9,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Switch } from "@mui/material";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { primaryPaletteTheme } from "../../../util/muiTheme";
 
 import { db_gallery } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
@@ -71,7 +72,7 @@ const EditLabel = styled.div`
 `;
 
 const ContentDiv = styled.div`
-  outline: 2px #3a4a58 solid;
+  /* outline: 2px #3a4a58 solid; */
   padding: 10px 30px 30px;
   margin-top: 15px;
   width: calc(100% - 60px);
@@ -80,6 +81,7 @@ const ContentDiv = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: rgb(255, 255, 255, 0.5);
+  border-radius: 10px;
   /* overflow: scroll; */
 `;
 
@@ -222,55 +224,65 @@ export default function MyGallery({ title, id, isMyPage }) {
     <MyGalleryContentDiv>
       <FilterDiv>
         <Title>{title}</Title>
-        <FormControl variant="filled" style={selectStyle}>
-          <InputLabel id="album-country-label">Country</InputLabel>
-          <Select
-            labelId="album-country-label"
-            id="album-country"
-            value={albumCountry}
-            label="Country"
-            style={{
-              color: "#3A4A58",
-              backgroundColor: "rgb(255,255,255,0.6)",
-            }}
-            onChange={handleAlbumCountry}
-          >
-            <MenuItem value={"All"}>All</MenuItem>
-            {Array.from(
-              new Set(
-                albumData
-                  .filter(
-                    ({ condition }) =>
-                      condition === (pending ? "pending" : "completed")
-                  )
-                  .map((data) => data.country)
-              )
-            ).map((country) => (
-              <MenuItem key={country} value={country}>
-                {countryTrans[country].name_en}
+        <ThemeProvider theme={primaryPaletteTheme}>
+          <FormControl variant="filled" style={selectStyle}>
+            <InputLabel id="album-country-label">Country</InputLabel>
+            <Select
+              labelId="album-country-label"
+              id="album-country"
+              value={albumCountry}
+              label="Country"
+              color="primary"
+              style={{
+                color: "#3A4A58",
+                backgroundColor: "rgb(255,255,255,0.6)",
+              }}
+              onChange={handleAlbumCountry}
+            >
+              <MenuItem value={"All"} sx={{ color: "#3a4a58" }}>
+                All
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth variant="filled" style={selectStyle}>
-          <InputLabel id="album-order-label">Order</InputLabel>
-          <Select
-            labelId="album-order-label"
-            id="album-order"
-            value={albumOrder}
-            label="Order"
-            style={{
-              color: "#3A4A58",
-              backgroundColor: "rgb(255,255,255,0.6)",
-            }}
-            onChange={handleAlbumOrder}
-          >
-            <MenuItem value={"New"}>New</MenuItem>
-            <MenuItem value={"Old"}>Old</MenuItem>
-            <MenuItem value={"Popular"}>Popular</MenuItem>
-            <MenuItem value={"Unpopular"}>Unpopular</MenuItem>
-          </Select>
-        </FormControl>
+              {Array.from(
+                new Set(
+                  albumData
+                    .filter(
+                      ({ condition }) =>
+                        condition === (pending ? "pending" : "completed")
+                    )
+                    .map((data) => data.country)
+                )
+              ).map((country) => (
+                <MenuItem
+                  key={country}
+                  value={country}
+                  sx={{ color: "#3a4a58" }}
+                >
+                  {countryTrans[country].name_en}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth variant="filled" style={selectStyle}>
+            <InputLabel id="album-order-label">Order</InputLabel>
+            <Select
+              labelId="album-order-label"
+              id="album-order"
+              value={albumOrder}
+              label="Order"
+              style={{
+                color: "#3A4A58",
+                backgroundColor: "rgb(255,255,255,0.6)",
+              }}
+              onChange={handleAlbumOrder}
+            >
+              {["New", "Old", "Popular", "Unpopular"].map((order, index) => (
+                <MenuItem key={index} sx={{ color: "#3a4a58" }} value={order}>
+                  {order}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </ThemeProvider>
       </FilterDiv>
       {/* <ContentDiv style={{height:`${240*myWorldDataFilter.length-30}px`}}> */}
       <ContentDiv>
@@ -278,10 +290,8 @@ export default function MyGallery({ title, id, isMyPage }) {
           <EditingSwitchDiv style={{ display: isMyPage ? "flex" : "none" }}>
             <EditLabel
               style={{
-                color: pending ? "#3a4a58" : "white",
-                backgroundColor: pending
-                  ? "rgb(255,255,255,0.7)"
-                  : "rgb(58, 74, 88, 1)",
+                color: "white",
+                backgroundColor: pending ? "#adadad" : "rgb(58, 74, 88)",
               }}
             >
               complete
@@ -295,10 +305,8 @@ export default function MyGallery({ title, id, isMyPage }) {
             />
             <EditLabel
               style={{
-                color: pending ? "white" : "#3a4a58",
-                backgroundColor: pending
-                  ? "rgb(59, 74, 88, 1)"
-                  : "rgb(255, 255, 255, 0.7)",
+                color: "white",
+                backgroundColor: pending ? "rgb(59, 74, 88)" : "#adadad",
               }}
             >
               editing

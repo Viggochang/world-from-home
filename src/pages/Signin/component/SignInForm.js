@@ -10,25 +10,7 @@ import { firebase } from "../../../util/firebase";
 import { db_userInfo } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
 import { facebookProvider, googleProvider } from "../../../util/authMethod";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-    },
-  },
-});
+import { signInBtnTheme } from "../../../util/muiTheme";
 
 const SignInFormDiv = styled.div`
   display: flex; /* to-do */
@@ -37,11 +19,9 @@ const SignInFormDiv = styled.div`
 `;
 
 const SignTitleDiv = styled.div`
-  font-size: 20px;
+  font-size: 40px;
   font-weight: bold;
   line-height: 40px;
-  border-radius: 20px;
-  background-color: white;
   padding: 0 30px;
   margin-top: 80px;
   color: #3a4a58;
@@ -52,22 +32,22 @@ const SignTitleDiv = styled.div`
 
 const SignInBtnArea = styled.div`
   background-color: white;
-  width: 260px;
+  width: 220px;
   height: 230px;
   margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px 0;
+  padding: 30px 20px;
+  box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.5);
+  border-radius: 10px;
 `;
 
-const SignInBtn = styledMui(Button)({
-  width: "220px",
-  fontSize: "12px",
-  borderRadius: "40px",
-  lineHeight: 1.5,
+const SignInBtnStyle = {
+  width: "100%",
   marginBottom: "20px",
-});
+  boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
+};
 
 export default function SignInForm({
   signinRef,
@@ -114,24 +94,26 @@ export default function SignInForm({
 
   return (
     <SignInFormDiv ref={signInFormRef}>
-      <SignTitleDiv>SIGN IN</SignTitleDiv>
+      <SignTitleDiv>SIGN&ensp;IN</SignTitleDiv>
       <SignInBtnArea>
-        <ThemeProvider theme={theme}>
-          <SignInBtn
+        <ThemeProvider theme={signInBtnTheme}>
+          <Button
             variant="contained"
             color="primary"
+            sx={SignInBtnStyle}
             onClick={() => handleSignin(googleProvider)}
           >
             <i className="fab fa-google"></i> &emsp;&emsp; Sign in with Google
-          </SignInBtn>
-          <SignInBtn
+          </Button>
+          <Button
             variant="contained"
             color="primary"
+            sx={SignInBtnStyle}
             onClick={() => handleSignin(facebookProvider)}
           >
             <i className="fab fa-facebook"></i> &emsp;&emsp; Sign in with
             Facebook
-          </SignInBtn>
+          </Button>
         </ThemeProvider>
       </SignInBtnArea>
     </SignInFormDiv>

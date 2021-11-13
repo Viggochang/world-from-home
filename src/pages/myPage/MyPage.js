@@ -99,7 +99,7 @@ export default function MyPage() {
             <div style={{ fontSize: 36 }}>from</div>
             <Country country={country} />
             <div
-              style={{ fontSize: 36, marginBottom: "24px" }}
+              style={{ fontSize: 36, marginBottom: "22px" }}
             >{`age: ${age}`}</div>
             <MoreInformation />
           </UserInfoDiv>

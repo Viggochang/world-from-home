@@ -1,11 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 import "firebase/auth";
 
 import signinImg from "../../image/signin.jpeg";
 
 import SignInChoice from "./component/SignInChoice";
-import MoreInfoForm from "./component/MoreInfoForm";
 
 const SigninDiv = styled.div`
   width: 100vw;
@@ -21,7 +20,7 @@ const SigninDiv = styled.div`
 const BaseDiv = styled.div`
   width: 900px;
   height: 600px;
-  background-color: #667484;
+  background-color: #b8c3d0;
   margin: auto;
   display: flex;
   position: relative;

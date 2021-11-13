@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
-import { moreInfoBtnTheme } from "../../../../util/muiTheme";
+import { moreInfoBtnTheme } from "../../../util/muiTheme";
 
 import MoreInfo from "./MoreInfo";
 

@@ -31,9 +31,10 @@ const theme = createTheme({
 const MyPhoto = styled.div`
   width: 450px;
   height: 450px;
-  box-shadow: 0px 0px 20px #000000;
+  box-shadow: 2px 2px 20px #3c3c3c;
   position: relative;
   color: white;
+  border-radius: 20px;
 `;
 
 const EditMyPhoto = styled.div`

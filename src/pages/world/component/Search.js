@@ -12,7 +12,7 @@ const SearchDiv = styled.div`
   right: 140px;
   width: 200px;
   height: 40px;
-  outline: 4px #b8c3d0 solid;
+  outline: 2px #b8c3d0 solid;
   border-radius: 22px;
   padding: 0 40px 0 10px;
   background-color: rgb(102, 116, 132, 0.8);
@@ -21,10 +21,10 @@ const SearchDiv = styled.div`
   z-index: 1;
 `;
 const SearchIconDiv = styled.div`
-  font-size: 20px;
+  font-size: 15px;
   position: absolute;
   right: 10px;
-  top: calc(50% - 10px);
+  top: calc(50% - 9px);
   color: #b8c3d0;
   cursor: pointer;
   :hover {

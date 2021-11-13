@@ -8,6 +8,8 @@ import { styled as styledMui } from "@mui/styles";
 import welcomePage from "../../image/welcomePage.mp4";
 import SigninDiv from "../Signin/Signin";
 
+import MyButton from "../../util/Button";
+
 const theme = createTheme({
   status: {
     danger: "#e53e3e",
@@ -85,10 +87,20 @@ export default function WelcomePage() {
       <Title2Div> FROM&ensp;HOME </Title2Div>
       <ThemeProvider theme={theme}>
         <ButtonsDiv>
+          {/* <MyButton
+            text="Sign In"
+            style={{ margin: "0 20px" }}
+            onClick={handleSignIn}
+          />
+          <MyButton
+            text="Guest"
+            style={{ margin: "0 20px" }}
+            onClick={handleGuest}
+          /> */}
           <Button
             variant="contained"
             color="white"
-            style={{
+            sx={{
               width: "200px",
               fontSize: "24px",
               fontWeight: "bold",
@@ -96,7 +108,11 @@ export default function WelcomePage() {
               lineHeight: 1.5,
               margin: "0 20px",
               color: "#3A4A58",
-              outline: "3px #3A4A58 solid",
+              // outline: "3px #3A4A58 solid",
+              boxShadow: "3px 3px 10px 5px rgb(80, 80, 80, 0.7)",
+              ":hover": {
+                backgroundColor: "#e0e0e0",
+              },
             }}
             onClick={handleSignIn}
           >
@@ -105,7 +121,7 @@ export default function WelcomePage() {
           <Button
             variant="contained"
             color="white"
-            style={{
+            sx={{
               width: "200px",
               fontSize: "24px",
               fontWeight: "bold",
@@ -113,7 +129,12 @@ export default function WelcomePage() {
               lineHeight: 1.5,
               margin: "0 20px",
               color: "#3A4A58",
-              outline: "3px #3A4A58 solid",
+              // outline: "3px #3A4A58 solid",
+              boxShadow: "3px 3px 10px 5px rgb(80, 80, 80, 0.7)",
+              // boxShadow: "3px 3px 10px rgb(80, 80, 80, 0.7)",
+              ":hover": {
+                backgroundColor: "#e0e0e0",
+              },
             }}
             onClick={handleGuest}
           >

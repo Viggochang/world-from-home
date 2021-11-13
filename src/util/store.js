@@ -56,6 +56,7 @@ const rootReducer = (state = data, action) => {
     case "DISCARD_CANVAS_EDIT":
       return {
         ...state,
+        targetCountry: {},
         albumIdEditing: "",
         canvas: {},
         pageInfo: {},

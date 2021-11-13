@@ -28,11 +28,11 @@ const BackBtn = styled.div`
   right: 45px;
   color: #3a4a58;
   border-radius: 25%;
-  outline: 2px solid #d9d9d9;
+  outline: 2px solid #ffffff;
   cursor: pointer;
   z-index: 1;
   :hover {
-    background-color: #8e8e8e;
+    background-color: #bebebe;
   }
 `;
 
@@ -65,6 +65,7 @@ export default function HomePage() {
   function handleClickBack() {
     map.goHome();
     // polygonSeries.getPolygonById(`${currentActive.dataItem.dataContext.id}`).isActive = false;
+    console.log(currentActive);
     currentActive.isActive = false;
     dispatch({
       type: "SET_TARGET_COUNTRY",

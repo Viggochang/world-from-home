@@ -13,6 +13,10 @@ const EditBackgroundImage = styled.div`
   top: 0px;
   right: 90px;
   display: flex;
+  border-radius: 20px;
+  :hover {
+    background-color: rgb(255, 255, 255, 0.2);
+  }
 `;
 
 const Input = styledMui("input")({
