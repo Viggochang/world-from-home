@@ -268,7 +268,9 @@ export default function CompleteQuestion({
 
   function handleSubmit() {
     touristSpot.forEach((spot) => {
-      if (!spot.id) {
+      if (spot.id) {
+        db_tourist_spot.doc(spot.id).update({ condition: "completed" });
+      } else {
         const id = db_tourist_spot.doc().id;
         const body = {
           id,

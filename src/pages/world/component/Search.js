@@ -77,7 +77,7 @@ export default function Search({
           country.dataItem.dataContext.id ===
           country2id[searchRef.current.value]
       )[0];
-      currentActiveCountry.isActive = true;
+      // currentActiveCountry.isActive = true;
       map.zoomToMapObject(currentActiveCountry);
       setMaskOpacity(0.8);
       setMaskVisibility("visible");

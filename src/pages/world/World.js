@@ -24,23 +24,31 @@ function World({
   mapType,
   userInfo,
   setCurrentActive,
+  currentActive,
   setMap,
   setMaskVisibility,
   setMaskOpacity,
   userPage,
+  map,
 }) {
   const dispatch = useDispatch();
   // const userInfo = useSelector((state) => state.userInfo);
   const [myTravelCountries, setMyTravelCountries] = useState([]);
+  const targetCountry = useSelector((state) => state.targetCountry);
+  const polygonSeries = useSelector((state) => state.polygonSeries);
 
   useEffect(() => {
     let unsubscribe = db_gallery
       .where("user_id", "==", userInfo.id || null)
       .onSnapshot((myAlbums) => {
         setMyTravelCountries(
-          myAlbums.docs
-            .filter((album) => album.data().condition === "completed")
-            .map((album) => album.data().country)
+          Array.from(
+            new Set(
+              myAlbums.docs
+                .filter((album) => album.data().condition === "completed")
+                .map((album) => album.data().country)
+            )
+          )
           // .push(userInfo.country)
         );
         console.log(myAlbums.docs.map((album) => album.data().country));
@@ -50,7 +58,7 @@ function World({
     };
   }, [userInfo]);
 
-  let currentActiveCountry;
+  // let currentActiveCountry = {};
   useEffect(() => {
     let map = am4core.create("chartdiv", am4maps.MapChart);
     setMap(map);
@@ -77,14 +85,14 @@ function World({
     polygonTemplate.events.on(
       "hit",
       function (ev) {
-        if (currentActiveCountry) {
-          currentActiveCountry.isActive = false;
-          // setCurrentActive(currentActiveCountry);
-        }
-        currentActiveCountry = ev.target;
+        // if (currentActiveCountry) {
+        //   currentActiveCountry.isActive = false;
+        //   // setCurrentActive(currentActiveCountry);
+        // }
+        let currentActiveCountry = ev.target;
         setCurrentActive(ev.target);
         map.zoomToMapObject(currentActiveCountry);
-        currentActiveCountry.isActive = true;
+        // currentActiveCountry.isActive = true;
         // setCurrentActive(currentActiveCountry);
         dispatch({
           type: "SET_TARGET_COUNTRY",
@@ -110,12 +118,8 @@ function World({
 
     // Add some data
     const { travel_country } = userInfo;
-    if (myTravelCountries.length) {
-      polygonSeries.data = (
-        userInfo.country
-          ? [...myTravelCountries, userInfo.country]
-          : myTravelCountries
-      ).map((countryCode) => ({
+    if (myTravelCountries) {
+      polygonSeries.data = myTravelCountries.map((countryCode) => ({
         id: countryCode,
         name: countryTrans[countryCode].name_en,
         fill: am4core.color("#ffffff"),
@@ -146,7 +150,45 @@ function World({
     return () => {
       map.dispose();
     };
-  }, [userInfo, myTravelCountries]);
+  }, [myTravelCountries]);
+
+  useEffect(() => {
+    if (
+      map &&
+      Object.keys(targetCountry).length &&
+      polygonSeries.mapPolygons.values.length
+    ) {
+      console.log(polygonSeries.mapPolygons.values);
+      const currentActiveCountry = polygonSeries.mapPolygons.values.filter(
+        (country) => country.dataItem.dataContext.id === targetCountry.id
+      )[0];
+      map.zoomToMapObject(currentActiveCountry);
+    }
+  }, [myTravelCountries, map, targetCountry, polygonSeries]);
+
+  console.log(targetCountry);
+
+  // useEffect(() => {
+  //   // Add some data
+  //   // const { travel_country } = userInfo;
+  //   if (myTravelCountries.length && Object.keys(map).length) {
+  //     let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
+
+  //     map.series.data = (
+  //       userInfo.country
+  //         ? [...myTravelCountries, userInfo.country]
+  //         : myTravelCountries
+  //     ).map((countryCode) => ({
+  //       id: countryCode,
+  //       name: countryTrans[countryCode].name_en,
+  //       fill: am4core.color("#ffffff"),
+  //     }));
+  //   }
+  //   // dispatch({
+  //   //   type: "SET_POLYGONSERIES",
+  //   //   payload: polygonSeries,
+  //   // });
+  // }, [myTravelCountries, map]);
 
   return (
     <Chartdiv

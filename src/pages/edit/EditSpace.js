@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { Alert, Stack } from "@mui/material";
 import { signInBtnTheme } from "../../util/muiTheme";
 
-import { db_gallery } from "../../util/firebase";
+import { db_gallery, db_tourist_spot } from "../../util/firebase";
 import WorkingSpace from "./WorkingSpace";
 import Preview from "./component/Preview";
 import Swal from "sweetalert2";
@@ -57,7 +57,7 @@ const NavBarNav = styled.nav`
   position: fixed;
   top: 0;
   background-color: #667484;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -95,14 +95,14 @@ const HomeDiv = styled.div`
 const ToolBarDiv = styled.div`
   width: 72px;
   height: calc(100vh - 160px);
-  background-color: #f0f0f0;
+  background-color: rgb(255, 255, 255, 0.9);
   position: fixed;
   top: 140px;
   left: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 2;
+  z-index: 1;
   box-shadow: 0px 0px 10px #8e8e8e;
 `;
 
@@ -136,6 +136,7 @@ const ContainerDiv = styled.div`
   top: 120px;
   left: 0;
   background-color: #b8c3d0;
+  z-index: 1;
 `;
 
 const ToolContainerDiv = styled.div`
@@ -145,11 +146,11 @@ const ToolContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f0f0f0;
+  background-color: rgb(255, 255, 255, 0.9);
   position: fixed;
   top: 140px;
   left: 110px;
-  z-index: 3;
+  z-index: 1;
   box-shadow: 0px 0px 10px #8e8e8e;
 `;
 
@@ -175,7 +176,7 @@ const TitleBarDiv = styled.div`
   position: fixed;
   top: 72px;
   left: 0;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   align-items: center;
   padding: 5px 0;
@@ -257,9 +258,16 @@ function EditSpace() {
     )
       .then((res) => res.json())
       .then((res) => {
+        // console.log(
+        //   targetCountry.id,
+        //   res[1][0].capitalCity,
+        //   res[1][0].longitude,
+        //   res[1][0].latitude
+        // );
         if (res[1]) {
-          setLongitude(res[1][0].longitude);
-          setLatitude(res[1][0].latitude);
+          console.log(res[1][0]);
+          setLongitude(res[1][0].longitude || 121.5);
+          setLatitude(res[1][0].latitude || 25.04);
         }
       });
   });
@@ -470,6 +478,16 @@ function EditSpace() {
                   type: "DISCARD_CANVAS_EDIT",
                   payload: "",
                 });
+                db_tourist_spot
+                  .where("album_id", "==", albumId)
+                  .get()
+                  .then((snapshot) => {
+                    snapshot.docs.forEach((doc) =>
+                      db_tourist_spot
+                        .doc(doc.id)
+                        .update({ condition: "discard" })
+                    );
+                  });
                 history.push({ pathname: "home" });
               }
             });
@@ -526,15 +544,6 @@ function EditSpace() {
           <i className="fas fa-home"></i>
         </HomeDiv>
       </NavBarNav>
-
-      <ToolBarDiv>
-        {Object.keys(allTemplate).map((tool) => (
-          <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
-            <IconDiv />
-            <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
-          </ToolIconDiv>
-        ))}
-      </ToolBarDiv>
 
       <TitleBarDiv>
         <Country>
@@ -616,6 +625,14 @@ function EditSpace() {
           </ToolContainerDivInner>
         </ToolContainerDiv>
         <WorkingSpace preview={preview} addWindow={addWindow} />
+        <ToolBarDiv>
+          {Object.keys(allTemplate).map((tool) => (
+            <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
+              <IconDiv />
+              <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
+            </ToolIconDiv>
+          ))}
+        </ToolBarDiv>
         <Preview preview={preview} />
       </ContainerDiv>
     </div>

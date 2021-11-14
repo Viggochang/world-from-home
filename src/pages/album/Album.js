@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { db_gallery, db_userInfo } from "../../util/firebase";
+import { db_gallery, db_userInfo, db_tourist_spot } from "../../util/firebase";
 
 import ShowAlbum from "./component/ShowAlbum";
 import { Tooltip, tooltipClasses } from "@mui/material";
@@ -166,24 +166,24 @@ export default function Album() {
   }, [myInfo.friends, ownerId]);
 
   function handleClickBack() {
+    dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
+    setAlbumData({});
+    setOwnerPhoto("");
+    setOwnerId("");
+
     let params = new URL(window.location).searchParams;
     params.delete("album_id_show");
     history.push({
       search: params.toString(),
     });
-
-    dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
-    setAlbumData({});
-    setOwnerPhoto("");
-    setOwnerId("");
   }
 
   function handleLike() {
     setLiked(!liked);
     db_gallery.doc(albumIdShow).update({
       praise: !liked
-        ? [...albumData.praise, myInfo.id]
-        : albumData.praise.filter((id) => id !== myInfo.id),
+        ? [...albumData.praise, myInfo.id || "none"]
+        : albumData.praise.filter((id) => id !== (myInfo.id || "none")),
     });
   }
 
@@ -233,6 +233,14 @@ export default function Album() {
         name: countryTrans[albumData.country].name_en,
       },
     });
+    db_tourist_spot
+      .where("album_id", "==", albumIdShow)
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) =>
+          db_tourist_spot.doc(doc.id).update({ condition: "pending" })
+        );
+      });
     history.push({
       pathname: "edit",
       search: `?album_id_edit=${albumIdShow}`,
@@ -260,6 +268,15 @@ export default function Album() {
             }
           }
         );
+
+        db_tourist_spot
+          .where("album_id", "==", albumIdShow)
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.forEach((doc) =>
+              db_tourist_spot.doc(doc.id).update({ condition: "discard" })
+            );
+          });
       } else if (
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel

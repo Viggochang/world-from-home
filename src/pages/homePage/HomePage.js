@@ -65,8 +65,6 @@ export default function HomePage() {
   function handleClickBack() {
     map.goHome();
     // polygonSeries.getPolygonById(`${currentActive.dataItem.dataContext.id}`).isActive = false;
-    console.log(currentActive);
-    currentActive.isActive = false;
     dispatch({
       type: "SET_TARGET_COUNTRY",
       payload: {},
@@ -77,6 +75,9 @@ export default function HomePage() {
     setTimeout(() => {
       setMaskDisplay("flex");
     }, 2000);
+
+    console.log(currentActive);
+    // currentActive.isActive = false;
   }
 
   function handleSignIn() {
@@ -99,9 +100,11 @@ export default function HomePage() {
         mapType={mapType}
         userInfo={userInfo}
         setCurrentActive={setCurrentActive}
+        currentActive={currentActive}
         setMap={setMap}
         setMaskVisibility={setMaskVisibility}
         setMaskOpacity={setMaskOpacity}
+        map={map}
       />
       <ToMyPage handleSignIn={handleSignIn} />
       <Title style={{ color: mapType ? "white" : "#3A4A58" }}>

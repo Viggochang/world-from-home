@@ -59,6 +59,7 @@ export default function CountryInfo() {
           return "Taipei";
         } else if (res[1]) {
           const { capitalCity, longitude, latitude } = res[1][0];
+          console.log(capitalCity, longitude, latitude);
           setCaptain({ capitalCity, longitude, latitude });
           return capitalCity;
         } else {

@@ -1,4 +1,4 @@
-.leaflet-control-zoom{
+#root > div > div > div.sc-dlVxhl.hWniXF > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.leaflet-control-zoom.leaflet-bar.leaflet-control{
   /* margin: 0 40px 22.22px 0 ; */
   position: fixed;
   right: 40px;
@@ -7,7 +7,7 @@
 
 .leaflet-container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 
 .leaflet-div-icon {
@@ -17,6 +17,14 @@
 }  
 
 .geocoder-control {
+  /* margin: 0 !important;
+  width: 250px !important;  */
+  /* position: fixed;
+  top: 50px;
+  right: 140px; */
+}
+
+#root > div > div > div.sc-dlVxhl.hWniXF > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.geocoder-control.leaflet-control {
   margin: 0 !important;
   width: 250px !important; 
   position: fixed;
@@ -29,8 +37,6 @@
   border-radius: 20px !important;
   padding: 0 10px;
   background-color: rgb(255, 255, 255, 0.8);
-  /* outline: 4px #3a4a58 solid;
-  outline-offset: -2px; */
 }
 
 /* geocoder-control leaflet-control */
