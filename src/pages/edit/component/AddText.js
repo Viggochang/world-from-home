@@ -36,6 +36,7 @@ function AddText({ page, id }) {
       left: 50,
       top: 50,
       fontSize: 20,
+      fontFamily: "helvetica",
     });
     newText.setControlsVisibility({
       mt: false,

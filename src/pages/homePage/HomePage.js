@@ -95,6 +95,7 @@ export default function HomePage({ mapType, setMapType }) {
     <HomePageDiv onKeyDown={handleEsc} tabIndex="0">
       <LeafletMap mapType={mapType} />
       <World
+        userInfo={userInfo}
         mapType={mapType}
         setCurrentActive={setCurrentActive}
         currentActive={currentActive}

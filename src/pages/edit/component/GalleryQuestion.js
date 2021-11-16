@@ -449,6 +449,7 @@ export default function GalleryQuestion() {
                     setTripIntroduction(e.target.value);
                     console.log(textAreaRef.current.offsetHeight);
                   }}
+                  value={tripIntroduction}
                 />
               </TextAreaDiv>
             </Question>

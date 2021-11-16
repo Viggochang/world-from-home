@@ -12,7 +12,6 @@ import { db_userInfo } from "../../../../util/firebase";
 const myUerId = "yXtnB3CD0XAJDQ0Le51J";
 
 const MoreInfoDiv = styled.div`
-  color: white;
   width: 320px;
   height: auto;
   background-color: rgb(255, 255, 255, 0.7);
@@ -85,6 +84,7 @@ const InfoTextDiv = styled.div`
 `;
 
 const EditIcon = styled.div`
+  color: rgb(102, 116, 132, 0.9);
   cursor: pointer;
   display: none;
   margin-left: 10px;

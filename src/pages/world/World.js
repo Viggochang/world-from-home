@@ -21,9 +21,9 @@ const Chartdiv = styled.div`
 `;
 
 function World({
+  userInfo,
   mapType,
   setCurrentActive,
-  currentActive,
   setMap,
   setMaskVisibility,
   setMaskOpacity,
@@ -31,7 +31,6 @@ function World({
   map,
 }) {
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.userInfo);
   const [myTravelCountries, setMyTravelCountries] = useState([]);
   const targetCountry = useSelector((state) => state.targetCountry);
   const polygonSeries = useSelector((state) => state.polygonSeries);

@@ -10,10 +10,10 @@ const PopupDiv = styled.div`
   background-color: #3a4a58;
   border-radius: 10px;
   width: 337.5px;
-  height: 510.3px;
+  height: 567px;
   position: fixed;
   right: 5%;
-  top: 5%;
+  top: 8%;
   z-index: 3;
   /* display: flex; */
   flex-direction: column;
@@ -33,7 +33,7 @@ const CaptainTitleDiv = styled.div`
   line-height: 50px;
   border-radius: 25px;
   text-align: center;
-  margin: 30px auto 0;
+  margin: 40px auto 0;
 `;
 
 const BackDiv = styled.div`
@@ -127,7 +127,7 @@ export default function CountryInfoPopup({
         <i className="fas fa-times-circle" />
       </BackDiv>
       <CaptainTitleDiv>
-        <i className="fas fa-archway"></i>&ensp;Capital City
+        <i className="fas fa-info"></i>&ensp;Information
       </CaptainTitleDiv>
       <CaptainCity>{captain.capitalCity}</CaptainCity>
       <WeatherDiv>

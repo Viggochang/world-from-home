@@ -132,8 +132,9 @@ function text(templateObjStyle, preview = false) {
       backgroundColor: canvasBackgroundColor,
       preserveObjectStacking: true,
     });
-    const newText = new fabric.Textbox("新增文字", {
+    const newText = new fabric.IText("edit", {
       ...templateObjStyle.t1,
+      fontFamily: "helvetica",
     });
     newText.setControlsVisibility({
       mt: false,

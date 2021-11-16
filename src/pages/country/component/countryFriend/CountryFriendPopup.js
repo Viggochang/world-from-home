@@ -9,10 +9,10 @@ const PopupDiv = styled.div`
   background-color: #3a4a58;
   border-radius: 10px;
   width: 337.5px;
-  height: 510.3px;
+  height: 567px;
   position: fixed;
   right: 5%;
-  top: 5%;
+  top: 8%;
   z-index: 3;
   /* display: flex; */
   flex-direction: column;
@@ -45,7 +45,7 @@ const CaptainTitleDiv = styled.div`
   line-height: 50px;
   border-radius: 25px;
   text-align: center;
-  margin: 30px auto 0;
+  margin: 40px auto 0;
 `;
 
 const FriendContainer = styled.div`

@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import CountryShape from "./component/CountryShape";
-import CountryAlbums from "./component/CountryAlbums";
+import CountryShape from "./country_shape/CountryShape";
+import CountryAlbums from "./component/country_album/CountryAlbums";
 import CountryInfo from "./component/CountryInfo";
 import CountryFriend from "./component/CountryFriend";
+import InfoFriendSmall from "./InfoFriendSmall/InfoFriendSmall";
 import CountryInfoPopup from "./component/countryInfo/CountryInfoPopup";
 import countryFriendPopup from "./component/countryFriend/CountryFriendPopup";
 
+import { db_userInfo } from "../../util/firebase";
+
 const CountryDiv = styled.div`
   width: calc(90% - 120px);
-  height: calc(90% - 140px);
+  height: calc(85% - 80px);
   padding: 60px 60px 20px;
   /* background-color: rgba(63, 63, 63, 1); */
   position: fixed;
@@ -24,38 +28,32 @@ const CountryDiv = styled.div`
   border-radius: 10px;
   @media (max-width: 1180px) {
     width: calc(90% - 60px);
+    height: calc(85% - 50px);
     padding: 30px 30px 20px;
+  }
+  @media (max-width: 600px) {
+    height: calc(85% - 30px);
+    padding: 10px 30px 20px;
+    flex-direction: column;
+    justify-content: flex-start;
+    top: 8%;
   }
 `;
 
-// const OtherGalleryDiv = styled.div`
-//   width: 80%;
-//   height: 25%;
-//   margin-bottom: 10px;
-//   border: 1px white solid;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   color: white;
-//   font-size: 30px;
-//   font-weight: bold;
-//   cursor: pointer;
-// `;
-
 const InfoFriendDiv = styled.div`
   width: 100%;
-  height: 100%;
+  height: 43%;
   display: flex;
   flex-direction: row;
   @media (max-width: 1180px) {
-    width: calc(65% - 20px);
+    display: none;
   }
-  @media (max-width: 1040px) {
+  /* @media (max-width: 1040px) {
     flex-direction: column;
   }
   @media (max-width: 630px) {
     width: 100%;
-  }
+  } */
 `;
 
 const BackDiv = styled.div`
@@ -72,14 +70,90 @@ const BackDiv = styled.div`
 `;
 
 function Country({ style, handleClickBack, signinRef }) {
+  const targetCountry = useSelector((state) => state.targetCountry);
+
+  const [captain, setCaptain] = useState({});
+  const [timezone, setTimezone] = useState(0);
+  const [weather, setWeather] = useState({});
+  const [friendHere, setFriendHere] = useState([]);
+  const id = useSelector((state) => state.myUserId);
+
+  useEffect(() => {
+    fetch(
+      `https://api.worldbank.org/v2/country/${targetCountry.id}?format=json`
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        if (targetCountry.id === "TW") {
+          setCaptain({
+            capitalCity: "Taipei",
+            longitude: 121.5,
+            latitude: 25.04,
+          });
+          return "Taipei";
+        } else if (res[1]) {
+          const { capitalCity, longitude, latitude } = res[1][0];
+          console.log(capitalCity, longitude, latitude);
+          setCaptain({ capitalCity, longitude, latitude });
+          return capitalCity;
+        } else {
+          return null;
+        }
+      })
+      .then((capitalCity) => {
+        if (capitalCity) {
+          fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${capitalCity}&appid=4768302d866115e64f3205b3939e2f19&units=metric`
+          )
+            .then((res) => res.json())
+            .then((res) => {
+              setTimezone(res.timezone || "No Data");
+              setWeather({
+                temp: res.main ? res.main.temp : "No Data",
+                weather: res.weather ? res.weather[0].description : "No Data",
+              });
+            });
+        }
+      });
+  }, [targetCountry]);
+
+  useEffect(() => {
+    if (id) {
+      db_userInfo
+        .where("friends", "array-contains", { id: id, condition: "confirmed" })
+        .get()
+        .then((querySnapshot) => {
+          return querySnapshot.docs;
+        })
+        .then((friendList) => {
+          setFriendHere(
+            friendList
+              .filter((friend) =>
+                friend.data().travel_country.includes(targetCountry.id)
+              )
+              .map((friend) => {
+                const { photo, id, name, country } = friend.data();
+                return { photo, id, name, country };
+              })
+          );
+        });
+    }
+  }, [id, targetCountry]);
+
   return (
     <CountryDiv style={style}>
       <CountryShape />
       <CountryAlbums signinRef={signinRef} />
       <InfoFriendDiv>
-        <CountryInfo />
-        <CountryFriend />
+        <CountryInfo captain={captain} weather={weather} timezone={timezone} />
+        <CountryFriend friendHere={friendHere} />
       </InfoFriendDiv>
+      <InfoFriendSmall
+        captain={captain}
+        weather={weather}
+        timezone={timezone}
+        friendHere={friendHere}
+      />
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times-circle" />
       </BackDiv>

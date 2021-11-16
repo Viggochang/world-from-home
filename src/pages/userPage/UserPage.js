@@ -221,7 +221,7 @@ export default function UserPage() {
 
   return (
     <>
-      {/* <Login signinRef={signinRef} /> */}
+      <Login signinRef={signinRef} />
       <Background background_photo={background_photo} />
       <MyPageDiv>
         <UpperDiv>
@@ -244,7 +244,7 @@ export default function UserPage() {
               style={{ fontSize: 36, marginBottom: "24px" }}
             >{`age: ${age}`}</div>
 
-            <MoreInformation />
+            <MoreInformation userInfo={userInfo} />
             {Object.keys(myInfo).length ? (
               <FriendState userInfo={userInfo} />
             ) : (

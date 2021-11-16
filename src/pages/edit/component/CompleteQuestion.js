@@ -391,7 +391,7 @@ export default function CompleteQuestion({
               }}
               onClick={handleCancel}
             >
-              Cancel
+              Back
             </Button>
             <Button
               variant="contained"

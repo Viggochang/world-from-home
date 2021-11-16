@@ -168,7 +168,7 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
           <InputBase
             sx={{ ml: 1, flex: 1 }}
             style={{ color: "#3a4a58" }}
-            placeholder="Search My Friends"
+            placeholder="Search Friends"
             inputProps={{ "aria-label": "search google maps" }}
             onChange={(e) => handleSearch(e)}
           />

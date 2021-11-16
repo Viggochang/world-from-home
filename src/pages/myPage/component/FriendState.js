@@ -174,7 +174,7 @@ export default function FriendState({ userInfo }) {
     db_userInfo.doc(myId).update({ friends: myFriendsData });
 
     const friendFriendsData = [
-      ...friendFriends.filter(({ id }) => id !== myId),
+      ...(friendFriends || []).filter(({ id }) => id !== myId),
       {
         id: myId,
         condition: stateObj[friendState].state_change.friend_state,

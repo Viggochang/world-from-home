@@ -7,7 +7,7 @@ import { moreInfoBtnTheme } from "../../../util/muiTheme";
 
 import MoreInfo from "./MoreInfo";
 
-export default function MoreInformation() {
+export default function MoreInformation({ userInfo }) {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const moreInfoRef = useRef();
   const myInfo = useSelector((state) => state.userInfo);
@@ -52,7 +52,7 @@ export default function MoreInformation() {
       <MoreInfo
         innerRef={moreInfoRef}
         handleMoreInfo={handleMoreInfo}
-        userInfo={myInfo}
+        userInfo={userInfo}
       ></MoreInfo>
     </div>
   );

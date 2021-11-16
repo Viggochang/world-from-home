@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { db_gallery } from "../../../util/firebase";
+import { db_gallery } from "../../../../util/firebase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { styled as styledMui } from "@mui/styles";
 import { autocompleteClasses } from "@material-ui/core";
 
-import { db_userInfo } from "../../../util/firebase";
+import { db_userInfo } from "../../../../util/firebase";
 import Album from "./CountryAlbum_album";
 
 const theme = createTheme({
@@ -34,16 +34,19 @@ const GalleryBackgroundDiv = styled.div`
   width: calc(65% - 80px);
   margin-left: 20px;
   /* height: calc(57% - 40px); */
-  height: calc(57% - 20px);
+  height: calc(57% - 40px);
   background-color: #e0e0e0;
   padding: 20px;
   display: flex;
   @media (max-width: 1180px) {
     width: calc(100% - 20px);
-    height: calc(57% - 90px);
+    height: calc(57% - 134px);
     margin-left: 0;
     padding: 20px 10px;
     order: -1;
+  }
+  @media (max-width: 600px) {
+    height: 50%;
   }
 `;
 

@@ -6,38 +6,39 @@ import "react-clock/dist/Clock.css";
 import "./clock.css";
 
 const ClockDiv = styled.div`
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 50px;
-  @media (min-width: 1280px) {
+  margin-left: 20px;
+
+  /* @media (min-width: 1280px) {
     display: flex;
   }
   @media (min-height: 1080px) and (min-width: 1350px) {
     margin-left: 0px;
-  }
+  } */
 `;
 
 const ClockText = styled.div`
+  margin-top: 20px;
   font-size: 22px;
   line-height: 28px;
   font-weight: bold;
-  margin-bottom: 10px;
   width: 100%;
   text-align: center;
-  @media (min-height: 1080px) {
+  /* @media (min-height: 1080px) {
     margin-bottom: 20px;
-  }
+  } */
 `;
 const ClockStyle = styled(Clock)`
-  display: none;
-  margin-top: 10px;
-  @media (min-height: 860px) {
+  margin-top: 20px;
+  display: block;
+  /* @media (min-height: 860px) {
     display: block;
   }
   @media (min-height: 1080px) {
     margin-top: 20px;
-  }
+  } */
 `;
 
 export default function CountryClock({ timezone }) {

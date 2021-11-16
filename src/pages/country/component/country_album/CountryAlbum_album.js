@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-import { db_userInfo } from "../../../util/firebase";
+import { db_userInfo } from "../../../../util/firebase";
 
 const AlbumHere = styled.div`
   width: 50%;

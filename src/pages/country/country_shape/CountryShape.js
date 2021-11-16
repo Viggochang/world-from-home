@@ -9,17 +9,25 @@ import am4geodata_usaLow from "@amcharts/amcharts4-geodata/usaLow";
 
 const CountryShapeFrameDiv = styled.div`
   width: 35%;
-  height: 57%;
+  height: calc(57% - 20px);
   outline: 1px white solid;
   position: relative;
   padding: 10px;
   @media (max-width: 1180px) {
-    height: calc(43% - 80px);
-    margin-top: 20px;
+    width: auto;
+    height: calc(43% - 50px);
+    margin: 20px 0 10px;
+    flex-grow: 1;
   }
-  @media (max-width: 630px) {
+  @media (max-width: 968px) {
+    height: calc(43% - 100px);
+  }
+  @media (max-width: 600px) {
     display: none;
   }
+  /* @media (max-width: 630px) {
+    display: none;
+  } */
 `;
 
 const CountryNameDiv = styled.div`
@@ -31,9 +39,9 @@ const CountryNameDiv = styled.div`
   position: absolute;
   bottom: 0px;
   left: 10px;
-  @media (max-width: 1180px) {
+  /* @media (max-width: 1180px) {
     display: none;
-  }
+  } */
 `;
 
 export default function CountryShape() {
