@@ -13,6 +13,13 @@ const CountryShapeFrameDiv = styled.div`
   outline: 1px white solid;
   position: relative;
   padding: 10px;
+  @media (max-width: 1180px) {
+    height: calc(43% - 80px);
+    margin-top: 20px;
+  }
+  @media (max-width: 630px) {
+    display: none;
+  }
 `;
 
 const CountryNameDiv = styled.div`
@@ -24,6 +31,9 @@ const CountryNameDiv = styled.div`
   position: absolute;
   bottom: 0px;
   left: 10px;
+  @media (max-width: 1180px) {
+    display: none;
+  }
 `;
 
 export default function CountryShape() {
@@ -61,11 +71,9 @@ export default function CountryShape() {
   }, [targetCountry]);
 
   return (
-    <>
-      <CountryShapeFrameDiv>
-        <div id="countryShape" style={{ width: "100%", height: "100%" }} />
-        <CountryNameDiv>{targetCountry.name}</CountryNameDiv>
-      </CountryShapeFrameDiv>
-    </>
+    <CountryShapeFrameDiv>
+      <div id="countryShape" style={{ width: "100%", height: "100%" }} />
+      <CountryNameDiv>{targetCountry.name}</CountryNameDiv>
+    </CountryShapeFrameDiv>
   );
 }

@@ -137,6 +137,14 @@ const LeafletMapDiv = styled.div`
 
 function LeafletMap({ longitude, latitude, setTouristSpot }) {
   const [map, setMap] = useState(null);
+  const [marker, setMarker] = useState({});
+
+  const iconMarkup = renderToStaticMarkup(
+    <i className=" fa fa-map-marker-alt fa-3x" />
+  );
+  const customMarkerIcon = divIcon({
+    html: iconMarkup,
+  });
 
   useEffect(() => {
     if (map) {
@@ -146,11 +154,30 @@ function LeafletMap({ longitude, latitude, setTouristSpot }) {
 
   const control = geosearch({
     providers: [ELG.arcgisOnlineProvider({ apikey })],
+    useMapBounds: false,
   });
 
   function handleOnSearchResult(data) {
     console.log(data);
+    if (data) {
+      const {
+        text,
+        latlng: { lat },
+        latlng: { lng },
+      } = data.results[0];
+
+      setTouristSpot((touristSpot) => {
+        return [
+          ...touristSpot.filter(
+            (touristSpot) => touristSpot.lat !== lat && touristSpot.lng !== lng
+          ),
+          { text, lat, lng },
+        ];
+      });
+      setMarker({ text, lat, lng });
+    }
   }
+
   useEffect(() => {
     if (map) {
       control.addTo(map);
@@ -193,6 +220,9 @@ function LeafletMap({ longitude, latitude, setTouristSpot }) {
           </Marker>
         ))}
       </MarkerClusterGroup> */}
+        {Object.keys(marker).length ? (
+          <Marker position={[marker.lat, marker.lng]} icon={customMarkerIcon} />
+        ) : null}
         <ZoomControl position="bottomright" />
         {/* <EsriLeafletGeoSearch
           className="geocoder-control-expanded"

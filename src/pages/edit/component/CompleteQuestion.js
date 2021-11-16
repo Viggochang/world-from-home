@@ -131,7 +131,7 @@ const TouristSpotDiv = styled.div`
   padding: 10px;
   margin-top: 30px;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 350px);
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -264,6 +264,7 @@ export default function CompleteQuestion({
           touristSpot.lat !== spot.lat && touristSpot.lng !== spot.lng
       )
     );
+    db_tourist_spot.doc(spot.id).delete();
   }
 
   function handleSubmit() {
@@ -297,9 +298,11 @@ export default function CompleteQuestion({
         setComplete(true);
       });
 
-    db_userInfo
-      .doc(myInfo.id)
-      .update({ travel_country: [...myInfo.travel_country, targetCountry.id] });
+    if (!myInfo.travel_country.includes(targetCountry.id)) {
+      db_userInfo.doc(myInfo.id).update({
+        travel_country: [...myInfo.travel_country, targetCountry.id],
+      });
+    }
   }
 
   function handleCancel() {

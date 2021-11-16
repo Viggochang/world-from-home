@@ -28,7 +28,7 @@ const MyTooltip = styledMui(({ className, ...props }) => (
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
   height: calc(100vh - 80px);
-  background-color: rgb(0, 0, 0, 0.85);
+  background-color: rgb(0, 0, 0, 0.9);
   display: none;
   z-index: 5;
   position: fixed;
@@ -37,6 +37,10 @@ const AlbumDiv = styled.div`
   flex-direction: column;
   padding: 40px 100px;
   overflow: scroll;
+  @media (min-width: 1440px) {
+    width: 1240px;
+    padding: 40px calc(50vw - 620px);
+  }
 `;
 
 const BackDiv = styled.div`
@@ -55,9 +59,13 @@ const BackDiv = styled.div`
 const ButtonsDiv = styled.div`
   position: fixed;
   top: 150px;
-  right: 50px;
+  right: 60px;
   display: flex;
   flex-direction: column;
+  z-index: 1;
+  @media (min-width: 1440px) {
+    right: 100px;
+  }
 `;
 
 const ButtonStyle = styled.div`
@@ -73,6 +81,11 @@ const ButtonStyle = styled.div`
   background-color: white;
   cursor: pointer;
   box-shadow: 0px 0px 10px #d0d0d0;
+  @media (min-width: 1440px) {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+  }
   :hover {
     /* color: #667484; */
     box-shadow: 0px 0px 22px #d0d0d0;
@@ -289,7 +302,7 @@ export default function Album() {
   const addFriendText = {
     none: "Add Friend",
     get_request: "Add Friend",
-    send_request: "Request sended",
+    send_request: "Request sent",
     confirmed: "You are Friend !",
   };
 
@@ -298,57 +311,61 @@ export default function Album() {
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times-circle" />
       </BackDiv>
-      <ButtonsDiv>
-        <MyTooltip
-          title={liked ? "Liked" : "Like"}
-          placement="left"
-          sx={{ fontSize: "16px" }}
-        >
-          <ButtonStyle
-            onClick={handleLike}
-            style={liked ? { backgroundColor: "#3A4A58", color: "white" } : {}}
+      {myInfo.id ? (
+        <ButtonsDiv>
+          <MyTooltip
+            title={liked ? "Liked" : "Like"}
+            placement="left"
+            sx={{ fontSize: "16px" }}
           >
-            <i className="fas fa-thumbs-up" />
-          </ButtonStyle>
-        </MyTooltip>
+            <ButtonStyle
+              onClick={handleLike}
+              style={
+                liked ? { backgroundColor: "#3A4A58", color: "white" } : {}
+              }
+            >
+              <i className="fas fa-thumbs-up" />
+            </ButtonStyle>
+          </MyTooltip>
 
-        <MyTooltip title={addFriendText[friendCondition]} placement="left">
-          <ButtonStyle
-            onClick={handleFriend}
-            style={
-              friendCondition === "confirmed"
-                ? {
-                    backgroundColor: "#3A4A58",
-                    color: "white",
-                    display: isMyAlbun ? "none" : "flex",
-                  }
-                : { display: isMyAlbun ? "none" : "flex" }
-            }
+          <MyTooltip title={addFriendText[friendCondition]} placement="left">
+            <ButtonStyle
+              onClick={handleFriend}
+              style={
+                friendCondition === "confirmed"
+                  ? {
+                      backgroundColor: "#3A4A58",
+                      color: "white",
+                      display: isMyAlbun ? "none" : "flex",
+                    }
+                  : { display: isMyAlbun ? "none" : "flex" }
+              }
+            >
+              <i className="fas fa-user-plus"></i>
+            </ButtonStyle>
+          </MyTooltip>
+
+          <MyTooltip
+            title="Edit"
+            placement="left"
+            style={{ display: isMyAlbun ? "flex" : "none" }}
           >
-            <i className="fas fa-user-plus"></i>
-          </ButtonStyle>
-        </MyTooltip>
+            <ButtonStyle onClick={handleEdit}>
+              <i className="fas fa-pencil-alt" />
+            </ButtonStyle>
+          </MyTooltip>
 
-        <MyTooltip
-          title="Edit"
-          placement="left"
-          style={{ display: isMyAlbun ? "flex" : "none" }}
-        >
-          <ButtonStyle onClick={handleEdit}>
-            <i className="fas fa-pencil-alt" />
-          </ButtonStyle>
-        </MyTooltip>
-
-        <MyTooltip
-          title="Delete"
-          placement="left"
-          style={{ display: isMyAlbun ? "flex" : "none" }}
-        >
-          <ButtonStyle onClick={handleDelete}>
-            <i className="fas fa-trash-alt"></i>
-          </ButtonStyle>
-        </MyTooltip>
-      </ButtonsDiv>
+          <MyTooltip
+            title="Delete"
+            placement="left"
+            style={{ display: isMyAlbun ? "flex" : "none" }}
+          >
+            <ButtonStyle onClick={handleDelete}>
+              <i className="fas fa-trash-alt"></i>
+            </ButtonStyle>
+          </MyTooltip>
+        </ButtonsDiv>
+      ) : null}
 
       <AlbumInfo>
         <AlbumOwner

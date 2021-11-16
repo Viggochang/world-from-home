@@ -41,15 +41,22 @@ const PageContainer = styled.div`
 `;
 
 const RemoveWindow = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
-  right: -30px;
+  right: -40px;
   font-size: 18px;
   color: #3a4a58;
   line-height: 30px;
   cursor: pointer;
   :hover {
-    color: white;
+    /* color: white; */
+    background-color: rgb(255, 255, 255, 0.4);
   }
 `;
 

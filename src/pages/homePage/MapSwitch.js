@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import Select from "@mui/material/Select";
 import { Switch } from "@mui/material";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
@@ -28,20 +27,25 @@ const theme = createTheme({
 const EditingSwitchDiv = styled.div`
   display: flex;
   align-items: center;
-  margin-left: auto;
+  margin: 2px 0 0 auto;
   position: fixed;
   top: 50px;
-  right: 400px;
-  z-index: 2;
+  right: 420px;
+  z-index: 1;
+  background-color: #3a4a58;
+  border-radius: 20px;
 `;
 
 const EditLabel = styled.div`
   font-weight: bold;
   font-size: 20px;
-  padding: 0 10px;
+  margin: 0 20px 0 5px;
   line-height: 30px;
-  border-radius: 15px;
-  background-color: rgb(255, 255, 255, 0.7);
+  /* border-radius: 15px; */
+  /* background-color: rgb(255, 255, 255, 0.7);
+  color: #3a4a58; */
+  /* background-color: #3a4a58; */
+  color: rgb(255, 255, 255, 0.9);
 `;
 
 export default function MapSwitch({ setMapType, mapType }) {
@@ -54,6 +58,7 @@ export default function MapSwitch({ setMapType, mapType }) {
           inputProps={{ "aria-label": "controlled" }}
           color="white"
         />
+        <EditLabel>To My World</EditLabel>
       </EditingSwitchDiv>
     </ThemeProvider>
   );

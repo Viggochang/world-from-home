@@ -2,15 +2,24 @@ import React from "react";
 import styled from "styled-components";
 
 const WeatherDiv = styled.div`
-  margin: 5px 0 0 20px;
-  font-size: 20px;
-  font-weight: bold;
-  line-height: 30px;
-  @media (min-height: 1080px) {
+  @media (min-width: 1350px) and (min-height: 1080px) {
     margin: 10px 0 0 20px;
     font-size: 35px;
     line-height: 50px;
   }
+  margin: 5px 0 0 20px;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 30px;
+  @media (max-width: 1040px) {
+    display: none;
+  }
+  /* 
+  @media (min-height: 1080px) {
+    margin: 10px 0 0 20px;
+    font-size: 35px;
+    line-height: 50px;
+  } */
 `;
 
 const WeatherDescription = styled.div`

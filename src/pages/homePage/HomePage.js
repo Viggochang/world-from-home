@@ -24,7 +24,7 @@ const BackBtn = styled.div`
   background-color: #d9d9d9;
   padding: 4px;
   position: absolute;
-  bottom: 220px;
+  bottom: 120px;
   right: 45px;
   color: #3a4a58;
   border-radius: 25%;
@@ -48,7 +48,7 @@ const Title = styled.div`
   z-index: 1;
 `;
 
-export default function HomePage() {
+export default function HomePage({ mapType, setMapType }) {
   const galleryQuestionRef = useRef();
   const signinRef = useRef();
   const userInfo = useSelector((state) => state.userInfo);
@@ -58,7 +58,6 @@ export default function HomePage() {
   const [maskDisplay, setMaskDisplay] = useState("flex");
   const [map, setMap] = useState(undefined);
   const [currentActive, setCurrentActive] = useState({});
-  const [mapType, setMapType] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -94,11 +93,9 @@ export default function HomePage() {
 
   return (
     <HomePageDiv onKeyDown={handleEsc} tabIndex="0">
-      <MapSwitch setMapType={setMapType} mapType={mapType} />
       <LeafletMap mapType={mapType} />
       <World
         mapType={mapType}
-        userInfo={userInfo}
         setCurrentActive={setCurrentActive}
         currentActive={currentActive}
         setMap={setMap}
@@ -108,8 +105,10 @@ export default function HomePage() {
       />
       <ToMyPage handleSignIn={handleSignIn} />
       <Title style={{ color: mapType ? "white" : "#3A4A58" }}>
-        {`World  from  ${userInfo.name || "Guest"}`}
+        {`World from ${userInfo.name || "Guest"}`}
       </Title>
+
+      <MapSwitch setMapType={setMapType} mapType={mapType} />
 
       <BackBtn
         style={{ display: mapType ? "block" : "none" }}

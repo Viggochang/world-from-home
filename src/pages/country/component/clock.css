@@ -1,23 +1,51 @@
-.react-clock__face {
-  width: 120px;
-  height: 120px;
+.react-clock__face{
   border: 1px solid white;
 }
 
-.react-clock {
-  width: 120px !important;
-  height: 120px !important;
+#root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time > div.react-clock__face {
+  width: 130px;
+  height: 130px;
+  border: 1px solid white;
+}
+
+#root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time {
+  width: 130px !important;
+  height: 130px !important;
+}
+
+@media (min-height: 950px){
+  #root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time > div.react-clock__face {
+    width: 160px;
+    height: 160px;
+  }
+  
+  #root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time {
+    width: 160px !important;
+    height: 160px !important;
+  }
 }
 
 @media (min-height: 1080px){
-  .react-clock__face {
-    width: 200px;
-    height: 200px;
+  #root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time > div.react-clock__face {
+    width: 180px;
+    height: 180px;
   }
   
-  .react-clock {
-    width: 200px !important;
-    height: 200px !important;
+  #root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time {
+    width: 180px !important;
+    height: 180px !important;
+  }
+}
+
+@media (max-width: 1350px){
+  #root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time > div.react-clock__face {
+    width: 130px;
+    height: 130px;
+  }
+  
+  #root > div > div > div.sc-cZMNgc.kPrSHB > div.sc-jUosCB.gJUKFT > div.sc-clIzBv.gFqpfx > div.sc-dvQaRk.fgscfe > div.sc-AjmGg.iBiSWy > time {
+    width: 130px !important;
+    height: 130px !important;
   }
 }
 

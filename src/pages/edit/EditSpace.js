@@ -68,7 +68,7 @@ const MyPageDiv = styled.div`
   height: 50px;
   border-radius: 50%;
   box-shadow: 0px 0px 10px #bebebe;
-  outline: 3px #b8c3d0 solid;
+  /* outline: 3px #b8c3d0 solid; */
   cursor: pointer;
 `;
 const MyPageIconMask = styled.div`
@@ -82,13 +82,20 @@ const MyPageIconMask = styled.div`
 `;
 
 const HomeDiv = styled.div`
-  font-size: 40px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
   margin-left: 20px;
   margin-right: 20px;
   color: white;
   cursor: pointer;
   :hover {
-    color: #b8c3d0;
+    /* color: #b8c3d0; */
+    background-color: rgb(255, 255, 255, 0.3);
   }
 `;
 

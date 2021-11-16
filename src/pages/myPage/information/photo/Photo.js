@@ -43,6 +43,8 @@ const EditMyPhoto = styled.div`
   width: 100%;
   height: 50px;
   background-color: rgb(0, 0, 0, 0.7);
+  border-end-end-radius: 20px;
+  border-end-start-radius: 20px;
   display: none;
   align-items: center;
   justify-content: center;

@@ -4,6 +4,12 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const AddTextDiv = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   z-index: 1;
   top: 10px;
@@ -12,6 +18,9 @@ const AddTextDiv = styled.div`
   text-align: center;
   cursor: pointer;
   color: #667484;
+  :hover {
+    background-color: rgb(184, 195, 208, 0.2);
+  }
 `;
 
 function AddText({ page, id }) {

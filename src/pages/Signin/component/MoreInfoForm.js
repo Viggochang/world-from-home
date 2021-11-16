@@ -218,7 +218,7 @@ export default function MoreInfoForm({
           // ref={input_ref}
         />
         <Title>
-          <i class="fas fa-list-ul"></i>&ensp;Introduction
+          <i className="fas fa-list-ul"></i>&ensp;Introduction
         </Title>
         <IntroductionTextField
           inputProps={{

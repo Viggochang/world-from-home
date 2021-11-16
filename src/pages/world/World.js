@@ -22,7 +22,6 @@ const Chartdiv = styled.div`
 
 function World({
   mapType,
-  userInfo,
   setCurrentActive,
   currentActive,
   setMap,
@@ -32,7 +31,7 @@ function World({
   map,
 }) {
   const dispatch = useDispatch();
-  // const userInfo = useSelector((state) => state.userInfo);
+  const userInfo = useSelector((state) => state.userInfo);
   const [myTravelCountries, setMyTravelCountries] = useState([]);
   const targetCountry = useSelector((state) => state.targetCountry);
   const polygonSeries = useSelector((state) => state.polygonSeries);
@@ -43,15 +42,15 @@ function World({
       .onSnapshot((myAlbums) => {
         setMyTravelCountries(
           Array.from(
-            new Set(
-              myAlbums.docs
+            new Set([
+              ...myAlbums.docs
                 .filter((album) => album.data().condition === "completed")
-                .map((album) => album.data().country)
-            )
+                .map((album) => album.data().country),
+              userInfo.country,
+            ])
           )
           // .push(userInfo.country)
         );
-        console.log(myAlbums.docs.map((album) => album.data().country));
       });
     return () => {
       unsubscribe();
@@ -119,18 +118,20 @@ function World({
     // Add some data
     const { travel_country } = userInfo;
     if (myTravelCountries) {
-      polygonSeries.data = myTravelCountries.map((countryCode) => ({
-        id: countryCode,
-        name: countryTrans[countryCode].name_en,
-        fill: am4core.color("#ffffff"),
-      }));
+      polygonSeries.data = myTravelCountries
+        .filter((countryCode) => countryCode)
+        .map((countryCode) => ({
+          id: countryCode,
+          name: countryTrans[countryCode].name_en,
+          fill: am4core.color("#ffffff"),
+        }));
     }
 
     polygonTemplate.propertyFields.fill = "fill";
 
     // Add zoom control
     map.zoomControl = new am4maps.ZoomControl();
-    map.zoomControl.slider.height = 100;
+    map.zoomControl.slider.height = 0;
     map.zoomControl.marginRight = 40;
     map.zoomControl.marginBottom = 40;
     // Add and configure small map

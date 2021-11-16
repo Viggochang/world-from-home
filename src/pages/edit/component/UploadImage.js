@@ -10,11 +10,20 @@ import Compressor from "compressorjs";
 import styled from "styled-components";
 
 const UploadImgDiv = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   z-index: 1;
   top: 40px;
-  right: 15px;
-  padding-left: 5px;
+  right: 10px;
+  padding: 5px;
+  :hover {
+    background-color: rgb(184, 195, 208, 0.2);
+  }
 `;
 
 const ImgInputLabel = styled.label`

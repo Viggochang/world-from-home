@@ -25,6 +25,7 @@ function App() {
   // const query = useQuery();
   const dispatch = useDispatch();
   const myUserId = useSelector((state) => state.myUserId);
+  const [mapType, setMapType] = useState(false);
 
   useEffect(() => {
     dispatch({
@@ -73,7 +74,7 @@ function App() {
             <WelcomePage />
           </Route>
           <Route path="/home">
-            <HomePage />
+            <HomePage mapType={mapType} setMapType={setMapType} />
           </Route>
           <Route path="/mypage">
             <MyPage />

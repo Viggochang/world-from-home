@@ -18,6 +18,7 @@ import countryTrans from "../../util/countryTrans";
 import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
+import Login from "../Signin/Signin";
 
 import Album from "../album/Album";
 // import { system } from "@amcharts/amcharts4/core";
@@ -154,6 +155,7 @@ const MyPageIcon = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  background-color: #b8c3d0;
   :hover {
     background-color: #667484;
   }
@@ -212,13 +214,14 @@ export default function UserPage() {
     if (Object.keys(myInfo).length) {
       history.push({ pathname: "mypage" });
     } else {
-      signinRef.current.style.display = "flex";
+      signinRef.current.style.zIndex = 1;
       console.log("sign in");
     }
   }
 
   return (
     <>
+      {/* <Login signinRef={signinRef} /> */}
       <Background background_photo={background_photo} />
       <MyPageDiv>
         <UpperDiv>
@@ -285,7 +288,6 @@ export default function UserPage() {
           </MyPageIcon>
         </ButtonsDiv>
       </MyPageDiv>
-      {/* <SigninDiv innerRef={signinRef} /> */}
       <Album />
     </>
   );

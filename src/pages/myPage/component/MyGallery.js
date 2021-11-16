@@ -107,7 +107,7 @@ const AlbumDiv = styled.div`
 const AlbumCoverDiv = styled.div`
   width: 280px;
   height: 210px;
-  box-shadow: 0px 0px 20px #4f4f4f;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   cursor: pointer;
 `;
 

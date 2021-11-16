@@ -1,17 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import Weather from "./CountryInfo_Weather";
 import CountryClock from "./CountryInfo_Clock";
+import CountryInfoPopup from "./countryInfo/CountryInfoPopup";
 
 const CountryInfoDiv = styled.div`
-  /* width: calc(50% - 60px); */
   height: calc(43% - 100px);
   /* border: 1px white solid; */
   padding: 20px;
   color: white;
   display: flex;
+  justify-content: space-around;
+  overflow: scroll;
+  @media (max-width: 1920px) {
+    width: 40%;
+    min-width: 575px;
+  }
+  @media (max-width: 1280px) {
+    width: 35%;
+    min-width: 0;
+  }
+  @media (max-width: 1180px) {
+    width: calc(47% - 20px);
+    padding: 20px 0 20px 20px;
+  }
+  @media (max-width: 1040px) {
+    width: 100%;
+    height: auto;
+  }
+  @media (max-width: 630px) {
+    padding: 10px 0 0;
+    justify-content: center;
+  }
 `;
 
 const LeftDiv = styled.div`
@@ -28,17 +50,63 @@ const CaptainTitleDiv = styled.div`
   line-height: 50px;
   border-radius: 25px;
   text-align: center;
+
+  @media (max-width: 1040px) {
+    width: 240px;
+    cursor: pointer;
+    margin-left: 30px;
+    background-color: rgb(255, 255, 255, 0.4);
+    :hover {
+      color: #3a4a58;
+    }
+  }
+
+  @media (max-width: 1180px) {
+    font-size: 28px;
+    padding: 0 25px;
+  }
+
+  @media (max-width: 630px) {
+    margin: 20px 0;
+    padding: 0 10px;
+  }
 `;
 
 const CaptainCity = styled.div`
   margin: 20px 0 0 20px;
-  font-size: 50px;
+  font-size: 44px;
   font-weight: bold;
   text-align: left;
+  @media (max-width: 1180px) {
+    font-size: 38px;
+  }
+  @media (max-width: 1040px) {
+    display: none;
+  }
+`;
+
+const RightDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const WeatherShow = styled.div`
+  display: none;
+  @media (min-height: 860px) {
+    display: block;
+  }
+`;
+const WeatherRight = styled.div`
+  /* margin-left: 50px; */
+  display: none;
+  @media (max-height: 860px) and (min-width: 1280px) {
+    display: block;
+  }
 `;
 
 export default function CountryInfo() {
   const targetCountry = useSelector((state) => state.targetCountry);
+  const popupRef = useRef();
 
   const [captain, setCaptain] = useState({});
   const [timezone, setTimezone] = useState(0);
@@ -83,16 +151,33 @@ export default function CountryInfo() {
       });
   }, [targetCountry]);
 
+  function handlePopup() {
+    popupRef.current.style.display = "flex";
+  }
+
   return (
     <CountryInfoDiv>
       <LeftDiv>
-        <CaptainTitleDiv>
+        <CaptainTitleDiv onClick={handlePopup}>
           <i className="fas fa-archway"></i>&ensp;Capital City
         </CaptainTitleDiv>
         <CaptainCity>{captain.capitalCity}</CaptainCity>
-        <Weather weatherData={weather} />
+        <WeatherShow>
+          <Weather weatherData={weather} />
+        </WeatherShow>
       </LeftDiv>
-      <CountryClock timezone={timezone} />
+      <RightDiv>
+        <CountryClock timezone={timezone} />
+        <WeatherRight>
+          <Weather weatherData={weather} />
+        </WeatherRight>
+      </RightDiv>
+      <CountryInfoPopup
+        captain={captain}
+        popupRef={popupRef}
+        weatherData={weather}
+        timezone={timezone}
+      />
     </CountryInfoDiv>
   );
 }

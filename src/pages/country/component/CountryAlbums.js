@@ -38,6 +38,26 @@ const GalleryBackgroundDiv = styled.div`
   background-color: #e0e0e0;
   padding: 20px;
   display: flex;
+  @media (max-width: 1180px) {
+    width: calc(100% - 20px);
+    height: calc(57% - 90px);
+    margin-left: 0;
+    padding: 20px 10px;
+    order: -1;
+  }
+`;
+
+const Country = styled.div`
+  display: none;
+  font-weight: bold;
+  font-size: 60px;
+  /* line-height: 60px; */
+  color: white;
+  margin: 0 0 10px 20px;
+  @media (max-width: 1180px) {
+    display: flex;
+    order: -2;
+  }
 `;
 
 const AlbumDiv = styled.div`
@@ -48,7 +68,6 @@ const AlbumDiv = styled.div`
 `;
 
 const AlbumHere = styled.div`
-  width: 50%;
   width: 500px;
   margin: 0 10px;
   color: #3a4a58;
@@ -59,11 +78,16 @@ const AlbumHere = styled.div`
 `;
 
 const AlbumAdd = styled.div`
-  width: 500px;
+  /* width: 500px; */
+  width: 63vw;
+  max-width: 450px;
   height: 65%;
   margin: 80px 0 40px;
   outline: 1px #3a4a58 solid;
   display: flex;
+  @media (max-width: 520px) {
+    margin: 50px 0 40px;
+  }
 `;
 
 export default function CountryAlbums({ signinRef }) {
@@ -114,42 +138,49 @@ export default function CountryAlbums({ signinRef }) {
   }, [targetCountry]);
 
   return (
-    <GalleryBackgroundDiv>
-      {album.filter((album) => album.condition === "completed").length ? (
-        <AlbumDiv>
-          {album
-            .filter((album) => album.condition === "completed")
-            .map((album) => {
-              //getOwnerPhoto(album.user_id);
-              return <Album key={album.id} album={album} />;
-            })}
-          <AlbumHere>
-            <AlbumAdd>
-              <ThemeProvider theme={theme}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleToEdit}
-                  style={{ margin: "auto", lineHeight: 1.5, fontSize: "28px" }}
-                >
-                  +&emsp; add my&emsp; <b>{targetCountry.name}</b>
-                </Button>
-              </ThemeProvider>
-            </AlbumAdd>
-          </AlbumHere>
-        </AlbumDiv>
-      ) : (
-        <ThemeProvider theme={theme}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleToEdit}
-            style={{ margin: "auto", lineHeight: 1.5, fontSize: "36px" }}
-          >
-            +&emsp; add my&emsp; <b>{targetCountry.name}</b>
-          </Button>
-        </ThemeProvider>
-      )}
-    </GalleryBackgroundDiv>
+    <>
+      <Country>{targetCountry.name}</Country>
+      <GalleryBackgroundDiv>
+        {album.filter((album) => album.condition === "completed").length ? (
+          <AlbumDiv>
+            {album
+              .filter((album) => album.condition === "completed")
+              .map((album) => {
+                //getOwnerPhoto(album.user_id);
+                return <Album key={album.id} album={album} />;
+              })}
+            <AlbumHere>
+              <AlbumAdd>
+                <ThemeProvider theme={theme}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleToEdit}
+                    style={{
+                      margin: "auto",
+                      lineHeight: 1.5,
+                      fontSize: "28px",
+                    }}
+                  >
+                    +&emsp; add my album
+                  </Button>
+                </ThemeProvider>
+              </AlbumAdd>
+            </AlbumHere>
+          </AlbumDiv>
+        ) : (
+          <ThemeProvider theme={theme}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleToEdit}
+              style={{ margin: "auto", lineHeight: 1.5, fontSize: "36px" }}
+            >
+              +&emsp; add my album
+            </Button>
+          </ThemeProvider>
+        )}
+      </GalleryBackgroundDiv>
+    </>
   );
 }

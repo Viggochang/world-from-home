@@ -6,11 +6,15 @@ import "react-clock/dist/Clock.css";
 import "./clock.css";
 
 const ClockDiv = styled.div`
-  /* display: flex;
-  flex-direction: column; */
+  display: none;
+  flex-direction: column;
+  align-items: center;
   margin-left: 50px;
-  @media (min-height: 1080px) {
-    margin-left: 80px;
+  @media (min-width: 1280px) {
+    display: flex;
+  }
+  @media (min-height: 1080px) and (min-width: 1350px) {
+    margin-left: 0px;
   }
 `;
 
@@ -26,9 +30,13 @@ const ClockText = styled.div`
   }
 `;
 const ClockStyle = styled(Clock)`
-  margin-top: 20px;
+  display: none;
+  margin-top: 10px;
+  @media (min-height: 860px) {
+    display: block;
+  }
   @media (min-height: 1080px) {
-    margin-top: 40px;
+    margin-top: 20px;
   }
 `;
 

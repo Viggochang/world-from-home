@@ -39,7 +39,7 @@ const LeafletMapDiv = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1 !important;
+  z-index: 1;
 `;
 
 const BackBtn = styled.div`
@@ -47,11 +47,11 @@ const BackBtn = styled.div`
   background-color: #ffffff;
   padding: 4px;
   position: fixed;
-  bottom: 220px;
+  bottom: 120px;
   right: 45px;
   color: #3a4a58;
   border-radius: 25%;
-  outline: 2px solid #adadad;
+  outline: 2px solid rgb(58, 74, 88, 0.6);
   cursor: pointer;
   z-index: 400;
   :hover {
@@ -159,8 +159,8 @@ function LeafletMap({ mapType }) {
     <LeafletMapDiv>
       <MapContainer
         whenCreated={(map) => setMap(map)}
-        center={[23.5, 0]}
-        zoom={3}
+        center={[25, 20]}
+        zoom={2.5}
         zoomControl={false}
         minZoom={2.5}
         scrollWheelZoom={true}

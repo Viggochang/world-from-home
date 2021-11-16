@@ -33,31 +33,49 @@ const AlbumOwner = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 520px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const AlbumPositionData = styled.div`
   display: flex;
   flex-direction: column;
+  overflow: scroll;
+  width: calc(63vw - 70px);
+  max-width: calc(450px - 70px);
 `;
 
 const AlbumPosition = styled.div`
+  width: calc(450px - 70px);
   margin-left: 5px;
   font-weight: bold;
   font-size: 30px;
   line-height: 40px;
+  @media (max-width: 520px) {
+    font-size: 24px;
+  }
 `;
 
 const AlbumDate = styled.div`
   margin-left: 5px;
   font-size: 20px;
   line-height: 30px;
+  @media (max-width: 520px) {
+    display: none;
+  }
 `;
 const AlbumPhoto = styled.div`
-  width: 500px;
+  width: 63vw;
+  max-width: 450px;
   height: 65%;
   cursor: pointer;
   margin-top: 10px;
   cursor: pointer;
+  /* @media (max-width: 732px) {
+    width: calc(65vw);
+  } */
 `;
 const AlbumPraise = styled.div`
   margin: 10px 5px 0 auto;

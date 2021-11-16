@@ -68,7 +68,7 @@ export default function FriendState({ userInfo }) {
       },
     },
     send_request: {
-      text: "request sended",
+      text: "request sent",
       text_change: "remove request",
       color_change: "#AE0000", //red
       style: {
