@@ -41,12 +41,17 @@ const CountryDiv = styled.div`
 `;
 
 const InfoFriendDiv = styled.div`
+  margin-top: 20px;
+  height: calc(43% - 20px);
   width: 100%;
-  height: 43%;
   display: flex;
   flex-direction: row;
   @media (max-width: 1180px) {
     display: none;
+  }
+  @media (max-height: 1120px) {
+    margin-top: 0;
+    height: 43%;
   }
   /* @media (max-width: 1040px) {
     flex-direction: column;

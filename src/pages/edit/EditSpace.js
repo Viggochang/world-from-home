@@ -11,6 +11,7 @@ import { signInBtnTheme } from "../../util/muiTheme";
 import { db_gallery, db_tourist_spot } from "../../util/firebase";
 import WorkingSpace from "./WorkingSpace";
 import Preview from "./component/Preview";
+import Logout from "../Signin/Logout";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -52,6 +53,7 @@ const AlertDiv = styled.div`
 `;
 
 const NavBarNav = styled.nav`
+  font-size: 30px;
   width: 100vw;
   height: 72px;
   position: fixed;
@@ -60,7 +62,6 @@ const NavBarNav = styled.nav`
   z-index: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
 `;
 
 const MyPageDiv = styled.div`
@@ -68,6 +69,8 @@ const MyPageDiv = styled.div`
   height: 50px;
   border-radius: 50%;
   box-shadow: 0px 0px 10px #bebebe;
+  margin-right: auto;
+  margin-left: 20px;
   /* outline: 3px #b8c3d0 solid; */
   cursor: pointer;
 `;
@@ -380,6 +383,28 @@ function EditSpace() {
       });
   }
 
+  function handleSaveLogout(e, albumId, logout) {
+    const body = {
+      content: {
+        pageInfo: JSON.stringify(pageInfo),
+        canvasState: JSON.stringify(canvasState),
+      },
+    };
+    db_gallery
+      .doc(albumId)
+      .update(body)
+      .then(() => {
+        saveAlertRef.current.style.zIndex = 5;
+        dispatch({
+          type: "DISCARD_CANVAS_EDIT",
+          payload: "",
+        });
+      })
+      .then(() => {
+        logout();
+      });
+  }
+
   function handlePreview(e, albumId) {
     // Object.keys(canvasState).forEach((canvasId) => {
     // })
@@ -515,6 +540,12 @@ function EditSpace() {
     marginRight: "10px",
   };
 
+  const LogoutStyle = {
+    margin: "0 20px 0 0",
+    width: "50px",
+    height: "50px",
+  };
+
   return (
     <div>
       <GalleryQuestion />
@@ -550,6 +581,11 @@ function EditSpace() {
         <HomeDiv onClick={(e) => handleHome(e, albumIdEditing)}>
           <i className="fas fa-home"></i>
         </HomeDiv>
+        <Logout
+          LogoutStyle={LogoutStyle}
+          handleSaveLogout={handleSaveLogout}
+          albumIdEditing={albumIdEditing}
+        />
       </NavBarNav>
 
       <TitleBarDiv>

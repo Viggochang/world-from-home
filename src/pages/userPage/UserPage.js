@@ -19,6 +19,7 @@ import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
 import Login from "../Signin/Signin";
+import Logout from "../Signin/Logout";
 
 import Album from "../album/Album";
 // import { system } from "@amcharts/amcharts4/core";
@@ -178,6 +179,7 @@ export default function UserPage() {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [activeButton, setActiveButton] = useState("Albums");
   const myInfo = useSelector((state) => state.userInfo);
+  const myUserId = useSelector((state) => state.myUserId);
   const queryUserId = useSelector((state) => state.queryUserId);
   const history = useHistory();
 
@@ -188,7 +190,8 @@ export default function UserPage() {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("id");
     console.log(id);
-    if (queryUserId === myInfo.id || id === myInfo.id) {
+    console.log(myUserId);
+    if (queryUserId === myUserId || id === myUserId) {
       history.push({ pathname: "mypage" });
     }
 
@@ -271,7 +274,7 @@ export default function UserPage() {
           <HomeLink to="home">
             <i className="fas fa-home"></i>
           </HomeLink>
-
+          <Logout />
           <MyPageIcon
             onClick={handleToMyPage}
             style={{

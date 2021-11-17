@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -69,6 +69,10 @@ const InfoTitle = styled.div`
   @media (max-width: 1180px) {
     display: none;
   }
+  @media (max-height: 900px) {
+    font-size: 28px;
+    line-height: 32px;
+  }
 `;
 
 const MyFriendsContainer = styled.div`
@@ -89,14 +93,18 @@ const MyFriendsContainer = styled.div`
 `;
 
 const FriendHere = styled.div`
-  height: 100%;
+  height: calc(100% - 20px);
   /* width: 180px; */
   /* margin-right: 40px; */
   /* position: relative; */
   margin-right: 40px;
-  /* display: flex;
+  padding: 10px;
+  display: flex;
   flex-direction: column;
-  align-items: flex-start; */
+  align-items: center;
+  @media (max-height: 900px) {
+    margin-right: 25px;
+  }
 
   /* align-items: center; */
   /* @media (max-height: 1079px) {
@@ -113,11 +121,14 @@ const FriendHere = styled.div`
 const FriendHerePhoto = styled.div`
   /* width: 200px;
   height: 200px; */
-  height: calc(100% - 73px);
+  height: calc(90% - 73px);
   aspect-ratio: 1;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0px 0px 10px #bebebe;
+  @media (max-height: 900px) {
+    height: calc(100% - 51px);
+  }
   /* @media (min-height: 1080px) {
     height: calc(100% - 55px);
   }
@@ -140,16 +151,21 @@ const FriendHereInfo = styled.div`
 `;
 
 const FriendHereInfoName = styled.div`
+  width: fit-content;
   font-size: 24px;
   line-height: 28px;
-  margin-top: 10px;
-  padding: 0 10px;
+  margin: 15px auto 0;
+  padding: 0 15px;
   border-radius: 16px;
   background-color: white;
   color: #3a4a58;
   cursor: pointer;
   :hover {
     background-color: #b8c3d0;
+  }
+  @media (max-height: 900px) {
+    font-size: 16px;
+    line-height: 20px;
   }
   /* @media (max-height: 720px) {
     display: none;
@@ -159,9 +175,14 @@ const FriendHereInfoName = styled.div`
   } */
 `;
 const FriendHereInfoCountry = styled.div`
+  width: fit-content;
   margin-top: 10px;
   /* display: none; */
   font-size: 18px;
+  @media (max-height: 900px) {
+    margin-top: 5px;
+    font-size: 14px;
+  }
   /* @media (min-height: 1200px) {
     display: block;
   } */

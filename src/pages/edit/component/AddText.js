@@ -1,17 +1,19 @@
 import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
+import TextFieldsIcon from "@mui/icons-material/TextFields";
+import Tooltip from "@mui/material/Tooltip";
 
 import styled from "styled-components";
 
 const AddTextDiv = styled.div`
+  display: flex;
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  z-index: 1;
+  z-index: -1;
   top: 10px;
   right: 10px;
   padding: 5px;
@@ -19,7 +21,8 @@ const AddTextDiv = styled.div`
   cursor: pointer;
   color: #667484;
   :hover {
-    background-color: rgb(184, 195, 208, 0.2);
+    background-color: rgb(255, 255, 255, 0.6);
+    color: #3a4a58;
   }
 `;
 
@@ -69,9 +72,12 @@ function AddText({ page, id }) {
   };
 
   return (
-    <AddTextDiv onClick={(e) => handleAddText(e, `page${page}-canvas${id}`)}>
-      <i className="fas fa-edit"></i>
-    </AddTextDiv>
+    <Tooltip title="new text" placement="left">
+      <AddTextDiv onClick={(e) => handleAddText(e, `page${page}-canvas${id}`)}>
+        {/* <i className="fas fa-font"></i> */}
+        <TextFieldsIcon />
+      </AddTextDiv>
+    </Tooltip>
   );
 }
 

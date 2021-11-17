@@ -39,6 +39,17 @@ const InfoTitle = styled.div`
   @media (max-width: 968px) {
     display: none;
   }
+  @media (max-height: 900px) {
+    font-size: 30px;
+    line-height: 36px;
+  }
+  @media (max-height: 800px) {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  @media (max-height: 667px) {
+    display: none;
+  }
 `;
 const CaptainCity = styled.div`
   margin: 20px 0 0 20px;
@@ -46,6 +57,16 @@ const CaptainCity = styled.div`
   font-weight: bold;
   text-align: left;
   @media (max-width: 968px) {
+    display: none;
+  }
+  @media (max-height: 900px) {
+    font-size: 36px;
+  }
+  @media (max-height: 800px) {
+    font-size: 32px;
+    margin-top: 15px;
+  }
+  @media (max-height: 667px) {
     display: none;
   }
 `;
@@ -61,15 +82,28 @@ const InfoFriendBtn = styled.div`
   justify-content: center;
   align-items: center;
   align-self: flex-start;
+  background-color: rgb(184, 195, 208, 0.25);
+  cursor: pointer;
+  :hover {
+    background-color: rgb(184, 195, 208, 0.5);
+  }
   @media (max-width: 1180px) {
     display: flex;
   }
   @media (max-width: 968px) {
-    margin-top: 10px;
+    width: 260px;
+    margin: 10px 20px 0;
   }
   @media (max-width: 600px) {
     width: 270px;
     margin: 20px auto 0;
+  }
+  @media (max-height: 900px) {
+    font-size: 28px;
+    line-height: 40px;
+  }
+  @media (max-height: 800px) {
+    margin-top: 15px;
   }
 `;
 

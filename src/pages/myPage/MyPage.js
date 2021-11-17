@@ -14,6 +14,7 @@ import MyGallery from "./component/MyGallery";
 import MyFriends from "./component/MyFriends";
 import AlbumFriendBtns from "./component/AlbumFriendBtns";
 import Album from "../album/Album";
+import Logout from "../Signin/Logout";
 
 const MyPageDiv = styled.div`
   /* position: fixed;
@@ -108,6 +109,7 @@ export default function MyPage() {
             <HomeLink to="home">
               <i className="fas fa-home"></i>
             </HomeLink>
+            <Logout />
           </ButtonsDiv>
         </UpperDiv>
         <LowerDiv>

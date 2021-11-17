@@ -102,7 +102,6 @@ function WorkingSpace({ preview, addWindow }) {
   const editRedo = useSelector((state) => state.editRedo);
 
   const workingSpaceInnerRef = useRef();
-
   const pageCanvasContainerRef = useRef();
   const textEditorRef = useRef();
 
@@ -531,6 +530,20 @@ function WorkingSpace({ preview, addWindow }) {
     });
   }
 
+  function handleShowIcon(e) {
+    if (e.target.children[0] && e.target.children[1]) {
+      e.target.children[0].style.zIndex = 1;
+      e.target.children[1].style.zIndex = 1;
+    }
+  }
+
+  function handleDisplayIcon(e) {
+    if (e.target.children[0] && e.target.children[1]) {
+      e.target.children[0].style.zIndex = -1;
+      e.target.children[1].style.zIndex = -1;
+    }
+  }
+
   return (
     <WorkingSpaceDiv
       onKeyDown={(e) => handleKeyDown(e)}
@@ -565,6 +578,8 @@ function WorkingSpace({ preview, addWindow }) {
                         onClick={(e) => {
                           console.log(e.target.parentNode.children[1]);
                         }}
+                        onMouseEnter={handleShowIcon}
+                        onMouseLeave={handleDisplayIcon}
                       >
                         <AddText page={page} id={id} />
                         <UploadImage page={page} id={id} />

@@ -8,7 +8,6 @@ import "firebase/auth";
 
 import WelcomePage from "./pages/welcomPage/WelcomePage";
 import HomePage from "./pages/homePage/HomePage";
-import World from "./pages/world/World";
 import EditSpace from "./pages/edit/EditSpace";
 import MyPage from "./pages/myPage/MyPage";
 import UserPage from "./pages/userPage/UserPage";
@@ -35,10 +34,11 @@ function App() {
   }, []);
 
   //onAuthStateChanged
-  useEffect(() => {
-    console.log(firebase.auth().currentUser);
-    if (firebase.auth().currentUser) {
-      const { email } = firebase.auth().currentUser;
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // console.log(user);
+      // if (firebase.auth().currentUser) {
+      const { email } = user;
       db_userInfo
         .where("email", "==", email)
         .get()
@@ -51,8 +51,9 @@ function App() {
             });
           });
         });
+      // }
     }
-  }, [firebase.auth().currentUser]);
+  });
 
   useEffect(() => {
     if (myUserId) {

@@ -4,8 +4,6 @@ import styled from "styled-components";
 
 import { templateStyle, allTemplateParams } from "./MyTemplate";
 
-import firebase from "../../../util/firebase";
-
 const PreviewDiv = styled.div`
   background-color: #b8c3d0;
   padding-left: 360px;

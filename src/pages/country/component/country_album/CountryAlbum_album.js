@@ -19,6 +19,7 @@ const AlbumHere = styled.div`
 const AlbumInfo = styled.div`
   display: flex;
   align-items: center;
+  /* width: calc(100% - 70px); */
 `;
 
 const AlbumOwner = styled.div`
@@ -39,7 +40,7 @@ const AlbumOwner = styled.div`
   }
 `;
 
-const AlbumPositionData = styled.div`
+const AlbumPositionDate = styled.div`
   display: flex;
   flex-direction: column;
   overflow: scroll;
@@ -48,7 +49,7 @@ const AlbumPositionData = styled.div`
 `;
 
 const AlbumPosition = styled.div`
-  width: calc(450px - 70px);
+  width: calc(450px - 75px);
   margin-left: 5px;
   font-weight: bold;
   font-size: 30px;
@@ -123,17 +124,17 @@ export default function Album({ album }) {
         >
           {ownerPhoto ? "" : <i className="fas fa-user-alt"></i>}
         </AlbumOwner>
-        <AlbumPositionData>
+        <AlbumPositionDate>
           <AlbumPosition>
-            <i className="fas fa-map-pin" />
+            <i className="fas fa-map-marker-alt"></i>
             &ensp;{album.position}
           </AlbumPosition>
           <AlbumDate>
             <i className="far fa-calendar-alt" />
-            &ensp;
+            &emsp;
             {new Date(album.timestamp.seconds * 1000).toDateString()}
           </AlbumDate>
-        </AlbumPositionData>
+        </AlbumPositionDate>
       </AlbumInfo>
       <AlbumPhoto
         style={{

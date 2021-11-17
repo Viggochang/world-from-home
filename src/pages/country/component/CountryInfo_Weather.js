@@ -9,7 +9,11 @@ const WeatherDiv = styled.div`
   } */
   margin: 0 0 0 20px;
   font-weight: bold;
-  line-height: 30px;
+  font-size: 30px;
+  @media (max-height: 1120px) {
+    font-size: 24px;
+  }
+
   /* @media (max-width: 1040px) {
     display: none;
   } */
@@ -25,6 +29,9 @@ const WeatherDiv = styled.div`
 const WeatherContent = styled.div`
   margin-top: 20px;
   display: flex;
+  @media (max-height: 900px) {
+    margin-top: 15px;
+  }
 `;
 const WeatherIcon = styled.div`
   margin-right: 15px;

@@ -6,23 +6,43 @@ import "react-clock/dist/Clock.css";
 import "../clock.css";
 
 const PopupDiv = styled.div`
-  display: none;
-  background-color: #3a4a58;
+  width: 90%;
+  height: 85%;
+  z-index: 3;
+  background-color: rgb(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  right: 5%;
+  top: 5%;
+  border-radius: 10px;
+  @media (max-width: 600px) {
+    top: 8%;
+  }
+`;
+
+const ContentDiv = styled.div`
+  display: flex;
+  background-color: rgb(142, 156, 172);
   border-radius: 10px;
   width: 337.5px;
   height: 567px;
-  position: fixed;
-  right: 5%;
-  top: 8%;
-  z-index: 3;
-  /* display: flex; */
   flex-direction: column;
-  /* display: none; */
-  /* @media (min-width: 1041px) {
-    &&& {
-      display: none;
-    }
-  } */
+  position: relative;
+`;
+
+const BackDiv = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: rgb(255, 255, 255, 0.7);
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  :hover {
+    color: white;
+  }
 `;
 
 const CaptainTitleDiv = styled.div`
@@ -34,19 +54,7 @@ const CaptainTitleDiv = styled.div`
   border-radius: 25px;
   text-align: center;
   margin: 40px auto 0;
-`;
-
-const BackDiv = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #9d9d9d;
-  font-weight: bold;
-  font-size: 20px;
-  cursor: pointer;
-  :hover {
-    color: white;
-  }
+  background-color: rgb(184, 195, 208, 0.5);
 `;
 
 const CaptainCity = styled.div`
@@ -123,43 +131,45 @@ export default function CountryInfoPopup({
 
   return (
     <PopupDiv ref={popupRef}>
-      <BackDiv onClick={handleClickBack}>
-        <i className="fas fa-times-circle" />
-      </BackDiv>
-      <CaptainTitleDiv>
-        <i className="fas fa-info"></i>&ensp;Information
-      </CaptainTitleDiv>
-      <CaptainCity>{captain.capitalCity}</CaptainCity>
-      <WeatherDiv>
-        {/* <img id="wicon" src="http://openweathermap.org/img/w/10d.png" style={{width: '100%'}} alt="Weather icon"></img> */}
-        <WeatherTemp>
-          <WeatherIcon>
-            <i className="fas fa-cloud-sun"></i>
-          </WeatherIcon>
-          <div>{weather}</div>
-        </WeatherTemp>
-        <WeatherTemp>
-          <TempIcon>
-            <i className="fas fa-temperature-high"></i>
-          </TempIcon>
-          <div>{temp !== "No Data" ? temp + "℃" : temp}</div>
-        </WeatherTemp>
-      </WeatherDiv>
-      <ClockDiv>
-        {timezone !== "No Data" ? (
-          <>
-            <ClockText>
-              <div>
-                {localTime.toDateString().slice(4)} &ensp;{" "}
-                {localTime.toTimeString().split("GMT")[0]}{" "}
-              </div>
-            </ClockText>
-            <ClockStyle value={localTime} />
-          </>
-        ) : (
-          <ClockText>No data</ClockText>
-        )}
-      </ClockDiv>
+      <ContentDiv>
+        <BackDiv onClick={handleClickBack}>
+          <i className="fas fa-times-circle" />
+        </BackDiv>
+        <CaptainTitleDiv>
+          <i className="fas fa-info"></i>&ensp;Information
+        </CaptainTitleDiv>
+        <CaptainCity>{captain.capitalCity}</CaptainCity>
+        <WeatherDiv>
+          {/* <img id="wicon" src="http://openweathermap.org/img/w/10d.png" style={{width: '100%'}} alt="Weather icon"></img> */}
+          <WeatherTemp>
+            <WeatherIcon>
+              <i className="fas fa-cloud-sun"></i>
+            </WeatherIcon>
+            <div>{weather}</div>
+          </WeatherTemp>
+          <WeatherTemp>
+            <TempIcon>
+              <i className="fas fa-temperature-high"></i>
+            </TempIcon>
+            <div>{temp !== "No Data" ? temp + "℃" : temp}</div>
+          </WeatherTemp>
+        </WeatherDiv>
+        <ClockDiv>
+          {timezone !== "No Data" ? (
+            <>
+              <ClockText>
+                <div>
+                  {localTime.toDateString().slice(4)} &ensp;{" "}
+                  {localTime.toTimeString().split("GMT")[0]}{" "}
+                </div>
+              </ClockText>
+              <ClockStyle value={localTime} />
+            </>
+          ) : (
+            <ClockText>No data</ClockText>
+          )}
+        </ClockDiv>
+      </ContentDiv>
     </PopupDiv>
   );
 }

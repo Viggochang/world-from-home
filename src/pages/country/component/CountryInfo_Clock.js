@@ -21,18 +21,30 @@ const ClockDiv = styled.div`
 
 const ClockText = styled.div`
   margin-top: 20px;
-  font-size: 22px;
-  line-height: 28px;
+  font-size: 26px;
+  line-height: 32px;
   font-weight: bold;
   width: 100%;
   text-align: center;
+  @media (max-height: 900px) {
+    font-size: 16px;
+    line-height: 20px;
+    margin-top: 10px;
+  }
+  @media (max-height: 1120px) {
+    font-size: 22px;
+    line-height: 28px;
+  }
   /* @media (min-height: 1080px) {
     margin-bottom: 20px;
   } */
 `;
 const ClockStyle = styled(Clock)`
-  margin-top: 20px;
+  margin-top: 15px;
   display: block;
+  @media (max-height: 900px) {
+    margin-top: 10px;
+  }
   /* @media (min-height: 860px) {
     display: block;
   }

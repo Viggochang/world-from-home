@@ -56,7 +56,7 @@ const Country = styled.div`
   font-size: 60px;
   /* line-height: 60px; */
   color: white;
-  margin: 0 0 10px 20px;
+  margin: 0 0 10px 0;
   @media (max-width: 1180px) {
     display: flex;
     order: -2;

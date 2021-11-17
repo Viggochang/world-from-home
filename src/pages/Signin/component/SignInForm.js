@@ -1,13 +1,11 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { styled as styledMui } from "@mui/styles";
 
-import { firebase } from "../../../util/firebase";
-import { db_userInfo } from "../../../util/firebase";
+import { firebase, db_userInfo } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
 import { facebookProvider, googleProvider } from "../../../util/authMethod";
 import { signInBtnTheme } from "../../../util/muiTheme";

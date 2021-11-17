@@ -133,7 +133,9 @@ function text(templateObjStyle, preview = false) {
       preserveObjectStacking: true,
     });
     const newText = new fabric.IText("edit", {
-      ...templateObjStyle.t1,
+      left: 50,
+      top: 50,
+      fontSize: 20,
       fontFamily: "helvetica",
     });
     newText.setControlsVisibility({

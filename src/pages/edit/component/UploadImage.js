@@ -8,21 +8,26 @@ import { storage } from "../../../util/firebase";
 import Compressor from "compressorjs";
 
 import styled from "styled-components";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import Tooltip from "@mui/material/Tooltip";
 
 const UploadImgDiv = styled.div`
+  display: flex;
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  z-index: 1;
+  z-index: -1;
   top: 40px;
   right: 10px;
   padding: 5px;
+  color: #667484;
+  line-height: 1;
   :hover {
-    background-color: rgb(184, 195, 208, 0.2);
+    background-color: rgb(255, 255, 255, 0.6);
+    color: #3a4a58;
   }
 `;
 
@@ -30,7 +35,6 @@ const ImgInputLabel = styled.label`
   /* width: 200px;
   height: 50px; */
   font-size: 20px;
-  color: #667484;
   cursor: pointer;
 `;
 
@@ -100,16 +104,19 @@ export default function UploadImage({ page, id }) {
   }
 
   return (
-    <UploadImgDiv>
-      <ImgInputLabel>
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={(e) => handleUploadImg(e, `page${page}-canvas${id}`)}
-        />
-        <i className="far fa-image"></i>
-      </ImgInputLabel>
-    </UploadImgDiv>
+    <Tooltip title="new image" placement="left">
+      <UploadImgDiv>
+        <ImgInputLabel>
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => handleUploadImg(e, `page${page}-canvas${id}`)}
+          />
+          {/* <i className="far fa-image"></i> */}
+          <InsertPhotoIcon />
+        </ImgInputLabel>
+      </UploadImgDiv>
+    </Tooltip>
   );
 }

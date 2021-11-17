@@ -52,6 +52,10 @@ const InfoTitle = styled.div`
   line-height: 48px;
   border-bottom: 2px white solid;
   margin-top: 20px;
+  @media (max-height: 900px) {
+    font-size: 28px;
+    line-height: 32px;
+  }
 `;
 
 const CaptainTitleDiv = styled.div`
@@ -96,6 +100,10 @@ const CaptainCity = styled.div`
   font-size: 40px;
   font-weight: bold;
   text-align: left;
+  @media (max-height: 900px) {
+    font-size: 30px;
+    margin-top: 10px;
+  }
   /* @media (max-width: 1180px) {
     font-size: 38px;
   }
@@ -105,7 +113,6 @@ const CaptainCity = styled.div`
 `;
 const WeatherShow = styled.div`
   display: flex;
-  font-size: 30px;
   /* @media (min-height: 860px) {
     display: block;
   } */
@@ -116,7 +123,7 @@ const RightDiv = styled.div`
   flex-direction: column;
   align-items: flex-start;
   margin-left: 60px;
-  @media (max-width: 1440px) {
+  @media (max-width: 1280px) {
     display: none;
   }
 `;
