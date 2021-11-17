@@ -12,6 +12,12 @@ const FriendDiv = styled.div`
   display: flex;
   width: 50%;
   margin-bottom: 30px;
+  @media (max-width: 1180px) {
+    width: 100%;
+  }
+  @media (max-width: 480px) {
+    margin-bottom: 15px;
+  }
 `;
 const FriendPhoto = styled.div`
   width: 100px;
@@ -21,6 +27,16 @@ const FriendPhoto = styled.div`
   cursor: pointer;
   :hover {
     box-shadow: 4px 4px 20px #3c3c3c;
+  }
+  @media (max-width: 1180px) {
+    margin-left: 50px;
+  }
+  @media (max-width: 480px) {
+    width: 80px;
+    height: 80px;
+  }
+  @media (max-width: 480px) {
+    margin-left: 30px;
   }
 `;
 const FriendMask = styled.div`
@@ -40,15 +56,26 @@ const FriendInfo = styled.div`
   width: calc(100% - 130px);
   height: 100px;
   position: relative;
+  @media (max-width: 1180px) {
+    width: calc(100% - 180px);
+  }
 `;
 const FriendName = styled.div`
   font-size: 36px;
   font-weight: bold;
   cursor: pointer;
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
 `;
 const FriendCountry = styled.div`
-  font-size: 24px;
-  line-height: 40px;
+  font-size: 20px;
+  line-height: 30px;
+  margin-bottom: 5px;
+  @media (max-width: 480px) {
+    font-size: 12px;
+    line-height: 20px;
+  }
 `;
 
 const AcceptRemoveBtnsDiv = styled.div`

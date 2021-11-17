@@ -29,12 +29,25 @@ const theme = createTheme({
 });
 
 const MyPhoto = styled.div`
-  width: 450px;
-  height: 450px;
+  width: 350px;
+  height: 350px;
   box-shadow: 2px 2px 20px #3c3c3c;
   position: relative;
   color: white;
   border-radius: 20px;
+  @media (max-width: 1180px) {
+    width: 250px;
+    height: 250px;
+  }
+  @media (max-width: 932px) {
+    margin-top: 60px;
+    width: 375px;
+    height: 375px;
+  }
+  @media (max-width: 450px) {
+    width: 300px;
+    height: 300px;
+  }
 `;
 
 const EditMyPhoto = styled.div`

@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-
 import styled from "styled-components";
 
 import World from "../../world/World";
-// import ToMyPage from "../world/component/ToMyPage";
-// import Country from "../country/Country";
-// import GalleryQuestion from "../country/component/GalleryQuestion";
 
 const UserPageDiv = styled.div`
   width: calc(100% - 80px);
@@ -21,7 +17,7 @@ const BackBtn = styled.div`
   background-color: #d9d9d9;
   padding: 4px;
   position: absolute;
-  bottom: 220px;
+  bottom: 120px;
   right: 45px;
   color: #3a4a58;
   border-radius: 25%;

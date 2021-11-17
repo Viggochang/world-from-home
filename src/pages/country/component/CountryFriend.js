@@ -1,12 +1,8 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-import { db_userInfo } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
-
-import CountryFriendPopup from "./countryFriend/CountryFriendPopup";
 
 const FriendsContainerDiv = styled.div`
   height: 100%;
@@ -185,46 +181,6 @@ const FriendHereInfoCountry = styled.div`
   }
   /* @media (min-height: 1200px) {
     display: block;
-  } */
-`;
-
-const CaptainTitleDiv = styled.div`
-  width: 300px;
-  display: none;
-  /* padding: 0 40px; */
-  outline: 1px white solid;
-  font-size: 32px;
-  line-height: 50px;
-  border-radius: 25px;
-  color: white;
-  justify-content: center;
-  align-items: center;
-  align-self: flex-start;
-  @media (max-width: 1180px) {
-    display: flex;
-  }
-  /* @media (min-width: 1200px) {
-    padding: 0 50px;
-  }
-
-  @media (min-height: 1000px) {
-    display: block;
-  }
-  @media (min-height: 1080px) {
-    margin-left: 0;
-  }
-  @media (max-width: 1040px) {
-    width: 240px;
-    padding: 0 25px;
-    cursor: pointer;
-    background-color: rgb(255, 255, 255, 0.4);
-    :hover {
-      color: #3a4a58;
-    }
-  }
-  @media (max-width: 630px) {
-    margin: 0;
-    padding: 0 10px;
   } */
 `;
 

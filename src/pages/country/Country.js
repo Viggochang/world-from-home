@@ -7,8 +7,6 @@ import CountryAlbums from "./component/country_album/CountryAlbums";
 import CountryInfo from "./component/CountryInfo";
 import CountryFriend from "./component/CountryFriend";
 import InfoFriendSmall from "./InfoFriendSmall/InfoFriendSmall";
-import CountryInfoPopup from "./component/countryInfo/CountryInfoPopup";
-import countryFriendPopup from "./component/countryFriend/CountryFriendPopup";
 
 import { db_userInfo } from "../../util/firebase";
 

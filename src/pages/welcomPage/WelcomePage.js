@@ -1,14 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { styled as styledMui } from "@mui/styles";
+import { firebase } from "../../util/firebase";
 
 import welcomePage from "../../image/welcomePage.mp4";
 import SigninDiv from "../Signin/Signin";
-
-import MyButton from "../../util/Button";
 
 const theme = createTheme({
   status: {
@@ -66,6 +64,12 @@ const ButtonsDiv = styled.div`
 `;
 
 export default function WelcomePage() {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      history.push({ pathname: "/home" });
+    }
+  });
+
   const history = useHistory();
   const signinRef = useRef();
 

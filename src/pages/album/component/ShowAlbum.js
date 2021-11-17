@@ -1,6 +1,5 @@
 // 類似 Preview.js
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import {
@@ -35,7 +34,6 @@ export default function ShowAlbum({ show, albumContent }) {
   const pageCanvasContainerRef = useRef();
   // const pageInfo = useSelector((state) => state.pageInfo);
   // const canvasState = useSelector((state) => state.canvasState);
-  const albumIdShow = useSelector((state) => state.albumIdShow);
   const [pageInfo, setPageInfo] = useState({});
   const [canvasState, setCanvasState] = useState({});
 

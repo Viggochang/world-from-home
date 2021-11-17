@@ -25,6 +25,7 @@ const MoreInfoDiv = styled.div`
   flex-direction: column;
   align-items: flex-start;
   font-weight: 400;
+  border-radius: 10px;
 `;
 
 const CloseDiv = styled.div`

@@ -17,6 +17,12 @@ const EditBackgroundImage = styled.div`
   :hover {
     background-color: rgb(255, 255, 255, 0.2);
   }
+  @media (max-width: 932px) {
+    right: calc(50% - 187.5px);
+  }
+  @media (max-width: 450px) {
+    right: calc(50% - 150px);
+  }
 `;
 
 const Input = styledMui("input")({

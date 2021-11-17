@@ -19,11 +19,18 @@ const ResultTitle = styled.div`
   margin-bottom: 30px;
   color: #3a4a58;
   text-align: center;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
 `;
 
 const FriendListContent = styled.div`
   display: flex;
   flex-wrap: wrap;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+    /* align-items: center; */
+  }
 `;
 
 export default function FriendList({ myFriends, searchInput, isMyPage }) {

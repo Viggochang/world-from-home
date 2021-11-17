@@ -11,6 +11,7 @@ const BackgroundDiv = styled.div`
   top: 0;
   left: 0;
   z-index: -1;
+  background-color: #b8c3d0;
 `;
 
 const Mask = styled.div`

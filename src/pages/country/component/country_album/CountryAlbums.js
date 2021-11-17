@@ -5,10 +5,7 @@ import { db_gallery } from "../../../../util/firebase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { styled as styledMui } from "@mui/styles";
-import { autocompleteClasses } from "@material-ui/core";
 
-import { db_userInfo } from "../../../../util/firebase";
 import Album from "./CountryAlbum_album";
 
 const theme = createTheme({

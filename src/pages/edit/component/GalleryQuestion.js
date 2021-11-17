@@ -3,41 +3,16 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 import InputBase from "@mui/material/InputBase";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import { styled as styledMui } from "@mui/styles";
 
 import { db_gallery } from "../../../util/firebase";
 import { whiteBtnTheme } from "../../../util/muiTheme";
 import "./AlbumQuestion.css";
-
-import { rgb } from "@amcharts/amcharts4/.internal/core/utils/Colors";
-import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
-import { flexbox, style } from "@material-ui/system";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-    },
-  },
-});
 
 const GalleryQuestionDiv = styled.div`
   background-color: rgb(0, 0, 0, 0.7);
@@ -64,25 +39,6 @@ const GalleryQuestionContainer = styled.div`
   z-index: 5;
   box-shadow: 0px 0px 5px 1px #d0d0d0;
   position: relative;
-`;
-
-const BackDiv = styled.div`
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  color: white;
-  font-weight: bold;
-  font-size: 25px;
-  cursor: pointer;
-  :hover {
-    color: #b8c3d0;
-  }
-`;
-
-const QuestionMapDiv = styled.div`
-  /* outline: 1px solid white; */
-  width: 50%;
-  height: 100%;
 `;
 
 const Form = styled.div`
@@ -196,10 +152,6 @@ const TextFieldDiv = styled.div`
   margin-left: 20px;
   align-self: center;
 `;
-
-const IntroductionTextField = styledMui(TextField)({
-  width: "100%",
-});
 
 const Inputdiv = styled.input`
   color: #3a4a58;

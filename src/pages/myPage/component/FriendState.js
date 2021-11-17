@@ -10,13 +10,13 @@ const RequestBtnDiv = styled.div`
   align-items: center;
   position: absolute;
   bottom: 0px;
-  left: 720px;
+  left: 620px;
 `;
 
 const RequestBtn = styled.div`
-  width: 75px;
-  height: 75px;
-  font-size: 40px;
+  width: 70px;
+  height: 70px;
+  font-size: 36px;
   border-radius: 50%;
   display: flex;
   cursor: pointer;

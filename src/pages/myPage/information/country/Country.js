@@ -10,9 +10,13 @@ const CountryDiv = styled.div`
   display: flex;
 `;
 const MyCountryDiv = styled.div`
-  font-size: 120px;
+  font-size: 88px;
   display: flex;
   align-items: baseline;
+  @media (max-width: 1180px) {
+    font-size: 40px;
+    line-height: 50px;
+  }
 `;
 const EditIcon = styled.div`
   font-size: 24px;

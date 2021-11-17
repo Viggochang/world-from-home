@@ -99,22 +99,13 @@ import * as ELG from "esri-leaflet-geocoder";
 //   return <LeafletMapDiv id="map" />;
 // }
 
-import React, { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 // import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  ZoomControl,
-} from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-markercluster";
-import EsriLeafletGeoSearch from "react-esri-leaflet/plugins/EsriLeafletGeoSearch";
+import { MapContainer, TileLayer, Marker, ZoomControl } from "react-leaflet";
 import { geosearch } from "esri-leaflet-geocoder";
 
 import "leaflet/dist/leaflet.css";
@@ -122,13 +113,6 @@ import "leaflet/dist/leaflet.css";
 
 const apikey =
   "AAPK8ba779cc01594743abbd245136a3f366gM55ZxvACBdAwG_RwlwTIts1NHYDcL4AT8N9qKcMqVXEj53qqGCJvnk_GHFLmUvU";
-
-const iconMarkup = renderToStaticMarkup(
-  <i className=" fa fa-map-marker-alt fa-3x" />
-);
-const customMarkerIcon = divIcon({
-  html: iconMarkup,
-});
 
 const LeafletMapDiv = styled.div`
   width: 100%;

@@ -8,6 +8,16 @@ import { albumFriendBtnTheme as theme } from "../../../util/muiTheme";
 const AlbumFriendBtnsDiv = styled.div`
   display: flex;
   flex-direction: column;
+  @media (max-width: 932px) {
+    border-top: 1px white solid;
+    padding: 20px 30px 0;
+    width: calc(100% - 60px);
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
 `;
 
 export default function AlbumFriendBtns({ activeButton, setActiveButton }) {
@@ -27,10 +37,11 @@ export default function AlbumFriendBtns({ activeButton, setActiveButton }) {
   });
 
   return (
-    <AlbumFriendBtnsDiv>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <AlbumFriendBtnsDiv>
         {["Albums", "Friends"].map((btn) => (
           <Button
+            key={btn}
             variant="contained"
             sx={albumFriendButtonStyle(btn)}
             color={activeButton === btn ? "primary" : "secondary"}
@@ -39,7 +50,7 @@ export default function AlbumFriendBtns({ activeButton, setActiveButton }) {
             {btn}
           </Button>
         ))}
-      </ThemeProvider>
-    </AlbumFriendBtnsDiv>
+      </AlbumFriendBtnsDiv>
+    </ThemeProvider>
   );
 }

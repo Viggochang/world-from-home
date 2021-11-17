@@ -44,8 +44,8 @@ const CompleteQuestionContainer = styled.div`
 
 const Form = styled.div`
   margin-top: 20px;
-  padding: 20px 30px 40px;
-  width: calc(100% - 60px);
+  padding: 20px 30px 30px;
+  width: calc(100% - 40px);
   /* height: 60vmin; */
   outline: 1px white solid;
   display: flex;
@@ -60,6 +60,7 @@ const Question = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(40vmin + 70px);
+  margin: 0 15px;
 `;
 
 const QuestionTitle = styled.div`
@@ -86,6 +87,12 @@ const QuestionTitleText = styled.div`
   font-size: 36px;
   line-height: 60px;
   font-weight: bold;
+`;
+
+const Description = styled.div`
+  color: #667484;
+  font-size: 18px;
+  margin: -10px 0 10px 55px;
 `;
 
 const CameraBtn = styled.div`
@@ -122,7 +129,7 @@ const CoverPhoto = styled.div`
 
 const TouristSpotMapDiv = styled.div`
   width: 100%;
-  height: 50vmin;
+  height: 48vmin;
   outline: 1px white solid;
   color: #3a4a58;
 `;
@@ -174,22 +181,6 @@ const Buttons = styled.div`
   bottom: 15px; */
   display: flex;
   justify-content: flex-end;
-`;
-
-const SubmitBtn = styled.div`
-  background-color: white;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 36px;
-  border-radius: 18px;
-  padding: 0 20px;
-  color: #3a4a58;
-  box-shadow: 0px 0px 5px #d0d0d0;
-  cursor: pointer;
-  margin-left: 20px;
-  :hover {
-    box-shadow: 0px 0px 15px #d0d0d0;
-  }
 `;
 
 export default function CompleteQuestion({
@@ -320,6 +311,9 @@ export default function CompleteQuestion({
               </QuestionIcon>
               <QuestionTitleText>Tourist Spots</QuestionTitleText>
             </QuestionTitle>
+            <Description>
+              use the search box below to label tourist spots in your trip
+            </Description>
             <TouristSpotMapDiv>
               <LeafletMap
                 longitude={longitude}

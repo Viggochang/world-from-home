@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 // import './App.css';
-import React, { useEffect, useState, useRef } from "react";
-import { Route, BrowserRouter, Switch, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { firebase, db_userInfo } from "./util/firebase";
 import "firebase/auth";
@@ -11,8 +11,7 @@ import HomePage from "./pages/homePage/HomePage";
 import EditSpace from "./pages/edit/EditSpace";
 import MyPage from "./pages/myPage/MyPage";
 import UserPage from "./pages/userPage/UserPage";
-import LeafletMap from "./pages/leafletMap/LeafletMap";
-import MuiStyle from "./util/MuiStyle";
+import NotFound from "./pages/notFound/NotFound";
 
 // const myUserId = "yXtnB3CD0XAJDQ0Le51J";
 
@@ -86,11 +85,8 @@ function App() {
           <Route path="/edit">
             <EditSpace />
           </Route>
-          <Route path="/leaflet">
-            <LeafletMap />
-          </Route>
-          <Route path="/muitest">
-            <MuiStyle />
+          <Route path="/notfound">
+            <NotFound />
           </Route>
         </Switch>
       </BrowserRouter>

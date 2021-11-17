@@ -1,12 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { moreInfoBtnTheme } from "../../util/muiTheme";
 
 import { db_userInfo } from "../../util/firebase";
 import FriendState from "../myPage/component/FriendState";
@@ -23,27 +19,6 @@ import Logout from "../Signin/Logout";
 
 import Album from "../album/Album";
 // import { system } from "@amcharts/amcharts4/core";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-      font: "#ffffff",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-      font: "#3A4A58",
-    },
-  },
-});
 
 const MyPageDiv = styled.div`
   /* position: fixed;
@@ -65,8 +40,8 @@ const UpperDiv = styled.div`
 `;
 
 const MyPhoto = styled.div`
-  width: 450px;
-  height: 450px;
+  width: 350px;
+  height: 350px;
   box-shadow: 2px 2px 20px #4f4f4f;
   position: relative;
   color: white;
@@ -86,7 +61,7 @@ const CountryDiv = styled.div`
   display: flex;
 `;
 const MyCountryDiv = styled.div`
-  font-size: 120px;
+  font-size: 88px;
   display: flex;
   align-items: baseline;
 `;
@@ -131,7 +106,7 @@ const ButtonsDiv = styled.div`
   right: 80px;
 `;
 
-const HomeLink = styled(NavLink)`
+const HomeDiv = styled.div`
   color: white;
   width: 64px;
   height: 64px;
@@ -140,6 +115,7 @@ const HomeLink = styled(NavLink)`
   align-items: center;
   text-decoration: none;
   border-radius: 50%;
+  cursor: pointer;
   :hover {
     background-color: rgb(184, 195, 208, 0.3);
   }
@@ -172,11 +148,9 @@ const MyPageIconMask = styled.div`
 `;
 
 export default function UserPage() {
-  // const moreAboutMeBtnRef = useRef();
-  const moreInfoRef = useRef();
+  const dispatch = useDispatch();
   const signinRef = useRef();
   const [userInfo, setUserInfo] = useState({});
-  const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [activeButton, setActiveButton] = useState("Albums");
   const myInfo = useSelector((state) => state.userInfo);
   const myUserId = useSelector((state) => state.myUserId);
@@ -189,19 +163,21 @@ export default function UserPage() {
 
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("id");
-    console.log(id);
     console.log(myUserId);
-    if (queryUserId === myUserId || id === myUserId) {
-      history.push({ pathname: "mypage" });
-    }
+    console.log(queryUserId);
+    console.log(id);
 
-    db_userInfo
-      .doc(id)
-      .get()
-      .then((doc) => {
-        setUserInfo(doc.data());
-      });
-  }, [queryUserId]);
+    if (myUserId && (queryUserId === myUserId || id === myUserId)) {
+      history.push({ pathname: "mypage" });
+    } else {
+      db_userInfo
+        .doc(id)
+        .get()
+        .then((doc) => {
+          setUserInfo(doc.data());
+        });
+    }
+  }, [myUserId, window.location.search, queryUserId]);
 
   const { name, country, photo, birthday, background_photo } = userInfo;
   const age =
@@ -222,6 +198,14 @@ export default function UserPage() {
     }
   }
 
+  function handleHome() {
+    dispatch({
+      type: "SET_TARGET_COUNTRY",
+      payload: {},
+    });
+    history.push({ pathname: "home" });
+  }
+
   return (
     <>
       <Login signinRef={signinRef} />
@@ -236,15 +220,15 @@ export default function UserPage() {
             }}
           />
           <UserInfoDiv>
-            <div style={{ fontSize: 148 }}>{name}</div>
-            <div style={{ fontSize: 36 }}>from</div>
+            <div style={{ fontSize: 100 }}>{name}</div>
+            <div style={{ fontSize: 30 }}>from</div>
             <CountryDiv>
               <MyCountryDiv>
                 {country ? countryTrans[country].name_en : ""}
               </MyCountryDiv>
             </CountryDiv>
             <div
-              style={{ fontSize: 36, marginBottom: "24px" }}
+              style={{ fontSize: 30, marginBottom: "24px" }}
             >{`age: ${age}`}</div>
 
             <MoreInformation userInfo={userInfo} />
@@ -265,15 +249,15 @@ export default function UserPage() {
             setActiveButton={setActiveButton}
           />
           {activeButton === "Albums" ? (
-            <MyGallery title={`${name}'s Albums`} id={userInfo.id} />
+            <MyGallery title={"Albums"} id={userInfo.id} />
           ) : (
-            <MyFriends title={`${name}'s Friends`} userInfo={userInfo} />
+            <MyFriends title={"Friends"} userInfo={userInfo} />
           )}
         </BottomDiv>
         <ButtonsDiv>
-          <HomeLink to="home">
+          <HomeDiv onClick={handleHome}>
             <i className="fas fa-home"></i>
-          </HomeLink>
+          </HomeDiv>
           <Logout />
           <MyPageIcon
             onClick={handleToMyPage}

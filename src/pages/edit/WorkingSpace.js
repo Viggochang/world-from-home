@@ -10,7 +10,6 @@ import TextEditor from "./component/TextEditor";
 
 import { templateStyle, allTemplateParams } from "./component/MyTemplate";
 import { db_gallery } from "../../util/firebase";
-import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
 
 const WorkingSpaceDiv = styled.div`
   /* padding-left: 352px;

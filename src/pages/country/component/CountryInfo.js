@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import styled from "styled-components";
 
 import Weather from "./CountryInfo_Weather";
 import CountryClock from "./CountryInfo_Clock";
-import CountryInfoPopup from "./countryInfo/CountryInfoPopup";
 
 const CountryInfoDiv = styled.div`
   /* height: 100%; */
@@ -58,43 +56,6 @@ const InfoTitle = styled.div`
   }
 `;
 
-const CaptainTitleDiv = styled.div`
-  width: 300px;
-  display: none;
-  /* padding: 0 40px; */
-  outline: 1px white solid;
-  font-size: 32px;
-  line-height: 50px;
-  border-radius: 25px;
-  color: white;
-  justify-content: center;
-  align-items: center;
-  align-self: flex-start;
-  @media (max-width: 1180px) {
-    display: flex;
-  }
-
-  /* @media (max-width: 1040px) {
-    width: 240px;
-    cursor: pointer;
-    margin-left: 30px;
-    background-color: rgb(255, 255, 255, 0.4);
-    :hover {
-      color: #3a4a58;
-    }
-  }
-
-  @media (max-width: 1180px) {
-    font-size: 28px;
-    padding: 0 25px;
-  }
-
-  @media (max-width: 630px) {
-    margin: 20px 0;
-    padding: 0 10px;
-  } */
-`;
-
 const CaptainCity = styled.div`
   margin: 20px 0 0 20px;
   font-size: 40px;
@@ -126,13 +87,6 @@ const RightDiv = styled.div`
   @media (max-width: 1280px) {
     display: none;
   }
-`;
-const WeatherRight = styled.div`
-  /* margin-left: 50px; */
-  display: none;
-  /* @media (max-height: 860px) and (min-width: 1280px) {
-    display: block;
-  } */
 `;
 
 export default function CountryInfo({ captain, weather, timezone }) {

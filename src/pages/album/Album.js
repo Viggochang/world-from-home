@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -121,7 +121,7 @@ const AlbumPosition = styled.div`
 const AlbumDate = styled.div`
   margin-left: 5px;
   font-size: 20px;
-  line-height: 30px;
+  line-height: 40px;
 `;
 
 export default function Album() {
@@ -136,9 +136,6 @@ export default function Album() {
   const [liked, setLiked] = useState(false);
   const [friendCondition, setFriendCondition] = useState("none");
   const [isMyAlbun, setIsMyAlbum] = useState(false);
-  const deleteAlertRef = useRef();
-
-  const { content, position, timestamp, user_id } = albumData || {};
 
   useEffect(() => {
     console.log(albumIdShow);
@@ -387,7 +384,7 @@ export default function Album() {
         />
         <AlbumPositionData>
           <AlbumPosition>
-            <i className="fas fa-map-pin" />
+            <i className="fas fa-map-marker-alt"></i>
             &ensp;{albumData.position}
           </AlbumPosition>
           <AlbumDate>

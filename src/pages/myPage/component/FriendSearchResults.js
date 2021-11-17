@@ -19,6 +19,9 @@ const ResultTitle = styled.div`
   margin-bottom: 30px;
   color: #3a4a58;
   text-align: center;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
 `;
 
 const FriendSearchResultsContent = styled.div`
@@ -26,10 +29,7 @@ const FriendSearchResultsContent = styled.div`
   flex-wrap: wrap;
 `;
 
-export default function FriendSearchResults({
-  myFriends,
-  searchInput
-}) {
+export default function FriendSearchResults({ myFriends, searchInput }) {
   return myFriends.length && searchInput ? (
     <FriendSearchResultsDiv>
       {myFriends.filter(({ name }) =>

@@ -1,5 +1,4 @@
-import { style } from "@mui/system";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import countryTrans from "../../../../util/countryTrans";
@@ -9,7 +8,7 @@ const PopupDiv = styled.div`
   height: 85%;
   z-index: 3;
   background-color: rgb(0, 0, 0, 0.7);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   position: fixed;

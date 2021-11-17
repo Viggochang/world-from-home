@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
-import TextField from "@mui/material/TextField";
+import React from "react";
 
 import styled from "styled-components";
 
@@ -18,6 +16,7 @@ const MoreInfoDiv = styled.div`
   padding: 30px 30px 0;
   flex-direction: column;
   align-items: flex-start;
+  border-radius: 10px;
 `;
 
 const CloseDiv = styled.div`

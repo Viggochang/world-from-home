@@ -19,15 +19,6 @@ const ShowValue = styled.div`
   margin-right: 20px;
 `;
 
-const ValueInput = styled.input`
-  color: #3a4a58;
-  width: 30px;
-  border: none;
-  :focus {
-    border: none;
-  }
-`;
-
 export default function TextEditorSlider({
   defaultVal,
   min,
@@ -41,10 +32,6 @@ export default function TextEditorSlider({
   useEffect(() => {
     setValue(Number(defaultVal));
   }, [defaultVal]);
-
-  const handleInputChange = (event) => {
-    setValue(event.target.value === "" ? 0 : Number(event.target.value));
-  };
 
   return (
     <TextEditorDiv>

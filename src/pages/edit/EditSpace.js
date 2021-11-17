@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { Alert, Stack } from "@mui/material";
 import { signInBtnTheme } from "../../util/muiTheme";
 
@@ -30,22 +30,6 @@ import text_1 from "../../image/template/text_1.jpeg";
 // import ToMyPage from "../world/component/ToMyPage";
 import GalleryQuestion from "./component/GalleryQuestion";
 import CompleteQuestion from "./component/CompleteQuestion";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-  },
-});
 
 const AlertDiv = styled.div`
   margin: 20px calc(50% - 150px);

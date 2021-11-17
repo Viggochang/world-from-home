@@ -1,8 +1,8 @@
 import { React, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { SliderPicker, CompactPicker } from "react-color";
+import { CompactPicker } from "react-color";
 import TextEditorSlider from "./TextEditorSlider";
 
 const TextEditorDiv = styled.div`
@@ -82,14 +82,6 @@ const FontSizeDiv = styled.div`
 
 const LineHeightDiv = styled.div`
   padding: 10px 0;
-`;
-
-const RangeInput = styled.input`
-  width: 160px;
-  ::-moz-range-progress {
-    background-color: green;
-    height: 1em;
-  }
 `;
 
 export default function TextEditor({ innerRef, handleCanvasOn }) {

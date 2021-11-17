@@ -8,7 +8,7 @@ import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 
 import countryTrans from "../../util/countryTrans";
-import { db_gallery, db_userInfo } from "../../util/firebase";
+import { db_gallery } from "../../util/firebase";
 
 const Chartdiv = styled.div`
   width: 100%;
@@ -115,7 +115,6 @@ function World({
     });
 
     // Add some data
-    const { travel_country } = userInfo;
     if (myTravelCountries) {
       polygonSeries.data = myTravelCountries
         .filter((countryCode) => countryCode)

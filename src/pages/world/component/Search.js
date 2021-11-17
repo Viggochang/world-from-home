@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import * as am4core from "@amcharts/amcharts4/core";
 import styled from "styled-components";
-import InputBase from "@mui/material/InputBase";
 import countryTrans from "../../../util/countryTrans";
 
 const SearchDiv = styled.div`

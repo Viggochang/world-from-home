@@ -1,5 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
+// import "proj4leaflet";
+// import L from "leaflet";
+
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 // import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -22,8 +24,6 @@ import "./leafletMap.css";
 
 import PopupContent from "./popupContent/PopupContent";
 
-// import "proj4leaflet";
-// import L from "leaflet";
 // import "leaflet.markercluster/dist/MarkerCluster.css";
 // import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 // import "leaflet.markercluster";
@@ -31,7 +31,6 @@ import PopupContent from "./popupContent/PopupContent";
 // import "esri-leaflet";
 // import "esri-leaflet-vector";
 import { db_gallery, db_tourist_spot } from "../../util/firebase";
-import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
 
 const LeafletMapDiv = styled.div`
   width: 100vw;
@@ -68,11 +67,8 @@ function LeafletMap({ mapType }) {
   const [map, setMap] = useState(null);
   const [allSpot, setAllSpot] = useState([]);
   const [allAlbums, setAllAlbums] = useState({});
-  const myInfo = useSelector((state) => state.userInfo);
-  const myUserId = useSelector((state) => state.myUserId);
   const apikey =
     "AAPK8ba779cc01594743abbd245136a3f366gM55ZxvACBdAwG_RwlwTIts1NHYDcL4AT8N9qKcMqVXEj53qqGCJvnk_GHFLmUvU";
-  const mapRef = useRef();
 
   useEffect(() => {
     db_tourist_spot.get().then((snapshot) => {

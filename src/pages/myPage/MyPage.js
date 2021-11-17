@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
+import { firebase } from "../../util/firebase";
 
 import Background from "./background/Background";
 import Photo from "./information/photo/Photo";
@@ -25,6 +26,10 @@ const MyPageDiv = styled.div`
   flex-direction: column;
   align-items: center;
   width: calc(100vw - 160px);
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+    padding: 50px 30px;
+  }
 `;
 
 const UpperDiv = styled.div`
@@ -32,6 +37,13 @@ const UpperDiv = styled.div`
   width: calc(100vw - 160px);
   max-width: 1500px;
   position: relative;
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+  }
 `;
 
 const UserInfoDiv = styled.div`
@@ -42,6 +54,30 @@ const UserInfoDiv = styled.div`
   max-width: calc(100vw - 704px);
   font-weight: bold;
   line-height: 1.15;
+  @media (max-width: 932px) {
+    max-width: 500px;
+    margin-left: 0;
+  }
+`;
+
+const NameDiv = styled.div`
+  font-size: 92px;
+  @media (max-width: 1180px) {
+    font-size: 64px;
+  }
+`;
+const TextDiv = styled.div`
+  font-size: 30px;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
+`;
+const AgeDiv = styled.div`
+  font-size: 30;
+  margin-bottom: 22px;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
 `;
 
 const ButtonsDiv = styled.div`
@@ -52,9 +88,19 @@ const ButtonsDiv = styled.div`
   position: fixed;
   top: 42px;
   right: 80px;
+  @media (max-width: 932px) {
+    flex-direction: row;
+    position: absolute;
+    top: -25px;
+    left: calc(50% - 187.5px);
+    align-items: center;
+  }
+  @media (max-width: 450px) {
+    left: calc(50% - 150px);
+  }
 `;
 
-const HomeLink = styled(NavLink)`
+const HomeDiv = styled.div`
   color: white;
   width: 64px;
   height: 64px;
@@ -63,8 +109,12 @@ const HomeLink = styled(NavLink)`
   align-items: center;
   text-decoration: none;
   border-radius: 50%;
+  cursor: pointer;
   :hover {
     background-color: rgb(184, 195, 208, 0.3);
+  }
+  @media (max-width: 932px) {
+    margin-top: 10px;
   }
 `;
 
@@ -73,13 +123,33 @@ const LowerDiv = styled.div`
   width: calc(100vw - 160px);
   max-width: 1500px;
   margin-top: 40px;
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+  }
 `;
 
 export default function MyPage() {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [activeButton, setActiveButton] = useState("Albums");
   const myInfo = useSelector((state) => state.userInfo);
 
   const { id, name, country, photo, birthday, background_photo } = myInfo;
+  console.log(id);
+  firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+      history.push({ pathname: "/" });
+    }
+  });
+  // if (!id) {
+  //   history.push({ pathname: "/" });
+  // }
+
   const age =
     birthday &&
     new Date(birthday.seconds * 1000).toDateString() !==
@@ -87,6 +157,14 @@ export default function MyPage() {
       ? new Date().getFullYear() -
         new Date(1000 * birthday.seconds).getFullYear()
       : "unknown";
+
+  function handleHome() {
+    dispatch({
+      type: "SET_TARGET_COUNTRY",
+      payload: {},
+    });
+    history.push({ pathname: "home" });
+  }
 
   return (
     <>
@@ -96,19 +174,17 @@ export default function MyPage() {
           <Photo id={id} photo={photo} />
           <ChangeBackground id={id} />
           <UserInfoDiv>
-            <div style={{ fontSize: 148 }}>{name}</div>
-            <div style={{ fontSize: 36 }}>from</div>
+            <NameDiv>{name}</NameDiv>
+            <TextDiv>from</TextDiv>
             <Country country={country} />
-            <div
-              style={{ fontSize: 36, marginBottom: "22px" }}
-            >{`age: ${age}`}</div>
+            <AgeDiv>{`age: ${age}`}</AgeDiv>
             <MoreInformation />
           </UserInfoDiv>
 
           <ButtonsDiv>
-            <HomeLink to="home">
+            <HomeDiv onClick={handleHome}>
               <i className="fas fa-home"></i>
-            </HomeLink>
+            </HomeDiv>
             <Logout />
           </ButtonsDiv>
         </UpperDiv>

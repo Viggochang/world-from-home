@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
@@ -10,7 +9,6 @@ import MoreInfo from "./MoreInfo";
 export default function MoreInformation({ userInfo }) {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const moreInfoRef = useRef();
-  const myInfo = useSelector((state) => state.userInfo);
 
   function handleMoreInfo() {
     setShowMoreInfo(showMoreInfo ? false : true);

@@ -13,6 +13,7 @@ import { primaryPaletteTheme } from "../../../util/muiTheme";
 
 import { db_gallery } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
+import AlbumInfo from "./MyGallery_info";
 
 const theme = createTheme({
   status: {
@@ -41,6 +42,13 @@ const MyGalleryContentDiv = styled.div`
   align-items: flex-end;
   margin-left: 50px;
   width: calc(100% - 320px);
+  @media (max-width: 932px) {
+    width: calc(100% - 60px);
+    margin-left: 0;
+  }
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 const FilterDiv = styled.div`
@@ -55,21 +63,18 @@ const Title = styled.div`
   font-size: 48px;
   font-weight: bold;
   margin-right: auto;
+  @media (max-width: 1180px) {
+    font-size: 30px;
+  }
+  @media (max-width: 640px) {
+    display: none;
+  }
 `;
 
 const selectStyle = {
   width: "150px",
   marginLeft: "30px",
 };
-
-const EditLabel = styled.div`
-  font-weight: bold;
-  font-size: 20px;
-  padding: 0 12px;
-  line-height: 30px;
-  border-radius: 15px;
-  background-color: rgb(255, 255, 255, 0.7);
-`;
 
 const ContentDiv = styled.div`
   /* outline: 2px #3a4a58 solid; */
@@ -83,6 +88,14 @@ const ContentDiv = styled.div`
   background-color: rgb(255, 255, 255, 0.5);
   border-radius: 10px;
   /* overflow: scroll; */
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    padding: 10px 10px 0;
+    width: calc(100% - 20px);
+  }
 `;
 
 const ContentDivInner = styled.div`
@@ -91,6 +104,13 @@ const ContentDivInner = styled.div`
   overflow: scroll;
   display: flex;
   flex-direction: column;
+  @media (max-width: 1180px) {
+    width: calc(100% - 60px);
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    padding: 10px 10px 0 10px;
+  }
 `;
 
 const EditingSwitchDiv = styled.div`
@@ -98,51 +118,113 @@ const EditingSwitchDiv = styled.div`
   align-items: center;
   margin-top: 10px;
   margin-left: auto;
+  @media (max-width: 450px) {
+    margin-left: 0;
+    justify-content: center;
+  }
+`;
+
+const EditLabel = styled.div`
+  font-weight: bold;
+  font-size: 20px;
+  padding: 0 12px;
+  line-height: 30px;
+  border-radius: 15px;
+  background-color: rgb(255, 255, 255, 0.7);
+  @media (max-width: 450px) {
+    font-size: 14px;
+  }
 `;
 
 const AlbumDiv = styled.div`
   display: flex;
   margin-bottom: 30px;
+  @media (max-width: 1180px) {
+    width: 100%;
+    max-width: 400px;
+    flex-direction: column;
+  }
 `;
 const AlbumCoverDiv = styled.div`
   width: 280px;
   height: 210px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   cursor: pointer;
+  @media (max-width: 1180px) {
+    width: 100%;
+    margin-top: 15px;
+  }
 `;
 
-const AlbumInfo = styled.div`
-  margin-left: 30px;
-  display: flex;
-  flex-direction: column;
-  color: #3a4a58;
+const AlbumInfoTop = styled.div`
+  display: none;
+  width: 100%;
+  @media (max-width: 1180px) {
+    display: block;
+  }
+`;
+
+const AlbumInfoRight = styled.div`
   width: calc(100% - 310px);
-  height: 210px;
-  position: relative;
+  @media (max-width: 1180px) {
+    display: none;
+  }
 `;
-const AlbumCountry = styled.div`
-  font-size: 48px;
-  font-weight: bold;
-`;
-const AlbumPosition = styled.div`
-  font-size: 36px;
-  line-height: 48px;
-`;
-const AlbumIntroduction = styled.div`
-  margin-top: 10px;
-  overflow: scroll;
-  height: calc(100% - 103px);
-`;
-const AlbumTime = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`;
-const AlbumPraise = styled.div`
-  position: absolute;
-  top: 80px;
-  right: 0;
-`;
+
+// const AlbumInfo = styled.div`
+//   margin-left: 30px;
+//   display: flex;
+//   flex-direction: column;
+//   color: #3a4a58;
+//   width: calc(100% - 310px);
+//   height: 210px;
+//   position: relative;
+//   @media (max-width: 1180px) {
+//     display: none;
+//   }
+// `;
+// const AlbumCountry = styled.div`
+//   font-size: 48px;
+//   font-weight: bold;
+//   @media (max-width: 1400px) {
+//     font-size: 30px;
+//   }
+// `;
+// const AlbumPosition = styled.div`
+//   font-size: 30px;
+//   line-height: 48px;
+//   @media (max-width: 1400px) {
+//     font-size: 20px;
+//     line-height: 36px;
+//   }
+// `;
+// const AlbumIntroduction = styled.div`
+//   margin-top: 10px;
+//   overflow: scroll;
+//   height: calc(100% - 103px);
+//   @media (max-width: 1400px) {
+//     font-size: 14px;
+//   }
+// `;
+// const AlbumDate = styled.div`
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   @media (max-width: 1400px) {
+//     font-size: 14px;
+//   }
+//   @media (max-width: 1260px) {
+//     display: none;
+//   }
+// `;
+// const AlbumPraise = styled.div`
+//   position: absolute;
+//   top: 80px;
+//   right: 0;
+//   @media (max-width: 1400px) {
+//     top: 45px;
+//   }
+// `;
 
 const NoAlbumsDiv = styled.div`
   font-size: 36px;
@@ -315,8 +397,11 @@ export default function MyGallery({ title, id, isMyPage }) {
         </ThemeProvider>
         <ContentDivInner>
           {albumDataFilter.length ? (
-            albumDataFilter.map((album, index) => (
+            albumDataFilter.map((album) => (
               <AlbumDiv key={album.id}>
+                <AlbumInfoTop>
+                  <AlbumInfo album={album} />
+                </AlbumInfoTop>
                 <AlbumCoverDiv
                   style={{
                     background: `url(${album.cover_photo})`,
@@ -325,22 +410,9 @@ export default function MyGallery({ title, id, isMyPage }) {
                   }}
                   onClick={() => handleShowAlbumId("album_id_show", album.id)}
                 ></AlbumCoverDiv>
-                <AlbumInfo>
-                  <AlbumCountry>
-                    {countryTrans[album.country].name_en}
-                  </AlbumCountry>
-                  <AlbumPosition>
-                    <i className="fas fa-map-pin"></i> {album.position}
-                  </AlbumPosition>
-                  <AlbumIntroduction>{album.introduction}</AlbumIntroduction>
-                  <AlbumTime>
-                    <i className="far fa-calendar-alt"></i>{" "}
-                    {new Date(album.timestamp.seconds * 1000).toDateString()}
-                  </AlbumTime>
-                  <AlbumPraise>
-                    <i className="fas fa-heart"></i> {album.praise.length}
-                  </AlbumPraise>
-                </AlbumInfo>
+                <AlbumInfoRight>
+                  <AlbumInfo album={album} />
+                </AlbumInfoRight>
               </AlbumDiv>
             ))
           ) : (
