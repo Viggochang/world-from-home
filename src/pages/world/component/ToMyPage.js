@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { firebase } from "../../../util/firebase";
 
 const MyPhoto = styled(NavLink)`
   /* background-color: white; */

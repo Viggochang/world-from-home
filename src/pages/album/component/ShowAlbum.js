@@ -30,8 +30,8 @@ const CanvasContainer = styled.div``;
 
 const MyCanvas = styled.canvas``;
 
-export default function ShowAlbum({ show, albumContent }) {
-  const pageCanvasContainerRef = useRef();
+export default function ShowAlbum({ show, albumContent, albumRef }) {
+  // const pageCanvasContainerRef = useRef();
   // const pageInfo = useSelector((state) => state.pageInfo);
   // const canvasState = useSelector((state) => state.canvasState);
   const [pageInfo, setPageInfo] = useState({});
@@ -85,7 +85,7 @@ export default function ShowAlbum({ show, albumContent }) {
   }, [show, pageInfo, canvasState]);
 
   return (
-    <ShowDiv style={{ display: show ? "flex" : "none" }}>
+    <ShowDiv style={{ display: show ? "flex" : "none" }} ref={albumRef}>
       {Object.values(pageInfo)
         .sort((a, b) => a.page - b.page)
         .map((pageInfo) => {
@@ -96,7 +96,7 @@ export default function ShowAlbum({ show, albumContent }) {
               style={{ display: display ? "block" : "none" }}
             >
               <PageCanvasContainer
-                ref={pageCanvasContainerRef}
+                // ref={pageCanvasContainerRef}
                 style={templateStyle[templateId]}
               >
                 {Array.from(new Array(canvasCount).keys()).map((id) => {

@@ -28,6 +28,7 @@ export default function Background({ background_photo }) {
           ? `url(${background_photo})`
           : `url(${defaultBackground})`,
         backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <Mask />

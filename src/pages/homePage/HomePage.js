@@ -12,6 +12,7 @@ import Country from "../country/Country";
 import SigninDiv from "../Signin/Signin";
 import Album from "../album/Album";
 import MapSwitch from "./MapSwitch";
+import Logout from "../Signin/Logout";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -46,6 +47,14 @@ const Title = styled.div`
   bottom: 40px;
   left: 60px;
   z-index: 1;
+`;
+
+const LogoutDiv = styled.div`
+  position: fixed;
+  bottom: 160px;
+  right: 26px;
+  z-index: 1;
+  opacity: 0.8;
 `;
 
 export default function HomePage({ mapType, setMapType }) {
@@ -104,7 +113,6 @@ export default function HomePage({ mapType, setMapType }) {
         setMaskOpacity={setMaskOpacity}
         map={map}
       />
-      <ToMyPage handleSignIn={handleSignIn} />
       <Title style={{ color: mapType ? "white" : "#3A4A58" }}>
         {`World from ${userInfo.name || "Guest"}`}
       </Title>
@@ -135,7 +143,12 @@ export default function HomePage({ mapType, setMapType }) {
         handleClickBack={handleClickBack}
         signinRef={signinRef}
       />
+      <ToMyPage handleSignIn={handleSignIn} />
       <SigninDiv signinRef={signinRef} />
+      <Logout />
+      <LogoutDiv style={{ color: mapType ? "white" : "#3a4a58" }}>
+        <Logout />
+      </LogoutDiv>
       <Album />
     </HomePageDiv>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -10,6 +10,7 @@ import { styled as styledMui } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./alertButton.css";
+import ToImage from "./component/ToImage";
 
 import countryTrans from "../../util/countryTrans";
 
@@ -136,6 +137,21 @@ export default function Album() {
   const [liked, setLiked] = useState(false);
   const [friendCondition, setFriendCondition] = useState("none");
   const [isMyAlbun, setIsMyAlbum] = useState(false);
+  const albumRef = useRef();
+
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("album_id_show");
+    id &&
+      db_gallery
+        .doc(id)
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            handleClickBack();
+            history.push({ pathname: "notfound" });
+          }
+        });
+  }, []);
 
   useEffect(() => {
     console.log(albumIdShow);
@@ -144,16 +160,18 @@ export default function Album() {
         .doc(albumIdShow)
         .get()
         .then((doc) => {
-          let albumData = doc.data();
-          setAlbumData(albumData);
-          db_userInfo
-            .doc(albumData.user_id)
-            .get()
-            .then((doc) => {
-              setOwnerPhoto(doc.data().photo);
-              setOwnerId(doc.data().id);
-              setOwnerFriendData(doc.data().friends);
-            });
+          if (doc.exists) {
+            let albumData = doc.data();
+            setAlbumData(albumData);
+            db_userInfo
+              .doc(albumData.user_id)
+              .get()
+              .then((doc) => {
+                setOwnerPhoto(doc.data().photo);
+                setOwnerId(doc.data().id);
+                setOwnerFriendData(doc.data().friends);
+              });
+          }
         });
     }
   }, [albumIdShow]);
@@ -361,6 +379,7 @@ export default function Album() {
               <i className="fas fa-trash-alt"></i>
             </ButtonStyle>
           </MyTooltip>
+          <ToImage albumRef={albumRef} />
         </ButtonsDiv>
       ) : null}
 
@@ -396,7 +415,11 @@ export default function Album() {
           </AlbumDate>
         </AlbumPositionData>
       </AlbumInfo>
-      <ShowAlbum show={true} albumContent={albumData.content} />
+      <ShowAlbum
+        show={true}
+        albumContent={albumData.content}
+        albumRef={albumRef}
+      />
     </AlbumDiv>
   );
 }

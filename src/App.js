@@ -88,6 +88,7 @@ function App() {
           <Route path="/notfound">
             <NotFound />
           </Route>
+          <Route path="*" component={NotFound} />
         </Switch>
       </BrowserRouter>
     </div>

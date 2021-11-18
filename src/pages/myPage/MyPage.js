@@ -57,6 +57,9 @@ const UserInfoDiv = styled.div`
   @media (max-width: 932px) {
     max-width: 500px;
     margin-left: 0;
+    margin-top: 20px;
+    border-left: 4px white solid;
+    padding-left: 20px;
   }
 `;
 
@@ -88,6 +91,7 @@ const ButtonsDiv = styled.div`
   position: fixed;
   top: 42px;
   right: 80px;
+  color: white;
   @media (max-width: 932px) {
     flex-direction: row;
     position: absolute;

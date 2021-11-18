@@ -194,16 +194,20 @@ export default function GalleryQuestion() {
         .doc(albumIdEditing)
         .get()
         .then((doc) => {
-          if (!doc.data().country) {
-            setNewAlbum(true);
+          if (!doc.exists) {
+            history.push({ pathname: "notfound" });
           } else {
-            setTripDate(
-              doc.data().timestamp
-                ? new Date(doc.data().timestamp.seconds * 1000)
-                : new Date()
-            );
-            setTripMainCity(doc.data().position || "");
-            setTripIntroduction(doc.data().introduction || "");
+            if (!doc.data().country) {
+              setNewAlbum(true);
+            } else {
+              setTripDate(
+                doc.data().timestamp
+                  ? new Date(doc.data().timestamp.seconds * 1000)
+                  : new Date()
+              );
+              setTripMainCity(doc.data().position || "");
+              setTripIntroduction(doc.data().introduction || "");
+            }
           }
         });
     }

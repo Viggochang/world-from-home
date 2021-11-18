@@ -7,6 +7,9 @@ import MoreInfoForm from "./MoreInfoForm";
 const SignInChoiceDiv = styled.div`
   width: 400px;
   height: 100%;
+  @media (max-width: 400px) {
+    width: 100%;
+  }
 `;
 
 const CrossDiv = styled.div`

@@ -4,8 +4,12 @@ import styled from "styled-components";
 import { useHistory } from "react-router";
 import { firebase } from "../../util/firebase";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import logoutImg from "../../image/logout.jpeg";
+
 const LogoutDiv = styled.div`
-  color: white;
+  font-size: 36px;
   width: 64px;
   height: 64px;
   border-radius: 50%;
@@ -41,7 +45,19 @@ export default function Logout({
           type: "SET_USER_INFO", // 使用者的資訊
           payload: {},
         });
-        history.push({ pathname: "home" });
+      })
+      .then(() => {
+        const MySwal = withReactContent(Swal);
+        MySwal.fire({
+          title: "Logged Out !",
+          text: "The most beautiful thing in the world is, of course, the world itself",
+          imageUrl: logoutImg,
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: "logged out",
+        }).then(() => {
+          history.push({ pathname: "/" });
+        });
       });
   }
   return (

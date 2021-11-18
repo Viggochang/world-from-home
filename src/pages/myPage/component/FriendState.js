@@ -11,6 +11,12 @@ const RequestBtnDiv = styled.div`
   position: absolute;
   bottom: 0px;
   left: 620px;
+  @media (max-width: 1180px) {
+    left: 500px;
+  }
+  @media (max-width: 932px) {
+    left: calc(56% + 80px);
+  }
 `;
 
 const RequestBtn = styled.div`

@@ -29,6 +29,10 @@ const MyPageDiv = styled.div`
   flex-direction: column;
   align-items: center;
   width: calc(100vw - 160px);
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+    padding: 50px 30px;
+  }
   /* z-index: 1; */
 `;
 
@@ -37,6 +41,13 @@ const UpperDiv = styled.div`
   width: calc(100vw - 160px);
   max-width: 1500px;
   position: relative;
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+  }
 `;
 
 const MyPhoto = styled.div`
@@ -46,6 +57,19 @@ const MyPhoto = styled.div`
   position: relative;
   color: white;
   border-radius: 20px;
+  @media (max-width: 1180px) {
+    width: 250px;
+    height: 250px;
+  }
+  @media (max-width: 932px) {
+    margin-top: 60px;
+    width: 375px;
+    height: 375px;
+  }
+  @media (max-width: 450px) {
+    width: 300px;
+    height: 300px;
+  }
 `;
 
 const UserInfoDiv = styled.div`
@@ -56,7 +80,35 @@ const UserInfoDiv = styled.div`
   max-width: calc(100vw - 704px);
   font-weight: bold;
   line-height: 1.15;
+  @media (max-width: 932px) {
+    max-width: 500px;
+    margin-left: 0;
+    margin-top: 20px;
+    border-left: 4px white solid;
+    padding-left: 20px;
+  }
 `;
+
+const NameDiv = styled.div`
+  font-size: 92px;
+  @media (max-width: 1180px) {
+    font-size: 64px;
+  }
+`;
+const TextDiv = styled.div`
+  font-size: 30px;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
+`;
+const AgeDiv = styled.div`
+  font-size: 30;
+  margin-bottom: 22px;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
+`;
+
 const CountryDiv = styled.div`
   display: flex;
 `;
@@ -64,6 +116,10 @@ const MyCountryDiv = styled.div`
   font-size: 88px;
   display: flex;
   align-items: baseline;
+  @media (max-width: 1180px) {
+    font-size: 40px;
+    line-height: 50px;
+  }
 `;
 
 const MiddleDiv = styled.div`
@@ -75,17 +131,26 @@ const MiddleDiv = styled.div`
   max-height: 900px;
   margin-top: 40px;
   position: relative;
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+    height: calc((100vw - 60px) * (4 / 7));
+  }
 `;
 
 const Title = styled.div`
   color: white;
-  font-size: 54px;
+  font-size: 50px;
   font-weight: bold;
   margin-right: auto;
   position: absolute;
-  bottom: 40px;
+  bottom: 30px;
   left: 40px;
   z-index: 1;
+  @media (max-width: 1080px) {
+    font-size: 4vw;
+    bottom: 2vw;
+    left: 4vw;
+  }
 `;
 
 const BottomDiv = styled.div`
@@ -93,6 +158,14 @@ const BottomDiv = styled.div`
   width: calc(100vw - 160px);
   max-width: 1500px;
   margin-top: 40px;
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+  }
 `;
 
 const ButtonsDiv = styled.div`
@@ -104,6 +177,21 @@ const ButtonsDiv = styled.div`
   position: fixed;
   top: 42px;
   right: 80px;
+  color: white;
+  @media (max-width: 932px) {
+    flex-direction: row;
+    position: absolute;
+    top: 24px;
+    left: calc(50% - 187.5px);
+    align-items: center;
+    min-width: 375px;
+    right: calc(50% - 187.5px);
+  }
+  @media (max-width: 450px) {
+    left: calc(50% - 150px);
+    min-width: 300px;
+    right: calc(50% - 150px);
+  }
 `;
 
 const HomeDiv = styled.div`
@@ -118,6 +206,9 @@ const HomeDiv = styled.div`
   cursor: pointer;
   :hover {
     background-color: rgb(184, 195, 208, 0.3);
+  }
+  @media (max-width: 932px) {
+    margin-top: 10px;
   }
 `;
 const MyPageIcon = styled.div`
@@ -135,6 +226,12 @@ const MyPageIcon = styled.div`
   background-color: #b8c3d0;
   :hover {
     background-color: #667484;
+  }
+  @media (max-width: 932px) {
+    margin: 10px 0 0 183px;
+  }
+  @media (max-width: 450px) {
+    margin: 10px 0 0 108px;
   }
 `;
 const MyPageIconMask = styled.div`
@@ -174,7 +271,11 @@ export default function UserPage() {
         .doc(id)
         .get()
         .then((doc) => {
-          setUserInfo(doc.data());
+          if (!doc.exists) {
+            history.push({ pathname: "notfound" });
+          } else {
+            setUserInfo(doc.data());
+          }
         });
     }
   }, [myUserId, window.location.search, queryUserId]);
@@ -220,16 +321,14 @@ export default function UserPage() {
             }}
           />
           <UserInfoDiv>
-            <div style={{ fontSize: 100 }}>{name}</div>
-            <div style={{ fontSize: 30 }}>from</div>
+            <NameDiv>{name}</NameDiv>
+            <TextDiv>from</TextDiv>
             <CountryDiv>
               <MyCountryDiv>
                 {country ? countryTrans[country].name_en : ""}
               </MyCountryDiv>
             </CountryDiv>
-            <div
-              style={{ fontSize: 30, marginBottom: "24px" }}
-            >{`age: ${age}`}</div>
+            <AgeDiv>{`age: ${age}`}</AgeDiv>
 
             <MoreInformation userInfo={userInfo} />
             {Object.keys(myInfo).length ? (

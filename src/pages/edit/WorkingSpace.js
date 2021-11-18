@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 // import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 
 import styled from "styled-components";
 
@@ -103,6 +104,7 @@ function WorkingSpace({ preview, addWindow }) {
   const workingSpaceInnerRef = useRef();
   const pageCanvasContainerRef = useRef();
   const textEditorRef = useRef();
+  const history = useHistory();
 
   // 畫布縮放功能在這
   // useEffect(() => {
@@ -476,6 +478,7 @@ function WorkingSpace({ preview, addWindow }) {
       handleCanvasOn(thisCanvas);
     }
     textEditorRef.current.style.display = "none";
+    // textEditorRef.current.style.zIndex = -1;
   }
 
   function getActiveCanvas(e) {
@@ -493,16 +496,16 @@ function WorkingSpace({ preview, addWindow }) {
       }
     }
 
-    if (!textEditorRef.current || !textEditorRef.current.contains(e.target)) {
-      dispatch({
-        type: "SET_ACTIVE_CANVAS",
-        payload: activeCanvas,
-      });
-      dispatch({
-        type: "SET_ACTIVE_OBJ",
-        payload: activeObj,
-      });
-    }
+    // if (!textEditorRef.current || !textEditorRef.current.contains(e.target)) {
+    dispatch({
+      type: "SET_ACTIVE_CANVAS",
+      payload: activeCanvas,
+    });
+    dispatch({
+      type: "SET_ACTIVE_OBJ",
+      payload: activeObj,
+    });
+    // }
     console.log("activeCanvasId:", thisCanvasId);
     console.log(textEditorRef.current.contains(e.target));
   }
@@ -550,7 +553,10 @@ function WorkingSpace({ preview, addWindow }) {
       tabIndex="0"
       style={{ display: preview ? "none" : "flex" }}
     >
-      <TextEditor innerRef={textEditorRef} handleCanvasOn={handleCanvasOn} />
+      <TextEditor
+        textEditorRef={textEditorRef}
+        handleCanvasOn={handleCanvasOn}
+      />
       <WorkingSpaceDivInner ref={workingSpaceInnerRef}>
         {Object.values(pageInfo)
           .sort((a, b) => a.page - b.page)
@@ -580,7 +586,11 @@ function WorkingSpace({ preview, addWindow }) {
                         onMouseEnter={handleShowIcon}
                         onMouseLeave={handleDisplayIcon}
                       >
-                        <AddText page={page} id={id} />
+                        <AddText
+                          page={page}
+                          id={id}
+                          textEditorRef={textEditorRef}
+                        />
                         <UploadImage page={page} id={id} />
                         <MyCanvas id={`page${page}-canvas${id}`} />
                       </CanvasContainer>

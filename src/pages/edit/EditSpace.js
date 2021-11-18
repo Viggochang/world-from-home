@@ -46,6 +46,7 @@ const NavBarNav = styled.nav`
   z-index: 1;
   display: flex;
   align-items: center;
+  color: white;
 `;
 
 const MyPageDiv = styled.div`
@@ -270,11 +271,22 @@ function EditSpace() {
     const albumIdEditing = new URLSearchParams(window.location.search).get(
       "album_id_edit"
     );
-    if (albumIdEditing) {
-      dispatch({
-        type: "SET_ALBUM_ID_EDITING",
-        payload: albumIdEditing,
-      });
+    if (!albumIdEditing) {
+      history.push({ pathname: "notfound" });
+    } else {
+      db_gallery
+        .doc(albumIdEditing)
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            history.push({ pathname: "notfound" });
+          } else {
+            dispatch({
+              type: "SET_ALBUM_ID_EDITING",
+              payload: albumIdEditing,
+            });
+          }
+        });
     }
   }, []);
   // const workingSpaceRef = useRef();

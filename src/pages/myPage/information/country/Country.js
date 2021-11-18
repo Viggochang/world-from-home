@@ -19,7 +19,7 @@ const MyCountryDiv = styled.div`
   }
 `;
 const EditIcon = styled.div`
-  font-size: 24px;
+  font-size: 18px;
   cursor: pointer;
   display: none;
   margin-left: 10px;
@@ -30,7 +30,7 @@ const EditIcon = styled.div`
 const EditDiv = styled.div`
   display: none;
   align-items: center;
-  height: 138px;
+  height: 50px;
 `;
 const SearchDiv = styled.div`
   display: flex;

@@ -26,6 +26,9 @@ const MoreInfoFormDiv = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+  @media (max-width: 400px) {
+    width: 100%;
+  }
 `;
 const MoreInfoFormTitleDiv = styled.div`
   font-size: 36px;
@@ -34,6 +37,9 @@ const MoreInfoFormTitleDiv = styled.div`
   padding: 0 30px;
   margin-top: 50px;
   color: #3a4a58;
+  @media (max-width: 400px) {
+    font-size: 30px;
+  }
 `;
 const MoreInfoFormArea = styled.div`
   background-color: white;

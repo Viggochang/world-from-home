@@ -52,6 +52,7 @@ function AddText({ page, id }) {
       tr: false,
     });
     thisCanvas.add(newText);
+    thisCanvas.setActiveObject(newText);
 
     const record = {};
     record[thisCanvas.lowerCanvasEl.id] =

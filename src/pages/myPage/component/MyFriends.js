@@ -29,6 +29,9 @@ const FilterDiv = styled.div`
   align-items: center;
   height: 56px;
   width: 100%;
+  @media (max-width: 640px) {
+    justify-content: flex-end;
+  }
 `;
 
 const Title = styled.div`
@@ -61,7 +64,7 @@ const RequestBtn = styled.div`
     color: white;
   }
   @media (max-width: 640px) {
-    margin-left: auto;
+    /* margin-left: auto; */
   }
 `;
 const RequestAlert = styled.div`

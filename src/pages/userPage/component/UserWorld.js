@@ -9,6 +9,12 @@ const UserPageDiv = styled.div`
   margin-top: 10px;
   background-color: rgb(58, 74, 88);
   position: relative;
+  @media (max-width: 932px) {
+    width: 100%;
+  }
+  @media (max-width: 932px) {
+    width: 100%;
+  }
   /* background-color: rgb(200, 200, 200, 0.5) ; */
 `;
 

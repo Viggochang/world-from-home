@@ -84,7 +84,7 @@ const LineHeightDiv = styled.div`
   padding: 10px 0;
 `;
 
-export default function TextEditor({ innerRef, handleCanvasOn }) {
+export default function TextEditor({ textEditorRef, handleCanvasOn }) {
   // const dispatch = useDispatch();
   const activeObj = useSelector((state) => state.activeObj);
   const activeCanvas = useSelector((state) => state.activeCanvas);
@@ -144,7 +144,7 @@ export default function TextEditor({ innerRef, handleCanvasOn }) {
   }, [activeObj]);
 
   return (
-    <TextEditorDiv ref={innerRef} style={{ display: textEditorDisplay }}>
+    <TextEditorDiv ref={textEditorRef} style={{ display: textEditorDisplay }}>
       <FontColorDiv>
         <Title>Font Color</Title>
         <CompactPicker
