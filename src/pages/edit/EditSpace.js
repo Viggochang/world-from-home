@@ -15,6 +15,11 @@ import Logout from "../Signin/Logout";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+import icon_full from "../../image/template/icon/full.jpeg";
+import icon_composition from "../../image/template/icon/composition.jpeg";
+import icon_photo_text from "../../image/template/icon/photo_text.jpeg";
+import icon_text from "../../image/template/icon/text.jpeg";
+
 import full_1 from "../../image/template/full_1.jpeg";
 import full_2 from "../../image/template/full_2.jpeg";
 import template_3a from "../../image/template/template_3a.jpeg";
@@ -30,6 +35,7 @@ import text_1 from "../../image/template/text_1.jpeg";
 // import ToMyPage from "../world/component/ToMyPage";
 import GalleryQuestion from "./component/GalleryQuestion";
 import CompleteQuestion from "./component/CompleteQuestion";
+import { urlAlphabet } from "nanoid";
 
 const AlertDiv = styled.div`
   margin: 20px calc(50% - 150px);
@@ -65,7 +71,7 @@ const MyPageIconMask = styled.div`
   border-radius: 50%;
   background-color: rgb(225, 225, 225, 0);
   :hover {
-    background-color: rgb(225, 225, 225, 0.3);
+    background-color: rgb(225, 225, 225, 0.2);
   }
 `;
 
@@ -188,6 +194,7 @@ const Country = styled.div`
 const allTemplate = {
   full: {
     name: "全版相片",
+    icon: icon_full,
     template: [
       [1, "full_1", full_1],
       [1, "full_2", full_2],
@@ -195,6 +202,7 @@ const allTemplate = {
   },
   composition: {
     name: "相片拼貼",
+    icon: icon_composition,
     template: [
       [3, "3a", template_3a],
       [4, "4a", template_4a],
@@ -203,6 +211,7 @@ const allTemplate = {
   },
   photoText: {
     name: "圖文搭配",
+    icon: icon_photo_text,
     template: [
       [2, "photoText_1", photoText_1],
       [2, "photoText_2", photoText_2],
@@ -213,6 +222,7 @@ const allTemplate = {
   },
   text: {
     name: "文字",
+    icon: icon_text,
     template: [[1, "text_1", text_1]],
   },
   slideShow: {
@@ -241,10 +251,12 @@ function EditSpace() {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
+  const activeCanvas = useSelector((state) => state.activeCanvas);
 
   const previewBtnRef = useRef();
   const saveAlertRef = useRef();
   const completeQuestionRef = useRef();
+  const removePageRef = useRef([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -260,7 +272,6 @@ function EditSpace() {
         //   res[1][0].latitude
         // );
         if (res[1]) {
-          console.log(res[1][0]);
           setLongitude(res[1][0].longitude || 121.5);
           setLatitude(res[1][0].latitude || 25.04);
         }
@@ -314,6 +325,7 @@ function EditSpace() {
         templateId,
         display: true,
       };
+
       dispatch({
         type: "SET_PAGE_INFO",
         payload: pageInfoObj,
@@ -404,6 +416,12 @@ function EditSpace() {
   function handlePreview(e, albumId) {
     // Object.keys(canvasState).forEach((canvasId) => {
     // })
+    if (Object.keys(activeCanvas).length) {
+      activeCanvas.discardActiveObject().renderAll();
+    }
+    removePageRef.current.forEach(
+      (el) => (el.style.display = preview ? "flex" : "none")
+    );
     previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
     setPreview(!preview);
 
@@ -430,6 +448,9 @@ function EditSpace() {
   }
 
   function handleSave(e, albumId) {
+    if (Object.keys(activeCanvas).length) {
+      activeCanvas.discardActiveObject().renderAll();
+    }
     const body = {
       content: {
         pageInfo: JSON.stringify(pageInfo),
@@ -450,6 +471,9 @@ function EditSpace() {
   }
 
   function handleComplete(e, albumId) {
+    if (Object.keys(activeCanvas).length) {
+      activeCanvas.discardActiveObject().renderAll();
+    }
     completeQuestionRef.current.style.zIndex = 5;
     handleSave(e, albumId);
 
@@ -663,16 +687,26 @@ function EditSpace() {
             ))}
           </ToolContainerDivInner>
         </ToolContainerDiv>
-        <WorkingSpace preview={preview} addWindow={addWindow} />
+        <WorkingSpace
+          preview={preview}
+          addWindow={addWindow}
+          removePageRef={removePageRef}
+        />
         <ToolBarDiv>
           {Object.keys(allTemplate).map((tool) => (
             <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
-              <IconDiv />
+              <IconDiv
+                style={{
+                  backgroundImage: `url(${allTemplate[tool].icon})`,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
+              />
               <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
             </ToolIconDiv>
           ))}
         </ToolBarDiv>
-        <Preview preview={preview} />
+        {/* <Preview preview={preview} /> */}
       </ContainerDiv>
     </div>
   );

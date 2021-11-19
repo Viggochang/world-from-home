@@ -19,21 +19,22 @@ const AddTextDiv = styled.div`
   padding: 5px;
   text-align: center;
   cursor: pointer;
-  color: #667484;
+  color: #3a4a58;
+  background-color: rgb(255, 255, 255, 0.3);
   :hover {
     background-color: rgb(255, 255, 255, 0.6);
-    color: #3a4a58;
   }
 `;
 
-function AddText({ page, id }) {
+function AddText({ page, id, addTextRef }) {
   const canvas = useSelector((state) => state.canvas);
   const canvasState = useSelector((state) => state.canvasState);
   const editUndo = useSelector((state) => state.editUndo);
   const dispatch = useDispatch();
 
   const handleAddText = (event, id) => {
-    event.preventDefault();
+    // event.preventDefault();
+    event.stopPropagation();
     const thisCanvas = canvas[id];
     const newText = new fabric.IText("edit", {
       left: 50,
@@ -53,6 +54,7 @@ function AddText({ page, id }) {
     });
     thisCanvas.add(newText);
     thisCanvas.setActiveObject(newText);
+    console.log(thisCanvas.getActiveObject());
 
     const record = {};
     record[thisCanvas.lowerCanvasEl.id] =
@@ -70,11 +72,20 @@ function AddText({ page, id }) {
       type: "SET_CANVAS_STATE",
       payload: stateChange,
     });
+    dispatch({
+      type: "SET_ACTIVE_OBJ",
+      payload: thisCanvas.getActiveObject(),
+    });
   };
 
   return (
     <Tooltip title="new text" placement="left">
-      <AddTextDiv onClick={(e) => handleAddText(e, `page${page}-canvas${id}`)}>
+      <AddTextDiv
+        ref={(el) => {
+          addTextRef.current[`page${page}-canvas${id}`] = el;
+        }}
+        onClick={(e) => handleAddText(e, `page${page}-canvas${id}`)}
+      >
         {/* <i className="fas fa-font"></i> */}
         <TextFieldsIcon />
       </AddTextDiv>

@@ -286,16 +286,25 @@ export default function Album() {
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "No, cancel!",
       reverseButtons: true,
+      customClass: {
+        confirmButton: "confirmbutton",
+        cancelButton: "cancelbutton",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         db_gallery.doc(albumIdShow).update({ condition: "discard" });
-        MySwal.fire("Deleted!", "Your album has been deleted.", "success").then(
-          (result) => {
-            if (result.isConfirmed) {
-              handleClickBack();
-            }
+        MySwal.fire({
+          title: "Deleted!",
+          text: "Your album has been deleted.",
+          icon: "success",
+          customClass: {
+            confirmButton: "confirmbutton",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleClickBack();
           }
-        );
+        });
 
         db_tourist_spot
           .where("album_id", "==", albumIdShow)
@@ -309,7 +318,14 @@ export default function Album() {
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
       ) {
-        MySwal.fire("Cancelled", "Your album is safe :)", "error");
+        MySwal.fire({
+          title: "Cancelled",
+          text: "Your album is safe :)",
+          icon: "error",
+          customClass: {
+            confirmButton: "confirmbutton",
+          },
+        });
       }
     });
   }

@@ -30,7 +30,10 @@ const EditIcon = styled.div`
 const EditDiv = styled.div`
   display: none;
   align-items: center;
-  height: 50px;
+  height: 101px;
+  @media (max-width: 1180px) {
+    height: 50px;
+  }
 `;
 const SearchDiv = styled.div`
   display: flex;

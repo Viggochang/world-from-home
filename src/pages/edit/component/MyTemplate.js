@@ -149,6 +149,7 @@ function text(templateObjStyle, preview = false) {
       tr: false,
     });
     newCanvas.add(newText);
+    newCanvas.setActiveObject(newText);
     return [newCanvas];
   };
 }
@@ -235,10 +236,13 @@ const allTemplateParams = (preview) => ({
     2,
     preview
   ),
-  text_1: text({
-    c: { height: 100, width: 500 },
-    t1: { height: 100, width: 500, fontSize: 15 },
-  }),
+  text_1: text(
+    {
+      c: { height: 100, width: 500 },
+      t1: { height: 100, width: 500, fontSize: 15 },
+    },
+    preview
+  ),
 });
 
 export { templateStyle, allTemplateParams };

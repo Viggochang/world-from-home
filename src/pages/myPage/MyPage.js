@@ -76,7 +76,7 @@ const TextDiv = styled.div`
   }
 `;
 const AgeDiv = styled.div`
-  font-size: 30;
+  font-size: 30px;
   margin-bottom: 22px;
   @media (max-width: 1180px) {
     font-size: 24px;

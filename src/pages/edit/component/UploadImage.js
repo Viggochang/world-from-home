@@ -20,14 +20,14 @@ const UploadImgDiv = styled.div`
   align-items: center;
   position: absolute;
   z-index: -1;
-  top: 40px;
+  top: 52px;
   right: 10px;
   padding: 5px;
-  color: #667484;
+  color: #3a4a58;
   line-height: 1;
+  background-color: rgb(255, 255, 255, 0.3);
   :hover {
     background-color: rgb(255, 255, 255, 0.6);
-    color: #3a4a58;
   }
 `;
 
@@ -38,7 +38,7 @@ const ImgInputLabel = styled.label`
   cursor: pointer;
 `;
 
-export default function UploadImage({ page, id }) {
+export default function UploadImage({ page, id, uploadImageRef }) {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
   const canvasState = useSelector((state) => state.canvasState);
@@ -105,7 +105,11 @@ export default function UploadImage({ page, id }) {
 
   return (
     <Tooltip title="new image" placement="left">
-      <UploadImgDiv>
+      <UploadImgDiv
+        ref={(el) => {
+          uploadImageRef.current[`page${page}-canvas${id}`] = el;
+        }}
+      >
         <ImgInputLabel>
           <input
             type="file"

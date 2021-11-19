@@ -127,24 +127,22 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
   }
 
   useEffect(() => {
-    let display = "none";
-    if (Object.keys(activeObj).length) {
-      console.log(activeObj, activeObj["fontWeight"]);
+    console.log(activeObj);
+    if (Object.keys(activeObj).length && activeObj.get("type") === "i-text") {
       setStyle(
         Object.keys(style).reduce((acc, fontStyle) => {
           acc[fontStyle] = activeObj[fontStyle];
           return acc;
         }, {})
       );
-      if (activeObj.get("type") === "i-text") {
-        display = "block";
-      }
+      textEditorRef.current.style.zIndex = 3;
+    } else {
+      textEditorRef.current.style.zIndex = -1;
     }
-    setTextEditorDisplay(display);
   }, [activeObj]);
 
   return (
-    <TextEditorDiv ref={textEditorRef} style={{ display: textEditorDisplay }}>
+    <TextEditorDiv ref={textEditorRef}>
       <FontColorDiv>
         <Title>Font Color</Title>
         <CompactPicker
@@ -225,7 +223,6 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
 
       <FontSizeDiv>
         <Title>Font Size</Title>
-
         <TextEditorSlider
           defaultVal={style.fontSize}
           min={1}
@@ -234,16 +231,6 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
           type={"fontSize"}
           handleFontStyleChange={handleFontStyleChange}
         />
-        {/* <RangeInput
-          type="range"
-          value={style.fontSize}
-          min="1"
-          max="120"
-          step="1"
-          id="text-font-size"
-          name="text-font-size"
-          onChange={(e) => handleFontStyleChange(e, "fontSize")}
-        /> */}
       </FontSizeDiv>
       <LineHeightDiv>
         <Title>Line Height</Title>
@@ -255,16 +242,6 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
           type={"lineHeight"}
           handleFontStyleChange={handleFontStyleChange}
         />
-
-        {/* <RangeInput
-          type="range"
-          value={style.lineHeight}
-          min="0.5"
-          max="2"
-          step="0.1"
-          id="text-line-height"
-          onChange={(e) => handleFontStyleChange(e, "lineHeight")}
-        /> */}
       </LineHeightDiv>
     </TextEditorDiv>
   );
