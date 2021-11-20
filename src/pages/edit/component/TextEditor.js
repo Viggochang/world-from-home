@@ -89,8 +89,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
   const activeObj = useSelector((state) => state.activeObj);
   const activeCanvas = useSelector((state) => state.activeCanvas);
 
-  const [textEditorDisplay, setTextEditorDisplay] = useState("none");
-  const [style, setStyle] = useState({
+  const [textStyle, setTextStyle] = useState({
     fill: "", //fontColor
     textAlign: "",
     fontSize: "",
@@ -102,7 +101,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
 
   function handleFontStyleChange(e, key) {
     // e.preventDefault();
-    let fontStyle = { ...style };
+    let fontStyle = { ...textStyle };
     if (key === "fill") {
       fontStyle[key] = e.hex;
     } else if (key === "textAlign") {
@@ -118,7 +117,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
     }
     activeObj.set(fontStyle);
     activeCanvas.renderAll();
-    setStyle(fontStyle);
+    setTextStyle(fontStyle);
     // dispatch({
     //   type: "SET_ACTIVE_OBJ",
     //   payload: activeObj
@@ -129,8 +128,8 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
   useEffect(() => {
     console.log(activeObj);
     if (Object.keys(activeObj).length && activeObj.get("type") === "i-text") {
-      setStyle(
-        Object.keys(style).reduce((acc, fontStyle) => {
+      setTextStyle(
+        Object.keys(textStyle).reduce((acc, fontStyle) => {
           acc[fontStyle] = activeObj[fontStyle];
           return acc;
         }, {})
@@ -146,7 +145,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
       <FontColorDiv>
         <Title>Font Color</Title>
         <CompactPicker
-          color={style.fill}
+          color={textStyle.fill}
           onChange={(e) => handleFontStyleChange(e, "fill")}
           style={{ margin: "5px" }}
         />
@@ -159,7 +158,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
             onClick={() => handleFontStyleChange("left", "textAlign")}
             style={{
               outline:
-                style.textAlign === "left" ? "1px #b8c3d0 solid" : "none",
+                textStyle.textAlign === "left" ? "1px #b8c3d0 solid" : "none",
             }}
           >
             <i className="fas fa-align-left" />
@@ -168,7 +167,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
             onClick={() => handleFontStyleChange("center", "textAlign")}
             style={{
               outline:
-                style.textAlign === "center" ? "1px #b8c3d0 solid" : "none",
+                textStyle.textAlign === "center" ? "1px #b8c3d0 solid" : "none",
             }}
           >
             <i className="fas fa-align-center" />
@@ -177,7 +176,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
             onClick={() => handleFontStyleChange("right", "textAlign")}
             style={{
               outline:
-                style.textAlign === "right" ? "1px #b8c3d0 solid" : "none",
+                textStyle.textAlign === "right" ? "1px #b8c3d0 solid" : "none",
             }}
           >
             <i className="fas fa-align-right" />
@@ -190,7 +189,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
             onClick={() => handleFontStyleChange("bold", "fontWeight")}
             style={{
               backgroundColor:
-                style.fontWeight === "bold"
+                textStyle.fontWeight === "bold"
                   ? "rgb(184, 195, 208, 0.3)"
                   : "white",
             }}
@@ -201,7 +200,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
             onClick={() => handleFontStyleChange("italic", "fontStyle")}
             style={{
               backgroundColor:
-                style.fontStyle === "italic"
+                textStyle.fontStyle === "italic"
                   ? "rgb(184, 195, 208, 0.3)"
                   : "white",
             }}
@@ -211,7 +210,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
           <IconDiv
             onClick={() => handleFontStyleChange("true", "underline")}
             style={{
-              backgroundColor: style.underline
+              backgroundColor: textStyle.underline
                 ? "rgb(184, 195, 208, 0.3)"
                 : "white",
             }}
@@ -224,7 +223,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
       <FontSizeDiv>
         <Title>Font Size</Title>
         <TextEditorSlider
-          defaultVal={style.fontSize}
+          defaultVal={textStyle.fontSize}
           min={1}
           max={120}
           step={1}
@@ -235,7 +234,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
       <LineHeightDiv>
         <Title>Line Height</Title>
         <TextEditorSlider
-          defaultVal={style.lineHeight}
+          defaultVal={textStyle.lineHeight}
           min={0.5}
           max={2}
           step={0.1}

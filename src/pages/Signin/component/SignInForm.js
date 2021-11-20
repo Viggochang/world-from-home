@@ -9,7 +9,7 @@ import { firebase, db_userInfo } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
 import { facebookProvider, googleProvider } from "../../../util/authMethod";
 import { signInBtnTheme } from "../../../util/muiTheme";
-import planeIcon from "../../../image/signinIcon.png";
+import worldIcon from "../../../image/worldIcon/worldIcon.png";
 
 const SignInFormDiv = styled.div`
   display: flex; /* to-do */
@@ -42,13 +42,15 @@ const SignInBtnArea = styled.div`
   border-radius: 10px;
 `;
 
-const PlaneIcon = styled.div`
-  background-image: url(${planeIcon});
+const WorldIcon = styled.div`
+  background-image: url(${worldIcon});
   background-position: center;
-  background-size: cover;
-  margin-bottom: 30px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-top: -10px;
+  margin-bottom: 10px;
   width: 200px;
-  height: 100px;
+  height: 120px;
   border-radius: 4px;
 `;
 
@@ -105,7 +107,7 @@ export default function SignInForm({
     <SignInFormDiv ref={signInFormRef}>
       <SignTitleDiv>SIGN&ensp;IN</SignTitleDiv>
       <SignInBtnArea>
-        <PlaneIcon />
+        <WorldIcon />
         <ThemeProvider theme={signInBtnTheme}>
           <Button
             variant="contained"

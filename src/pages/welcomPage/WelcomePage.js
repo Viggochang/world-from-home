@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -114,14 +114,15 @@ const ButtonsDiv = styled.div`
 export default function WelcomePage() {
   const history = useHistory();
   const signinRef = useRef();
+  const [signIn, setSignIn] = useState(false);
 
-  // useEffect(() => {
-  //   firebase.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       history.push({ pathname: "/home" });
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setSignIn(true);
+      }
+    });
+  }, []);
 
   function handleSignIn() {
     signinRef.current.style.zIndex = 2;
@@ -200,7 +201,13 @@ export default function WelcomePage() {
               }}
               onClick={handleGuest}
             >
-              Guest
+              {signIn ? (
+                <>
+                  {"Enter"}&ensp; <i class="fas fa-arrow-right"></i>
+                </>
+              ) : (
+                "Guest"
+              )}
             </Button>
           </ButtonsDiv>
         </ThemeProvider>

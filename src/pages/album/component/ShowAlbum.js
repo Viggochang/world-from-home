@@ -1,6 +1,7 @@
 // 類似 Preview.js
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import SlideShow from "./slideShow/SlideShow";
 
 import {
   templateStyle,
@@ -36,6 +37,7 @@ export default function ShowAlbum({ show, albumContent, albumRef }) {
   // const canvasState = useSelector((state) => state.canvasState);
   const [pageInfo, setPageInfo] = useState({});
   const [canvasState, setCanvasState] = useState({});
+  const canvasDivRef = useRef({});
 
   useEffect(() => {
     setPageInfo(albumContent ? JSON.parse(albumContent.pageInfo) : {});
@@ -99,7 +101,27 @@ export default function ShowAlbum({ show, albumContent, albumRef }) {
                 // ref={pageCanvasContainerRef}
                 style={templateStyle[templateId]}
               >
-                {Array.from(new Array(canvasCount).keys()).map((id) => {
+                {templateId === "slide_show_1" ? (
+                  <SlideShow
+                    canvasDivRef={canvasDivRef}
+                    page={page}
+                    canvasCount={canvasCount}
+                  />
+                ) : (
+                  Array.from(new Array(canvasCount).keys()).map((id) => {
+                    return (
+                      <CanvasContainer
+                        style={{ position: "relative" }}
+                        key={`page${page}-canvas${id}`}
+                        tabIndex="0"
+                      >
+                        <MyCanvas id={`preview-page${page}-canvas${id}`} />
+                      </CanvasContainer>
+                    );
+                  })
+                )}
+
+                {/* {Array.from(new Array(canvasCount).keys()).map((id) => {
                   return (
                     <CanvasContainer
                       style={{ position: "relative" }}
@@ -109,7 +131,7 @@ export default function ShowAlbum({ show, albumContent, albumRef }) {
                       <MyCanvas id={`preview-page${page}-canvas${id}`} />
                     </CanvasContainer>
                   );
-                })}
+                })} */}
               </PageCanvasContainer>
             </PageContainer>
           );

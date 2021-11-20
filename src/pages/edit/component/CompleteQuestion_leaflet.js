@@ -173,7 +173,6 @@ function LeafletMap({ longitude, latitude, setTouristSpot }) {
     };
   }, [map]);
 
-  console.log(longitude, latitude);
   return (
     <LeafletMapDiv>
       <MapContainer

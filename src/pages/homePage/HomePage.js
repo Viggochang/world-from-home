@@ -133,6 +133,13 @@ export default function HomePage({ mapType, setMapType }) {
         setCurrentActive={setCurrentActive}
         mapType={mapType}
       />
+      <ToMyPage handleSignIn={handleSignIn} />
+      <SigninDiv signinRef={signinRef} />
+      <Logout />
+      <LogoutDiv style={{ color: mapType ? "white" : "#3a4a58" }}>
+        <Logout />
+      </LogoutDiv>
+
       <Country
         style={{
           visibility: maskVisibility,
@@ -143,12 +150,6 @@ export default function HomePage({ mapType, setMapType }) {
         handleClickBack={handleClickBack}
         signinRef={signinRef}
       />
-      <ToMyPage handleSignIn={handleSignIn} />
-      <SigninDiv signinRef={signinRef} />
-      <Logout />
-      <LogoutDiv style={{ color: mapType ? "white" : "#3a4a58" }}>
-        <Logout />
-      </LogoutDiv>
       <Album />
     </HomePageDiv>
   );

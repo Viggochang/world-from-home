@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
 
-import UploadImage from "./component/UploadImage";
-import AddText from "./component/AddText";
+import SlideShow from "./component/slideShow/SlideShow";
 import TextEditor from "./component/TextEditor";
+import ImageEditor from "./component/ImageEditor";
+import TemplateCanvas from "./component/templateCanvas/TemplateCanvas";
 
 import { templateStyle, allTemplateParams } from "./component/MyTemplate";
 import { db_gallery } from "../../util/firebase";
@@ -79,20 +80,7 @@ const PageCanvasContainer = styled.div`
   /* margin: 0 100px; */
 `;
 
-const CanvasContainer = styled.div`
-  box-shadow: 0px 0px 2px #8e8e8e;
-  &:hover ${AddText} {
-    z-index: 1;
-  }
-  /* :focus {
-    box-shadow: 0px 0px 5px #6c6c6c;
-    z-index: 2;
-  } */
-`;
-
-const MyCanvas = styled.canvas``;
-
-function WorkingSpace({ preview, addWindow, removePageRef }) {
+function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
   const dispatch = useDispatch();
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
@@ -107,6 +95,7 @@ function WorkingSpace({ preview, addWindow, removePageRef }) {
   const addTextRef = useRef({});
   const uploadImageRef = useRef({});
   const textEditorRef = useRef();
+  const imageEditorRef = useRef();
 
   // 畫布縮放功能在這
   // useEffect(() => {
@@ -502,6 +491,7 @@ function WorkingSpace({ preview, addWindow, removePageRef }) {
       handleCanvasOn(thisCanvas);
     }
     textEditorRef.current.style.zIndex = -1;
+    imageEditorRef.current.style.zIndex = -1;
   }
 
   function getActiveCanvas(e) {
@@ -529,7 +519,10 @@ function WorkingSpace({ preview, addWindow, removePageRef }) {
       }
     }
 
-    if (!textEditorRef.current.contains(e.target)) {
+    if (
+      !textEditorRef.current.contains(e.target) &&
+      !imageEditorRef.current.contains(e.target)
+    ) {
       dispatch({
         type: "SET_ACTIVE_CANVAS",
         payload: thisCanvas,
@@ -593,6 +586,10 @@ function WorkingSpace({ preview, addWindow, removePageRef }) {
         textEditorRef={textEditorRef}
         handleCanvasOn={handleCanvasOn}
       />
+      <ImageEditor
+        imageEditorRef={imageEditorRef}
+        handleCanvasOn={handleCanvasOn}
+      />
       <WorkingSpaceDivInner ref={workingSpaceInnerRef}>
         {Object.values(pageInfo)
           .sort((a, b) => a.page - b.page)
@@ -611,51 +608,99 @@ function WorkingSpace({ preview, addWindow, removePageRef }) {
                 </RemovePage>
                 <PageCanvasContainer
                   ref={pageCanvasContainerRef}
-                  style={templateStyle[templateId]}
+                  style={templateStyle[templateId]} // page的style格式
                 >
-                  {Array.from(new Array(canvasCount).keys()).map((id) => {
-                    return (
-                      <CanvasContainer
-                        style={{
-                          position: "relative",
-                          // ":focus": {
-                          //   boxShadow: "0px 0px 5px #6c6c6c",
-                          //   zIndex: 2,
-                          // },
-                        }}
-                        key={`page${page}-canvas${id}`}
-                        tabIndex="0"
-                        onFocus={(e) => {
-                          if (!preview) {
-                            e.target.style.boxShadow = "0px 0px 5px #6c6c6c";
-                            e.target.style.zIndex = 2;
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!preview) {
-                            e.target.style.boxShadow = "0px 0px 2px #8e8e8e";
-                          }
-                        }}
-                        onClick={(e) => {
-                          console.log(e.target.parentNode);
-                        }}
-                        onMouseEnter={(e) =>
-                          handleShowIcon(e, `page${page}-canvas${id}`)
+                  {templateId === "slide_show_1" ? (
+                    <SlideShow
+                      canvasCount={canvasCount}
+                      canvasDivRef={canvasDivRef}
+                      page={page}
+                      preview={preview}
+                      addTextRef={addTextRef}
+                      uploadImageRef={uploadImageRef}
+                      handleCanvasOn={handleCanvasOn}
+                    />
+                  ) : (
+                    <TemplateCanvas
+                      canvasCount={canvasCount}
+                      canvasDivRef={canvasDivRef}
+                      page={page}
+                      preview={preview}
+                      addTextRef={addTextRef}
+                      uploadImageRef={uploadImageRef}
+                      handleCanvasOn={handleCanvasOn}
+                    />
+                  )}
+
+                  {/* {templateId === "slide_show_1" ? (
+                    <SlideShow
+                      canvasCount={canvasCount}
+                      canvasDivRef={canvasDivRef}
+                      page={page}
+                      preview={preview}
+                      addTextRef={addTextRef}
+                      uploadImageRef={uploadImageRef}
+                    />
+                  ) : (
+                    <>
+                      {Array.from(new Array(canvasCount).keys()).map(
+                        (id, index) => {
+                          return (
+                            <CanvasContainer
+                              ref={(el) =>
+                                (canvasDivRef.current[
+                                  `page${page}-canvas${id}`
+                                ] = el)
+                              }
+                              style={{
+                                position: "relative",
+                                // ":focus": {
+                                //   boxShadow: "0px 0px 5px #6c6c6c",
+                                //   zIndex: 2,
+                                // },
+                              }}
+                              key={`page${page}-canvas${id}`}
+                              tabIndex="0"
+                              onFocus={(e) => {
+                                if (!preview) {
+                                  e.target.style.boxShadow =
+                                    "0px 0px 5px #6c6c6c";
+                                  e.target.style.zIndex = 2;
+                                }
+                              }}
+                              onBlur={(e) => {
+                                if (!preview) {
+                                  e.target.style.boxShadow =
+                                    "0px 0px 2px #8e8e8e";
+                                }
+                              }}
+                              onClick={(e) => {
+                                console.log(e.target.parentNode);
+                              }}
+                              onMouseEnter={(e) =>
+                                handleShowIcon(e, `page${page}-canvas${id}`)
+                              }
+                              onMouseLeave={(e) =>
+                                handleDisplayIcon(e, `page${page}-canvas${id}`)
+                              }
+                            >
+                              <AddText
+                                page={page}
+                                id={id}
+                                addTextRef={addTextRef}
+                              />
+                              <UploadImage
+                                page={page}
+                                id={id}
+                                uploadImageRef={uploadImageRef}
+                              />
+                              <MyCanvas id={`page${page}-canvas${id}`} />
+                            </CanvasContainer>
+                          );
                         }
-                        onMouseLeave={(e) =>
-                          handleDisplayIcon(e, `page${page}-canvas${id}`)
-                        }
-                      >
-                        <AddText page={page} id={id} addTextRef={addTextRef} />
-                        <UploadImage
-                          page={page}
-                          id={id}
-                          uploadImageRef={uploadImageRef}
-                        />
-                        <MyCanvas id={`page${page}-canvas${id}`} />
-                      </CanvasContainer>
-                    );
-                  })}
+                      )}
+                    </>
+                  )} */}
                 </PageCanvasContainer>
               </PageContainer>
             );

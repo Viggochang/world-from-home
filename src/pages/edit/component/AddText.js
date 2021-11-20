@@ -4,6 +4,10 @@ import TextFieldsIcon from "@mui/icons-material/TextFields";
 import Tooltip from "@mui/material/Tooltip";
 
 import styled from "styled-components";
+import deleteIcon from "../../../image/deleteIcon/delete_icon.png";
+
+let deleteIconImg = document.createElement("img");
+deleteIconImg.src = deleteIcon;
 
 const AddTextDiv = styled.div`
   display: flex;
@@ -26,15 +30,51 @@ const AddTextDiv = styled.div`
   }
 `;
 
-function AddText({ page, id, addTextRef }) {
+function AddText({ page, id, addTextRef, handleCanvasOn }) {
   const canvas = useSelector((state) => state.canvas);
   const canvasState = useSelector((state) => state.canvasState);
   const editUndo = useSelector((state) => state.editUndo);
+  const activeCanvas = useSelector((state) => state.activeCanvas);
   const dispatch = useDispatch();
 
+  function deleteObject(eventData, transform) {
+    let target = transform.target;
+    let canvas = target.canvas;
+    canvas.remove(target);
+    canvas.requestRenderAll();
+    handleCanvasOn(activeCanvas);
+  }
+
+  function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+    let size = this.cornerSize;
+    ctx.save();
+    ctx.translate(left, top);
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+    ctx.drawImage(deleteIconImg, -size / 2, -size / 2, 1.3 * size, size);
+    ctx.restore();
+  }
+
+  fabric.IText.prototype.controls.deleteControl = new fabric.Control({
+    x: 0.52,
+    y: -1,
+    offsetY: 16,
+    cursorStyle: "pointer",
+    mouseUpHandler: deleteObject,
+    render: renderIcon,
+    cornerSize: 16,
+  });
+
   const handleAddText = (event, id) => {
-    // event.preventDefault();
     event.stopPropagation();
+
+    if (Object.keys(activeCanvas).length) {
+      activeCanvas.discardActiveObject().renderAll();
+    }
+    dispatch({
+      type: "SET_ACTIVE_CANVAS",
+      payload: canvas[id],
+    });
+
     const thisCanvas = canvas[id];
     const newText = new fabric.IText("edit", {
       left: 50,

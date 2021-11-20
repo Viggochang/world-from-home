@@ -167,28 +167,6 @@ function World({
 
   console.log(targetCountry);
 
-  // useEffect(() => {
-  //   // Add some data
-  //   // const { travel_country } = userInfo;
-  //   if (myTravelCountries.length && Object.keys(map).length) {
-  //     let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
-
-  //     map.series.data = (
-  //       userInfo.country
-  //         ? [...myTravelCountries, userInfo.country]
-  //         : myTravelCountries
-  //     ).map((countryCode) => ({
-  //       id: countryCode,
-  //       name: countryTrans[countryCode].name_en,
-  //       fill: am4core.color("#ffffff"),
-  //     }));
-  //   }
-  //   // dispatch({
-  //   //   type: "SET_POLYGONSERIES",
-  //   //   payload: polygonSeries,
-  //   // });
-  // }, [myTravelCountries, map]);
-
   return (
     <Chartdiv
       id="chartdiv"

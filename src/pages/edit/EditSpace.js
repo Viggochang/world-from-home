@@ -19,6 +19,7 @@ import icon_full from "../../image/template/icon/full.jpeg";
 import icon_composition from "../../image/template/icon/composition.jpeg";
 import icon_photo_text from "../../image/template/icon/photo_text.jpeg";
 import icon_text from "../../image/template/icon/text.jpeg";
+import icon_slide_show from "../../image/template/icon/slide_show.jpeg";
 
 import full_1 from "../../image/template/full_1.jpeg";
 import full_2 from "../../image/template/full_2.jpeg";
@@ -31,11 +32,11 @@ import photoText_3 from "../../image/template/photoText_3.jpeg";
 import photoText_4 from "../../image/template/photoText_4.jpeg";
 import photoText_5 from "../../image/template/photoText_5.jpeg";
 import text_1 from "../../image/template/text_1.jpeg";
+import slide_show_1 from "../../image/template/slide_show_1.jpeg";
 
 // import ToMyPage from "../world/component/ToMyPage";
 import GalleryQuestion from "./component/GalleryQuestion";
 import CompleteQuestion from "./component/CompleteQuestion";
-import { urlAlphabet } from "nanoid";
 
 const AlertDiv = styled.div`
   margin: 20px calc(50% - 150px);
@@ -105,15 +106,28 @@ const ToolBarDiv = styled.div`
   align-items: center;
   z-index: 1;
   box-shadow: 0px 0px 10px #8e8e8e;
+  border-radius: 7px;
 `;
 
 const ToolIconDiv = styled.div`
   width: 100%;
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+`;
+
+const IconHover = styled.div`
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  &:hover {
+    background-color: rgb(184, 195, 208, 0.4);
+  }
 `;
 
 const IconDiv = styled.div`
@@ -126,6 +140,9 @@ const ToolNameDiv = styled.div`
   text-align: center;
   line-height: 18px;
   color: #667484;
+  /* white-space: pre-wrap; */
+  font-size: 12px;
+  margin-top: -2px;
 `;
 
 const ContainerDiv = styled.div`
@@ -153,6 +170,7 @@ const ToolContainerDiv = styled.div`
   left: 110px;
   z-index: 1;
   box-shadow: 0px 0px 10px #8e8e8e;
+  border-radius: 7px;
 `;
 
 const ToolContainerDivInner = styled.div`
@@ -201,7 +219,7 @@ const allTemplate = {
     ],
   },
   composition: {
-    name: "相片拼貼",
+    name: `相片拼貼`,
     icon: icon_composition,
     template: [
       [3, "3a", template_3a],
@@ -227,7 +245,8 @@ const allTemplate = {
   },
   slideShow: {
     name: "slide show",
-    template: [],
+    icon: icon_slide_show,
+    template: [[3, "slide_show_1", slide_show_1]],
   },
 };
 // let templateActive = allTemplate["full"].template;
@@ -252,11 +271,14 @@ function EditSpace() {
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
   const activeCanvas = useSelector((state) => state.activeCanvas);
+  const canvas = useSelector((state) => state.canvas);
 
+  const toolIconRef = useRef([]);
   const previewBtnRef = useRef();
   const saveAlertRef = useRef();
   const completeQuestionRef = useRef();
   const removePageRef = useRef([]);
+  const canvasDivRef = useRef({});
   const history = useHistory();
 
   useEffect(() => {
@@ -346,6 +368,7 @@ function EditSpace() {
   }
 
   function handleClickTool(key) {
+    console.log(key);
     // console.log(key);
     setTemplateActive(allTemplate[key].template);
     // setToolActive(key);
@@ -419,9 +442,18 @@ function EditSpace() {
     if (Object.keys(activeCanvas).length) {
       activeCanvas.discardActiveObject().renderAll();
     }
-    removePageRef.current.forEach(
-      (el) => (el.style.display = preview ? "flex" : "none")
+    Object.values(canvas).forEach((canvas) => {
+      canvas.backgroundColor = preview ? "#F0F0F0" : "white";
+      canvas.renderAll();
+    });
+    Object.values(canvasDivRef.current).forEach(
+      (el) => (el.style.boxShadow = preview ? "0px 0px 2px #8e8e8e" : "none")
     );
+
+    removePageRef.current.forEach((el) => {
+      console.log(el);
+      return (el.style.display = preview ? "flex" : "none");
+    });
     previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
     setPreview(!preview);
 
@@ -553,6 +585,14 @@ function EditSpace() {
     });
   }
 
+  function handleHoverToolIcon(index) {
+    toolIconRef.current.forEach(
+      (el) => (el.style.backgroundColor = "rgb(0,0,0,0)")
+    );
+    toolIconRef.current[index].style.backgroundColor =
+      "rgb(184, 195, 208, 0.4)";
+  }
+
   const SignInBtnStyle = {
     // width: "100%",
     // marginBottom: "20px",
@@ -672,6 +712,25 @@ function EditSpace() {
       </TitleBarDiv>
 
       <ContainerDiv>
+        <ToolBarDiv>
+          {Object.keys(allTemplate).map((tool, index) => (
+            <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
+              <IconHover
+                ref={(el) => (toolIconRef.current[index] = el)}
+                onClick={() => handleHoverToolIcon(index)}
+              >
+                <IconDiv
+                  style={{
+                    backgroundImage: `url(${allTemplate[tool].icon})`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                  }}
+                />
+              </IconHover>
+              <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
+            </ToolIconDiv>
+          ))}
+        </ToolBarDiv>
         <ToolContainerDiv>
           <ToolContainerDivInner>
             {templateActive.map((template) => (
@@ -691,21 +750,8 @@ function EditSpace() {
           preview={preview}
           addWindow={addWindow}
           removePageRef={removePageRef}
+          canvasDivRef={canvasDivRef}
         />
-        <ToolBarDiv>
-          {Object.keys(allTemplate).map((tool) => (
-            <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
-              <IconDiv
-                style={{
-                  backgroundImage: `url(${allTemplate[tool].icon})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                }}
-              />
-              <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
-            </ToolIconDiv>
-          ))}
-        </ToolBarDiv>
         {/* <Preview preview={preview} /> */}
       </ContainerDiv>
     </div>

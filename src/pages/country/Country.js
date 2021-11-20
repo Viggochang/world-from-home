@@ -8,13 +8,12 @@ import CountryInfo from "./component/CountryInfo";
 import CountryFriend from "./component/CountryFriend";
 import InfoFriendSmall from "./InfoFriendSmall/InfoFriendSmall";
 
-import { db_userInfo } from "../../util/firebase";
+import { db_userInfo, db_gallery } from "../../util/firebase";
 
 const CountryDiv = styled.div`
   width: calc(90% - 120px);
   height: calc(85% - 80px);
   padding: 60px 60px 20px;
-  /* background-color: rgba(63, 63, 63, 1); */
   position: fixed;
   top: 5%;
   left: 5%;
@@ -51,12 +50,6 @@ const InfoFriendDiv = styled.div`
     margin-top: 0;
     height: 43%;
   }
-  /* @media (max-width: 1040px) {
-    flex-direction: column;
-  }
-  @media (max-width: 630px) {
-    width: 100%;
-  } */
 `;
 
 const BackDiv = styled.div`
@@ -78,6 +71,7 @@ function Country({ style, handleClickBack, signinRef }) {
   const [captain, setCaptain] = useState({});
   const [timezone, setTimezone] = useState(0);
   const [weather, setWeather] = useState({});
+  const [myFriendList, setMyFriendList] = useState([]);
   const [friendHere, setFriendHere] = useState([]);
   const id = useSelector((state) => state.myUserId);
 
@@ -121,24 +115,31 @@ function Country({ style, handleClickBack, signinRef }) {
   }, [targetCountry]);
 
   useEffect(() => {
-    if (id) {
+    if (id && targetCountry.id) {
       db_userInfo
         .where("friends", "array-contains", { id: id, condition: "confirmed" })
         .get()
         .then((querySnapshot) => {
-          return querySnapshot.docs;
+          setMyFriendList(querySnapshot.docs.map((doc) => doc.id));
+          return querySnapshot.docs.map((doc) => {
+            const { photo, id, name, country } = doc.data();
+            console.log({ photo, id, name, country });
+            return { photo, id, name, country };
+          });
         })
         .then((friendList) => {
-          setFriendHere(
-            friendList
-              .filter((friend) =>
-                friend.data().travel_country.includes(targetCountry.id)
-              )
-              .map((friend) => {
-                const { photo, id, name, country } = friend.data();
-                return { photo, id, name, country };
-              })
-          );
+          db_gallery
+            .where("country", "==", targetCountry.id)
+            .get()
+            .then((allAlbums) => {
+              const userHere = allAlbums.docs
+                .filter((album) => album.data().condition === "completed")
+                .map((album) => album.data().user_id);
+              console.log(userHere);
+              setFriendHere(
+                friendList.filter((friend) => userHere.includes(friend.id))
+              );
+            });
         });
     }
   }, [id, targetCountry]);
