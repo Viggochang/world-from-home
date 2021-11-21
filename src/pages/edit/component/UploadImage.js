@@ -180,6 +180,7 @@ export default function UploadImage({
           mr: false,
         });
         canvi.add(imgObj);
+        canvi.setActiveObject(imgObj);
         canvi.sendToBack(imgObj);
         canvi.renderAll();
 
@@ -189,6 +190,11 @@ export default function UploadImage({
         stateChange[canvi.lowerCanvasEl.id] = JSON.stringify(canvi.toJSON());
 
         dispatch({
+          type: "SET_ACTIVE_CANVAS",
+          payload: canvi,
+        });
+
+        dispatch({
           type: "UNDO",
           payload: [...editUndo, record],
         });
@@ -196,7 +202,12 @@ export default function UploadImage({
           type: "SET_CANVAS_STATE",
           payload: stateChange,
         });
+        dispatch({
+          type: "SET_ACTIVE_OBJ",
+          payload: canvi.getActiveObject(),
+        });
       },
+      null,
       { crossOrigin: "anonymous" }
     );
   };
@@ -206,6 +217,8 @@ export default function UploadImage({
 
     new Compressor(img, {
       quality: 0.6,
+      maxWidth: 2048,
+      maxHeight: 2048,
       success(result) {
         // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };

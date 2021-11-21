@@ -127,7 +127,11 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
 
   useEffect(() => {
     console.log(activeObj);
-    if (Object.keys(activeObj).length && activeObj.get("type") === "i-text") {
+    if (
+      activeObj &&
+      Object.keys(activeObj).length &&
+      activeObj.get("type") === "i-text"
+    ) {
       setTextStyle(
         Object.keys(textStyle).reduce((acc, fontStyle) => {
           acc[fontStyle] = activeObj[fontStyle];

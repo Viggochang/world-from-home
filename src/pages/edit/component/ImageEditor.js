@@ -65,7 +65,7 @@ const FilterBtn = styled.div`
   width: 94px;
   display: flex;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 5px;
   margin: 0 4px 4px;
   background-color: rgb(184, 195, 208, 0.5);
@@ -87,23 +87,28 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
   });
   const [imgFilters, setImgFilters] = useState([]);
 
-  const allFilters = [
-    "Grayscale",
-    "Invert",
-    "Sepia",
-    "Black/White",
-    "Brownie",
-    "Vintage",
-    "Technicolor",
-    "Polaroid",
-  ];
+  const allFilters = {
+    Grayscale: new fabric.Image.filters.Grayscale(),
+    Invert: new fabric.Image.filters.Invert(),
+    Sepia: new fabric.Image.filters.Sepia(),
+    "Black/White": new fabric.Image.filters.BlackWhite(),
+    Brownie: new fabric.Image.filters.Brownie(),
+    Vintage: new fabric.Image.filters.Vintage(),
+    Technicolor: new fabric.Image.filters.Technicolor(),
+    Polaroid: new fabric.Image.filters.Polaroid(),
+  };
 
   useEffect(() => {
     console.log(activeObj);
-    if (Object.keys(activeObj).length && activeObj.get("type") === "image") {
+    if (
+      activeObj &&
+      Object.keys(activeObj).length &&
+      activeObj.get("type") === "image"
+    ) {
+      setImgFilters(activeObj["filters"].map((filter) => filter.type));
       setImgStyle(
-        Object.keys(imgStyle).reduce((acc, fontStyle) => {
-          acc[fontStyle] = activeObj[fontStyle];
+        Object.keys(imgStyle).reduce((acc, imgStyle) => {
+          acc[imgStyle] = activeObj[imgStyle];
           return acc;
         }, {})
       );
@@ -118,6 +123,7 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
     switch (key) {
       case "size":
         const scale = 20 / Math.min(imgStyle.width, imgStyle.height);
+        console.log(scale);
         if (value === "minus") {
           activeImgStyle["scaleX"] = imgStyle.scaleX - scale;
           activeImgStyle["scaleY"] = imgStyle.scaleY - scale;
@@ -126,34 +132,30 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
           activeImgStyle["scaleY"] = imgStyle.scaleY + scale;
         }
         activeObj.set(activeImgStyle);
+        setImgStyle(activeImgStyle);
         break;
       case "filter":
-        switch (value) {
-          case "Grayscale":
-            if (!imgFilters.includes(value)) {
-              setImgFilters((filters) => [...filters, "Grayscale"]);
-              activeObj.filters.push(new fabric.Image.filters.Grayscale());
-              event.target.style.backgroundColor = "rgb(184, 195, 208, 0.7)";
-            } else {
-              const index = imgFilters.indexOf(value);
-              setImgFilters((filters) => [
-                ...filters.slice(0, index),
-                ...filters.slice(index + 1),
-              ]);
-              activeObj.filters.splice(index, 1);
-              event.target.style.backgroundColor = "rgb(184, 195, 208, 0.5)";
-            }
-            activeObj.applyFilters();
-            break;
-          default:
-            break;
+        if (!imgFilters.includes(value)) {
+          setImgFilters((filters) => [...filters, value]);
+          activeObj.filters.push(allFilters[value]);
+          event.target.style.backgroundColor = "rgb(58, 74, 88, 0.9)";
+          event.target.style.color = "white";
+        } else {
+          const index = imgFilters.indexOf(value);
+          setImgFilters((filters) => [
+            ...filters.slice(0, index),
+            ...filters.slice(index + 1),
+          ]);
+          activeObj.filters.splice(index, 1);
+          event.target.style.backgroundColor = "rgb(184, 195, 208, 0.5)";
+          event.target.style.color = "#3a4a58";
         }
+        activeObj.applyFilters();
+        break;
       default:
         break;
     }
-
     activeCanvas.renderAll();
-    setImgStyle(activeImgStyle);
     handleCanvasOn(activeCanvas);
   }
 
@@ -173,8 +175,17 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
       <ImageSizeDiv>
         <Title>Image Filters</Title>
         <BtnDiv>
-          {allFilters.map((filter) => (
-            <FilterBtn onClick={(e) => handleImgStyle(e, filter, "filter")}>
+          {Object.keys(allFilters).map((filter) => (
+            <FilterBtn
+              key={filter}
+              onClick={(e) => handleImgStyle(e, filter, "filter")}
+              style={{
+                backgroundColor: imgFilters.includes(filter)
+                  ? "rgb(58, 74, 88, 0.9)"
+                  : "rgb(184, 195, 208, 0.5)",
+                color: imgFilters.includes(filter) ? "white" : "#3a4a58",
+              }}
+            >
               {filter}
             </FilterBtn>
           ))}
