@@ -15,7 +15,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import { styled as styledMui } from "@mui/styles";
 
-import { db_userInfo } from "../../../util/firebase";
+import { setUserDataIntoDb } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
 import { signInEnterTheme } from "../../../util/muiTheme";
 
@@ -112,31 +112,27 @@ export default function MoreInfoForm({
   const [introduction, setIntroduction] = useState("");
 
   function handleToWorldPage() {
-    console.log(
-      new Date(birthday.seconds * 1000).toDateString(),
-      new Date().toDateString()
-    );
-    console.log(birthday, birthday.toDateString());
+    const userData = {
+      id: myUserId,
+      email: currentUser.email,
+      name: currentUser.displayName,
+      photo: currentUser.photoURL,
+      country,
+      language,
+      introduction,
+      birthday:
+        birthday.toDateString() === new Date().toDateString()
+          ? new Date(0)
+          : birthday,
+      travel_country: [],
+    };
 
-    db_userInfo
-      .doc(myUserId)
-      .set({
-        id: myUserId,
-        email: currentUser.email,
-        name: currentUser.displayName,
-        photo: currentUser.photoURL,
-        country,
-        language,
-        introduction,
-        birthday:
-          birthday.toDateString() === new Date().toDateString()
-            ? new Date(0)
-            : birthday,
-      })
-      .then(() => {
-        signinRef.current.style.display = "none";
-        history.push({ pathname: "home" });
-      });
+    async function setNewUserData() {
+      await setUserDataIntoDb(myUserId, userData);
+      signinRef.current.style.display = "none";
+      history.push({ pathname: "home" });
+    }
+    setNewUserData();
   }
 
   function handleSetValue(event, key) {
@@ -165,7 +161,8 @@ export default function MoreInfoForm({
       <MoreInfoFormTitleDiv>MORE ABOUT YOU</MoreInfoFormTitleDiv>
       <MoreInfoFormArea>
         <Title>
-          <i className="fas fa-birthday-cake"></i>&ensp;Birthday
+          <i className="fas fa-birthday-cake" />
+          &ensp;Birthday
         </Title>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
@@ -182,7 +179,8 @@ export default function MoreInfoForm({
         </LocalizationProvider>
 
         <Title>
-          <i className="fas fa-globe"></i>&ensp;Country
+          <i className="fas fa-globe" />
+          &ensp;Country
         </Title>
         <FormControl fullWidth variant="filled">
           <InputLabel id="set-country-label"></InputLabel>
@@ -206,7 +204,8 @@ export default function MoreInfoForm({
         </FormControl>
 
         <Title>
-          <i className="fas fa-globe"></i>&ensp;Language
+          <i className="fas fa-globe" />
+          &ensp;Language
         </Title>
         <LanguageTextField
           inputProps={{
@@ -221,10 +220,10 @@ export default function MoreInfoForm({
           onChange={(e) => {
             handleSetValue(e, "language");
           }}
-          // ref={input_ref}
         />
         <Title>
-          <i className="fas fa-list-ul"></i>&ensp;Introduction
+          <i className="fas fa-list-ul" />
+          &ensp;Introduction
         </Title>
         <IntroductionTextField
           inputProps={{
@@ -236,7 +235,6 @@ export default function MoreInfoForm({
           size="small"
           placeholder="introduce yourself"
           variant="outlined"
-          // ref={input_ref}
           multiline
           onChange={(e) => {
             handleSetValue(e, "introduction");
@@ -250,28 +248,19 @@ export default function MoreInfoForm({
           sx={{
             width: "100px",
             margin: "4px 0 24px",
-            // border: `2px white solid`,
-            // boxShadow: "1px 3px 10px rgb(80, 80, 80)",
             boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.6)",
             color: "white",
             ":hover": {
               boxShadow: "2px 3px 10px rgb(80, 80, 80, 0.6)",
             },
           }}
-          // style={{
-          //   marginTop: "20px",
-          //   borderRadius: "40px",
-          //   lineHeight: 1.5,
-          //   color: "#3A4A58",
-          //   fontWeight: "bold",
-          // }}
           onClick={handleToWorldPage}
         >
           enter
         </Button>
       </ThemeProvider>
       <BackDiv onClick={handleBack}>
-        <i className="fas fa-arrow-left"></i>
+        <i className="fas fa-arrow-left" />
       </BackDiv>
     </MoreInfoFormDiv>
   );

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-import { db_userInfo } from "../../../../util/firebase";
+import { getUserDataByUid } from "../../../util/firebase";
 
 const AlbumHere = styled.div`
   width: 50%;
@@ -19,7 +19,6 @@ const AlbumHere = styled.div`
 const AlbumInfo = styled.div`
   display: flex;
   align-items: center;
-  /* width: calc(100% - 70px); */
 `;
 
 const AlbumOwner = styled.div`
@@ -74,9 +73,7 @@ const AlbumPhoto = styled.div`
   cursor: pointer;
   margin-top: 10px;
   cursor: pointer;
-  /* @media (max-width: 732px) {
-    width: calc(65vw);
-  } */
+  border-radius: 5px;
 `;
 const AlbumPraise = styled.div`
   margin: 10px 5px 0 auto;
@@ -90,12 +87,11 @@ export default function Album({ album }) {
   const history = useHistory();
 
   useEffect(() => {
-    db_userInfo
-      .doc(album.user_id)
-      .get()
-      .then((doc) => {
-        setOwnerPhoto(doc.data().photo);
-      });
+    async function getUserPhoto() {
+      const OwnerPhoto = (await getUserDataByUid(album.user_id)).photo;
+      setOwnerPhoto(OwnerPhoto);
+    }
+    getUserPhoto();
   }, [album]);
 
   function handleShowAlbumId(key, value) {
@@ -122,11 +118,11 @@ export default function Album({ album }) {
             history.push({ pathname: "user", search: `?id=${album.user_id}` });
           }}
         >
-          {ownerPhoto ? "" : <i className="fas fa-user-alt"></i>}
+          {ownerPhoto ? "" : <i className="fas fa-user-alt" />}
         </AlbumOwner>
         <AlbumPositionDate>
           <AlbumPosition>
-            <i className="fas fa-map-marker-alt"></i>
+            <i className="fas fa-map-marker-alt" />
             &ensp;{album.position}
           </AlbumPosition>
           <AlbumDate>
@@ -145,7 +141,7 @@ export default function Album({ album }) {
         onClick={() => handleShowAlbumId("album_id_show", album.id)}
       />
       <AlbumPraise>
-        <i className="fas fa-thumbs-up"></i> {album.praise.length}
+        <i className="fas fa-thumbs-up" /> {album.praise.length}
       </AlbumPraise>
     </AlbumHere>
   );

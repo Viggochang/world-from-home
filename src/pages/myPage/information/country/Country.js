@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import countryTrans from "../../../../util/countryTrans";
 
-import { db_userInfo } from "../../../../util/firebase";
+import { updateUser } from "../../../../util/firebase";
 
 const CountryDiv = styled.div`
   display: flex;
@@ -98,17 +98,13 @@ export default function Country({ country }) {
   function handleDisappear(ref) {
     ref.current.style.display = "none";
   }
-  function handleSubmitCountry() {
+  async function handleSubmitCountry() {
     if (country2id[countryInputRef.current.value]) {
-      db_userInfo
-        .doc(myUserId)
-        .update({
-          country: country2id[countryInputRef.current.value],
-        })
-        .then(() => {
-          handleShow(myCountryRef);
-          handleDisappear(editCountryRef);
-        });
+      await updateUser(myUserId, {
+        country: country2id[countryInputRef.current.value],
+      });
+      handleShow(myCountryRef);
+      handleDisappear(editCountryRef);
     } else {
       countryInputRef.current.parentNode.parentNode.style.outline =
         "4px #AE0000 solid";
@@ -129,12 +125,12 @@ export default function Country({ country }) {
             handleDisappear(myCountryRef);
           }}
         >
-          <i className="fas fa-pencil-alt"></i>
+          <i className="fas fa-pencil-alt" />
         </EditIcon>
       </MyCountryDiv>
       <EditDiv ref={editCountryRef}>
         <SearchDiv>
-          <i className="fas fa-search"></i>
+          <i className="fas fa-search" />
           <TextFieldDiv>
             <Inputdiv
               list="country-choice"

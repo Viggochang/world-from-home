@@ -11,7 +11,7 @@ import { Switch } from "@mui/material";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { primaryPaletteTheme } from "../../../util/muiTheme";
 
-import { db_gallery } from "../../../util/firebase";
+import { onSnapshotAlbumByUserId } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
 import AlbumInfo from "./MyGallery_info";
 
@@ -258,11 +258,7 @@ export default function MyGallery({ title, id, isMyPage }) {
 
   useEffect(() => {
     if (id) {
-      let unsubscribe = db_gallery
-        .where("user_id", "==", id)
-        .onSnapshot((querySnapshot) => {
-          setAlbumData(querySnapshot.docs.map((doc) => doc.data()));
-        });
+      const unsubscribe = onSnapshotAlbumByUserId(id, setAlbumData);
       return () => {
         unsubscribe();
       };

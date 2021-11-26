@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import { firebase, db_userInfo } from "../../../util/firebase";
+import { getUserIsExist } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
 import { facebookProvider, googleProvider } from "../../../util/authMethod";
 import { signInBtnTheme } from "../../../util/muiTheme";
@@ -60,6 +60,19 @@ const SignInBtnStyle = {
   boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
 };
 
+const socialMedia = [
+  {
+    name: "Google",
+    icon: <i className="fab fa-google" />,
+    provider: googleProvider,
+  },
+  {
+    name: "Facebook",
+    icon: <i className="fab fa-facebook" />,
+    provider: facebookProvider,
+  },
+];
+
 export default function SignInForm({
   signinRef,
   signInFormRef,
@@ -68,38 +81,23 @@ export default function SignInForm({
 }) {
   const dispatch = useDispatch();
   const history = useHistory();
-  // const [currentUser, setCurrentUser] = useState();
 
   const handleSignin = async (provider) => {
     const res = await socialMediaAuth(provider);
-    if (firebase.auth().currentUser) {
-      setCurrentUser(firebase.auth().currentUser);
+    if (res) {
+      setCurrentUser(res);
+      dispatch({
+        type: "SET_MY_USER_ID",
+        payload: res.uid,
+      });
 
-      db_userInfo
-        .where("email", "==", firebase.auth().currentUser.email)
-        .get()
-        .then((snapshot) => {
-          let myUserId = "";
-          if (snapshot.empty) {
-            myUserId = db_userInfo.doc().id;
-            dispatch({
-              type: "SET_MY_USER_ID",
-              payload: myUserId,
-            });
-            signInFormRef.current.style.display = "none";
-            moreInfoFormRef.current.style.display = "flex";
-          } else {
-            snapshot.forEach((doc) => {
-              myUserId = doc.id;
-              dispatch({
-                type: "SET_MY_USER_ID",
-                payload: myUserId,
-              });
-              signinRef.current.style.display = "none";
-              history.push({ pathname: "home" });
-            });
-          }
-        });
+      if (await getUserIsExist(res.uid)) {
+        signinRef.current.style.display = "none";
+        history.push({ pathname: "home" });
+      } else {
+        signInFormRef.current.style.display = "none";
+        moreInfoFormRef.current.style.display = "flex";
+      }
     }
   };
 
@@ -109,23 +107,17 @@ export default function SignInForm({
       <SignInBtnArea>
         <WorldIcon />
         <ThemeProvider theme={signInBtnTheme}>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={() => handleSignin(googleProvider)}
-          >
-            <i className="fab fa-google"></i> &emsp;&emsp; Sign in with Google
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={() => handleSignin(facebookProvider)}
-          >
-            <i className="fab fa-facebook"></i> &emsp;&emsp; Sign in with
-            Facebook
-          </Button>
+          {socialMedia.map((socialMedia) => (
+            <Button
+              key={socialMedia.name}
+              variant="contained"
+              color="primary"
+              sx={SignInBtnStyle}
+              onClick={() => handleSignin(socialMedia.provider)}
+            >
+              {socialMedia.icon}&emsp;&emsp; Sign in with {socialMedia.name}
+            </Button>
+          ))}
         </ThemeProvider>
       </SignInBtnArea>
     </SignInFormDiv>

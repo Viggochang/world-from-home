@@ -10,7 +10,11 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 
-import { db_gallery } from "../../../util/firebase";
+import {
+  getAlbumDataById,
+  deleteAlbum,
+  updateAlbum,
+} from "../../../util/firebase";
 import { whiteBtnTheme } from "../../../util/muiTheme";
 import "./AlbumQuestion.css";
 
@@ -33,7 +37,6 @@ const GalleryQuestionContainer = styled.div`
   background-color: #b8c3d0;
   width: 45vmin;
   height: 75vmin;
-  /* height: 57%; */
   margin: auto;
   padding: 60px 100px 40px;
   z-index: 5;
@@ -46,8 +49,6 @@ const Form = styled.div`
   padding: 0 50px 0 30px;
   width: 88%;
   height: 50vmin;
-  /* outline: 1px white solid; */
-  /* box-shadow: 4px 6px 8px #5b5b5b; */
   box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.4);
   border-radius: 20px;
   color: #667484;
@@ -92,27 +93,19 @@ const QuestionTitle = styled.div`
 
 const TextAreaDiv = styled.div`
   width: 100%;
-  /* height: calc(100% - 264px); */
   outline: 1px rgb(58, 74, 88, 0.5) solid;
   max-height: 50%;
   font-size: 20px;
   overflow-y: scroll;
   border-radius: 10px;
   @media (min-height: 1080px) {
-    /* height: calc(100% - 408px); */
     width: 100%;
   }
-  /* margin: 50px 0; */
 `;
-
-// const TextAreaInner = styled.div`
-
-// `;
 
 const ButtonsDiv = styled.div`
   width: 100%;
   margin-top: 40px;
-  /* margin-left: auto; */
   display: flex;
   justify-content: space-around;
 `;
@@ -138,7 +131,6 @@ const TitleCountry = styled.div`
 `;
 
 const SearchDiv = styled.div`
-  /* width: 100%; */
   height: 31px;
   display: flex;
   align-items: center;
@@ -165,6 +157,8 @@ const Inputdiv = styled.input`
   }
 `;
 
+const CountryStateApi = "https://countriesnow.space/api/v0.1/countries/states";
+
 export default function GalleryQuestion() {
   const history = useHistory();
   const QuestionRef = useRef();
@@ -188,33 +182,29 @@ export default function GalleryQuestion() {
   }, [textAreaRef]);
 
   useEffect(() => {
-    console.log(albumIdEditing);
     if (albumIdEditing) {
-      db_gallery
-        .doc(albumIdEditing)
-        .get()
-        .then((doc) => {
-          if (!doc.exists) {
-            history.push({ pathname: "notfound" });
-          } else {
-            if (!doc.data().country) {
-              setNewAlbum(true);
-            } else {
-              setTripDate(
-                doc.data().timestamp
-                  ? new Date(doc.data().timestamp.seconds * 1000)
-                  : new Date()
-              );
-              setTripMainCity(doc.data().position || "");
-              setTripIntroduction(doc.data().introduction || "");
-            }
-          }
-        });
+      async function getTripData() {
+        const albumData = await getAlbumDataById(albumIdEditing);
+        if (!albumData) {
+          history.push({ pathname: "notfound" });
+        } else if (!albumData.country) {
+          setNewAlbum(true);
+        } else {
+          setTripDate(
+            albumData.timestamp
+              ? new Date(albumData.timestamp.seconds * 1000)
+              : new Date()
+          );
+          setTripMainCity(albumData.position || "");
+          setTripIntroduction(albumData.introduction || "");
+        }
+      }
+      getTripData();
     }
   }, [albumIdEditing]);
 
   useEffect(() => {
-    fetch("https://countriesnow.space/api/v0.1/countries/states", {
+    fetch(CountryStateApi, {
       body: JSON.stringify({ country: targetCountry.name }),
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -226,21 +216,16 @@ export default function GalleryQuestion() {
       });
   }, []);
 
-  function handleBack() {
+  async function handleBack() {
     dispatch({
       type: "SET_ALBUM_ID_EDITING",
       payload: "",
     });
-    db_gallery
-      .doc(albumIdEditing)
-      .delete()
-      .then(() => {
-        history.push({ pathname: "home" });
-      });
-    // innerRef.current.style.display = "none";
+    await deleteAlbum(albumIdEditing);
+    history.push({ pathname: "home" });
   }
 
-  function handleStartEdit() {
+  async function handleStartEdit() {
     if (
       !cityInCountry.map((state) => state.name).length ||
       cityInCountry.map((state) => state.name).includes(tripMainCity)
@@ -254,25 +239,16 @@ export default function GalleryQuestion() {
         praise: [],
         condition: "pending",
       };
-      db_gallery
-        .doc(albumIdEditing)
-        .update(body)
-        .then(() => {
-          QuestionRef.current.style.display = "none";
-        });
+      await updateAlbum(albumIdEditing, body);
+      QuestionRef.current.style.display = "none";
     } else {
       mainCityInputRef.current.style.outline = "4px #AE0000 solid";
     }
-
-    // history.push({ pathname: "edit" });
   }
 
   return (
     <GalleryQuestionDiv ref={QuestionRef}>
       <GalleryQuestionContainer>
-        {/* <BackDiv onClick={handleBack}>
-          <i className="fas fa-times"></i>
-        </BackDiv> */}
         <Title>Start the trip in</Title>
         <TitleCountry
           style={{
@@ -287,14 +263,13 @@ export default function GalleryQuestion() {
         <Form>
           <QuestionDiv>
             <QustionIcon>
-              <i className="fas fa-calendar-alt"></i>
+              <i className="fas fa-calendar-alt" />
             </QustionIcon>
             <Question>
               <QuestionTitle>Date</QuestionTitle>
-              {/* <ThemeProvider theme={theme}> */}
-              {/* <div style={{ backgroundColor: "white" }}> */}
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
+                  maxDate={new Date()}
                   value={tripDate}
                   onChange={(newValue) => {
                     setTripDate(newValue);
@@ -309,35 +284,31 @@ export default function GalleryQuestion() {
                   }}
                 />
               </LocalizationProvider>
-              {/* </div> */}
-              {/* </ThemeProvider> */}
             </Question>
           </QuestionDiv>
 
           <QuestionDiv>
             <QustionIcon>
-              <i className="fas fa-university"></i>
+              <i className="fas fa-university" />
             </QustionIcon>
             <Question>
-              <QuestionTitle>Main City</QuestionTitle>
+              <QuestionTitle>City/State</QuestionTitle>
               <SearchDiv ref={mainCityInputRef}>
-                <i className="fas fa-search"></i>
+                <i className="fas fa-search" />
                 <TextFieldDiv>
                   <Inputdiv
                     list="ice-cream-flavors"
                     id="search-country"
                     name="search-country"
-                    placeholder="Main City"
+                    placeholder="City/State"
                     style={{
                       border: "none",
                       background: "none",
-                      // color: "white",
                       fontSize: "20px",
                     }}
                     value={tripMainCity}
                     onChange={(e) => {
                       setTripMainCity(e.target.value);
-                      // e.target.parentNode.parentNode.style.outline = "none";
                     }}
                   />
 
@@ -346,29 +317,6 @@ export default function GalleryQuestion() {
                       <option key={state.name} value={state.name} />
                     ))}
                   </datalist>
-
-                  {/* <Inputdiv
-                    list="country-choice"
-                    id="search-country"
-                    name="search-country"
-                    placeholder="Main City"
-                    style={{
-                      border: "none",
-                      background: "none",
-                      color: "white",
-                      fontSize: "20px",
-                    }}
-                    value={tripMainCity}
-                    onChange={(e) => {
-                      setTripMainCity(e.target.value);
-                      e.target.parentNode.parentNode.style.outline = "none";
-                    }}
-                  />
-                  <datalist id="country-choice">
-                    {cityInCountry.map((state) => (
-                      <option key={state.name} value={state.name} />
-                    ))}
-                  </datalist> */}
                 </TextFieldDiv>
               </SearchDiv>
             </Question>
@@ -376,7 +324,7 @@ export default function GalleryQuestion() {
 
           <QuestionDiv>
             <QustionIcon>
-              <i className="fas fa-list-ul"></i>
+              <i className="fas fa-list-ul" />
             </QustionIcon>
             <Question>
               <QuestionTitle>Introduction</QuestionTitle>
@@ -388,14 +336,12 @@ export default function GalleryQuestion() {
                       width: "100%",
                       height: "200px",
                       fontSize: 16,
-                      // border: "1px rgb(58, 74, 88, 0.5) solid",
                       padding: "10px 10px 0",
                       backgroundColor: "rgb(255, 255, 255, 0.4)",
                       borderRadius: "10px",
                       color: "#3a4a58",
                     },
                   }}
-                  // label={`Edit ${title}`}
                   size="small"
                   maxRows={textAreaHeight}
                   placeholder="Introduce the trip"
@@ -450,7 +396,6 @@ export default function GalleryQuestion() {
                 lineHeight: 1.5,
                 margin: "0 20px",
                 color: "#667484",
-                // outline: "3px #3A4A58 solid",
                 boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.6)",
                 ":hover": {
                   backgroundColor: "rgb(255, 255, 255, 0.8)",
@@ -459,7 +404,7 @@ export default function GalleryQuestion() {
               onClick={handleStartEdit}
             >
               {newAlbum ? "Start" : "Continue"}&ensp;
-              <i className="fas fa-arrow-right"></i>
+              <i className="fas fa-arrow-right" />
             </Button>
           </ButtonsDiv>
         </ThemeProvider>

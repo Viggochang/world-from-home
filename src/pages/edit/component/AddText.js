@@ -126,7 +126,6 @@ function AddText({ page, id, addTextRef, handleCanvasOn }) {
         }}
         onClick={(e) => handleAddText(e, `page${page}-canvas${id}`)}
       >
-        {/* <i className="fas fa-font"></i> */}
         <TextFieldsIcon />
       </AddTextDiv>
     </Tooltip>

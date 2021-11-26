@@ -123,15 +123,16 @@ export default function InfoFriendSmall({
     <InfoFriendDiv>
       <InfoTitle>Capital City</InfoTitle>
       <CaptainCity>
-        <i className="fas fa-archway"></i>
+        <i className="fas fa-archway" />
         &ensp;{captain.capitalCity}
       </CaptainCity>
 
       <InfoFriendBtn onClick={() => handlePopup(infoPopupRef)}>
-        <i className="fas fa-info"></i>&ensp;Information
+        <i className="fas fa-info" />
+        &ensp;Information
       </InfoFriendBtn>
       <InfoFriendBtn onClick={() => handlePopup(friendPopupRef)}>
-        <i className="fas fa-users"></i>
+        <i className="fas fa-users" />
         &ensp;Friends
       </InfoFriendBtn>
 

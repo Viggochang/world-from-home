@@ -6,7 +6,8 @@ import { useHistory } from "react-router";
 import Button from "@material-ui/core/Button";
 
 import countryTrans from "../../../util/countryTrans";
-import { db_userInfo } from "../../../util/firebase";
+import { updateUser } from "../../../util/firebase";
+import { friendStateObj } from "../../../util/friendStateObj";
 
 const FriendDiv = styled.div`
   display: flex;
@@ -82,50 +83,59 @@ const AcceptRemoveBtnsDiv = styled.div`
   display: flex;
 `;
 
-export default function Friend({ friend, request, isMyPage }) {
-  const { id: friendId, friends: friendFriends, photo, name, country } = friend;
+export default function Friend({ friend: friendInfo, request, isMyPage }) {
   const acceptRef = useRef();
   const removeRef = useRef();
   const history = useHistory();
   const dispatch = useDispatch();
 
   const myInfo = useSelector((state) => state.userInfo);
-  const { friends: myFriends, id: myId } = myInfo;
 
-  function handleAcceptRemove(e, type) {
-    const myFriendsData = [
-      ...myFriends.filter(({ id }) => id !== friendId),
+  function handleAcceptRemove(e, friendCondition) {
+    const createUpdateBody = (
+      myInfo,
+      friendInfo,
+      friendCondition,
+      stateFrom
+    ) => [
+      ...myInfo.friends.filter((friend) => friend.id !== friendInfo.id),
       {
-        id: friendId,
-        condition: type === "accept" ? "confirmed" : "none",
+        id: friendInfo.id,
+        condition: friendStateObj[friendCondition].state_change[stateFrom],
       },
     ];
-    db_userInfo.doc(myId).update({ friends: myFriendsData });
 
-    const friendFriendsData = [
-      ...friendFriends.filter(({ id }) => id !== myId),
-      {
-        id: myId,
-        condition: type === "accept" ? "confirmed" : "none",
-      },
-    ];
-    db_userInfo.doc(friendId).update({ friends: friendFriendsData });
+    updateUser(myInfo.id, {
+      friends: createUpdateBody(
+        myInfo,
+        friendInfo,
+        friendCondition,
+        "my_state"
+      ),
+    });
+    updateUser(friendInfo.id, {
+      friends: createUpdateBody(
+        friendInfo,
+        myInfo,
+        friendCondition,
+        "friend_state"
+      ),
+    });
   }
 
   function handleQueryUserId() {
     dispatch({
       type: "SET_QUERY_USER_ID",
-      payload: friendId,
+      payload: friendInfo.id,
     });
-    history.push({ pathname: "user", search: `?id=${friendId}` });
+    history.push({ pathname: "user", search: `?id=${friendInfo.id}` });
   }
 
   return (
     <FriendDiv>
-      {/* <NavLink to={`/user?id=${friendId}`}> */}
       <FriendPhoto
         style={{
-          background: `url(${photo})`,
+          background: `url(${friendInfo.photo})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -133,19 +143,18 @@ export default function Friend({ friend, request, isMyPage }) {
       >
         <FriendMask />
       </FriendPhoto>
-      {/* </NavLink> */}
       <FriendInfo>
-        <FriendName onClick={handleQueryUserId}>{name}</FriendName>
+        <FriendName onClick={handleQueryUserId}>{friendInfo.name}</FriendName>
         <FriendCountry>
-          <i className="fas fa-globe"></i>{" "}
-          {country ? countryTrans[country].name_en : ""}
+          <i className="fas fa-globe" />{" "}
+          {friendInfo.country ? countryTrans[friendInfo.country].name_en : ""}
         </FriendCountry>
         {isMyPage ? (
           <AcceptRemoveBtnsDiv>
             {request ? (
               <Button
                 ref={acceptRef}
-                onClick={(e) => handleAcceptRemove(e, "accept")}
+                onClick={(e) => handleAcceptRemove(e, "get_request")}
                 sx={{
                   outline: "1px	#006000 solid",
                   color: "#006000",
@@ -166,7 +175,7 @@ export default function Friend({ friend, request, isMyPage }) {
             )}
             <Button
               ref={removeRef}
-              onClick={(e) => handleAcceptRemove(e, "remove")}
+              onClick={(e) => handleAcceptRemove(e, "confirmed")}
               sx={{
                 outline: "1px #AE0000 solid",
                 color: "#AE0000",
@@ -174,9 +183,6 @@ export default function Friend({ friend, request, isMyPage }) {
                 borderRadius: "20px",
                 marginRight: "15px",
                 fontSize: "12px",
-                // display: "flex",
-                // alignItem: "center",
-                // justifyContent: "center",
                 "&:hover": {
                   backgroundColor: "#AE0000",
                   color: "white",
@@ -189,10 +195,6 @@ export default function Friend({ friend, request, isMyPage }) {
         ) : (
           <></>
         )}
-        {/* <AcceptRemoveBtnsDiv>
-          {request ? <AcceptBtn ref={acceptRef} onClick={e => handleAcceptRemove(e, 'accept')}>accept</AcceptBtn> : <></>}
-          <RemoveBtn ref={removeRef} onClick={e => handleAcceptRemove(e, 'remove')}>remove</RemoveBtn>
-        </AcceptRemoveBtnsDiv> */}
       </FriendInfo>
     </FriendDiv>
   );

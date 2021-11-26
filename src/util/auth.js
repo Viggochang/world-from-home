@@ -1,13 +1,13 @@
-import {firebase} from './firebase';
+import { firebase } from "./firebase";
 
 const socialMediaAuth = (provider) => {
   return firebase
     .auth()
     .signInWithPopup(provider)
-    .then(res => {
+    .then((res) => {
       return res.user;
     })
-    .catch(er => {
+    .catch((er) => {
       return er;
     });
 };

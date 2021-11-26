@@ -120,7 +120,7 @@ export default function Search({
           ))}
       </datalist>
       <SearchIconDiv onClick={handleSearch}>
-        <i className="fas fa-search"></i>
+        <i className="fas fa-search" />
       </SearchIconDiv>
     </SearchDiv>
   );

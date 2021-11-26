@@ -10,13 +10,6 @@ const ClockDiv = styled.div`
   flex-direction: column;
   align-items: center;
   margin-left: 20px;
-
-  /* @media (min-width: 1280px) {
-    display: flex;
-  }
-  @media (min-height: 1080px) and (min-width: 1350px) {
-    margin-left: 0px;
-  } */
 `;
 
 const ClockText = styled.div`
@@ -35,9 +28,6 @@ const ClockText = styled.div`
     font-size: 22px;
     line-height: 28px;
   }
-  /* @media (min-height: 1080px) {
-    margin-bottom: 20px;
-  } */
 `;
 const ClockStyle = styled(Clock)`
   margin-top: 15px;

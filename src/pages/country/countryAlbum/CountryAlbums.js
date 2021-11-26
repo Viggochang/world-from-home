@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { db_gallery } from "../../../../util/firebase";
+import {
+  db_gallery,
+  setAlbumDataIntoDb,
+  onSnapshotAlbumByCountry,
+} from "../../../util/firebase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -30,11 +34,11 @@ const theme = createTheme({
 const GalleryBackgroundDiv = styled.div`
   width: calc(65% - 80px);
   margin-left: 20px;
-  /* height: calc(57% - 40px); */
   height: calc(57% - 40px);
   background-color: #e0e0e0;
   padding: 20px;
   display: flex;
+  border-radius: 8px;
   @media (max-width: 1180px) {
     width: calc(100% - 20px);
     height: calc(57% - 134px);
@@ -51,7 +55,6 @@ const Country = styled.div`
   display: none;
   font-weight: bold;
   font-size: 60px;
-  /* line-height: 60px; */
   color: white;
   margin: 0 0 10px 0;
   @media (max-width: 1180px) {
@@ -78,13 +81,13 @@ const AlbumHere = styled.div`
 `;
 
 const AlbumAdd = styled.div`
-  /* width: 500px; */
   width: 63vw;
   max-width: 450px;
   height: 65%;
   margin: 80px 0 40px;
   outline: 1px #3a4a58 solid;
   display: flex;
+  border-radius: 5px;
   @media (max-width: 520px) {
     margin: 50px 0 40px;
   }
@@ -97,10 +100,6 @@ export default function CountryAlbums({ signinRef }) {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  // function handleGalleryQuestion() {
-  //   galleryQuestionRef.current.style.display = "flex";
-  // }
-
   function handleToEdit() {
     if (!myUserId) {
       signinRef.current.style.zIndex = 3;
@@ -110,30 +109,31 @@ export default function CountryAlbums({ signinRef }) {
         type: "SET_ALBUM_ID_EDITING",
         payload: newAlbumIdEditing,
       });
-      db_gallery
-        .doc(newAlbumIdEditing)
-        .set({ id: newAlbumIdEditing, condition: "pending" })
-        .then(() => {
-          let params = new URL(window.location).searchParams;
-          params.append("album_id_edit", newAlbumIdEditing);
-          history.push({ pathname: "edit", search: params.toString() });
+
+      async function albumPending() {
+        await setAlbumDataIntoDb(newAlbumIdEditing, {
+          id: newAlbumIdEditing,
+          condition: "pending",
         });
+        let params = new URL(window.location).searchParams;
+        params.append("album_id_edit", newAlbumIdEditing);
+        history.push({ pathname: "edit", search: params.toString() });
+      }
+      albumPending();
     }
   }
 
   useEffect(() => {
     console.log(targetCountry);
     if (Object.keys(targetCountry).length) {
-      let unsubscribe = db_gallery
-        .where("country", "==", targetCountry.id)
-        .onSnapshot((querySnapshot) => {
-          let albums = [];
-          querySnapshot.forEach((album) => albums.push(album.data()));
-          setAlbum(albums);
-        });
-      return () => {
-        unsubscribe();
-      };
+      async function getAlbumHere() {
+        const unsubscribe = onSnapshotAlbumByCountry(
+          targetCountry.id,
+          setAlbum
+        );
+        return () => unsubscribe();
+      }
+      getAlbumHere();
     }
   }, [targetCountry]);
 
@@ -145,8 +145,8 @@ export default function CountryAlbums({ signinRef }) {
           <AlbumDiv>
             {album
               .filter((album) => album.condition === "completed")
+              .sort((a, b) => b.timestamp.seconds - a.timestamp.seconds)
               .map((album) => {
-                //getOwnerPhoto(album.user_id);
                 return <Album key={album.id} album={album} />;
               })}
             <AlbumHere>

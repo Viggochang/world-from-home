@@ -51,18 +51,6 @@ export default function Preview({ preview }) {
           const { page, templateId } = pageInfo;
           const CanvasInPage = allTemplateParams("preview")[templateId](page);
           CanvasInPage.forEach((canvas) => {
-            // let canvasId = canvas.lowerCanvasEl.id.split("preview-")[1];
-            // const [canvasWeight, canvasHeight] = [
-            //   canvas.getWidth(),
-            //   canvas.getHeight(),
-            // ];
-
-            // let canvasObj = JSON.parse(canvasState[canvasId]);
-            // canvasObj["objects"] = canvasObj["objects"].map((object) => {
-            //   if (object.type === "image") {
-            //     // object.scaleX=
-            //   }
-            // });
             canvas.loadFromJSON(
               canvasState[canvas.lowerCanvasEl.id.split("preview-")[1]],
               () => {

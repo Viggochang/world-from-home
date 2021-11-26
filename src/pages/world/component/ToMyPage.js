@@ -2,10 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { firebase } from "../../../util/firebase";
 
 const MyPhoto = styled(NavLink)`
-  /* background-color: white; */
   width: 60px;
   height: 60px;
   box-shadow: 0px 0px 10px #bebebe;
@@ -45,7 +43,6 @@ const GuestIcon = styled.div`
 
 export default function ToMyPage({ handleSignIn, style }) {
   const userInfo = useSelector((state) => state.userInfo);
-  // console.log(userInfo);
   if (userInfo.photo) {
     return (
       <MyPhoto
@@ -61,7 +58,7 @@ export default function ToMyPage({ handleSignIn, style }) {
   } else {
     return (
       <GuestIcon style={style} onClick={handleSignIn}>
-        <i className="fas fa-user-alt"></i>
+        <i className="fas fa-user-alt" />
       </GuestIcon>
     );
   }

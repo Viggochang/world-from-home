@@ -6,9 +6,14 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import Compressor from "compressorjs";
 import {
   db_tourist_spot,
-  db_gallery,
-  db_userInfo,
   storage,
+  getAlbumDataById,
+  getTouristSpotByAlbumId,
+  updateUser,
+  updateAlbum,
+  updateTouristSpot,
+  setTouristSpotDataIntoDb,
+  deleteTouristSpot,
 } from "../../../util/firebase";
 import LeafletMap from "./CompleteQuestion_leaflet";
 
@@ -32,7 +37,6 @@ const CompleteQuestionContainer = styled.div`
   align-items: center;
   background-color: #b8c3d0;
   width: calc(80vmin + 240px);
-  /* height: 75vmin; */
   height: calc(50vmin + 220px);
   margin: auto;
   padding: 30px 70px 30px;
@@ -46,7 +50,6 @@ const Form = styled.div`
   margin-top: 20px;
   padding: 20px 30px 30px;
   width: calc(100% - 40px);
-  /* height: 60vmin; */
   outline: 1px white solid;
   display: flex;
   justify-content: space-between;
@@ -107,7 +110,6 @@ const CameraBtn = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  /* box-shadow: 0 0 15px #adadad; */
   :hover {
     background-color: rgb(184, 195, 208, 0.3);
   }
@@ -118,8 +120,6 @@ const CoverPhotoDiv = styled.div`
 `;
 
 const CoverPhoto = styled.div`
-  /* width: calc(100% - 100px);
-  height: 20vh; */
   outline: 1px rgb(255, 255, 255, 0.5) solid;
   width: 40vmin;
   height: 30vmin;
@@ -157,7 +157,6 @@ const TouristSpotTag = styled.div`
   padding: 0 10px 0 15px;
   margin: 0 10px 10px 0;
   border-radius: 14px;
-  /* box-shadow: 0px 0px 5px #d0d0d0; */
 `;
 
 const RemoveTag = styled.div`
@@ -176,9 +175,6 @@ const RemoveTag = styled.div`
 
 const Buttons = styled.div`
   width: 100%;
-  /* position: absolute;
-  right: 30px;
-  bottom: 15px; */
   display: flex;
   justify-content: flex-end;
 `;
@@ -199,23 +195,15 @@ export default function CompleteQuestion({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(albumIdEditing);
     if (albumIdEditing) {
-      db_gallery
-        .doc(albumIdEditing)
-        .get()
-        .then((doc) => {
-          if (doc.data()) {
-            setImageUrl(doc.data().cover_photo || "");
-          }
-        });
-
-      db_tourist_spot
-        .where("album_id", "==", albumIdEditing)
-        .get()
-        .then((spots) => {
-          setTouristSpot(spots.docs.map((spot) => spot.data() || []));
-        });
+      async function getCoverPhoto() {
+        setImageUrl((await getAlbumDataById(albumIdEditing)).cover_photo || "");
+      }
+      async function getTouristSpot() {
+        setTouristSpot((await getTouristSpotByAlbumId(albumIdEditing)) || []);
+      }
+      getCoverPhoto();
+      getTouristSpot();
     }
   }, [albumIdEditing]);
 
@@ -255,13 +243,13 @@ export default function CompleteQuestion({
           touristSpot.lat !== spot.lat && touristSpot.lng !== spot.lng
       )
     );
-    db_tourist_spot.doc(spot.id).delete();
+    deleteTouristSpot(spot.id);
   }
 
   function handleSubmit() {
     touristSpot.forEach((spot) => {
       if (spot.id) {
-        db_tourist_spot.doc(spot.id).update({ condition: "completed" });
+        updateTouristSpot(spot.id, { condition: "completed" });
       } else {
         const id = db_tourist_spot.doc().id;
         const body = {
@@ -270,7 +258,7 @@ export default function CompleteQuestion({
           album_id: albumIdEditing,
           condition: "completed",
         };
-        db_tourist_spot.doc(id).set(body).then();
+        setTouristSpotDataIntoDb(id, body);
       }
     });
 
@@ -278,19 +266,19 @@ export default function CompleteQuestion({
       cover_photo: imageUrl,
       condition: "completed",
     };
-    db_gallery
-      .doc(albumIdEditing)
-      .update(body)
-      .then(() => {
-        dispatch({
-          type: "DISCARD_CANVAS_EDIT",
-          payload: "",
-        });
-        setComplete(true);
+
+    async function CompleteAlbum() {
+      await updateAlbum(albumIdEditing, body);
+      dispatch({
+        type: "DISCARD_CANVAS_EDIT",
+        payload: "",
       });
+      setComplete(true);
+    }
+    CompleteAlbum();
 
     if (!myInfo.travel_country.includes(targetCountry.id)) {
-      db_userInfo.doc(myInfo.id).update({
+      updateUser(myInfo.id, {
         travel_country: [...myInfo.travel_country, targetCountry.id],
       });
     }
@@ -300,6 +288,20 @@ export default function CompleteQuestion({
     completeQuestionRef.current.style.zIndex = -1;
   }
 
+  const btnStyle = {
+    width: "180px",
+    fontSize: "20px",
+    fontWeight: "bold",
+    borderRadius: "40px",
+    lineHeight: 1.5,
+    margin: "0 20px",
+    color: "#667484",
+    boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
+    ":hover": {
+      backgroundColor: "rgb(255, 255, 255, 0.8)",
+    },
+  };
+
   return (
     <CompleteQuestionDiv ref={completeQuestionRef}>
       <CompleteQuestionContainer>
@@ -307,7 +309,7 @@ export default function CompleteQuestion({
           <Question>
             <QuestionTitle>
               <QuestionIcon>
-                <i className="fas fa-map-marker-alt"></i>
+                <i className="fas fa-map-marker-alt" />
               </QuestionIcon>
               <QuestionTitleText>Tourist Spots</QuestionTitleText>
             </QuestionTitle>
@@ -326,7 +328,7 @@ export default function CompleteQuestion({
           <Question>
             <QuestionTitle>
               <QuestionIcon>
-                <i className="fas fa-image"></i>
+                <i className="fas fa-image" />
               </QuestionIcon>
               <QuestionTitleText>Cover Photo</QuestionTitleText>
             </QuestionTitle>
@@ -346,7 +348,7 @@ export default function CompleteQuestion({
                   onChange={handleUploadImg}
                 />
                 <CameraBtn>
-                  <i className="fas fa-camera"></i>
+                  <i className="fas fa-camera" />
                 </CameraBtn>
               </label>
             </CoverPhotoDiv>
@@ -355,7 +357,7 @@ export default function CompleteQuestion({
                 <TouristSpotTag key={index}>
                   {spot.text}&ensp;
                   <RemoveTag onClick={() => removeTag(spot)}>
-                    <i className="fas fa-times"></i>
+                    <i className="fas fa-times" />
                   </RemoveTag>
                 </TouristSpotTag>
               ))}
@@ -364,25 +366,10 @@ export default function CompleteQuestion({
         </Form>
         <ThemeProvider theme={whiteBtnTheme}>
           <Buttons>
-            {/* <SubmitBtn onClick={handleCancel}>Cancel</SubmitBtn>
-            <SubmitBtn onClick={handleSubmit}>Submit</SubmitBtn> */}
             <Button
               variant="contained"
               color="white"
-              sx={{
-                width: "180px",
-                fontSize: "20px",
-                fontWeight: "bold",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                margin: "0 20px",
-                color: "#667484",
-                // outline: "3px #3A4A58 solid",
-                boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
-                ":hover": {
-                  backgroundColor: "rgb(255, 255, 255, 0.8)",
-                },
-              }}
+              sx={btnStyle}
               onClick={handleCancel}
             >
               Back
@@ -390,20 +377,7 @@ export default function CompleteQuestion({
             <Button
               variant="contained"
               color="white"
-              sx={{
-                width: "180px",
-                fontSize: "20px",
-                fontWeight: "bold",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                marginLeft: "20px",
-                color: "#667484",
-                // outline: "3px #3A4A58 solid",
-                boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
-                ":hover": {
-                  backgroundColor: "rgb(255, 255, 255, 0.8)",
-                },
-              }}
+              sx={btnStyle}
               onClick={handleSubmit}
             >
               Submit

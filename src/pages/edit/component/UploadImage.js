@@ -54,6 +54,7 @@ export default function UploadImage({
   const canvasState = useSelector((state) => state.canvasState);
   const editUndo = useSelector((state) => state.editUndo);
   const activeCanvas = useSelector((state) => state.activeCanvas);
+  const myUserId = useSelector((state) => state.myUserId);
   const dispatch = useDispatch();
 
   function deleteObject(eventData, transform) {
@@ -223,7 +224,7 @@ export default function UploadImage({
         // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };
         const storageRef = storage.ref(
-          `userId/albums/${albumIdEditing}/${canvasId}_${Date.now()}`
+          `user_album/${myUserId}/albums/${albumIdEditing}/${canvasId}_${Date.now()}`
         );
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
@@ -253,7 +254,6 @@ export default function UploadImage({
             style={{ display: "none" }}
             onChange={(e) => handleUploadImg(e, `page${page}-canvas${id}`)}
           />
-          {/* <i className="far fa-image"></i> */}
           <InsertPhotoIcon />
         </ImgInputLabel>
       </UploadImgDiv>

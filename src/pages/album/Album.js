@@ -2,17 +2,24 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { db_gallery, db_userInfo, db_tourist_spot } from "../../util/firebase";
+import {
+  getAlbumDataById,
+  getUserDataByUid,
+  updateAlbum,
+  updateUser,
+  getTouristSpotByAlbumId,
+  onSnapshotAlbumByAlbumId,
+  updateTouristSpot,
+} from "../../util/firebase";
+import { swalDeleteAlbum } from "../../util/swal";
 
 import ShowAlbum from "./component/ShowAlbum";
 import { Tooltip, tooltipClasses } from "@mui/material";
 import { styled as styledMui } from "@mui/material/styles";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-import "./alertButton.css";
-import ToImage from "./component/ToImage";
+// import "./alertButton.css";
 
 import countryTrans from "../../util/countryTrans";
+import { friendStateObj } from "../../util/friendStateObj";
 
 const MyTooltip = styledMui(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -88,7 +95,6 @@ const ButtonStyle = styled.div`
     font-size: 36px;
   }
   :hover {
-    /* color: #667484; */
     box-shadow: 0px 0px 22px #d0d0d0;
   }
 `;
@@ -112,7 +118,7 @@ const AlbumPositionData = styled.div`
   color: white;
 `;
 
-const AlbumPosition = styled.div`
+const AlbumOwnerName = styled.div`
   margin-left: 5px;
   font-weight: bold;
   font-size: 30px;
@@ -121,8 +127,15 @@ const AlbumPosition = styled.div`
 
 const AlbumDate = styled.div`
   margin-left: 5px;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 40px;
+`;
+
+const AlbumPraise = styled.div`
+  font-size: 22px;
+  line-height: 40px;
+  margin: auto calc(50% - 400px) 0 auto;
+  color: white;
 `;
 
 export default function Album() {
@@ -131,73 +144,56 @@ export default function Album() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [albumData, setAlbumData] = useState({});
-  const [ownerPhoto, setOwnerPhoto] = useState("");
-  const [ownerId, setOwnerId] = useState("");
-  const [ownerFriendData, setOwnerFriendData] = useState([]);
+  const [ownerData, setOwnerData] = useState({});
+  const [praise, setPraise] = useState(0);
   const [liked, setLiked] = useState(false);
   const [friendCondition, setFriendCondition] = useState("none");
   const [isMyAlbun, setIsMyAlbum] = useState(false);
   const albumRef = useRef();
 
-  useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("album_id_show");
-    id &&
-      db_gallery
-        .doc(id)
-        .get()
-        .then((doc) => {
-          if (!doc.exists) {
-            handleClickBack();
-            history.push({ pathname: "notfound" });
-          }
-        });
-  }, []);
+  const id = new URLSearchParams(window.location.search).get("album_id_show");
 
   useEffect(() => {
-    console.log(albumIdShow);
+    async function getAlbumData(id) {
+      const albumData = await getAlbumDataById(id);
+      if (!albumData) {
+        handleClickBack();
+        history.push({ pathname: "notfound" });
+      } else {
+        setAlbumData(albumData);
+        setLiked(albumData.praise.includes(myInfo.id));
+
+        if (albumData.user_id === myInfo.id) {
+          setIsMyAlbum(true);
+        }
+
+        const ownerData = await getUserDataByUid(albumData.user_id);
+        setOwnerData(ownerData);
+        if (Object.keys(myInfo).length) {
+          myInfo.friends.forEach((friend) => {
+            if (ownerData.id === friend.id) {
+              setFriendCondition(friend.condition);
+            }
+          });
+        }
+      }
+    }
+    id && getAlbumData(id);
+  }, [id, myInfo]);
+
+  useEffect(() => {
     if (albumIdShow) {
-      db_gallery
-        .doc(albumIdShow)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            let albumData = doc.data();
-            setAlbumData(albumData);
-            db_userInfo
-              .doc(albumData.user_id)
-              .get()
-              .then((doc) => {
-                setOwnerPhoto(doc.data().photo);
-                setOwnerId(doc.data().id);
-                setOwnerFriendData(doc.data().friends);
-              });
-          }
-        });
+      const unsubscribe = onSnapshotAlbumByAlbumId(albumIdShow, setPraise);
+      return () => {
+        unsubscribe();
+      };
     }
   }, [albumIdShow]);
-
-  useEffect(() => {
-    if (albumData.praise) {
-      setLiked(albumData.praise.includes(myInfo.id));
-    }
-  }, [albumData.praise]);
-
-  useEffect(() => {
-    if (myInfo.friends) {
-      myInfo.friends.forEach((friend) => {
-        if (ownerId === friend.id) {
-          setFriendCondition(friend.condition);
-        }
-      });
-    }
-    setIsMyAlbum(myInfo.id === ownerId);
-  }, [myInfo.friends, ownerId]);
 
   function handleClickBack() {
     dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
     setAlbumData({});
-    setOwnerPhoto("");
-    setOwnerId("");
+    setOwnerData({});
 
     let params = new URL(window.location).searchParams;
     params.delete("album_id_show");
@@ -208,43 +204,44 @@ export default function Album() {
 
   function handleLike() {
     setLiked(!liked);
-    db_gallery.doc(albumIdShow).update({
+    updateAlbum(albumIdShow, {
       praise: !liked
-        ? [...albumData.praise, myInfo.id || "none"]
-        : albumData.praise.filter((id) => id !== (myInfo.id || "none")),
+        ? [...albumData.praise.filter((id) => id !== myInfo.id), myInfo.id]
+        : albumData.praise.filter((id) => id !== myInfo.id),
     });
   }
 
   function handleFriend() {
-    const newMyFriendData = myInfo.friends.filter(
-      (friend) => friend.id !== ownerId
-    );
-    const newOwnerFriendData = ownerFriendData.filter(
-      (friend) => friend.id !== myInfo.id
-    );
+    if (friendCondition === "none" || friendCondition === "get_request") {
+      const createUpdateBody = (
+        myInfo,
+        friendInfo,
+        friendCondition,
+        stateFrom
+      ) => [
+        ...myInfo.friends.filter((friend) => friend.id !== friendInfo.id),
+        {
+          id: friendInfo.id,
+          condition: friendStateObj[friendCondition].state_change[stateFrom],
+        },
+      ];
 
-    if (friendCondition === "none") {
-      db_userInfo.doc(myInfo.id).update({
-        friends: [
-          ...newMyFriendData,
-          { id: ownerId, condition: "send_request" },
-        ],
+      setFriendCondition(friendStateObj[friendCondition].state_change.my_state);
+      updateUser(myInfo.id, {
+        friends: createUpdateBody(
+          myInfo,
+          ownerData,
+          friendCondition,
+          "my_state"
+        ),
       });
-      db_userInfo.doc(ownerId).update({
-        friends: [
-          ...newOwnerFriendData,
-          { id: myInfo.id, condition: "get_request" },
-        ],
-      });
-    } else if (friendCondition === "get_request") {
-      db_userInfo.doc(myInfo.id).update({
-        friends: [...newMyFriendData, { id: ownerId, condition: "confirmed" }],
-      });
-      db_userInfo.doc(ownerId).update({
-        friends: [
-          ...newOwnerFriendData,
-          { id: myInfo.id, condition: "confirmed" },
-        ],
+      updateUser(ownerData.id, {
+        friends: createUpdateBody(
+          ownerData,
+          myInfo,
+          friendCondition,
+          "friend_state"
+        ),
       });
     }
   }
@@ -261,14 +258,13 @@ export default function Album() {
         name: countryTrans[albumData.country].name_en,
       },
     });
-    db_tourist_spot
-      .where("album_id", "==", albumIdShow)
-      .get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) =>
-          db_tourist_spot.doc(doc.id).update({ condition: "pending" })
-        );
-      });
+    async function touristSpotPending() {
+      const touristSpots = await getTouristSpotByAlbumId(albumIdShow);
+      touristSpots.forEach((doc) =>
+        updateTouristSpot(doc.id, { condition: "pending" })
+      );
+    }
+    touristSpotPending();
     history.push({
       pathname: "edit",
       search: `?album_id_edit=${albumIdShow}`,
@@ -276,58 +272,28 @@ export default function Album() {
   }
 
   function handleDelete() {
-    const MySwal = withReactContent(Swal);
+    async function discardTouristSpot() {
+      const allSpots = await getTouristSpotByAlbumId(albumIdShow);
+      allSpots.forEach((spot) =>
+        updateTouristSpot(spot.id, { condition: "discard" })
+      );
+    }
 
-    MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
-      reverseButtons: true,
-      customClass: {
-        confirmButton: "confirmbutton",
-        cancelButton: "cancelbutton",
+    swalDeleteAlbum(
+      () => {
+        updateAlbum(albumIdShow, { condition: "discard" });
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        db_gallery.doc(albumIdShow).update({ condition: "discard" });
-        MySwal.fire({
-          title: "Deleted!",
-          text: "Your album has been deleted.",
-          icon: "success",
-          customClass: {
-            confirmButton: "confirmbutton",
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleClickBack();
-          }
-        });
+      discardTouristSpot,
+      handleClickBack
+    );
+  }
 
-        db_tourist_spot
-          .where("album_id", "==", albumIdShow)
-          .get()
-          .then((snapshot) => {
-            snapshot.docs.forEach((doc) =>
-              db_tourist_spot.doc(doc.id).update({ condition: "discard" })
-            );
-          });
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        MySwal.fire({
-          title: "Cancelled",
-          text: "Your album is safe :)",
-          icon: "error",
-          customClass: {
-            confirmButton: "confirmbutton",
-          },
-        });
+  function handleEsc(event) {
+    if (event.key === "Escape") {
+      if (albumIdShow) {
+        handleClickBack();
       }
-    });
+    }
   }
 
   const addFriendText = {
@@ -338,7 +304,11 @@ export default function Album() {
   };
 
   return (
-    <AlbumDiv style={{ display: albumIdShow ? "flex" : "none" }}>
+    <AlbumDiv
+      style={{ display: albumIdShow ? "flex" : "none" }}
+      onKeyDown={handleEsc}
+      tabIndex="0"
+    >
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times-circle" />
       </BackDiv>
@@ -372,7 +342,7 @@ export default function Album() {
                   : { display: isMyAlbun ? "none" : "flex" }
               }
             >
-              <i className="fas fa-user-plus"></i>
+              <i className="fas fa-user-plus" />
             </ButtonStyle>
           </MyTooltip>
 
@@ -392,17 +362,17 @@ export default function Album() {
             style={{ display: isMyAlbun ? "flex" : "none" }}
           >
             <ButtonStyle onClick={handleDelete}>
-              <i className="fas fa-trash-alt"></i>
+              <i className="fas fa-trash-alt" />
             </ButtonStyle>
           </MyTooltip>
-          <ToImage albumRef={albumRef} />
+          {/* <ToImage albumRef={albumRef} /> */}
         </ButtonsDiv>
       ) : null}
 
       <AlbumInfo>
         <AlbumOwner
           style={{
-            backgroundImage: `url(${ownerPhoto})`,
+            backgroundImage: `url(${ownerData.photo})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -418,11 +388,10 @@ export default function Album() {
           }}
         />
         <AlbumPositionData>
-          <AlbumPosition>
-            <i className="fas fa-map-marker-alt"></i>
-            &ensp;{albumData.position}
-          </AlbumPosition>
+          <AlbumOwnerName>{ownerData.name}</AlbumOwnerName>
           <AlbumDate>
+            <i className="fas fa-map-marker-alt" />
+            &ensp;{albumData.position}&emsp;
             <i className="far fa-calendar-alt" />
             &ensp;
             {albumData.timestamp
@@ -430,6 +399,9 @@ export default function Album() {
               : ""}
           </AlbumDate>
         </AlbumPositionData>
+        <AlbumPraise>
+          <i className="fas fa-thumbs-up" /> {praise}
+        </AlbumPraise>
       </AlbumInfo>
       <ShowAlbum
         show={true}

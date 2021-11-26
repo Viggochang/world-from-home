@@ -4,9 +4,8 @@ import styled from "styled-components";
 import { useHistory } from "react-router";
 import { firebase } from "../../util/firebase";
 
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import logoutImg from "../../image/logout.jpeg";
+import { swalLogout } from "../../util/swal";
 
 const LogoutDiv = styled.div`
   font-size: 36px;
@@ -47,15 +46,7 @@ export default function Logout({
         });
       })
       .then(() => {
-        const MySwal = withReactContent(Swal);
-        MySwal.fire({
-          title: "Logged Out !",
-          text: "The most beautiful thing in the world is, of course, the world itself",
-          imageUrl: logoutImg,
-          imageWidth: 400,
-          imageHeight: 200,
-          imageAlt: "logged out",
-        }).then(() => {
+        swalLogout(logoutImg, () => {
           history.push({ pathname: "/" });
         });
       });
@@ -71,7 +62,7 @@ export default function Logout({
         }
       }}
     >
-      <i className="fas fa-sign-out-alt"></i>
+      <i className="fas fa-sign-out-alt" />
     </LogoutDiv>
   );
 }

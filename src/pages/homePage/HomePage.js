@@ -13,6 +13,7 @@ import SigninDiv from "../Signin/Signin";
 import Album from "../album/Album";
 import MapSwitch from "./MapSwitch";
 import Logout from "../Signin/Logout";
+import { startOfSecond } from "date-fns";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -61,6 +62,7 @@ export default function HomePage({ mapType, setMapType }) {
   const galleryQuestionRef = useRef();
   const signinRef = useRef();
   const userInfo = useSelector((state) => state.userInfo);
+  const albumIdShow = useSelector((state) => state.albumIdShow);
 
   const [maskVisibility, setMaskVisibility] = useState("hidden");
   const [maskOpacity, setMaskOpacity] = useState(0);
@@ -96,7 +98,9 @@ export default function HomePage({ mapType, setMapType }) {
   function handleEsc(event) {
     console.log(event.key);
     if (event.key === "Escape") {
-      handleClickBack();
+      if (!albumIdShow) {
+        handleClickBack();
+      }
     }
   }
 
@@ -123,7 +127,7 @@ export default function HomePage({ mapType, setMapType }) {
         style={{ display: mapType ? "block" : "none" }}
         onClick={handleClickBack}
       >
-        <i className="fas fa-home"></i>
+        <i className="fas fa-home" />
       </BackBtn>
 
       <Search

@@ -6,8 +6,6 @@ import { CompactPicker } from "react-color";
 import TextEditorSlider from "./TextEditorSlider";
 
 const TextEditorDiv = styled.div`
-  /* outline: 1px black solid; */
-  /* box-shadow: 0px 0px 15px #3a4a58; */
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
   padding: 10px;
@@ -32,7 +30,6 @@ const Title = styled.div`
 `;
 
 const FontColorDiv = styled.div`
-  /* width: 70%; */
   padding-bottom: 15px;
   border-bottom: 1px solid rgb(184, 195, 208, 0.7);
 `;
@@ -85,7 +82,6 @@ const LineHeightDiv = styled.div`
 `;
 
 export default function TextEditor({ textEditorRef, handleCanvasOn }) {
-  // const dispatch = useDispatch();
   const activeObj = useSelector((state) => state.activeObj);
   const activeCanvas = useSelector((state) => state.activeCanvas);
 
@@ -100,7 +96,6 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
   });
 
   function handleFontStyleChange(e, key) {
-    // e.preventDefault();
     let fontStyle = { ...textStyle };
     if (key === "fill") {
       fontStyle[key] = e.hex;
@@ -118,10 +113,6 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
     activeObj.set(fontStyle);
     activeCanvas.renderAll();
     setTextStyle(fontStyle);
-    // dispatch({
-    //   type: "SET_ACTIVE_OBJ",
-    //   payload: activeObj
-    // });
     handleCanvasOn(activeCanvas);
   }
 

@@ -180,7 +180,7 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
         <Title>{title}</Title>
         {isMyPage ? (
           <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
-            <i className="fas fa-user-plus" style={{ margin: "auto" }}></i>
+            <i className="fas fa-user-plus" style={{ margin: "auto" }} />
             {myFriendRequests.length ? (
               <RequestAlert>{myFriendRequests.length}</RequestAlert>
             ) : (
@@ -199,11 +199,8 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
             onChange={(e) => handleSearch(e)}
           />
           <SearchIconDiv>
-            <i className="fas fa-search"></i>
+            <i className="fas fa-search" />
           </SearchIconDiv>
-          {/* <IconButton sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
-          </IconButton> */}
         </SearchInput>
       </FilterDiv>
 

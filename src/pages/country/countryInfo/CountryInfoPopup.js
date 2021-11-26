@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Clock from "react-clock";
 import "react-clock/dist/Clock.css";
-import "../clock.css";
+import "./clock.css";
 
 const PopupDiv = styled.div`
   width: 90%;
@@ -46,7 +46,6 @@ const BackDiv = styled.div`
 `;
 
 const CaptainTitleDiv = styled.div`
-  /* padding: 0 20px; */
   width: 260px;
   outline: 1px white solid;
   font-size: 32px;
@@ -89,7 +88,6 @@ const TempIcon = styled.div`
 `;
 
 const ClockDiv = styled.div`
-  /* display: none; */
   flex-direction: column;
   align-items: center;
   margin: 20px 40px 0 40px;
@@ -103,7 +101,6 @@ const ClockText = styled.div`
   font-weight: bold;
   margin-bottom: 10px;
   width: 100%;
-  /* text-align: center; */
 `;
 const ClockStyle = styled(Clock)`
   margin: 20px auto 0;
@@ -143,7 +140,8 @@ export default function CountryInfoPopup({
           <i className="fas fa-times-circle" />
         </BackDiv>
         <CaptainTitleDiv>
-          <i className="fas fa-info"></i>&ensp;Information
+          <i className="fas fa-info" />
+          &ensp;Information
         </CaptainTitleDiv>
         <CaptitalTitle>Captital City</CaptitalTitle>
         <CaptainCity>{captain.capitalCity}</CaptainCity>
@@ -151,13 +149,13 @@ export default function CountryInfoPopup({
           {/* <img id="wicon" src="http://openweathermap.org/img/w/10d.png" style={{width: '100%'}} alt="Weather icon"></img> */}
           <WeatherTemp>
             <WeatherIcon>
-              <i className="fas fa-cloud-sun"></i>
+              <i className="fas fa-cloud-sun" />
             </WeatherIcon>
             <div>{weather}</div>
           </WeatherTemp>
           <WeatherTemp>
             <TempIcon>
-              <i className="fas fa-temperature-high"></i>
+              <i className="fas fa-temperature-high" />
             </TempIcon>
             <div>{temp !== "No Data" ? temp + "℃" : temp}</div>
           </WeatherTemp>

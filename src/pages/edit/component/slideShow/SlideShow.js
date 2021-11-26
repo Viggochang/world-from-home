@@ -1,34 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Fade } from "react-slideshow-image";
 import styled from "styled-components";
 
 import TemplateCanvas from "../templateCanvas/TemplateCanvas";
 import "./slideShow.css";
-
-const fadeImages = [
-  "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/pexels-fabian-wiktor-994605.jpg?alt=media&token=4ef6c694-7a2b-44c5-aa1c-a28c002eea83",
-  "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/pexels-julius-silver-753626.jpg?alt=media&token=9626416d-208c-486c-bb13-f199b4223544",
-  "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/pexels-nextvoyage-490466.jpg?alt=media&token=1c6c64d5-2ead-4ca0-b29b-09a78e410636",
-];
-
-const SlideContainer = styled.div`
-  height: 300px;
-  /* position: relative; */
-`;
-
-const EachFadeDiv = styled.div`
-  width: 800px;
-  height: 300px;
-  position: absolute;
-  top: 0;
-`;
-
-const SlideImg = styled.div`
-  background-position: center;
-  background-size: cover;
-  width: 100%;
-  height: 300px;
-`;
 
 const ButtonDiv = styled.div`
   width: 100%;
@@ -119,10 +93,10 @@ export default function SlideShow({
       />
       <ButtonDiv>
         <LeftBtn onClick={handleLeft}>
-          <i className="fas fa-caret-left"></i>
+          <i className="fas fa-caret-left" />
         </LeftBtn>
         <RightBtn onClick={handleRight}>
-          <i className="fas fa-caret-right"></i>
+          <i className="fas fa-caret-right" />
         </RightBtn>
       </ButtonDiv>
     </>

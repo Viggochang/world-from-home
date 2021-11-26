@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import CountryShape from "./country_shape/CountryShape";
-import CountryAlbums from "./component/country_album/CountryAlbums";
-import CountryInfo from "./component/CountryInfo";
-import CountryFriend from "./component/CountryFriend";
+import CountryShape from "./countryShape/CountryShape";
+import CountryAlbums from "./countryAlbum/CountryAlbums";
+import CountryInfo from "./countryInfo/CountryInfo";
+import CountryFriend from "./countryFriend/CountryFriend";
 import InfoFriendSmall from "./InfoFriendSmall/InfoFriendSmall";
 
-import { db_userInfo, db_gallery } from "../../util/firebase";
+import { getFriendsHere } from "../../util/firebase";
 
 const CountryDiv = styled.div`
   width: calc(90% - 120px);
@@ -65,20 +65,54 @@ const BackDiv = styled.div`
   }
 `;
 
+const countryCaptalCityApi = (countryId) =>
+  `https://api.worldbank.org/v2/country/${countryId}?format=json`;
+const weatherApi = (capitalCity) =>
+  `https://api.openweathermap.org/data/2.5/weather?q=${capitalCity}&appid=${process.env.REACT_APP_OPENWEATHERMAP_APPID}&units=metric`;
+
 function Country({ style, handleClickBack, signinRef }) {
   const targetCountry = useSelector((state) => state.targetCountry);
 
   const [captain, setCaptain] = useState({});
   const [timezone, setTimezone] = useState(0);
   const [weather, setWeather] = useState({});
-  const [myFriendList, setMyFriendList] = useState([]);
   const [friendHere, setFriendHere] = useState([]);
-  const id = useSelector((state) => state.myUserId);
+  const myUserInfo = useSelector((state) => state.userInfo);
 
   useEffect(() => {
-    fetch(
-      `https://api.worldbank.org/v2/country/${targetCountry.id}?format=json`
-    )
+    // async function fetchCountryCaptalCityApi() {
+    //   const result = (
+    //     await fetch(countryCaptalCityApi(targetCountry.id))
+    //   ).json()[1];
+    //   console.log((await fetch(countryCaptalCityApi(targetCountry.id))).json());
+    //   let capitalCity = null;
+    //   if (targetCountry.id === "TW") {
+    //     setCaptain({
+    //       capitalCity: "Taipei",
+    //       longitude: 121.5,
+    //       latitude: 25.04,
+    //     });
+    //     capitalCity = "Taipei";
+    //   } else if (result) {
+    //     const { longitude, latitude } = result[0];
+    //     capitalCity = result[0].capitalCity;
+    //     setCaptain({ capitalCity, longitude, latitude });
+    //   }
+    //   console.log(capitalCity);
+    //   if (capitalCity) {
+    //     const weatherData = (await fetch(weatherApi(capitalCity))).json();
+    //     setTimezone(weatherData.timezone || "No Data");
+    //     setWeather({
+    //       temp: weatherData.main ? weatherData.main.temp : "No Data",
+    //       weather: weatherData.weather
+    //         ? weatherData.weather[0].description
+    //         : "No Data",
+    //     });
+    //   }
+    // }
+    // fetchCountryCaptalCityApi();
+
+    fetch(countryCaptalCityApi(targetCountry.id))
       .then((res) => res.json())
       .then((res) => {
         if (targetCountry.id === "TW") {
@@ -90,7 +124,6 @@ function Country({ style, handleClickBack, signinRef }) {
           return "Taipei";
         } else if (res[1]) {
           const { capitalCity, longitude, latitude } = res[1][0];
-          console.log(capitalCity, longitude, latitude);
           setCaptain({ capitalCity, longitude, latitude });
           return capitalCity;
         } else {
@@ -99,9 +132,7 @@ function Country({ style, handleClickBack, signinRef }) {
       })
       .then((capitalCity) => {
         if (capitalCity) {
-          fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${capitalCity}&appid=4768302d866115e64f3205b3939e2f19&units=metric`
-          )
+          fetch(weatherApi(capitalCity))
             .then((res) => res.json())
             .then((res) => {
               setTimezone(res.timezone || "No Data");
@@ -115,34 +146,26 @@ function Country({ style, handleClickBack, signinRef }) {
   }, [targetCountry]);
 
   useEffect(() => {
-    if (id && targetCountry.id) {
-      db_userInfo
-        .where("friends", "array-contains", { id: id, condition: "confirmed" })
-        .get()
-        .then((querySnapshot) => {
-          setMyFriendList(querySnapshot.docs.map((doc) => doc.id));
-          return querySnapshot.docs.map((doc) => {
-            const { photo, id, name, country } = doc.data();
-            console.log({ photo, id, name, country });
-            return { photo, id, name, country };
-          });
-        })
-        .then((friendList) => {
-          db_gallery
-            .where("country", "==", targetCountry.id)
-            .get()
-            .then((allAlbums) => {
-              const userHere = allAlbums.docs
-                .filter((album) => album.data().condition === "completed")
-                .map((album) => album.data().user_id);
-              console.log(userHere);
-              setFriendHere(
-                friendList.filter((friend) => userHere.includes(friend.id))
-              );
-            });
-        });
+    if (myUserInfo.id && targetCountry.id) {
+      const myFriendList = myUserInfo.friends.filter(
+        (friend) => friend.condition === "confirmed"
+      );
+
+      function createUserHereArr(allAlbums) {
+        return allAlbums
+          .filter((album) => album.condition === "completed")
+          .map((album) => album.user_id);
+      }
+
+      getFriendsHere(targetCountry.id, (allAlbums) => {
+        setFriendHere(
+          myFriendList.filter((friend) =>
+            createUserHereArr(allAlbums).includes(friend.id)
+          )
+        );
+      });
     }
-  }, [id, targetCountry]);
+  }, [myUserInfo, targetCountry]);
 
   return (
     <CountryDiv style={style}>

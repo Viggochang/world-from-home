@@ -4,8 +4,6 @@ import styled from "styled-components";
 import { fabric } from "fabric";
 
 const ImageEditorDiv = styled.div`
-  /* outline: 1px black solid; */
-  /* box-shadow: 0px 0px 15px #3a4a58; */
   width: 245px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
@@ -23,7 +21,6 @@ const ImageEditorDiv = styled.div`
 `;
 
 const ImageSizeDiv = styled.div`
-  /* width: 70%; */
   padding-bottom: 15px;
   border-bottom: 1px solid rgb(184, 195, 208, 0.7);
 `;
@@ -70,6 +67,7 @@ const FilterBtn = styled.div`
   margin: 0 4px 4px;
   background-color: rgb(184, 195, 208, 0.5);
   color: #3a4a58;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   border: 4px rgb(184, 195, 208, 1) solid;
@@ -165,10 +163,10 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
         <Title>Image Size</Title>
         <BtnDiv>
           <SizeBtn onClick={(e) => handleImgStyle(e, "minus", "size")}>
-            <i className="fas fa-minus"></i>
+            <i className="fas fa-minus" />
           </SizeBtn>
           <SizeBtn onClick={(e) => handleImgStyle(e, "plus", "size")}>
-            <i className="fas fa-plus"></i>
+            <i className="fas fa-plus" />
           </SizeBtn>
         </BtnDiv>
       </ImageSizeDiv>

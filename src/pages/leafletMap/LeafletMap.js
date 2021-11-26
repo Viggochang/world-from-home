@@ -1,10 +1,6 @@
-// import "proj4leaflet";
-// import L from "leaflet";
-
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
 import {
@@ -16,21 +12,16 @@ import {
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import EsriLeafletGeoSearch from "react-esri-leaflet/plugins/EsriLeafletGeoSearch";
-// import Search from "react-leaflet-search";
 
-// import { MarkerClusterGroup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./leafletMap.css";
 
 import PopupContent from "./popupContent/PopupContent";
 
-// import "leaflet.markercluster/dist/MarkerCluster.css";
-// import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-// import "leaflet.markercluster";
-// import * as ELG from "esri-leaflet-geocoder";
-// import "esri-leaflet";
-// import "esri-leaflet-vector";
-import { db_gallery, db_tourist_spot } from "../../util/firebase";
+import {
+  getTouristSpotsData,
+  onSnapshotTouristSpot,
+} from "../../util/firebase";
 
 const LeafletMapDiv = styled.div`
   width: 100vw;
@@ -58,85 +49,15 @@ const BackBtn = styled.div`
   }
 `;
 
-// const PopupStyle = styled(Popup)`
-//   width: 320px;
-//   height: 320px;
-// `;
-
-function LeafletMap({ mapType }) {
+function LeafletMap() {
   const [map, setMap] = useState(null);
   const [allSpot, setAllSpot] = useState([]);
-  const [allAlbums, setAllAlbums] = useState({});
-  const apikey =
-    "AAPK8ba779cc01594743abbd245136a3f366gM55ZxvACBdAwG_RwlwTIts1NHYDcL4AT8N9qKcMqVXEj53qqGCJvnk_GHFLmUvU";
+  const apikey = process.env.REACT_APP_LEAFLET_APIKEY;
 
   useEffect(() => {
-    db_tourist_spot.get().then((snapshot) => {
-      setAllSpot(
-        snapshot.docs
-          .filter((doc) => doc.data().condition === "completed")
-          .map((doc) => doc.data())
-      );
-    });
-    db_gallery.get().then((snapshot) => {
-      const allAlbum = {};
-      snapshot.docs.forEach((doc) => {
-        allAlbum[doc.id] = doc.data();
-      });
-      setAllAlbums(allAlbum);
-    });
+    const unsubscribe = onSnapshotTouristSpot(setAllSpot);
+    return () => unsubscribe();
   }, []);
-
-  // useEffect(() => {
-  //   let map = new L.map("map", {
-  //     minZoom: 3,
-  //     zoomControl: false,
-  //   }).setView([23.5, 0], 2);
-
-  //   new L.Control.Zoom({ position: "bottomright" }).addTo(map);
-  //   var cartodbAttribution =
-  //     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CARTO</a>';
-
-  //   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
-  //     attribution: cartodbAttribution,
-  //   }).addTo(map);
-
-  //   let markers = new L.markerClusterGroup();
-
-  //   const arr = [];
-  //   db_gallery
-  //     .get()
-  //     .then((snapshot) =>
-  //       snapshot.docs
-  //         // .filter((doc) => doc.data().user_id === myUserId)
-  //         .filter((doc) => doc.data().condition === "completed")
-  //         .forEach((doc) => {
-  //           doc.data().tourist_spot.forEach((spot) => {
-  //             setAllSpot((allSpot) => [
-  //               ...allSpot,
-  //               { x: spot.lng, y: spot.lat, text: spot.text },
-  //             ]);
-  //             arr.push({ x: spot.lng, y: spot.lat, text: spot.text });
-  //           });
-  //         })
-  //     )
-  //     .then(() => {
-  //       console.log(arr);
-  //       arr
-  //         .map((item) =>
-  //           L.marker(new L.LatLng(item.y, item.x)) // 新增Marker
-  //             .bindPopup(`<h2>${item.text}</h2>`)
-  //         ) // 資訊視窗
-  //         .forEach((item) => markers.addLayer(item)); // 把marker加入 L.markerClusterGroup中
-  //       map.addLayer(markers);
-  //     });
-  //   return () => {
-  //     map.off();
-  //     map.remove();
-  //   };
-  // }, [myInfo]);
-
-  // return <LeafletMapDiv id="map" style={{ zIndex: mapType ? 0 : 1 }} />;
 
   const iconMarkup = renderToStaticMarkup(
     <i className=" fa fa-map-marker-alt fa-3x" />
@@ -209,7 +130,7 @@ function LeafletMap({ mapType }) {
         />
       </MapContainer>
       <BackBtn onClick={handleClickBack}>
-        <i className="fas fa-home"></i>
+        <i className="fas fa-home" />
       </BackBtn>
     </LeafletMapDiv>
   );

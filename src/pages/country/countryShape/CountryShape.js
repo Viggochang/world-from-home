@@ -13,6 +13,7 @@ const CountryShapeFrameDiv = styled.div`
   outline: 1px white solid;
   position: relative;
   padding: 10px;
+  border-radius: 8px;
   @media (max-width: 1180px) {
     width: auto;
     height: calc(43% - 50px);
@@ -25,9 +26,6 @@ const CountryShapeFrameDiv = styled.div`
   @media (max-width: 600px) {
     display: none;
   }
-  /* @media (max-width: 630px) {
-    display: none;
-  } */
 `;
 
 const CountryNameDiv = styled.div`
@@ -39,9 +37,6 @@ const CountryNameDiv = styled.div`
   position: absolute;
   bottom: 0px;
   left: 10px;
-  /* @media (max-width: 1180px) {
-    display: none;
-  } */
 `;
 
 export default function CountryShape() {
@@ -69,12 +64,6 @@ export default function CountryShape() {
 
       // Center on Pacic
       map.deltaLongitude = -12;
-      // let label = map.chartContainer.createChild(am4core.Label);
-      // label.text = targetCountry.name;
-      // label.fontSize = 50;
-      // label.fontWeight = 'bold';
-      // label.fill = "white";
-      // label.verticalCenter = "bottom";
     }
   }, [targetCountry]);
 

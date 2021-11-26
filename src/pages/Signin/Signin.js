@@ -50,8 +50,6 @@ const PhotoDiv = styled.div`
 `;
 
 export default function Login({ signinRef }) {
-  // const signInChoiceRef = useRef();
-
   return (
     <SigninDiv ref={signinRef}>
       <ContentDiv>

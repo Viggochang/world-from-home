@@ -187,7 +187,7 @@ export default function MyPage() {
 
           <ButtonsDiv>
             <HomeDiv onClick={handleHome}>
-              <i className="fas fa-home"></i>
+              <i className="fas fa-home" />
             </HomeDiv>
             <Logout />
           </ButtonsDiv>

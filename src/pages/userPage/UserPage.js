@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
 
-import { db_userInfo } from "../../util/firebase";
+import { getUserDataByUid } from "../../util/firebase";
 import FriendState from "../myPage/component/FriendState";
 
 import Background from "../myPage/background/Background";
@@ -18,12 +18,8 @@ import Login from "../Signin/Signin";
 import Logout from "../Signin/Logout";
 
 import Album from "../album/Album";
-// import { system } from "@amcharts/amcharts4/core";
 
 const MyPageDiv = styled.div`
-  /* position: fixed;
-  top: 0;
-  left: 0; */
   padding: 50px 80px;
   display: flex;
   flex-direction: column;
@@ -33,7 +29,6 @@ const MyPageDiv = styled.div`
     width: calc(100vw - 60px);
     padding: 50px 30px;
   }
-  /* z-index: 1; */
 `;
 
 const UpperDiv = styled.div`
@@ -102,7 +97,7 @@ const TextDiv = styled.div`
   }
 `;
 const AgeDiv = styled.div`
-  font-size: 30;
+  font-size: 30px;
   margin-bottom: 22px;
   @media (max-width: 1180px) {
     font-size: 24px;
@@ -258,26 +253,22 @@ export default function UserPage() {
   //   history.push({ pathname: "mypage" });
   // }
 
-  useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("id");
-    console.log(myUserId);
-    console.log(queryUserId);
-    console.log(id);
+  const id = new URLSearchParams(window.location.search).get("id");
 
-    if (myUserId && (queryUserId === myUserId || id === myUserId)) {
-      history.push({ pathname: "mypage" });
-    } else {
-      db_userInfo
-        .doc(id)
-        .get()
-        .then((doc) => {
-          if (!doc.exists) {
-            history.push({ pathname: "notfound" });
-          } else {
-            setUserInfo(doc.data());
-          }
-        });
+  useEffect(() => {
+    async function getUserData(id) {
+      if (myUserId && (queryUserId === myUserId || id === myUserId)) {
+        history.push({ pathname: "mypage" });
+      } else {
+        const userData = await getUserDataByUid(id);
+        if (!userData) {
+          history.push({ pathname: "notfound" });
+        } else {
+          setUserInfo(userData);
+        }
+      }
     }
+    getUserData(id);
   }, [myUserId, window.location.search, queryUserId]);
 
   const { name, country, photo, birthday, background_photo } = userInfo;
@@ -355,7 +346,7 @@ export default function UserPage() {
         </BottomDiv>
         <ButtonsDiv>
           <HomeDiv onClick={handleHome}>
-            <i className="fas fa-home"></i>
+            <i className="fas fa-home" />
           </HomeDiv>
           <Logout />
           <MyPageIcon
@@ -369,7 +360,7 @@ export default function UserPage() {
             {myInfo.photo ? (
               <MyPageIconMask />
             ) : (
-              <i className="fas fa-user-alt"></i>
+              <i className="fas fa-user-alt" />
             )}
           </MyPageIcon>
         </ButtonsDiv>

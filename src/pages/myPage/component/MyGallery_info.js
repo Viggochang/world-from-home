@@ -73,15 +73,15 @@ export default function AlbumInfo({ album }) {
     <AlbumInfoDiv>
       <AlbumCountry>{countryTrans[album.country].name_en}</AlbumCountry>
       <AlbumPosition>
-        <i className="fas fa-map-marker-alt"></i> {album.position}
+        <i className="fas fa-map-marker-alt" /> {album.position}
       </AlbumPosition>
       <AlbumIntroduction>{album.introduction}</AlbumIntroduction>
       <AlbumDate>
-        <i className="far fa-calendar-alt"></i>{" "}
+        <i className="far fa-calendar-alt" />{" "}
         {new Date(album.timestamp.seconds * 1000).toDateString()}
       </AlbumDate>
       <AlbumPraise>
-        <i className="fas fa-heart"></i> {album.praise.length}
+        <i className="fas fa-thumbs-up" /> {album.praise.length}
       </AlbumPraise>
     </AlbumInfoDiv>
   );

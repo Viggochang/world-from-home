@@ -57,7 +57,7 @@ export default function UserWorld({ userInfo }) {
         userPage={true}
       />
       <BackBtn onClick={handleBack}>
-        <i className="fas fa-home"></i>
+        <i className="fas fa-home" />
       </BackBtn>
     </UserPageDiv>
   );

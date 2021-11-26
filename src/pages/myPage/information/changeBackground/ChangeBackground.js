@@ -4,7 +4,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { styled as styledMui } from "@mui/styles";
 
-import { storage, db_userInfo } from "../../../../util/firebase";
+import { storage, updateUser } from "../../../../util/firebase";
 import Compressor from "compressorjs";
 import { changeBackgroundBtnTheme } from "../../../../util/muiTheme";
 
@@ -39,17 +39,18 @@ export default function ChangeBackground({ id }) {
     const img = event.target.files[0];
 
     new Compressor(img, {
-      quality: 0.6,
+      quality: 0.8,
+      maxWidth: 4096,
+      maxHeight: 4096,
       success(result) {
         // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };
         const storageRef = storage.ref(`user_${key}/${id}`);
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
-            console.log(imageUrl);
             let photoObj = {};
             photoObj[key] = imageUrl;
-            db_userInfo.doc(id).update(photoObj);
+            updateUser(id, photoObj);
           });
         });
       },
@@ -80,7 +81,7 @@ export default function ChangeBackground({ id }) {
             color="primary"
           >
             <CameraIcon>
-              <i className="fas fa-camera"></i>
+              <i className="fas fa-camera" />
             </CameraIcon>
             <div>
               change

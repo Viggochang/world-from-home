@@ -8,7 +8,7 @@ import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 
 import countryTrans from "../../util/countryTrans";
-import { db_gallery } from "../../util/firebase";
+import { onSnapShotMyTravelCountry } from "../../util/firebase";
 
 const Chartdiv = styled.div`
   width: 100%;
@@ -36,27 +36,25 @@ function World({
   const polygonSeries = useSelector((state) => state.polygonSeries);
 
   useEffect(() => {
-    let unsubscribe = db_gallery
-      .where("user_id", "==", userInfo.id || null)
-      .onSnapshot((myAlbums) => {
-        setMyTravelCountries(
-          Array.from(
-            new Set([
-              ...myAlbums.docs
-                .filter((album) => album.data().condition === "completed")
-                .map((album) => album.data().country),
-              userInfo.country,
-            ])
-          )
-          // .push(userInfo.country)
-        );
-      });
+    function createMyTravelCountryArr(myAlbums) {
+      return Array.from(
+        new Set([
+          ...myAlbums
+            .filter((album) => album.condition === "completed")
+            .map((album) => album.country),
+          userInfo.country,
+        ])
+      );
+    }
+
+    let unsubscribe = onSnapShotMyTravelCountry(userInfo.id, (myAlbums) => {
+      setMyTravelCountries(createMyTravelCountryArr(myAlbums));
+    });
     return () => {
       unsubscribe();
     };
   }, [userInfo]);
 
-  // let currentActiveCountry = {};
   useEffect(() => {
     let map = am4core.create("chartdiv", am4maps.MapChart);
     setMap(map);
@@ -157,7 +155,6 @@ function World({
       Object.keys(targetCountry).length &&
       polygonSeries.mapPolygons.values.length
     ) {
-      console.log(polygonSeries.mapPolygons.values);
       const currentActiveCountry = polygonSeries.mapPolygons.values.filter(
         (country) => country.dataItem.dataContext.id === targetCountry.id
       )[0];

@@ -100,22 +100,22 @@ export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
     {
       title: "Email",
       info_data: email,
-      icon: <i className="fas fa-envelope"></i>,
+      icon: <i className="fas fa-envelope" />,
     },
     {
       title: "Language",
       info_data: language,
-      icon: <i className="fas fa-globe"></i>,
+      icon: <i className="fas fa-globe" />,
     },
     {
       title: "Birthday",
       info_data: birthdayFormat,
-      icon: <i className="fas fa-birthday-cake"></i>,
+      icon: <i className="fas fa-birthday-cake" />,
     },
     {
       title: "Introduction",
       info_data: <IntroductionDiv>{introduction}</IntroductionDiv>,
-      icon: <i className="fas fa-smile"></i>,
+      icon: <i className="fas fa-smile" />,
     },
   ];
   return (
@@ -126,7 +126,7 @@ export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
           handleMoreInfo();
         }}
       >
-        <i className="fas fa-times-circle"></i>
+        <i className="fas fa-times-circle" />
       </CloseDiv>
       {infoData.map((info, index) => {
         const { title, info_data, icon } = info;

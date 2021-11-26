@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import countryTrans from "../../../../util/countryTrans";
+import { getUserDataByUid } from "../../../../util/firebase";
 
 const PopupDiv = styled.div`
   width: 90%;
@@ -95,6 +96,17 @@ const FriendCountry = styled.div`
 
 export default function CountryFriendPopup({ popupRef, friendHere }) {
   const history = useHistory();
+  const [friendHereInfo, setFriendHereInfo] = useState([]);
+
+  useEffect(() => {
+    Promise.all(friendHere.map((friend) => getUserDataByUid(friend.id))).then(
+      (arr) => {
+        console.log(arr);
+        setFriendHereInfo(arr);
+      }
+    );
+  }, [friendHere]);
+
   function handleClickBack() {
     popupRef.current.style.display = "none";
   }
@@ -106,11 +118,11 @@ export default function CountryFriendPopup({ popupRef, friendHere }) {
           <i className="fas fa-times-circle" />
         </BackDiv>
         <CaptainTitleDiv>
-          <i className="fas fa-users"></i>
+          <i className="fas fa-users" />
           &ensp;{`Friends`}
         </CaptainTitleDiv>
         <FriendContainer>
-          {friendHere.map((friend, index) => (
+          {friendHereInfo.map((friend, index) => (
             <FriendDiv key={`friend-here-${index}`}>
               <FriendPhoto
                 style={{
@@ -128,7 +140,7 @@ export default function CountryFriendPopup({ popupRef, friendHere }) {
               <FriendInfo>
                 <FriendName>{friend.name}</FriendName>
                 <FriendCountry>
-                  <i className="fas fa-globe"></i>
+                  <i className="fas fa-globe" />
                   &ensp;{countryTrans[friend.country].name_en}
                 </FriendCountry>
               </FriendInfo>
