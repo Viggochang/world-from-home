@@ -81,8 +81,6 @@ const IntroductionDiv = styled.div`
 `;
 
 export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
-  // const userInfo = useSelector((state) => state.userInfo);
-
   const { email, language, introduction, birthday } = userInfo;
   const birthdayDate =
     birthday && new Date(birthday.seconds * 1000).toDateString();

@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 
-import CountryInfoPopup from "../component/countryInfo/CountryInfoPopup";
-import CountryFriendPopup from "../component/countryFriend/CountryFriendPopup";
+import CountryInfoPopup from "../countryInfo/CountryInfoPopup";
+import CountryFriendPopup from "../countryFriend/CountryFriendPopup";
 
 const InfoFriendDiv = styled.div`
   color: white;

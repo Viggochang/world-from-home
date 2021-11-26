@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import Compressor from "compressorjs";
-import { storage, updateUser } from "../../../../util/firebase";
+import { storage, updateUser } from "../../../../../util/firebase";
 
 import styled from "styled-components";
 import { styled as styledMui } from "@mui/styles";

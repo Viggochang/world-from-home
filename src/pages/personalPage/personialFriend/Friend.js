@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useHistory } from "react-router";
 
-import Button from "@material-ui/core/Button";
+import { FriendAcceptRemoveBtn } from "../../../util/MuiButton";
 
 import countryTrans from "../../../util/countryTrans";
 import { updateUser } from "../../../util/firebase";
@@ -26,6 +26,9 @@ const FriendPhoto = styled.div`
   border-radius: 50%;
   box-shadow: 4px 4px 20px #4f4f4f;
   cursor: pointer;
+  background-image: ${(props) => `url(${props.backgroundImg})`};
+  background-size: ${() => "cover"};
+  background-position: ${() => "center"};
   :hover {
     box-shadow: 4px 4px 20px #3c3c3c;
   }
@@ -133,14 +136,7 @@ export default function Friend({ friend: friendInfo, request, isMyPage }) {
 
   return (
     <FriendDiv>
-      <FriendPhoto
-        style={{
-          background: `url(${friendInfo.photo})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        onClick={handleQueryUserId}
-      >
+      <FriendPhoto backgroundImg={friendInfo.photo} onClick={handleQueryUserId}>
         <FriendMask />
       </FriendPhoto>
       <FriendInfo>
@@ -149,51 +145,21 @@ export default function Friend({ friend: friendInfo, request, isMyPage }) {
           <i className="fas fa-globe" />{" "}
           {friendInfo.country ? countryTrans[friendInfo.country].name_en : ""}
         </FriendCountry>
-        {isMyPage ? (
+        {isMyPage && (
           <AcceptRemoveBtnsDiv>
-            {request ? (
-              <Button
+            {request && (
+              <FriendAcceptRemoveBtn
+                content={"accept"}
                 ref={acceptRef}
-                onClick={(e) => handleAcceptRemove(e, "get_request")}
-                sx={{
-                  outline: "1px	#006000 solid",
-                  color: "#006000",
-                  padding: "0 10px",
-                  borderRadius: "20px",
-                  marginRight: "15px",
-                  fontSize: "12px",
-                  "&:hover": {
-                    backgroundColor: "#006000",
-                    color: "white",
-                  },
-                }}
-              >
-                accept
-              </Button>
-            ) : (
-              <></>
+                callback={(e) => handleAcceptRemove(e, "get_request")}
+              />
             )}
-            <Button
+            <FriendAcceptRemoveBtn
+              content={"remove"}
               ref={removeRef}
-              onClick={(e) => handleAcceptRemove(e, "confirmed")}
-              sx={{
-                outline: "1px #AE0000 solid",
-                color: "#AE0000",
-                padding: "0 10px",
-                borderRadius: "20px",
-                marginRight: "15px",
-                fontSize: "12px",
-                "&:hover": {
-                  backgroundColor: "#AE0000",
-                  color: "white",
-                },
-              }}
-            >
-              remove
-            </Button>
+              callback={(e) => handleAcceptRemove(e, "confirmed")}
+            />
           </AcceptRemoveBtnsDiv>
-        ) : (
-          <></>
         )}
       </FriendInfo>
     </FriendDiv>

@@ -1,13 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { ThemeProvider } from "@material-ui/core/styles";
 import { onAuthStateChanged } from "../../util/firebase";
 
 import SigninDiv from "../Signin/Signin";
 import landingPageImg from "../../image/landingPage.jpeg";
-import { whiteBtnTheme } from "../../util/muiTheme";
+import { WelcomePageBtn } from "../../util/MuiButton";
 
 const WelcomePageDiv = styled.div`
   width: 100vw;
@@ -102,20 +100,6 @@ export default function WelcomePage() {
     history.push({ pathname: "home" });
   }
 
-  const BtnStyle = {
-    width: "200px",
-    fontSize: "24px",
-    fontWeight: "bold",
-    borderRadius: "40px",
-    lineHeight: 1.5,
-    margin: "0 20px",
-    color: "#3A4A58",
-    boxShadow: "3px 3px 10px 5px rgb(80, 80, 80, 0.7)",
-    ":hover": {
-      backgroundColor: "#e0e0e0",
-    },
-  };
-
   return (
     <>
       <WelcomePageDiv>
@@ -128,32 +112,22 @@ export default function WelcomePage() {
           <br /> – Pico Iyer
         </Quote>
 
-        <ThemeProvider theme={whiteBtnTheme}>
-          <ButtonsDiv>
-            <Button
-              variant="contained"
-              color="white"
-              sx={BtnStyle}
-              onClick={handleSignIn}
-            >
-              Sign in
-            </Button>
-            <Button
-              variant="contained"
-              color="white"
-              sx={BtnStyle}
-              onClick={handleGuest}
-            >
-              {signIn ? (
+        <ButtonsDiv>
+          <WelcomePageBtn content={"Sign in"} onClick={handleSignIn} />
+          <WelcomePageBtn
+            content={
+              signIn ? (
                 <>
-                  {"Enter"}&ensp; <i className="fas fa-plane" />
+                  Enter&ensp;
+                  <i className="fas fa-plane" />
                 </>
               ) : (
                 "Guest"
-              )}
-            </Button>
-          </ButtonsDiv>
-        </ThemeProvider>
+              )
+            }
+            onClick={handleGuest}
+          />
+        </ButtonsDiv>
       </WelcomePageDiv>
       <SigninDiv signinRef={signinRef} />
     </>

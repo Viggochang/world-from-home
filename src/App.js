@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  onAuthStateChanged,
-  onSnapShotByUid,
-  getUserDataByUid,
-} from "./util/firebase";
+import { useDispatch } from "react-redux";
+import { onAuthStateChanged, onSnapShotByUid } from "./util/firebase";
 import "firebase/auth";
 
 import WelcomePage from "./pages/welcomPage/WelcomePage";
 import HomePage from "./pages/homePage/HomePage";
 import EditSpace from "./pages/edit/EditSpace";
-import MyPage from "./pages/myPage/MyPage";
-import UserPage from "./pages/userPage/UserPage";
+import MyPage from "./pages/personalPage/MyPage";
+import UserPage from "./pages/personalPage/UserPage";
 import NotFound from "./pages/notFound/NotFound";
 
 function App() {

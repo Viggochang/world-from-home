@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import "./input.css";
 
-import { updateUser } from "../../../../util/firebase";
+import { updateUser } from "../../../../../util/firebase";
 import Email from "./Email";
 import Language from "./Language";
 import Birthday from "./Birthday";
@@ -61,14 +61,14 @@ export default function MoreInfo({ innerRef, handleMoreInfo, userInfo }) {
     el.style.display = "none";
   }
 
-  const allInfo = ["language"];
+  const allInfo = ["language", "birthday", "introduction"];
   return (
     <MoreInfoDiv ref={innerRef}>
       <CloseDiv
         onClick={() => {
           handleCloseMoreInfo();
           handleMoreInfo();
-          allInfo.forEach(({ data }) => {
+          allInfo.forEach((data) => {
             handleDisappear(editRef.current[data]);
             handleShow(infoRef.current[data]);
           });

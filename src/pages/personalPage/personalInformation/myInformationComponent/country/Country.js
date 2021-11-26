@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import countryTrans from "../../../../util/countryTrans";
+import countryTrans from "../../../../../util/countryTrans";
 
-import { updateUser } from "../../../../util/firebase";
+import { updateUser } from "../../../../../util/firebase";
 
 const CountryDiv = styled.div`
   display: flex;

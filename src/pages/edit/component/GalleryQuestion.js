@@ -158,6 +158,19 @@ const Inputdiv = styled.input`
 `;
 
 const CountryStateApi = "https://countriesnow.space/api/v0.1/countries/states";
+const btnStyle = {
+  width: "180px",
+  fontSize: "20px",
+  fontWeight: "bold",
+  borderRadius: "40px",
+  lineHeight: 1.5,
+  margin: "0 20px",
+  color: "#667484",
+  boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
+  ":hover": {
+    backgroundColor: "rgb(255, 255, 255, 0.8)",
+  },
+};
 
 export default function GalleryQuestion() {
   const history = useHistory();
@@ -363,20 +376,7 @@ export default function GalleryQuestion() {
               <Button
                 variant="contained"
                 color="white"
-                sx={{
-                  width: "180px",
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  borderRadius: "40px",
-                  lineHeight: 1.5,
-                  margin: "0 20px",
-                  color: "#667484",
-                  // outline: "3px #3A4A58 solid",
-                  boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
-                  ":hover": {
-                    backgroundColor: "rgb(255, 255, 255, 0.8)",
-                  },
-                }}
+                sx={btnStyle}
                 onClick={handleBack}
               >
                 Cancel
@@ -388,19 +388,7 @@ export default function GalleryQuestion() {
             <Button
               variant="contained"
               color="white"
-              sx={{
-                width: "180px",
-                fontSize: "20px",
-                fontWeight: "bold",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                margin: "0 20px",
-                color: "#667484",
-                boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.6)",
-                ":hover": {
-                  backgroundColor: "rgb(255, 255, 255, 0.8)",
-                },
-              }}
+              sx={btnStyle}
               onClick={handleStartEdit}
             >
               {newAlbum ? "Start" : "Continue"}&ensp;

@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { albumFriendBtnTheme as theme } from "../../../util/muiTheme";
+import { albumFriendBtnTheme } from "../../util/muiTheme";
 
 const AlbumFriendBtnsDiv = styled.div`
   display: flex;
@@ -37,7 +37,7 @@ export default function AlbumFriendBtns({ activeButton, setActiveButton }) {
   });
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={albumFriendBtnTheme}>
       <AlbumFriendBtnsDiv>
         {["Albums", "Friends"].map((btn) => (
           <Button

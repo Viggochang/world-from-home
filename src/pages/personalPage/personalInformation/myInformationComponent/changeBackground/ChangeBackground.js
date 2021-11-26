@@ -4,10 +4,9 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { styled as styledMui } from "@mui/styles";
 
-import { storage, updateUser } from "../../../../util/firebase";
+import { storage, updateUser } from "../../../../../util/firebase";
 import Compressor from "compressorjs";
-import { changeBackgroundBtnTheme } from "../../../../util/muiTheme";
-
+import { changeBackgroundBtnTheme } from "../../../../../util/muiTheme";
 const EditBackgroundImage = styled.div`
   position: absolute;
   top: 0px;

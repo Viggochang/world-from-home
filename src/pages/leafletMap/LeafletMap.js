@@ -18,10 +18,7 @@ import "./leafletMap.css";
 
 import PopupContent from "./popupContent/PopupContent";
 
-import {
-  getTouristSpotsData,
-  onSnapshotTouristSpot,
-} from "../../util/firebase";
+import { onSnapshotTouristSpot } from "../../util/firebase";
 
 const LeafletMapDiv = styled.div`
   width: 100vw;

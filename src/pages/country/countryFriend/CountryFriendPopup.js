@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import countryTrans from "../../../../util/countryTrans";
-import { getUserDataByUid } from "../../../../util/firebase";
+import countryTrans from "../../../util/countryTrans";
+import { getUserDataByUid } from "../../../util/firebase";
 
 const PopupDiv = styled.div`
   width: 90%;
@@ -45,7 +45,6 @@ const BackDiv = styled.div`
 `;
 
 const CaptainTitleDiv = styled.div`
-  /* padding: 0 20px; */
   width: 260px;
   outline: 1px white solid;
   font-size: 32px;
