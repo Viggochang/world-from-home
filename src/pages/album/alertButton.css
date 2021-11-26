@@ -1,0 +1,17 @@
+.confirmbutton{
+  background-color: #3a4a58 !important;
+  border-radius: 19px !important;
+}
+
+.confirmbutton:focus{
+  box-shadow: 0 0 0 3px #B8C3D0 !important;
+}
+
+.cancelbutton{
+  background-color: #B8C3D0 !important;
+  border-radius: 19px !important;
+}
+
+.cancelbutton:focus{
+  box-shadow: 0 0 0 3px #B8C3D0 !important;
+}

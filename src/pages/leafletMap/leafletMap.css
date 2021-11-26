@@ -1,0 +1,43 @@
+#root > div > div > div.sc-kfPuZi.jTsDyT > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.leaflet-control-zoom.leaflet-bar.leaflet-control{
+  /* margin: 0 40px 22.22px 0 ; */
+  position: fixed;
+  right: 43px;
+  bottom: 45px;
+  border: 2px solid rgb(58, 74, 88, 0.6);
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+  color: #3a4a58;
+}  
+
+.geocoder-control {
+  /* margin: 0 !important;
+  width: 250px !important;  */
+  /* position: fixed;
+  top: 50px;
+  right: 140px; */
+}
+
+#root > div > div > div.sc-kfPuZi.jTsDyT > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.geocoder-control.leaflet-control{
+  margin: 0 !important;
+  width: 250px !important; 
+  position: fixed;
+  top: 50px;
+  right: 140px;
+}
+
+.geocoder-control-input {
+  height: 42px !important;
+  border-radius: 20px !important;
+  padding: 0 10px;
+  background-color: rgb(255, 255, 255, 0.65);
+}
+
+/* geocoder-control leaflet-control */

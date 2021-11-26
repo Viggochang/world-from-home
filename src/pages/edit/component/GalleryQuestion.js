@@ -3,41 +3,19 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import InputBase from "@mui/material/InputBase";
+import { ThemeProvider } from "@material-ui/core/styles";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 
 import { db_gallery } from "../../../util/firebase";
+import { whiteBtnTheme } from "../../../util/muiTheme";
 import "./AlbumQuestion.css";
 
-import countryTrans from "../../../util/countryTrans";
-
-import { rgb } from "@amcharts/amcharts4/.internal/core/utils/Colors";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-    },
-  },
-});
-
 const GalleryQuestionDiv = styled.div`
-  background-color: rgb(0, 0, 0, 0.6);
+  background-color: rgb(0, 0, 0, 0.7);
   position: fixed;
   top: 0;
   left: 0;
@@ -52,50 +30,59 @@ const GalleryQuestionContainer = styled.div`
   flex-direction: column;
   align-items: center;
 
-  background-color: #667484;
+  background-color: #b8c3d0;
   width: 45vmin;
   height: 75vmin;
   /* height: 57%; */
   margin: auto;
   padding: 60px 100px 40px;
   z-index: 5;
-  box-shadow: 0px 0px 10px #d0d0d0;
+  box-shadow: 0px 0px 5px 1px #d0d0d0;
   position: relative;
-  color: white;
-`;
-
-const BackDiv = styled.div`
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  color: white;
-  font-weight: bold;
-  font-size: 25px;
-  cursor: pointer;
-  :hover {
-    color: #b8c3d0;
-  }
-`;
-
-const QuestionMapDiv = styled.div`
-  /* outline: 1px solid white; */
-  width: 50%;
-  height: 100%;
 `;
 
 const Form = styled.div`
   margin-top: 20px;
-  padding: 0 30px;
-  width: 92%;
+  padding: 0 50px 0 30px;
+  width: 88%;
   height: 50vmin;
-  outline: 1px white solid;
+  /* outline: 1px white solid; */
+  /* box-shadow: 4px 6px 8px #5b5b5b; */
+  box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.4);
+  border-radius: 20px;
+  color: #667484;
+  background-color: #ffffff;
+`;
+
+const QuestionDiv = styled.div`
+  display: flex;
+`;
+
+const QustionIcon = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #667484;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 32px 20px 0 0;
   color: white;
+  font-size: 24px;
+`;
+
+const Question = styled.div`
+  width: calc(100% - 80px);
+  display: flex;
+  flex-direction: column;
 `;
 
 const QuestionTitle = styled.div`
   margin-top: 10px;
   font-size: 28px;
+  font-weight: 400;
   line-height: 40px;
+  font-weight: bold;
   @media (min-height: 1080px) {
     margin-top: 20px;
     font-size: 36px;
@@ -105,13 +92,15 @@ const QuestionTitle = styled.div`
 
 const TextAreaDiv = styled.div`
   width: 100%;
-  height: calc(100% - 264px);
+  /* height: calc(100% - 264px); */
+  outline: 1px rgb(58, 74, 88, 0.5) solid;
   max-height: 50%;
   font-size: 20px;
   overflow-y: scroll;
+  border-radius: 10px;
   @media (min-height: 1080px) {
-    height: calc(100% - 408px);
-    width: calc(100% - 40px);
+    /* height: calc(100% - 408px); */
+    width: 100%;
   }
   /* margin: 50px 0; */
 `;
@@ -129,6 +118,7 @@ const ButtonsDiv = styled.div`
 `;
 
 const Title = styled.div`
+  color: #ffffff;
   font-size: 32px;
   font-weight: bold;
   text-align: center;
@@ -137,6 +127,7 @@ const Title = styled.div`
   }
 `;
 const TitleCountry = styled.div`
+  color: #ffffff;
   font-size: 48px;
   font-weight: bold;
   text-align: center;
@@ -147,27 +138,29 @@ const TitleCountry = styled.div`
 `;
 
 const SearchDiv = styled.div`
-  width: 280px;
+  /* width: 100%; */
   height: 31px;
   display: flex;
   align-items: center;
+  outline: 1px rgb(58, 74, 88, 0.6) solid;
   padding: 10px 20px;
-  border-radius: 27px;
-  background-color: rgb(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255, 0.6);
 `;
 
 const TextFieldDiv = styled.div`
   margin-left: 20px;
   align-self: center;
 `;
+
 const Inputdiv = styled.input`
-  color: white;
+  color: #3a4a58;
   width: 240px;
   :focus {
     outline: none;
   }
   ::placeholder {
-    color: white;
+    color: #b8c3d0;
     font-size: 20px;
   }
 `;
@@ -176,6 +169,7 @@ export default function GalleryQuestion() {
   const history = useHistory();
   const QuestionRef = useRef();
   const mainCityInputRef = useRef();
+  const textAreaRef = useRef();
   const targetCountry = useSelector((state) => state.targetCountry);
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [cityInCountry, setCityInCountry] = useState([]);
@@ -184,8 +178,14 @@ export default function GalleryQuestion() {
   const [tripDate, setTripDate] = useState(new Date());
   const [tripMainCity, setTripMainCity] = useState("");
   const [tripIntroduction, setTripIntroduction] = useState("");
+  const [textAreaHeight, setTextAreaHeight] = useState(1);
+
   const myInfo = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setTextAreaHeight(Math.floor((textAreaRef.current.offsetHeight - 40) / 21));
+  }, [textAreaRef]);
 
   useEffect(() => {
     console.log(albumIdEditing);
@@ -194,16 +194,20 @@ export default function GalleryQuestion() {
         .doc(albumIdEditing)
         .get()
         .then((doc) => {
-          if (!doc.data()) {
-            setNewAlbum(true);
+          if (!doc.exists) {
+            history.push({ pathname: "notfound" });
           } else {
-            setTripDate(
-              doc.data().timestamp
-                ? new Date(doc.data().timestamp.seconds * 1000)
-                : new Date()
-            );
-            setTripMainCity(doc.data().position || "");
-            setTripIntroduction(doc.data().introduction || "");
+            if (!doc.data().country) {
+              setNewAlbum(true);
+            } else {
+              setTripDate(
+                doc.data().timestamp
+                  ? new Date(doc.data().timestamp.seconds * 1000)
+                  : new Date()
+              );
+              setTripMainCity(doc.data().position || "");
+              setTripIntroduction(doc.data().introduction || "");
+            }
           }
         });
     }
@@ -218,6 +222,7 @@ export default function GalleryQuestion() {
       .then((res) => res.json())
       .then((res) => {
         setCityInCountry(res.data ? res.data.states : []);
+        console.log(res.data ? res.data.states : []);
       });
   }, []);
 
@@ -247,7 +252,6 @@ export default function GalleryQuestion() {
         user_id: myInfo.id,
         country: targetCountry.id,
         praise: [],
-        tourist_spot: [],
         condition: "pending",
       };
       db_gallery
@@ -281,93 +285,151 @@ export default function GalleryQuestion() {
           {targetCountry.name}
         </TitleCountry>
         <Form>
-          <QuestionTitle>Date</QuestionTitle>
-          {/* <ThemeProvider theme={theme}> */}
-          {/* <div style={{ backgroundColor: "white" }}> */}
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Trip Date"
-              value={tripDate}
-              onChange={(newValue) => {
-                setTripDate(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-              inputProps={{
-                style: {
-                  height: "20px",
-                  color: "white",
-                  fontSize: "20px",
-                },
-              }}
-            />
-          </LocalizationProvider>
-          {/* </div> */}
-          {/* </ThemeProvider> */}
+          <QuestionDiv>
+            <QustionIcon>
+              <i className="fas fa-calendar-alt"></i>
+            </QustionIcon>
+            <Question>
+              <QuestionTitle>Date</QuestionTitle>
+              {/* <ThemeProvider theme={theme}> */}
+              {/* <div style={{ backgroundColor: "white" }}> */}
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  value={tripDate}
+                  onChange={(newValue) => {
+                    setTripDate(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  inputProps={{
+                    style: {
+                      height: "20px",
+                      color: "#3a4a58",
+                      fontSize: "20px",
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+              {/* </div> */}
+              {/* </ThemeProvider> */}
+            </Question>
+          </QuestionDiv>
 
-          <QuestionTitle>Main City</QuestionTitle>
-          <SearchDiv ref={mainCityInputRef}>
-            <i className="fas fa-search"></i>
-            <TextFieldDiv>
-              <Inputdiv
-                list="country-choice"
-                id="search-country"
-                name="search-country"
-                placeholder="Main City"
-                style={{
-                  border: "none",
-                  background: "none",
-                  color: "white",
-                  fontSize: "20px",
-                }}
-                value={tripMainCity}
-                onChange={(e) => {
-                  setTripMainCity(e.target.value);
-                  e.target.parentNode.parentNode.style.outline = "none";
-                }}
-              />
-              <datalist id="country-choice">
-                {cityInCountry.map((state) => (
-                  <option key={state.name} value={state.name} />
-                ))}
-              </datalist>
-            </TextFieldDiv>
-          </SearchDiv>
-          <QuestionTitle>Introduction</QuestionTitle>
-          <TextAreaDiv>
-            {/* <div> */}
-            <TextareaAutosize
-              aria-label="empty textarea"
-              placeholder=""
-              resize="none"
-              style={{
-                width: "calc(100% - 30px)",
-                height: "100%",
-                padding: "15px",
-                resize: "none",
-                backgroundColor: "rgb(255, 255, 255, 0.3)",
-                color: "white",
-              }}
-              value={tripIntroduction}
-              onChange={(e) => {
-                setTripIntroduction(e.target.value);
-              }}
-            />
-            {/* </div> */}
-          </TextAreaDiv>
+          <QuestionDiv>
+            <QustionIcon>
+              <i className="fas fa-university"></i>
+            </QustionIcon>
+            <Question>
+              <QuestionTitle>Main City</QuestionTitle>
+              <SearchDiv ref={mainCityInputRef}>
+                <i className="fas fa-search"></i>
+                <TextFieldDiv>
+                  <Inputdiv
+                    list="ice-cream-flavors"
+                    id="search-country"
+                    name="search-country"
+                    placeholder="Main City"
+                    style={{
+                      border: "none",
+                      background: "none",
+                      // color: "white",
+                      fontSize: "20px",
+                    }}
+                    value={tripMainCity}
+                    onChange={(e) => {
+                      setTripMainCity(e.target.value);
+                      // e.target.parentNode.parentNode.style.outline = "none";
+                    }}
+                  />
+
+                  <datalist id="ice-cream-flavors">
+                    {cityInCountry.map((state) => (
+                      <option key={state.name} value={state.name} />
+                    ))}
+                  </datalist>
+
+                  {/* <Inputdiv
+                    list="country-choice"
+                    id="search-country"
+                    name="search-country"
+                    placeholder="Main City"
+                    style={{
+                      border: "none",
+                      background: "none",
+                      color: "white",
+                      fontSize: "20px",
+                    }}
+                    value={tripMainCity}
+                    onChange={(e) => {
+                      setTripMainCity(e.target.value);
+                      e.target.parentNode.parentNode.style.outline = "none";
+                    }}
+                  />
+                  <datalist id="country-choice">
+                    {cityInCountry.map((state) => (
+                      <option key={state.name} value={state.name} />
+                    ))}
+                  </datalist> */}
+                </TextFieldDiv>
+              </SearchDiv>
+            </Question>
+          </QuestionDiv>
+
+          <QuestionDiv>
+            <QustionIcon>
+              <i className="fas fa-list-ul"></i>
+            </QustionIcon>
+            <Question>
+              <QuestionTitle>Introduction</QuestionTitle>
+              <TextAreaDiv ref={textAreaRef}>
+                <InputBase
+                  style={{ width: "100%", padding: 0 }}
+                  inputProps={{
+                    style: {
+                      width: "100%",
+                      height: "200px",
+                      fontSize: 16,
+                      // border: "1px rgb(58, 74, 88, 0.5) solid",
+                      padding: "10px 10px 0",
+                      backgroundColor: "rgb(255, 255, 255, 0.4)",
+                      borderRadius: "10px",
+                      color: "#3a4a58",
+                    },
+                  }}
+                  // label={`Edit ${title}`}
+                  size="small"
+                  maxRows={textAreaHeight}
+                  placeholder="Introduce the trip"
+                  variant="outlined"
+                  multiline
+                  onChange={(e) => {
+                    setTripIntroduction(e.target.value);
+                    console.log(textAreaRef.current.offsetHeight);
+                  }}
+                  value={tripIntroduction}
+                />
+              </TextAreaDiv>
+            </Question>
+          </QuestionDiv>
         </Form>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={whiteBtnTheme}>
           <ButtonsDiv>
             {newAlbum ? (
               <Button
                 variant="contained"
                 color="white"
-                style={{
-                  width: "200px",
+                sx={{
+                  width: "180px",
+                  fontSize: "20px",
+                  fontWeight: "bold",
                   borderRadius: "40px",
                   lineHeight: 1.5,
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "#3A4A58",
+                  margin: "0 20px",
+                  color: "#667484",
+                  // outline: "3px #3A4A58 solid",
+                  boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
+                  ":hover": {
+                    backgroundColor: "rgb(255, 255, 255, 0.8)",
+                  },
                 }}
                 onClick={handleBack}
               >
@@ -380,13 +442,19 @@ export default function GalleryQuestion() {
             <Button
               variant="contained"
               color="white"
-              style={{
-                width: "200px",
+              sx={{
+                width: "180px",
+                fontSize: "20px",
+                fontWeight: "bold",
                 borderRadius: "40px",
                 lineHeight: 1.5,
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "#3A4A58",
+                margin: "0 20px",
+                color: "#667484",
+                // outline: "3px #3A4A58 solid",
+                boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.6)",
+                ":hover": {
+                  backgroundColor: "rgb(255, 255, 255, 0.8)",
+                },
               }}
               onClick={handleStartEdit}
             >

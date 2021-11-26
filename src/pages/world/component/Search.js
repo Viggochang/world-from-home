@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import * as am4core from "@amcharts/amcharts4/core";
 import styled from "styled-components";
-import InputBase from "@mui/material/InputBase";
 import countryTrans from "../../../util/countryTrans";
 
 const SearchDiv = styled.div`
@@ -12,18 +10,19 @@ const SearchDiv = styled.div`
   right: 140px;
   width: 200px;
   height: 40px;
-  outline: 4px #b8c3d0 solid;
+  outline: 2px #b8c3d0 solid;
   border-radius: 22px;
   padding: 0 40px 0 10px;
   background-color: rgb(102, 116, 132, 0.8);
   margin-left: 20px;
   display: flex;
+  z-index: 1;
 `;
 const SearchIconDiv = styled.div`
-  font-size: 20px;
+  font-size: 15px;
   position: absolute;
   right: 10px;
-  top: calc(50% - 10px);
+  top: calc(50% - 9px);
   color: #b8c3d0;
   cursor: pointer;
   :hover {
@@ -45,6 +44,7 @@ export default function Search({
   setMaskVisibility,
   map,
   setCurrentActive,
+  mapType,
 }) {
   const searchRef = useRef();
   const dispatch = useDispatch();
@@ -62,6 +62,12 @@ export default function Search({
     setCountry2id(country2id);
   }, []);
 
+  function handleEnter(event) {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  }
+
   function handleSearch() {
     if (country2id[searchRef.current.value]) {
       const currentActiveCountry = polygonSeries.mapPolygons.values.filter(
@@ -69,7 +75,7 @@ export default function Search({
           country.dataItem.dataContext.id ===
           country2id[searchRef.current.value]
       )[0];
-      currentActiveCountry.isActive = true;
+      // currentActiveCountry.isActive = true;
       map.zoomToMapObject(currentActiveCountry);
       setMaskOpacity(0.8);
       setMaskVisibility("visible");
@@ -86,7 +92,10 @@ export default function Search({
   }
 
   return (
-    <SearchDiv>
+    <SearchDiv
+      style={{ display: mapType ? "flex" : "none" }}
+      onKeyDown={handleEnter}
+    >
       <Inputdiv
         list="country-choice"
         id="search-country"

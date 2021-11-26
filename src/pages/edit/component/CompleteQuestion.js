@@ -1,61 +1,98 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
+import { ThemeProvider } from "@material-ui/core/styles";
 import Compressor from "compressorjs";
-import { storage } from "../../../util/firebase";
+import {
+  db_tourist_spot,
+  db_gallery,
+  db_userInfo,
+  storage,
+} from "../../../util/firebase";
 import LeafletMap from "./CompleteQuestion_leaflet";
 
-import { db_gallery } from "../../../util/firebase";
+import { whiteBtnTheme } from "../../../util/muiTheme";
 
 const CompleteQuestionDiv = styled.div`
-  background-color: rgb(0, 0, 0, 0.6);
+  background-color: rgb(0, 0, 0, 0.7);
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 5;
-  display: none;
+  z-index: -1;
+  display: flex;
 `;
 
 const CompleteQuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-
-  background-color: #667484;
-  width: 100vmin;
-  height: 75vmin;
-  /* height: 57%; */
+  background-color: #b8c3d0;
+  width: calc(80vmin + 240px);
+  /* height: 75vmin; */
+  height: calc(50vmin + 220px);
   margin: auto;
-  padding: 30px 100px 40px;
+  padding: 30px 70px 30px;
   z-index: 5;
-  box-shadow: 0px 0px 10px #d0d0d0;
+  box-shadow: 0px 0px 5px 1px #d0d0d0;
   position: relative;
   color: white;
 `;
 
 const Form = styled.div`
   margin-top: 20px;
-  padding: 20px 30px 70px;
-  width: 100%;
-  height: 60vmin;
+  padding: 20px 30px 30px;
+  width: calc(100% - 40px);
+  /* height: 60vmin; */
   outline: 1px white solid;
   display: flex;
   justify-content: space-between;
   position: relative;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255, 0.95);
+  box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.4);
 `;
 
 const Question = styled.div`
   display: flex;
   flex-direction: column;
-  width: calc(50% - 10px);
+  width: calc(40vmin + 70px);
+  margin: 0 15px;
 `;
 
 const QuestionTitle = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const QuestionIcon = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 20px;
+  background-color: #667484;
+  font-size: 20px;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const QuestionTitleText = styled.div`
+  color: #667484;
   font-size: 36px;
   line-height: 60px;
+  font-weight: bold;
+`;
+
+const Description = styled.div`
+  color: #667484;
+  font-size: 18px;
+  margin: -10px 0 10px 55px;
 `;
 
 const CameraBtn = styled.div`
@@ -63,15 +100,16 @@ const CameraBtn = styled.div`
   height: 40px;
   margin-left: 30px;
   border-radius: 50%;
-  background-color: #b8c3d0;
+  outline: 1px #b8c3d0 solid;
   color: #3a4a58;
   font-size: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  /* box-shadow: 0 0 15px #adadad; */
   :hover {
-    background-color: white;
+    background-color: rgb(184, 195, 208, 0.3);
   }
 `;
 
@@ -82,22 +120,25 @@ const CoverPhotoDiv = styled.div`
 const CoverPhoto = styled.div`
   /* width: calc(100% - 100px);
   height: 20vh; */
+  outline: 1px rgb(255, 255, 255, 0.5) solid;
   width: 40vmin;
   height: 30vmin;
-  box-shadow: 0px 0px 10px #d0d0d0;
+  box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.3);
+  background-color: white;
 `;
 
 const TouristSpotMapDiv = styled.div`
   width: 100%;
-  height: 100%;
+  height: 48vmin;
   outline: 1px white solid;
   color: #3a4a58;
 `;
 
 const TouristSpotDiv = styled.div`
+  padding: 10px;
   margin-top: 30px;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 350px);
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -108,15 +149,15 @@ const TouristSpotTag = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #b8c3d0;
+  background-color: rgb(184, 195, 208, 0.5);
   color: #3a4a58;
   font-weight: bold;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 28px;
   padding: 0 10px 0 15px;
   margin: 0 10px 10px 0;
-  border-radius: 12px;
-  box-shadow: 0px 0px 5px #d0d0d0;
+  border-radius: 14px;
+  /* box-shadow: 0px 0px 5px #d0d0d0; */
 `;
 
 const RemoveTag = styled.div`
@@ -135,27 +176,11 @@ const RemoveTag = styled.div`
 
 const Buttons = styled.div`
   width: 100%;
-  position: absolute;
+  /* position: absolute;
   right: 30px;
-  bottom: 15px;
+  bottom: 15px; */
   display: flex;
   justify-content: flex-end;
-`;
-
-const SubmitBtn = styled.div`
-  background-color: white;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 36px;
-  border-radius: 18px;
-  padding: 0 20px;
-  color: #3a4a58;
-  box-shadow: 0px 0px 5px #d0d0d0;
-  cursor: pointer;
-  margin-left: 20px;
-  :hover {
-    box-shadow: 0px 0px 15px #d0d0d0;
-  }
 `;
 
 export default function CompleteQuestion({
@@ -167,6 +192,8 @@ export default function CompleteQuestion({
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [imageUrl, setImageUrl] = useState("");
   const [touristSpot, setTouristSpot] = useState([]);
+  const myInfo = useSelector((state) => state.userInfo);
+  const targetCountry = useSelector((state) => state.targetCountry);
 
   const touristSpotRef = useRef();
   const dispatch = useDispatch();
@@ -180,8 +207,14 @@ export default function CompleteQuestion({
         .then((doc) => {
           if (doc.data()) {
             setImageUrl(doc.data().cover_photo || "");
-            setTouristSpot(doc.data().tourist_spot || []);
           }
+        });
+
+      db_tourist_spot
+        .where("album_id", "==", albumIdEditing)
+        .get()
+        .then((spots) => {
+          setTouristSpot(spots.docs.map((spot) => spot.data() || []));
         });
     }
   }, [albumIdEditing]);
@@ -222,12 +255,27 @@ export default function CompleteQuestion({
           touristSpot.lat !== spot.lat && touristSpot.lng !== spot.lng
       )
     );
+    db_tourist_spot.doc(spot.id).delete();
   }
 
   function handleSubmit() {
+    touristSpot.forEach((spot) => {
+      if (spot.id) {
+        db_tourist_spot.doc(spot.id).update({ condition: "completed" });
+      } else {
+        const id = db_tourist_spot.doc().id;
+        const body = {
+          id,
+          ...spot,
+          album_id: albumIdEditing,
+          condition: "completed",
+        };
+        db_tourist_spot.doc(id).set(body).then();
+      }
+    });
+
     const body = {
       cover_photo: imageUrl,
-      tourist_spot: touristSpot,
       condition: "completed",
     };
     db_gallery
@@ -240,10 +288,16 @@ export default function CompleteQuestion({
         });
         setComplete(true);
       });
+
+    if (!myInfo.travel_country.includes(targetCountry.id)) {
+      db_userInfo.doc(myInfo.id).update({
+        travel_country: [...myInfo.travel_country, targetCountry.id],
+      });
+    }
   }
 
   function handleCancel() {
-    completeQuestionRef.current.style.display = "none";
+    completeQuestionRef.current.style.zIndex = -1;
   }
 
   return (
@@ -251,17 +305,31 @@ export default function CompleteQuestion({
       <CompleteQuestionContainer>
         <Form>
           <Question>
-            <QuestionTitle>Tourist Spots</QuestionTitle>
+            <QuestionTitle>
+              <QuestionIcon>
+                <i className="fas fa-map-marker-alt"></i>
+              </QuestionIcon>
+              <QuestionTitleText>Tourist Spots</QuestionTitleText>
+            </QuestionTitle>
+            <Description>
+              use the search box below to label tourist spots in your trip
+            </Description>
             <TouristSpotMapDiv>
               <LeafletMap
                 longitude={longitude}
                 latitude={latitude}
                 setTouristSpot={setTouristSpot}
+                touristSpot={touristSpot}
               />
             </TouristSpotMapDiv>
           </Question>
           <Question>
-            <QuestionTitle>Cover Photo</QuestionTitle>
+            <QuestionTitle>
+              <QuestionIcon>
+                <i className="fas fa-image"></i>
+              </QuestionIcon>
+              <QuestionTitleText>Cover Photo</QuestionTitleText>
+            </QuestionTitle>
             <CoverPhotoDiv>
               <CoverPhoto
                 style={{
@@ -293,11 +361,55 @@ export default function CompleteQuestion({
               ))}
             </TouristSpotDiv>
           </Question>
-          <Buttons>
-            <SubmitBtn onClick={handleCancel}>Cancel</SubmitBtn>
-            <SubmitBtn onClick={handleSubmit}>Submit</SubmitBtn>
-          </Buttons>
         </Form>
+        <ThemeProvider theme={whiteBtnTheme}>
+          <Buttons>
+            {/* <SubmitBtn onClick={handleCancel}>Cancel</SubmitBtn>
+            <SubmitBtn onClick={handleSubmit}>Submit</SubmitBtn> */}
+            <Button
+              variant="contained"
+              color="white"
+              sx={{
+                width: "180px",
+                fontSize: "20px",
+                fontWeight: "bold",
+                borderRadius: "40px",
+                lineHeight: 1.5,
+                margin: "0 20px",
+                color: "#667484",
+                // outline: "3px #3A4A58 solid",
+                boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
+                ":hover": {
+                  backgroundColor: "rgb(255, 255, 255, 0.8)",
+                },
+              }}
+              onClick={handleCancel}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              color="white"
+              sx={{
+                width: "180px",
+                fontSize: "20px",
+                fontWeight: "bold",
+                borderRadius: "40px",
+                lineHeight: 1.5,
+                marginLeft: "20px",
+                color: "#667484",
+                // outline: "3px #3A4A58 solid",
+                boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.4)",
+                ":hover": {
+                  backgroundColor: "rgb(255, 255, 255, 0.8)",
+                },
+              }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Buttons>
+        </ThemeProvider>
       </CompleteQuestionContainer>
     </CompleteQuestionDiv>
   );

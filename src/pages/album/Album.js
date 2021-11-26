@@ -1,18 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { db_gallery, db_userInfo } from "../../util/firebase";
+import { db_gallery, db_userInfo, db_tourist_spot } from "../../util/firebase";
 
 import ShowAlbum from "./component/ShowAlbum";
-import { Tooltip } from "@mui/material";
+import { Tooltip, tooltipClasses } from "@mui/material";
+import { styled as styledMui } from "@mui/material/styles";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import "./alertButton.css";
+import ToImage from "./component/ToImage";
 
 import countryTrans from "../../util/countryTrans";
+
+const MyTooltip = styledMui(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "rgb(255, 255, 255, 0.9)",
+    color: "#3a4a58",
+    boxShadow: theme.shadows[1],
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+}));
 
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
   height: calc(100vh - 80px);
-  background-color: rgb(0, 0, 0, 0.85);
+  background-color: rgb(0, 0, 0, 0.9);
   display: none;
   z-index: 5;
   position: fixed;
@@ -21,27 +38,35 @@ const AlbumDiv = styled.div`
   flex-direction: column;
   padding: 40px 100px;
   overflow: scroll;
+  @media (min-width: 1440px) {
+    width: 1240px;
+    padding: 40px calc(50vw - 620px);
+  }
 `;
 
 const BackDiv = styled.div`
   position: fixed;
   top: 25px;
   right: 30px;
-  color: white;
+  color: #9d9d9d;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 28px;
   cursor: pointer;
   :hover {
-    color: #b8c3d0;
+    color: white;
   }
 `;
 
 const ButtonsDiv = styled.div`
   position: fixed;
   top: 150px;
-  right: 50px;
+  right: 60px;
   display: flex;
   flex-direction: column;
+  z-index: 1;
+  @media (min-width: 1440px) {
+    right: 100px;
+  }
 `;
 
 const ButtonStyle = styled.div`
@@ -49,14 +74,19 @@ const ButtonStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 45px;
-  height: 45px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  font-size: 25px;
+  font-size: 30px;
   color: #3a4a58;
   background-color: white;
   cursor: pointer;
   box-shadow: 0px 0px 10px #d0d0d0;
+  @media (min-width: 1440px) {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+  }
   :hover {
     /* color: #667484; */
     box-shadow: 0px 0px 22px #d0d0d0;
@@ -92,7 +122,7 @@ const AlbumPosition = styled.div`
 const AlbumDate = styled.div`
   margin-left: 5px;
   font-size: 20px;
-  line-height: 30px;
+  line-height: 40px;
 `;
 
 export default function Album() {
@@ -106,10 +136,22 @@ export default function Album() {
   const [ownerFriendData, setOwnerFriendData] = useState([]);
   const [liked, setLiked] = useState(false);
   const [friendCondition, setFriendCondition] = useState("none");
-  const [myAlbun, setMyAlbum] = useState(false);
+  const [isMyAlbun, setIsMyAlbum] = useState(false);
+  const albumRef = useRef();
 
-  const { content, position, timestamp, user_id } = albumData || {};
-  console.log(ownerId, myInfo.id, ownerId === myInfo.id);
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("album_id_show");
+    id &&
+      db_gallery
+        .doc(id)
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            handleClickBack();
+            history.push({ pathname: "notfound" });
+          }
+        });
+  }, []);
 
   useEffect(() => {
     console.log(albumIdShow);
@@ -118,16 +160,18 @@ export default function Album() {
         .doc(albumIdShow)
         .get()
         .then((doc) => {
-          let albumData = doc.data();
-          setAlbumData(albumData);
-          db_userInfo
-            .doc(albumData.user_id)
-            .get()
-            .then((doc) => {
-              setOwnerPhoto(doc.data().photo);
-              setOwnerId(doc.data().id);
-              setOwnerFriendData(doc.data().friends);
-            });
+          if (doc.exists) {
+            let albumData = doc.data();
+            setAlbumData(albumData);
+            db_userInfo
+              .doc(albumData.user_id)
+              .get()
+              .then((doc) => {
+                setOwnerPhoto(doc.data().photo);
+                setOwnerId(doc.data().id);
+                setOwnerFriendData(doc.data().friends);
+              });
+          }
         });
     }
   }, [albumIdShow]);
@@ -146,28 +190,28 @@ export default function Album() {
         }
       });
     }
-    setMyAlbum(myInfo.id === ownerId);
+    setIsMyAlbum(myInfo.id === ownerId);
   }, [myInfo.friends, ownerId]);
 
   function handleClickBack() {
+    dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
+    setAlbumData({});
+    setOwnerPhoto("");
+    setOwnerId("");
+
     let params = new URL(window.location).searchParams;
     params.delete("album_id_show");
     history.push({
       search: params.toString(),
     });
-
-    dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
-    setAlbumData({});
-    setOwnerPhoto("");
-    setOwnerId("");
   }
 
   function handleLike() {
     setLiked(!liked);
     db_gallery.doc(albumIdShow).update({
       praise: !liked
-        ? [...albumData.praise, myInfo.id]
-        : albumData.praise.filter((id) => id !== myInfo.id),
+        ? [...albumData.praise, myInfo.id || "none"]
+        : albumData.praise.filter((id) => id !== (myInfo.id || "none")),
     });
   }
 
@@ -217,6 +261,14 @@ export default function Album() {
         name: countryTrans[albumData.country].name_en,
       },
     });
+    db_tourist_spot
+      .where("album_id", "==", albumIdShow)
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) =>
+          db_tourist_spot.doc(doc.id).update({ condition: "pending" })
+        );
+      });
     history.push({
       pathname: "edit",
       search: `?album_id_edit=${albumIdShow}`,
@@ -224,69 +276,128 @@ export default function Album() {
   }
 
   function handleDelete() {
-    db_gallery.doc(albumIdShow).update({ condition: "discard" });
-    handleClickBack();
+    const MySwal = withReactContent(Swal);
+
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+      customClass: {
+        confirmButton: "confirmbutton",
+        cancelButton: "cancelbutton",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        db_gallery.doc(albumIdShow).update({ condition: "discard" });
+        MySwal.fire({
+          title: "Deleted!",
+          text: "Your album has been deleted.",
+          icon: "success",
+          customClass: {
+            confirmButton: "confirmbutton",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleClickBack();
+          }
+        });
+
+        db_tourist_spot
+          .where("album_id", "==", albumIdShow)
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.forEach((doc) =>
+              db_tourist_spot.doc(doc.id).update({ condition: "discard" })
+            );
+          });
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire({
+          title: "Cancelled",
+          text: "Your album is safe :)",
+          icon: "error",
+          customClass: {
+            confirmButton: "confirmbutton",
+          },
+        });
+      }
+    });
   }
 
   const addFriendText = {
     none: "Add Friend",
     get_request: "Add Friend",
-    send_request: "Request sended",
+    send_request: "Request sent",
     confirmed: "You are Friend !",
   };
 
   return (
     <AlbumDiv style={{ display: albumIdShow ? "flex" : "none" }}>
       <BackDiv onClick={handleClickBack}>
-        <i className="fas fa-times"></i>
+        <i className="fas fa-times-circle" />
       </BackDiv>
-      <ButtonsDiv>
-        <Tooltip title={liked ? "Liked" : "Like"} placement="left">
-          <ButtonStyle
-            onClick={handleLike}
-            style={liked ? { backgroundColor: "#3A4A58", color: "white" } : {}}
+      {myInfo.id ? (
+        <ButtonsDiv>
+          <MyTooltip
+            title={liked ? "Liked" : "Like"}
+            placement="left"
+            sx={{ fontSize: "16px" }}
           >
-            <i className="fas fa-thumbs-up" />
-          </ButtonStyle>
-        </Tooltip>
+            <ButtonStyle
+              onClick={handleLike}
+              style={
+                liked ? { backgroundColor: "#3A4A58", color: "white" } : {}
+              }
+            >
+              <i className="fas fa-thumbs-up" />
+            </ButtonStyle>
+          </MyTooltip>
 
-        <Tooltip
-          title={addFriendText[friendCondition]}
-          placement="left"
-          style={{ display: myAlbun ? "none" : "flex" }}
-        >
-          <ButtonStyle
-            onClick={handleFriend}
-            style={
-              friendCondition === "confirmed"
-                ? { backgroundColor: "#3A4A58", color: "white" }
-                : {}
-            }
+          <MyTooltip title={addFriendText[friendCondition]} placement="left">
+            <ButtonStyle
+              onClick={handleFriend}
+              style={
+                friendCondition === "confirmed"
+                  ? {
+                      backgroundColor: "#3A4A58",
+                      color: "white",
+                      display: isMyAlbun ? "none" : "flex",
+                    }
+                  : { display: isMyAlbun ? "none" : "flex" }
+              }
+            >
+              <i className="fas fa-user-plus"></i>
+            </ButtonStyle>
+          </MyTooltip>
+
+          <MyTooltip
+            title="Edit"
+            placement="left"
+            style={{ display: isMyAlbun ? "flex" : "none" }}
           >
-            <i className="fas fa-user-plus"></i>
-          </ButtonStyle>
-        </Tooltip>
+            <ButtonStyle onClick={handleEdit}>
+              <i className="fas fa-pencil-alt" />
+            </ButtonStyle>
+          </MyTooltip>
 
-        <Tooltip
-          title="Edit"
-          placement="left"
-          style={{ display: myAlbun ? "flex" : "none" }}
-        >
-          <ButtonStyle onClick={handleEdit}>
-            <i className="fas fa-pencil-alt" />
-          </ButtonStyle>
-        </Tooltip>
-
-        <Tooltip
-          title="Delete"
-          placement="left"
-          style={{ display: myAlbun ? "flex" : "none" }}
-        >
-          <ButtonStyle onClick={handleDelete}>
-            <i className="fas fa-trash-alt"></i>
-          </ButtonStyle>
-        </Tooltip>
-      </ButtonsDiv>
+          <MyTooltip
+            title="Delete"
+            placement="left"
+            style={{ display: isMyAlbun ? "flex" : "none" }}
+          >
+            <ButtonStyle onClick={handleDelete}>
+              <i className="fas fa-trash-alt"></i>
+            </ButtonStyle>
+          </MyTooltip>
+          <ToImage albumRef={albumRef} />
+        </ButtonsDiv>
+      ) : null}
 
       <AlbumInfo>
         <AlbumOwner
@@ -308,7 +419,7 @@ export default function Album() {
         />
         <AlbumPositionData>
           <AlbumPosition>
-            <i className="fas fa-map-pin" />
+            <i className="fas fa-map-marker-alt"></i>
             &ensp;{albumData.position}
           </AlbumPosition>
           <AlbumDate>
@@ -320,7 +431,11 @@ export default function Album() {
           </AlbumDate>
         </AlbumPositionData>
       </AlbumInfo>
-      <ShowAlbum show={true} albumContent={albumData.content} />
+      <ShowAlbum
+        show={true}
+        albumContent={albumData.content}
+        albumRef={albumRef}
+      />
     </AlbumDiv>
   );
 }

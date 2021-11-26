@@ -4,13 +4,13 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
 
-import UploadImage from "./component/UploadImage";
-import AddText from "./component/AddText";
+import SlideShow from "./component/slideShow/SlideShow";
 import TextEditor from "./component/TextEditor";
+import ImageEditor from "./component/ImageEditor";
+import TemplateCanvas from "./component/templateCanvas/TemplateCanvas";
 
 import { templateStyle, allTemplateParams } from "./component/MyTemplate";
 import { db_gallery } from "../../util/firebase";
-import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
 
 const WorkingSpaceDiv = styled.div`
   /* padding-left: 352px;
@@ -40,16 +40,23 @@ const PageContainer = styled.div`
   position: relative;
 `;
 
-const RemoveWindow = styled.div`
+const RemovePage = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
-  right: -30px;
+  right: -40px;
   font-size: 18px;
   color: #3a4a58;
   line-height: 30px;
   cursor: pointer;
   :hover {
-    color: white;
+    /* color: white; */
+    background-color: rgb(255, 255, 255, 0.4);
   }
 `;
 
@@ -73,18 +80,7 @@ const PageCanvasContainer = styled.div`
   /* margin: 0 100px; */
 `;
 
-const CanvasContainer = styled.div`
-  box-shadow: 0px 0px 2px #8e8e8e;
-  :focus {
-    /* outline: 1px #667484 solid; */
-    box-shadow: 0px 0px 5px #6c6c6c;
-    z-index: 2;
-  }
-`;
-
-const MyCanvas = styled.canvas``;
-
-function WorkingSpace({ preview, addWindow }) {
+function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
   const dispatch = useDispatch();
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
@@ -95,9 +91,11 @@ function WorkingSpace({ preview, addWindow }) {
   const editRedo = useSelector((state) => state.editRedo);
 
   const workingSpaceInnerRef = useRef();
-
   const pageCanvasContainerRef = useRef();
+  const addTextRef = useRef({});
+  const uploadImageRef = useRef({});
   const textEditorRef = useRef();
+  const imageEditorRef = useRef();
 
   // 畫布縮放功能在這
   // useEffect(() => {
@@ -254,10 +252,32 @@ function WorkingSpace({ preview, addWindow }) {
           return acc;
         }, {}),
       });
+
+      if (templateId === "text_1") {
+        dispatch({
+          type: "SET_ACTIVE_CANVAS",
+          payload: newCanvas[0],
+        });
+        dispatch({
+          type: "SET_ACTIVE_OBJ",
+          payload: newCanvas[0].getActiveObject(),
+        });
+      }
     }
     workingSpaceInnerRef.current.scrollTop =
       workingSpaceInnerRef.current.scrollHeight;
   }, [pageInfo]);
+
+  useEffect(() => {
+    console.log(preview);
+    Object.values(canvas).forEach((canvas) => {
+      canvas.selectable = !preview;
+      canvas.getObjects().forEach((obj) => {
+        obj.selectable = !preview;
+      });
+      canvas.renderAll();
+    });
+  }, [preview]);
 
   // useEffect(() => {
   //   // const allCanvas = initCanvas();
@@ -365,7 +385,7 @@ function WorkingSpace({ preview, addWindow }) {
     });
   }
 
-  function handleUndo(event) {
+  function handleKeyDown(event) {
     // redo
     if (
       (event.ctrlKey || event.metaKey) &&
@@ -470,39 +490,54 @@ function WorkingSpace({ preview, addWindow }) {
       thisCanvas.remove(thisCanvas.getActiveObject());
       handleCanvasOn(thisCanvas);
     }
-    textEditorRef.current.style.display = "none";
+    textEditorRef.current.style.zIndex = -1;
+    imageEditorRef.current.style.zIndex = -1;
   }
 
   function getActiveCanvas(e) {
     console.log(canvas);
-    let [thisCanvasId, activeCanvas, activeObj] = [undefined, {}, {}];
+    let [thisCanvasId, thisCanvas, activeObj] = [undefined, {}, {}];
 
     if (e.target.classList.contains("upper-canvas")) {
       thisCanvasId = e.target.parentNode.children[0].id;
+      if (
+        Object.keys(activeCanvas).length &&
+        activeCanvas.lowerCanvasEl.id !== thisCanvasId
+      ) {
+        activeCanvas.discardActiveObject().renderAll();
+      }
       if (thisCanvasId) {
         console.log(canvas, thisCanvasId);
-        activeCanvas = canvas[thisCanvasId];
-        if (activeCanvas.getActiveObject()) {
-          activeObj = activeCanvas.getActiveObject();
+        thisCanvas = canvas[thisCanvasId];
+        if (thisCanvas.getActiveObject()) {
+          activeObj = thisCanvas.getActiveObject();
         }
+      }
+    } else {
+      if (Object.keys(activeCanvas).length) {
+        activeCanvas.discardActiveObject().renderAll();
       }
     }
 
-    if (!textEditorRef.current || !textEditorRef.current.contains(e.target)) {
+    if (
+      !textEditorRef.current.contains(e.target) &&
+      !imageEditorRef.current.contains(e.target)
+    ) {
       dispatch({
         type: "SET_ACTIVE_CANVAS",
-        payload: activeCanvas,
+        payload: thisCanvas,
       });
       dispatch({
         type: "SET_ACTIVE_OBJ",
         payload: activeObj,
       });
     }
+    console.log("activeObj:", activeObj);
+    console.log("activeCanvas", thisCanvas);
     console.log("activeCanvasId:", thisCanvasId);
-    console.log(textEditorRef.current.contains(e.target));
   }
 
-  function handleRemoveWindow(e, page) {
+  function handleRemovePage(e, page) {
     // e.target.parentNode.innerHTML = '';
     console.log(page, Object.keys(pageInfo));
     // e.target.parentNode.parentNode.parentNode.removeChild(
@@ -524,47 +559,148 @@ function WorkingSpace({ preview, addWindow }) {
     });
   }
 
+  function handleShowIcon(e, canvasId) {
+    if (!preview) {
+      addTextRef.current[canvasId].style.zIndex = 1;
+      uploadImageRef.current[canvasId].style.zIndex = 1;
+    }
+  }
+
+  function handleDisplayIcon(e, canvasId) {
+    if (!preview) {
+      addTextRef.current[canvasId].style.zIndex = -1;
+      uploadImageRef.current[canvasId].style.zIndex = -1;
+    }
+  }
+
   return (
     <WorkingSpaceDiv
-      onKeyDown={(e) => handleUndo(e)}
-      onClick={(e) => getActiveCanvas(e)}
+      onKeyDown={(e) => handleKeyDown(e)}
+      onClick={(e) => {
+        getActiveCanvas(e);
+      }}
       tabIndex="0"
-      style={{ display: preview ? "none" : "flex" }}
+      // style={{ display: preview ? "none" : "flex" }}
     >
-      <TextEditor innerRef={textEditorRef} handleCanvasOn={handleCanvasOn} />
+      <TextEditor
+        textEditorRef={textEditorRef}
+        handleCanvasOn={handleCanvasOn}
+      />
+      <ImageEditor
+        imageEditorRef={imageEditorRef}
+        handleCanvasOn={handleCanvasOn}
+      />
       <WorkingSpaceDivInner ref={workingSpaceInnerRef}>
         {Object.values(pageInfo)
           .sort((a, b) => a.page - b.page)
-          .map((pageInfo) => {
+          .map((pageInfo, index) => {
             const { page, canvasCount, templateId, display } = pageInfo;
             return (
               <PageContainer
                 key={`page${page}`}
                 style={{ display: display ? "block" : "none" }}
               >
-                <RemoveWindow onClick={(e) => handleRemoveWindow(e, page)}>
+                <RemovePage
+                  ref={(el) => (removePageRef.current[index] = el)}
+                  onClick={(e) => handleRemovePage(e, page)}
+                >
                   <i className="fas fa-trash-alt"></i>
-                </RemoveWindow>
+                </RemovePage>
                 <PageCanvasContainer
                   ref={pageCanvasContainerRef}
-                  style={templateStyle[templateId]}
+                  style={templateStyle[templateId]} // page的style格式
                 >
-                  {Array.from(new Array(canvasCount).keys()).map((id) => {
-                    return (
-                      <CanvasContainer
-                        style={{ position: "relative" }}
-                        key={`page${page}-canvas${id}`}
-                        tabIndex="0"
-                        onClick={(e) => {
-                          console.log(e.target.parentNode.children[1]);
-                        }}
-                      >
-                        <AddText page={page} id={id} />
-                        <UploadImage page={page} id={id} />
-                        <MyCanvas id={`page${page}-canvas${id}`} />
-                      </CanvasContainer>
-                    );
-                  })}
+                  {templateId === "slide_show_1" ? (
+                    <SlideShow
+                      canvasCount={canvasCount}
+                      canvasDivRef={canvasDivRef}
+                      page={page}
+                      preview={preview}
+                      addTextRef={addTextRef}
+                      uploadImageRef={uploadImageRef}
+                      handleCanvasOn={handleCanvasOn}
+                    />
+                  ) : (
+                    <TemplateCanvas
+                      canvasCount={canvasCount}
+                      canvasDivRef={canvasDivRef}
+                      page={page}
+                      preview={preview}
+                      addTextRef={addTextRef}
+                      uploadImageRef={uploadImageRef}
+                      handleCanvasOn={handleCanvasOn}
+                    />
+                  )}
+
+                  {/* {templateId === "slide_show_1" ? (
+                    <SlideShow
+                      canvasCount={canvasCount}
+                      canvasDivRef={canvasDivRef}
+                      page={page}
+                      preview={preview}
+                      addTextRef={addTextRef}
+                      uploadImageRef={uploadImageRef}
+                    />
+                  ) : (
+                    <>
+                      {Array.from(new Array(canvasCount).keys()).map(
+                        (id, index) => {
+                          return (
+                            <CanvasContainer
+                              ref={(el) =>
+                                (canvasDivRef.current[
+                                  `page${page}-canvas${id}`
+                                ] = el)
+                              }
+                              style={{
+                                position: "relative",
+                                // ":focus": {
+                                //   boxShadow: "0px 0px 5px #6c6c6c",
+                                //   zIndex: 2,
+                                // },
+                              }}
+                              key={`page${page}-canvas${id}`}
+                              tabIndex="0"
+                              onFocus={(e) => {
+                                if (!preview) {
+                                  e.target.style.boxShadow =
+                                    "0px 0px 5px #6c6c6c";
+                                  e.target.style.zIndex = 2;
+                                }
+                              }}
+                              onBlur={(e) => {
+                                if (!preview) {
+                                  e.target.style.boxShadow =
+                                    "0px 0px 2px #8e8e8e";
+                                }
+                              }}
+                              onClick={(e) => {
+                                console.log(e.target.parentNode);
+                              }}
+                              onMouseEnter={(e) =>
+                                handleShowIcon(e, `page${page}-canvas${id}`)
+                              }
+                              onMouseLeave={(e) =>
+                                handleDisplayIcon(e, `page${page}-canvas${id}`)
+                              }
+                            >
+                              <AddText
+                                page={page}
+                                id={id}
+                                addTextRef={addTextRef}
+                              />
+                              <UploadImage
+                                page={page}
+                                id={id}
+                                uploadImageRef={uploadImageRef}
+                              />
+                              <MyCanvas id={`page${page}-canvas${id}`} />
+                            </CanvasContainer>
+                          );
+                        }
+                      )}
+                    </>
+                  )} */}
                 </PageCanvasContainer>
               </PageContainer>
             );

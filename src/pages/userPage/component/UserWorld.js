@@ -1,11 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
-
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import World from "../../world/World";
-// import ToMyPage from "../world/component/ToMyPage";
-// import Country from "../country/Country";
-// import GalleryQuestion from "../country/component/GalleryQuestion";
 
 const UserPageDiv = styled.div`
   width: calc(100% - 80px);
@@ -13,6 +9,12 @@ const UserPageDiv = styled.div`
   margin-top: 10px;
   background-color: rgb(58, 74, 88);
   position: relative;
+  @media (max-width: 932px) {
+    width: 100%;
+  }
+  @media (max-width: 932px) {
+    width: 100%;
+  }
   /* background-color: rgb(200, 200, 200, 0.5) ; */
 `;
 
@@ -21,23 +23,23 @@ const BackBtn = styled.div`
   background-color: #d9d9d9;
   padding: 4px;
   position: absolute;
-  bottom: 220px;
+  bottom: 120px;
   right: 45px;
-  color: #3A4A58;
+  color: #3a4a58;
   border-radius: 25%;
   outline: 2px solid #d9d9d9;
   cursor: pointer;
-  :hover{
-    background-color: #8E8E8E;
+  :hover {
+    background-color: #8e8e8e;
   }
 `;
 
-export default function UserWorld({userInfo}) {
+export default function UserWorld({ userInfo }) {
   const [maskVisibility, setMaskVisibility] = useState("hidden");
   const [maskOpacity, setMaskOpacity] = useState(0);
   const [maskDisplay, setMaskDisplay] = useState("flex");
   const [map, setMap] = useState(undefined);
-  const [currentActive, setCurrentActive] = useState(undefined);
+  const [currentActive, setCurrentActive] = useState({});
 
   function handleBack() {
     map.goHome();
@@ -52,6 +54,7 @@ export default function UserWorld({userInfo}) {
         setMap={setMap}
         setMaskVisibility={setMaskVisibility}
         setMaskOpacity={setMaskOpacity}
+        userPage={true}
       />
       <BackBtn onClick={handleBack}>
         <i className="fas fa-home"></i>

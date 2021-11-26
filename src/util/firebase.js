@@ -1,7 +1,6 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/storage';
-
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCl-eLi6K19lxYcyM6XNWHQLufcKXRJ3EA",
@@ -16,12 +15,12 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 const storage = firebase.storage();
-const db_userInfo = db.collection('user_info');
+const db_userInfo = db.collection("user_info");
 // const db_userInfo_group = db.collectionGroup('user_info');
-const db_gallery = db.collection('gallery');
+const db_gallery = db.collection("gallery");
+const db_tourist_spot = db.collection("tourist_spot");
 
-
-export {firebase, storage, db_userInfo, db_gallery};
+export { firebase, storage, db_userInfo, db_gallery, db_tourist_spot };
 
 // let instance;
 

@@ -1,92 +1,56 @@
-import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import React from "react";
 
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import TextField from "@mui/material/TextField";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-      font: "#ffffff",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-      font: "#3A4A58",
-    },
-  },
-});
+import { ThemeProvider } from "@material-ui/core/styles";
+import { albumFriendBtnTheme as theme } from "../../../util/muiTheme";
 
 const AlbumFriendBtnsDiv = styled.div`
   display: flex;
   flex-direction: column;
+  @media (max-width: 932px) {
+    border-top: 1px white solid;
+    padding: 20px 30px 0;
+    width: calc(100% - 60px);
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
 `;
 
 export default function AlbumFriendBtns({ activeButton, setActiveButton }) {
-  // const [activeButton, setActiveButton] = useState("Albums");
-
-  function handleAlbums() {
-    setActiveButton("Albums");
+  function handleAlbumsFriend(btn) {
+    setActiveButton(btn);
   }
 
-  function handleFriends() {
-    setActiveButton("Friends");
-  }
+  const albumFriendButtonStyle = () => ({
+    width: "190px",
+    margin: "4px 0 24px",
+    border: `2px #ffffff solid`,
+    color: "#ffffff",
+    boxShadow: "4px 6px 10px rgb(50, 50, 50, 0.7)",
+    ":hover": {
+      boxShadow: "4px 6px 5px rgb(50, 50, 50, 0.7)",
+    },
+  });
 
   return (
-    <AlbumFriendBtnsDiv>
-      <ThemeProvider theme={theme}>
-        <Button
-          variant="contained"
-          color={activeButton === "Albums" ? "primary" : "white"}
-          style={{
-            width: "180px",
-            fontSize: "20px",
-            borderRadius: "40px",
-            lineHeight: 1.5,
-            fontWeight: "bold",
-            color: activeButton === "Albums" ? "white" : "#3A4A58",
-            outline:
-              activeButton === "Albums"
-                ? "3px white solid"
-                : "3px #3A4A58 solid",
-          }}
-          onClick={handleAlbums}
-        >
-          Albums
-        </Button>
-        <Button
-          variant="contained"
-          color={activeButton === "Friends" ? "primary" : "white"}
-          style={{
-            width: "180px",
-            fontSize: "20px",
-            borderRadius: "40px",
-            lineHeight: 1.5,
-            fontWeight: "bold",
-            marginTop: "20px",
-            color: activeButton === "Friends" ? "white" : "#3A4A58",
-            outline:
-              activeButton === "Albums"
-                ? "3px #3A4A58 solid"
-                : "3px white solid",
-          }}
-          onClick={handleFriends}
-        >
-          Friends
-        </Button>
-      </ThemeProvider>
-    </AlbumFriendBtnsDiv>
+    <ThemeProvider theme={theme}>
+      <AlbumFriendBtnsDiv>
+        {["Albums", "Friends"].map((btn) => (
+          <Button
+            key={btn}
+            variant="contained"
+            sx={albumFriendButtonStyle(btn)}
+            color={activeButton === btn ? "primary" : "secondary"}
+            onClick={() => handleAlbumsFriend(btn)}
+          >
+            {btn}
+          </Button>
+        ))}
+      </AlbumFriendBtnsDiv>
+    </ThemeProvider>
   );
 }

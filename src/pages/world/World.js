@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // import "./App.css";
@@ -8,23 +8,55 @@ import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 
 import countryTrans from "../../util/countryTrans";
+import { db_gallery } from "../../util/firebase";
 
 const Chartdiv = styled.div`
   width: 100%;
   height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #3a4a58;
 `;
 
 function World({
   userInfo,
+  mapType,
   setCurrentActive,
   setMap,
   setMaskVisibility,
   setMaskOpacity,
+  userPage,
+  map,
 }) {
   const dispatch = useDispatch();
-  // const userInfo = useSelector((state) => state.userInfo);
+  const [myTravelCountries, setMyTravelCountries] = useState([]);
+  const targetCountry = useSelector((state) => state.targetCountry);
+  const polygonSeries = useSelector((state) => state.polygonSeries);
 
-  let currentActiveCountry;
+  useEffect(() => {
+    let unsubscribe = db_gallery
+      .where("user_id", "==", userInfo.id || null)
+      .onSnapshot((myAlbums) => {
+        setMyTravelCountries(
+          Array.from(
+            new Set([
+              ...myAlbums.docs
+                .filter((album) => album.data().condition === "completed")
+                .map((album) => album.data().country),
+              userInfo.country,
+            ])
+          )
+          // .push(userInfo.country)
+        );
+      });
+    return () => {
+      unsubscribe();
+    };
+  }, [userInfo]);
+
+  // let currentActiveCountry = {};
   useEffect(() => {
     let map = am4core.create("chartdiv", am4maps.MapChart);
     setMap(map);
@@ -51,14 +83,14 @@ function World({
     polygonTemplate.events.on(
       "hit",
       function (ev) {
-        if (currentActiveCountry) {
-          currentActiveCountry.isActive = false;
-          // setCurrentActive(currentActiveCountry);
-        }
-        currentActiveCountry = ev.target;
+        // if (currentActiveCountry) {
+        //   currentActiveCountry.isActive = false;
+        //   // setCurrentActive(currentActiveCountry);
+        // }
+        let currentActiveCountry = ev.target;
         setCurrentActive(ev.target);
         map.zoomToMapObject(currentActiveCountry);
-        currentActiveCountry.isActive = true;
+        // currentActiveCountry.isActive = true;
         // setCurrentActive(currentActiveCountry);
         dispatch({
           type: "SET_TARGET_COUNTRY",
@@ -83,20 +115,21 @@ function World({
     });
 
     // Add some data
-    const { travel_country } = userInfo;
-    if (travel_country) {
-      polygonSeries.data = travel_country.map((countryCode) => ({
-        id: countryCode,
-        name: countryTrans[countryCode].name_en,
-        fill: am4core.color("#ffffff"),
-      }));
+    if (myTravelCountries) {
+      polygonSeries.data = myTravelCountries
+        .filter((countryCode) => countryCode)
+        .map((countryCode) => ({
+          id: countryCode,
+          name: countryTrans[countryCode].name_en,
+          fill: am4core.color("#ffffff"),
+        }));
     }
 
     polygonTemplate.propertyFields.fill = "fill";
 
     // Add zoom control
     map.zoomControl = new am4maps.ZoomControl();
-    map.zoomControl.slider.height = 100;
+    map.zoomControl.slider.height = 0;
     map.zoomControl.marginRight = 40;
     map.zoomControl.marginBottom = 40;
     // Add and configure small map
@@ -116,9 +149,33 @@ function World({
     return () => {
       map.dispose();
     };
-  }, [userInfo]);
+  }, [myTravelCountries]);
 
-  return <Chartdiv id="chartdiv" />;
+  useEffect(() => {
+    if (
+      map &&
+      Object.keys(targetCountry).length &&
+      polygonSeries.mapPolygons.values.length
+    ) {
+      console.log(polygonSeries.mapPolygons.values);
+      const currentActiveCountry = polygonSeries.mapPolygons.values.filter(
+        (country) => country.dataItem.dataContext.id === targetCountry.id
+      )[0];
+      map.zoomToMapObject(currentActiveCountry);
+    }
+  }, [myTravelCountries, map, targetCountry, polygonSeries]);
+
+  console.log(targetCountry);
+
+  return (
+    <Chartdiv
+      id="chartdiv"
+      style={{
+        display: userPage || mapType ? "block" : "none",
+        position: userPage ? "static" : "fixed",
+      }}
+    />
+  );
 }
 
 export default World;

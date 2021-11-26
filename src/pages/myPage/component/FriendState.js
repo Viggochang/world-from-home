@@ -10,13 +10,19 @@ const RequestBtnDiv = styled.div`
   align-items: center;
   position: absolute;
   bottom: 0px;
-  left: 250px;
+  left: 620px;
+  @media (max-width: 1180px) {
+    left: 500px;
+  }
+  @media (max-width: 932px) {
+    left: calc(56% + 80px);
+  }
 `;
 
 const RequestBtn = styled.div`
-  width: 75px;
-  height: 75px;
-  font-size: 40px;
+  width: 70px;
+  height: 70px;
+  font-size: 36px;
   border-radius: 50%;
   display: flex;
   cursor: pointer;
@@ -35,7 +41,7 @@ const RemoveRequest = styled.div`
   bottom: 20px;
   cursor: pointer;
   :hover {
-    color: #AE0000;  /*red*/
+    color: #ae0000; /*red*/
   }
 `;
 
@@ -56,7 +62,7 @@ export default function FriendState({ userInfo }) {
     none: {
       text: "add friend",
       text_change: "send request",
-      color_change: "#3A4A58",  //green
+      color_change: "#3A4A58", //green
       style: {
         backgroundColor: "white",
         color: "#b8c3d0",
@@ -68,9 +74,9 @@ export default function FriendState({ userInfo }) {
       },
     },
     send_request: {
-      text: "request sended",
+      text: "request sent",
       text_change: "remove request",
-      color_change: "#AE0000",   //red
+      color_change: "#AE0000", //red
       style: {
         backgroundColor: "#b8c3d0",
         color: "white",
@@ -98,7 +104,7 @@ export default function FriendState({ userInfo }) {
     confirmed: {
       text: "friend",
       text_change: "remove friend",
-      color_change: "#AE0000",  //red
+      color_change: "#AE0000", //red
       style: {
         backgroundColor: "#3A4A58",
         color: "white",
@@ -174,7 +180,7 @@ export default function FriendState({ userInfo }) {
     db_userInfo.doc(myId).update({ friends: myFriendsData });
 
     const friendFriendsData = [
-      ...friendFriends.filter(({ id }) => id !== myId),
+      ...(friendFriends || []).filter(({ id }) => id !== myId),
       {
         id: myId,
         condition: stateObj[friendState].state_change.friend_state,
@@ -187,18 +193,18 @@ export default function FriendState({ userInfo }) {
     const stateText = stateTextRef.current;
     if (type === "enter") {
       stateText.innerText = "remove request";
-      stateText.style.color = "#AE0000";  //red
+      stateText.style.color = "#AE0000"; //red
     }
   }
-  function handleRemoveRequesState(){
+  function handleRemoveRequesState() {
     const stateText = stateTextRef.current;
     stateText.style.color = "white";
-    setFriendState('none');
+    setFriendState("none");
     const myFriendsData = [
       ...myFriends.filter(({ id }) => id !== friendId),
       {
         id: friendId,
-        condition: 'none',
+        condition: "none",
       },
     ];
     db_userInfo.doc(myId).update({ friends: myFriendsData });
@@ -207,7 +213,7 @@ export default function FriendState({ userInfo }) {
       ...friendFriends.filter(({ id }) => id !== myId),
       {
         id: myId,
-        condition: 'none',
+        condition: "none",
       },
     ];
     db_userInfo.doc(friendId).update({ friends: friendFriendsData });

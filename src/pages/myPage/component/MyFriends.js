@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 
 import styled from "styled-components";
 import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
 
 import FriendSearchResults from "./FriendSearchResults";
 import FriendRequests from "./FriendRequests";
@@ -17,6 +15,13 @@ const MyFriendsContentDiv = styled.div`
   align-items: flex-end;
   margin-left: 50px;
   width: calc(100% - 320px);
+  @media (max-width: 932px) {
+    width: calc(100% - 60px);
+    margin-left: 0;
+  }
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 const FilterDiv = styled.div`
@@ -24,6 +29,9 @@ const FilterDiv = styled.div`
   align-items: center;
   height: 56px;
   width: 100%;
+  @media (max-width: 640px) {
+    justify-content: flex-end;
+  }
 `;
 
 const Title = styled.div`
@@ -31,22 +39,32 @@ const Title = styled.div`
   font-size: 48px;
   font-weight: bold;
   margin-right: auto;
+  @media (max-width: 1180px) {
+    font-size: 30px;
+  }
+  @media (max-width: 640px) {
+    display: none;
+  }
 `;
 
 const RequestBtn = styled.div`
-  width: 55px;
-  height: 55px;
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
   color: #3a4a58;
   font-size: 30px;
-  outline: 1px #3a4a58 solid;
+  /* outline: 2px #3a4a58 solid; */
   border-radius: 50%;
   position: relative;
   display: flex;
   background-color: rgb(255, 255, 255, 0.7);
   cursor: pointer;
   :hover {
-    background-color: #3a4a58;
+    background-color: #b8c3d0;
     color: white;
+  }
+  @media (max-width: 640px) {
+    /* margin-left: auto; */
   }
 `;
 const RequestAlert = styled.div`
@@ -79,19 +97,29 @@ const SearchIconDiv = styled.div`
   position: absolute;
   right: 10px;
   top: calc(50% - 10px);
+  color: #3a4a58;
 `;
 
 const ContentDiv = styled.div`
-  outline: 2px #3a4a58 solid;
-  padding: 30px 30px 0;
+  /* outline: 2px #3a4a58 solid; */
+  padding: 20px 30px 30px;
   margin-top: 15px;
   width: calc(100% - 60px);
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 170px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-content: space-between;
   background-color: rgb(255, 255, 255, 0.5);
+  border-radius: 10px;
+  /* overflow: scroll; */
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    padding: 10px 10px 0;
+    width: calc(100% - 20px);
+  }
 `;
 
 export default function MyFriends({ title, userInfo, isMyPage }) {
@@ -135,6 +163,9 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
     friendRequestsRef.current.style.color = showFriendRequest
       ? "#3a4a58"
       : "white";
+    // friendRequestsRef.current.style.outline = showFriendRequest
+    //   ? "2px #3a4a58 solid"
+    //   : "2px white solid";
     setShowFriendRequest(showFriendRequest ? false : true);
   }
 
@@ -163,7 +194,7 @@ export default function MyFriends({ title, userInfo, isMyPage }) {
           <InputBase
             sx={{ ml: 1, flex: 1 }}
             style={{ color: "#3a4a58" }}
-            placeholder="Search My Friends"
+            placeholder="Search Friends"
             inputProps={{ "aria-label": "search google maps" }}
             onChange={(e) => handleSearch(e)}
           />

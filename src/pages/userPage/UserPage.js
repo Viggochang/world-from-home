@@ -1,59 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import { db_userInfo } from "../../util/firebase";
 import FriendState from "../myPage/component/FriendState";
-import MoreInfo from "./component/MoreInfo";
+
+import Background from "../myPage/background/Background";
+import MoreInformation from "./moreInformation/MoreInformation";
 import UserWorld from "./component/UserWorld";
 import countryTrans from "../../util/countryTrans";
 import AlbumFriendBtns from "../myPage/component/AlbumFriendBtns";
 import MyGallery from "../myPage/component/MyGallery";
 import MyFriends from "../myPage/component/MyFriends";
-import SigninDiv from "../Signin/Signin";
+import Login from "../Signin/Signin";
+import Logout from "../Signin/Logout";
+
 import Album from "../album/Album";
 // import { system } from "@amcharts/amcharts4/core";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-      font: "#ffffff",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-      font: "#3A4A58",
-    },
-  },
-});
-
-const Background = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-`;
-
-const Mask = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background: rgb(142, 142, 142, 0.6);
-`;
 
 const MyPageDiv = styled.div`
   /* position: fixed;
@@ -64,6 +29,11 @@ const MyPageDiv = styled.div`
   flex-direction: column;
   align-items: center;
   width: calc(100vw - 160px);
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+    padding: 50px 30px;
+  }
+  /* z-index: 1; */
 `;
 
 const UpperDiv = styled.div`
@@ -71,14 +41,35 @@ const UpperDiv = styled.div`
   width: calc(100vw - 160px);
   max-width: 1500px;
   position: relative;
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+  }
 `;
 
 const MyPhoto = styled.div`
-  width: 450px;
-  height: 450px;
-  box-shadow: 0px 0px 20px #000000;
+  width: 350px;
+  height: 350px;
+  box-shadow: 2px 2px 20px #4f4f4f;
   position: relative;
   color: white;
+  border-radius: 20px;
+  @media (max-width: 1180px) {
+    width: 250px;
+    height: 250px;
+  }
+  @media (max-width: 932px) {
+    margin-top: 60px;
+    width: 375px;
+    height: 375px;
+  }
+  @media (max-width: 450px) {
+    width: 300px;
+    height: 300px;
+  }
 `;
 
 const UserInfoDiv = styled.div`
@@ -89,15 +80,46 @@ const UserInfoDiv = styled.div`
   max-width: calc(100vw - 704px);
   font-weight: bold;
   line-height: 1.15;
-  position: relative;
+  @media (max-width: 932px) {
+    max-width: 500px;
+    margin-left: 0;
+    margin-top: 20px;
+    border-left: 4px white solid;
+    padding-left: 20px;
+  }
 `;
+
+const NameDiv = styled.div`
+  font-size: 92px;
+  @media (max-width: 1180px) {
+    font-size: 64px;
+  }
+`;
+const TextDiv = styled.div`
+  font-size: 30px;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
+`;
+const AgeDiv = styled.div`
+  font-size: 30;
+  margin-bottom: 22px;
+  @media (max-width: 1180px) {
+    font-size: 24px;
+  }
+`;
+
 const CountryDiv = styled.div`
   display: flex;
 `;
 const MyCountryDiv = styled.div`
-  font-size: 120px;
+  font-size: 88px;
   display: flex;
   align-items: baseline;
+  @media (max-width: 1180px) {
+    font-size: 40px;
+    line-height: 50px;
+  }
 `;
 
 const MiddleDiv = styled.div`
@@ -109,17 +131,26 @@ const MiddleDiv = styled.div`
   max-height: 900px;
   margin-top: 40px;
   position: relative;
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+    height: calc((100vw - 60px) * (4 / 7));
+  }
 `;
 
 const Title = styled.div`
   color: white;
-  font-size: 54px;
+  font-size: 50px;
   font-weight: bold;
   margin-right: auto;
   position: absolute;
-  bottom: 40px;
+  bottom: 30px;
   left: 40px;
   z-index: 1;
+  @media (max-width: 1080px) {
+    font-size: 4vw;
+    bottom: 2vw;
+    left: 4vw;
+  }
 `;
 
 const BottomDiv = styled.div`
@@ -127,27 +158,62 @@ const BottomDiv = styled.div`
   width: calc(100vw - 160px);
   max-width: 1500px;
   margin-top: 40px;
+  @media (max-width: 932px) {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  @media (max-width: 640px) {
+    width: calc(100vw - 60px);
+  }
 `;
 
 const ButtonsDiv = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-left: auto;
-  font-size: 48px;
+  font-size: 36px;
   position: fixed;
-  top: 50px;
+  top: 42px;
   right: 80px;
+  color: white;
+  @media (max-width: 932px) {
+    flex-direction: row;
+    position: absolute;
+    top: 24px;
+    left: calc(50% - 187.5px);
+    align-items: center;
+    min-width: 375px;
+    right: calc(50% - 187.5px);
+  }
+  @media (max-width: 450px) {
+    left: calc(50% - 150px);
+    min-width: 300px;
+    right: calc(50% - 150px);
+  }
 `;
 
-const HomeLink = styled(NavLink)`
+const HomeDiv = styled.div`
   color: white;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 50%;
+  cursor: pointer;
   :hover {
-    color: #3a4a58;
+    background-color: rgb(184, 195, 208, 0.3);
+  }
+  @media (max-width: 932px) {
+    margin-top: 10px;
   }
 `;
 const MyPageIcon = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   margin-top: 20px;
   border-radius: 50%;
   outline: 3px white solid;
@@ -157,8 +223,15 @@ const MyPageIcon = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  background-color: #b8c3d0;
   :hover {
     background-color: #667484;
+  }
+  @media (max-width: 932px) {
+    margin: 10px 0 0 183px;
+  }
+  @media (max-width: 450px) {
+    margin: 10px 0 0 108px;
   }
 `;
 const MyPageIconMask = styled.div`
@@ -172,27 +245,40 @@ const MyPageIconMask = styled.div`
 `;
 
 export default function UserPage() {
-  const id = new URLSearchParams(window.location.search).get("id");
-  const defaultBackground =
-    "https://firebasestorage.googleapis.com/v0/b/world-from-home.appspot.com/o/user_background_photo%2Fdefault-background.jpg?alt=media&token=17d3a90e-1f80-45c2-9b1d-e641d7ee0b88";
-
-  // const moreAboutMeBtnRef = useRef();
-  const moreInfoRef = useRef();
+  const dispatch = useDispatch();
   const signinRef = useRef();
   const [userInfo, setUserInfo] = useState({});
-  const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [activeButton, setActiveButton] = useState("Albums");
   const myInfo = useSelector((state) => state.userInfo);
+  const myUserId = useSelector((state) => state.myUserId);
+  const queryUserId = useSelector((state) => state.queryUserId);
   const history = useHistory();
 
+  // if (id === myInfo.id) {
+  //   history.push({ pathname: "mypage" });
+  // }
+
   useEffect(() => {
-    db_userInfo
-      .doc(id)
-      .get()
-      .then((doc) => {
-        setUserInfo(doc.data());
-      });
-  }, []);
+    const id = new URLSearchParams(window.location.search).get("id");
+    console.log(myUserId);
+    console.log(queryUserId);
+    console.log(id);
+
+    if (myUserId && (queryUserId === myUserId || id === myUserId)) {
+      history.push({ pathname: "mypage" });
+    } else {
+      db_userInfo
+        .doc(id)
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            history.push({ pathname: "notfound" });
+          } else {
+            setUserInfo(doc.data());
+          }
+        });
+    }
+  }, [myUserId, window.location.search, queryUserId]);
 
   const { name, country, photo, birthday, background_photo } = userInfo;
   const age =
@@ -203,44 +289,28 @@ export default function UserPage() {
         new Date(1000 * birthday.seconds).getFullYear()
       : "unknown";
 
-  function handleShow(ref) {
-    ref.current.style.display = "flex";
-  }
-  function handleDisappear(ref) {
-    ref.current.style.display = "none";
-  }
-
-  function handleMoreInfo() {
-    setShowMoreInfo(showMoreInfo ? false : true);
-    if (!showMoreInfo) {
-      handleShow(moreInfoRef);
-    } else {
-      handleDisappear(moreInfoRef);
-    }
-  }
-
   function handleToMyPage() {
     console.log(myInfo);
     if (Object.keys(myInfo).length) {
       history.push({ pathname: "mypage" });
     } else {
-      signinRef.current.style.display = "flex";
+      signinRef.current.style.zIndex = 1;
       console.log("sign in");
     }
   }
 
+  function handleHome() {
+    dispatch({
+      type: "SET_TARGET_COUNTRY",
+      payload: {},
+    });
+    history.push({ pathname: "home" });
+  }
+
   return (
     <>
-      <Background
-        style={{
-          backgroundImage: background_photo
-            ? `url(${background_photo})`
-            : `url(${defaultBackground})`,
-          backgroundSize: "cover",
-        }}
-      >
-        <Mask />
-      </Background>
+      <Login signinRef={signinRef} />
+      <Background background_photo={background_photo} />
       <MyPageDiv>
         <UpperDiv>
           <MyPhoto
@@ -251,48 +321,22 @@ export default function UserPage() {
             }}
           />
           <UserInfoDiv>
-            <div style={{ fontSize: 148 }}>{name}</div>
-            <div style={{ fontSize: 36 }}>from</div>
+            <NameDiv>{name}</NameDiv>
+            <TextDiv>from</TextDiv>
             <CountryDiv>
               <MyCountryDiv>
                 {country ? countryTrans[country].name_en : ""}
               </MyCountryDiv>
             </CountryDiv>
-            <div
-              style={{ fontSize: 36, marginBottom: "24px" }}
-            >{`age: ${age}`}</div>
+            <AgeDiv>{`age: ${age}`}</AgeDiv>
 
-            <ThemeProvider theme={theme}>
-              <Button
-                onClick={() => {
-                  handleMoreInfo();
-                }}
-                variant="contained"
-                color={showMoreInfo ? "primary" : "white"}
-                // color={activeButton === "Friends" ? "primary" : "white"}
-                style={{
-                  width: "220px",
-                  fontSize: "16px",
-                  borderRadius: "40px",
-                  lineHeight: 1.5,
-                  fontWeight: "bold",
-                  color: showMoreInfo ? "white" : "#3A4A58",
-                }}
-              >
-                More about Me
-              </Button>
-            </ThemeProvider>
+            <MoreInformation userInfo={userInfo} />
             {Object.keys(myInfo).length ? (
               <FriendState userInfo={userInfo} />
             ) : (
               <></>
             )}
           </UserInfoDiv>
-          <MoreInfo
-            innerRef={moreInfoRef}
-            userInfo={userInfo}
-            handleMoreInfo={handleMoreInfo}
-          />
         </UpperDiv>
         <MiddleDiv>
           <Title>{`World from ${name}`}</Title>
@@ -304,16 +348,16 @@ export default function UserPage() {
             setActiveButton={setActiveButton}
           />
           {activeButton === "Albums" ? (
-            <MyGallery title={`${name}'s Albums`} id={id} />
+            <MyGallery title={"Albums"} id={userInfo.id} />
           ) : (
-            <MyFriends title={`${name}'s Friends`} userInfo={userInfo} />
+            <MyFriends title={"Friends"} userInfo={userInfo} />
           )}
         </BottomDiv>
         <ButtonsDiv>
-          <HomeLink to="home">
+          <HomeDiv onClick={handleHome}>
             <i className="fas fa-home"></i>
-          </HomeLink>
-
+          </HomeDiv>
+          <Logout />
           <MyPageIcon
             onClick={handleToMyPage}
             style={{
@@ -330,7 +374,6 @@ export default function UserPage() {
           </MyPageIcon>
         </ButtonsDiv>
       </MyPageDiv>
-      <SigninDiv innerRef={signinRef} />
       <Album />
     </>
   );

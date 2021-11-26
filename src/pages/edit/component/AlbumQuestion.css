@@ -1,8 +1,14 @@
 .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
-  background-color: rgb(255, 255, 255, 0.3);
-  border-radius: 27px !important;
+  background-color: rgb(255, 255, 255, 0.6);
+  outline: 1px rgb(58, 74, 88, 0.5) solid ;
+  outline-offset: -1px;
+  border-radius: 10px !important;
 }
 
-.css-186xcr5 span{
+/* .css-186xcr5 span{
   color: white !important;
+} */
+
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+  width: 100%;
 }

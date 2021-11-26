@@ -4,12 +4,22 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { Alert, Stack } from "@mui/material";
+import { signInBtnTheme } from "../../util/muiTheme";
 
-import { db_gallery } from "../../util/firebase";
+import { db_gallery, db_tourist_spot } from "../../util/firebase";
 import WorkingSpace from "./WorkingSpace";
 import Preview from "./component/Preview";
+import Logout from "../Signin/Logout";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+import icon_full from "../../image/template/icon/full.jpeg";
+import icon_composition from "../../image/template/icon/composition.jpeg";
+import icon_photo_text from "../../image/template/icon/photo_text.jpeg";
+import icon_text from "../../image/template/icon/text.jpeg";
+import icon_slide_show from "../../image/template/icon/slide_show.jpeg";
 
 import full_1 from "../../image/template/full_1.jpeg";
 import full_2 from "../../image/template/full_2.jpeg";
@@ -22,26 +32,11 @@ import photoText_3 from "../../image/template/photoText_3.jpeg";
 import photoText_4 from "../../image/template/photoText_4.jpeg";
 import photoText_5 from "../../image/template/photoText_5.jpeg";
 import text_1 from "../../image/template/text_1.jpeg";
+import slide_show_1 from "../../image/template/slide_show_1.jpeg";
 
 // import ToMyPage from "../world/component/ToMyPage";
 import GalleryQuestion from "./component/GalleryQuestion";
 import CompleteQuestion from "./component/CompleteQuestion";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-  },
-});
 
 const AlertDiv = styled.div`
   margin: 20px calc(50% - 150px);
@@ -49,15 +44,16 @@ const AlertDiv = styled.div`
 `;
 
 const NavBarNav = styled.nav`
+  font-size: 30px;
   width: 100vw;
   height: 72px;
   position: fixed;
   top: 0;
   background-color: #667484;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  color: white;
 `;
 
 const MyPageDiv = styled.div`
@@ -65,7 +61,9 @@ const MyPageDiv = styled.div`
   height: 50px;
   border-radius: 50%;
   box-shadow: 0px 0px 10px #bebebe;
-  outline: 3px #b8c3d0 solid;
+  margin-right: auto;
+  margin-left: 20px;
+  /* outline: 3px #b8c3d0 solid; */
   cursor: pointer;
 `;
 const MyPageIconMask = styled.div`
@@ -74,42 +72,62 @@ const MyPageIconMask = styled.div`
   border-radius: 50%;
   background-color: rgb(225, 225, 225, 0);
   :hover {
-    background-color: rgb(225, 225, 225, 0.3);
+    background-color: rgb(225, 225, 225, 0.2);
   }
 `;
 
 const HomeDiv = styled.div`
-  font-size: 40px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
   margin-left: 20px;
   margin-right: 20px;
   color: white;
   cursor: pointer;
   :hover {
-    color: #b8c3d0;
+    /* color: #b8c3d0; */
+    background-color: rgb(255, 255, 255, 0.3);
   }
 `;
 
 const ToolBarDiv = styled.div`
   width: 72px;
   height: calc(100vh - 160px);
-  background-color: #f0f0f0;
+  background-color: rgb(255, 255, 255, 0.9);
   position: fixed;
   top: 140px;
   left: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 2;
+  z-index: 1;
   box-shadow: 0px 0px 10px #8e8e8e;
+  border-radius: 7px;
 `;
 
 const ToolIconDiv = styled.div`
   width: 100%;
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+`;
+
+const IconHover = styled.div`
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  &:hover {
+    background-color: rgb(184, 195, 208, 0.4);
+  }
 `;
 
 const IconDiv = styled.div`
@@ -122,6 +140,9 @@ const ToolNameDiv = styled.div`
   text-align: center;
   line-height: 18px;
   color: #667484;
+  /* white-space: pre-wrap; */
+  font-size: 12px;
+  margin-top: -2px;
 `;
 
 const ContainerDiv = styled.div`
@@ -133,6 +154,7 @@ const ContainerDiv = styled.div`
   top: 120px;
   left: 0;
   background-color: #b8c3d0;
+  z-index: 1;
 `;
 
 const ToolContainerDiv = styled.div`
@@ -142,12 +164,13 @@ const ToolContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f0f0f0;
+  background-color: rgb(255, 255, 255, 0.9);
   position: fixed;
   top: 140px;
   left: 110px;
-  z-index: 3;
+  z-index: 1;
   box-shadow: 0px 0px 10px #8e8e8e;
+  border-radius: 7px;
 `;
 
 const ToolContainerDivInner = styled.div`
@@ -172,7 +195,7 @@ const TitleBarDiv = styled.div`
   position: fixed;
   top: 72px;
   left: 0;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   align-items: center;
   padding: 5px 0;
@@ -183,18 +206,21 @@ const Country = styled.div`
   font-weight: bold;
   font-size: 30px;
   margin-left: 20px;
+  margin-right: auto;
 `;
 
 const allTemplate = {
   full: {
     name: "全版相片",
+    icon: icon_full,
     template: [
       [1, "full_1", full_1],
       [1, "full_2", full_2],
     ],
   },
   composition: {
-    name: "相片拼貼",
+    name: `相片拼貼`,
+    icon: icon_composition,
     template: [
       [3, "3a", template_3a],
       [4, "4a", template_4a],
@@ -203,6 +229,7 @@ const allTemplate = {
   },
   photoText: {
     name: "圖文搭配",
+    icon: icon_photo_text,
     template: [
       [2, "photoText_1", photoText_1],
       [2, "photoText_2", photoText_2],
@@ -213,11 +240,13 @@ const allTemplate = {
   },
   text: {
     name: "文字",
+    icon: icon_text,
     template: [[1, "text_1", text_1]],
   },
   slideShow: {
     name: "slide show",
-    template: [],
+    icon: icon_slide_show,
+    template: [[3, "slide_show_1", slide_show_1]],
   },
 };
 // let templateActive = allTemplate["full"].template;
@@ -241,11 +270,15 @@ function EditSpace() {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
+  const activeCanvas = useSelector((state) => state.activeCanvas);
+  const canvas = useSelector((state) => state.canvas);
 
+  const toolIconRef = useRef([]);
   const previewBtnRef = useRef();
   const saveAlertRef = useRef();
-  const deleteAlertRef = useRef();
   const completeQuestionRef = useRef();
+  const removePageRef = useRef([]);
+  const canvasDivRef = useRef({});
   const history = useHistory();
 
   useEffect(() => {
@@ -254,9 +287,15 @@ function EditSpace() {
     )
       .then((res) => res.json())
       .then((res) => {
+        // console.log(
+        //   targetCountry.id,
+        //   res[1][0].capitalCity,
+        //   res[1][0].longitude,
+        //   res[1][0].latitude
+        // );
         if (res[1]) {
-          setLongitude(res[1][0].longitude);
-          setLatitude(res[1][0].latitude);
+          setLongitude(res[1][0].longitude || 121.5);
+          setLatitude(res[1][0].latitude || 25.04);
         }
       });
   });
@@ -265,19 +304,21 @@ function EditSpace() {
     const albumIdEditing = new URLSearchParams(window.location.search).get(
       "album_id_edit"
     );
-    const newAlbumIdEditing = db_gallery.doc().id;
-    dispatch({
-      type: "SET_ALBUM_ID_EDITING",
-      payload: albumIdEditing || newAlbumIdEditing,
-    });
     if (!albumIdEditing) {
+      history.push({ pathname: "notfound" });
+    } else {
       db_gallery
-        .doc(newAlbumIdEditing)
-        .set({ id: newAlbumIdEditing, condition: "pending" })
-        .then(() => {
-          let params = new URL(window.location).searchParams;
-          params.append("album_id_edit", newAlbumIdEditing);
-          history.push({ search: params.toString() });
+        .doc(albumIdEditing)
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            history.push({ pathname: "notfound" });
+          } else {
+            dispatch({
+              type: "SET_ALBUM_ID_EDITING",
+              payload: albumIdEditing,
+            });
+          }
         });
     }
   }, []);
@@ -287,6 +328,7 @@ function EditSpace() {
     if (complete) {
       saveAlertRef.current.style.zIndex = 5;
       setTimeout(() => {
+        setComplete(false);
         history.push({ pathname: "home" });
       }, 500);
     }
@@ -305,6 +347,7 @@ function EditSpace() {
         templateId,
         display: true,
       };
+
       dispatch({
         type: "SET_PAGE_INFO",
         payload: pageInfoObj,
@@ -325,6 +368,7 @@ function EditSpace() {
   }
 
   function handleClickTool(key) {
+    console.log(key);
     // console.log(key);
     setTemplateActive(allTemplate[key].template);
     // setToolActive(key);
@@ -370,9 +414,46 @@ function EditSpace() {
       });
   }
 
+  function handleSaveLogout(e, albumId, logout) {
+    const body = {
+      content: {
+        pageInfo: JSON.stringify(pageInfo),
+        canvasState: JSON.stringify(canvasState),
+      },
+    };
+    db_gallery
+      .doc(albumId)
+      .update(body)
+      .then(() => {
+        saveAlertRef.current.style.zIndex = 5;
+        dispatch({
+          type: "DISCARD_CANVAS_EDIT",
+          payload: "",
+        });
+      })
+      .then(() => {
+        logout();
+      });
+  }
+
   function handlePreview(e, albumId) {
     // Object.keys(canvasState).forEach((canvasId) => {
     // })
+    if (Object.keys(activeCanvas).length) {
+      activeCanvas.discardActiveObject().renderAll();
+    }
+    Object.values(canvas).forEach((canvas) => {
+      canvas.backgroundColor = preview ? "#F0F0F0" : "white";
+      canvas.renderAll();
+    });
+    Object.values(canvasDivRef.current).forEach(
+      (el) => (el.style.boxShadow = preview ? "0px 0px 2px #8e8e8e" : "none")
+    );
+
+    removePageRef.current.forEach((el) => {
+      console.log(el);
+      return (el.style.display = preview ? "flex" : "none");
+    });
     previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
     setPreview(!preview);
 
@@ -399,6 +480,9 @@ function EditSpace() {
   }
 
   function handleSave(e, albumId) {
+    if (Object.keys(activeCanvas).length) {
+      activeCanvas.discardActiveObject().renderAll();
+    }
     const body = {
       content: {
         pageInfo: JSON.stringify(pageInfo),
@@ -419,7 +503,10 @@ function EditSpace() {
   }
 
   function handleComplete(e, albumId) {
-    completeQuestionRef.current.style.display = "flex";
+    if (Object.keys(activeCanvas).length) {
+      activeCanvas.discardActiveObject().renderAll();
+    }
+    completeQuestionRef.current.style.zIndex = 5;
     handleSave(e, albumId);
 
     // const body = {
@@ -445,21 +532,79 @@ function EditSpace() {
   }
 
   function handleDiscard(e, albumId) {
-    deleteAlertRef.current.style.zIndex = 5;
-    const body = {
-      condition: "discard",
-    };
-    db_gallery
-      .doc(albumId)
-      .update(body)
-      .then(() => {
-        dispatch({
-          type: "DISCARD_CANVAS_EDIT",
-          payload: "",
-        });
-        history.push({ pathname: "home" });
-      });
+    // deleteAlertRef.current.style.zIndex = 5;
+    const MySwal = withReactContent(Swal);
+
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const body = {
+          condition: "discard",
+        };
+        db_gallery
+          .doc(albumId)
+          .update(body)
+          .then(() => {
+            MySwal.fire(
+              "Deleted!",
+              "Your album has been deleted.",
+              "success"
+            ).then((result) => {
+              if (result.isConfirmed) {
+                dispatch({
+                  type: "DISCARD_CANVAS_EDIT",
+                  payload: "",
+                });
+                db_tourist_spot
+                  .where("album_id", "==", albumId)
+                  .get()
+                  .then((snapshot) => {
+                    snapshot.docs.forEach((doc) =>
+                      db_tourist_spot
+                        .doc(doc.id)
+                        .update({ condition: "discard" })
+                    );
+                  });
+                history.push({ pathname: "home" });
+              }
+            });
+          });
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Cancelled", "Your album is safe :)", "error");
+      }
+    });
   }
+
+  function handleHoverToolIcon(index) {
+    toolIconRef.current.forEach(
+      (el) => (el.style.backgroundColor = "rgb(0,0,0,0)")
+    );
+    toolIconRef.current[index].style.backgroundColor =
+      "rgb(184, 195, 208, 0.4)";
+  }
+
+  const SignInBtnStyle = {
+    // width: "100%",
+    // marginBottom: "20px",
+    boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
+    marginRight: "10px",
+  };
+
+  const LogoutStyle = {
+    margin: "0 20px 0 0",
+    width: "50px",
+    height: "50px",
+  };
 
   return (
     <div>
@@ -477,14 +622,7 @@ function EditSpace() {
             style={{ position: "absolute", margin: 0 }}
             ref={saveAlertRef}
           >
-            {setComplete ? "Album Complete !" : "Album Saved !"}
-          </Alert>
-          <Alert
-            severity="warning"
-            style={{ position: "absolute", margin: 0 }}
-            ref={deleteAlertRef}
-          >
-            Album Deleted !
+            {complete ? "Album Complete !" : "Album Saved !"}
           </Alert>
         </Stack>
       </AlertDiv>
@@ -503,27 +641,44 @@ function EditSpace() {
         <HomeDiv onClick={(e) => handleHome(e, albumIdEditing)}>
           <i className="fas fa-home"></i>
         </HomeDiv>
+        <Logout
+          LogoutStyle={LogoutStyle}
+          handleSaveLogout={handleSaveLogout}
+          albumIdEditing={albumIdEditing}
+        />
       </NavBarNav>
-
-      <ToolBarDiv>
-        {Object.keys(allTemplate).map((tool) => (
-          <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
-            <IconDiv />
-            <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
-          </ToolIconDiv>
-        ))}
-      </ToolBarDiv>
 
       <TitleBarDiv>
         <Country>
           <i className="fas fa-globe"></i>
           &ensp;{targetCountry.name}
         </Country>
-        <ThemeProvider theme={theme}>
+        {/* 
+        <ThemeProvider theme={signInBtnTheme}>
           <Button
             variant="contained"
             color="primary"
-            style={{ marginLeft: "auto", marginRight: "10px" }}
+            sx={SignInBtnStyle}
+            onClick={() => handleSignin(googleProvider)}
+          >
+            <i className="fab fa-google"></i> &emsp;&emsp; Sign in with Google
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={SignInBtnStyle}
+            onClick={() => handleSignin(facebookProvider)}
+          >
+            <i className="fab fa-facebook"></i> &emsp;&emsp; Sign in with
+            Facebook
+          </Button>
+        </ThemeProvider> */}
+
+        <ThemeProvider theme={signInBtnTheme}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={SignInBtnStyle}
             onClick={(e) => handlePreview(e, albumIdEditing)}
             ref={previewBtnRef}
           >
@@ -532,7 +687,7 @@ function EditSpace() {
           <Button
             variant="contained"
             color="primary"
-            style={{ marginRight: "10px" }}
+            sx={SignInBtnStyle}
             onClick={(e) => handleSave(e, albumIdEditing)}
           >
             SAVE
@@ -540,7 +695,7 @@ function EditSpace() {
           <Button
             variant="contained"
             color="primary"
-            style={{ marginRight: "10px" }}
+            sx={SignInBtnStyle}
             onClick={(e) => handleComplete(e, albumIdEditing)}
           >
             COMPLETE
@@ -548,7 +703,7 @@ function EditSpace() {
           <Button
             variant="contained"
             color="primary"
-            style={{ marginRight: "10px" }}
+            sx={SignInBtnStyle}
             onClick={(e) => handleDiscard(e, albumIdEditing)}
           >
             DISCARD
@@ -557,6 +712,25 @@ function EditSpace() {
       </TitleBarDiv>
 
       <ContainerDiv>
+        <ToolBarDiv>
+          {Object.keys(allTemplate).map((tool, index) => (
+            <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
+              <IconHover
+                ref={(el) => (toolIconRef.current[index] = el)}
+                onClick={() => handleHoverToolIcon(index)}
+              >
+                <IconDiv
+                  style={{
+                    backgroundImage: `url(${allTemplate[tool].icon})`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                  }}
+                />
+              </IconHover>
+              <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
+            </ToolIconDiv>
+          ))}
+        </ToolBarDiv>
         <ToolContainerDiv>
           <ToolContainerDivInner>
             {templateActive.map((template) => (
@@ -572,8 +746,13 @@ function EditSpace() {
             ))}
           </ToolContainerDivInner>
         </ToolContainerDiv>
-        <WorkingSpace preview={preview} addWindow={addWindow} />
-        <Preview preview={preview} />
+        <WorkingSpace
+          preview={preview}
+          addWindow={addWindow}
+          removePageRef={removePageRef}
+          canvasDivRef={canvasDivRef}
+        />
+        {/* <Preview preview={preview} /> */}
       </ContainerDiv>
     </div>
   );

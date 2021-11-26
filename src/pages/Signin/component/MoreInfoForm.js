@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -17,25 +17,7 @@ import { styled as styledMui } from "@mui/styles";
 
 import { db_userInfo } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-    },
-  },
-});
+import { signInEnterTheme } from "../../../util/muiTheme";
 
 const MoreInfoFormDiv = styled.div`
   width: 400px;
@@ -43,37 +25,43 @@ const MoreInfoFormDiv = styled.div`
   display: none; /* to-do */
   flex-direction: column;
   align-items: center;
+  position: relative;
+  @media (max-width: 400px) {
+    width: 100%;
+  }
 `;
 const MoreInfoFormTitleDiv = styled.div`
-  font-size: 20px;
+  font-size: 36px;
   font-weight: bold;
   line-height: 40px;
-  border-radius: 20px;
-  background-color: white;
   padding: 0 30px;
-  margin-top: 40px;
+  margin-top: 50px;
+  color: #3a4a58;
+  @media (max-width: 400px) {
+    font-size: 30px;
+  }
 `;
 const MoreInfoFormArea = styled.div`
   background-color: white;
-  width: 220px;
+  width: 260px;
   height: 380px;
   overflow: scroll;
-  margin-top: 30px;
+  margin: 20px 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 10px 20px 20px;
+  padding: 0 20px 20px;
+  box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.6);
+  border-radius: 10px;
+  /* box-shadow: 0px 0px 6px #000000; */
 `;
 
 const Title = styled.div`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   line-height: 28px;
-  padding: 0 12px;
-  border-radius: 14px;
-  background-color: #3a4a58;
-  margin: 10px 0;
-  color: white;
+  margin: 15px 0 5px;
+  color: #3a4a58;
 `;
 
 const CountrySelect = styledMui(Select)({
@@ -90,7 +78,31 @@ const IntroductionTextField = styledMui(TextField)({
   width: "100%",
 });
 
-export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
+const BackDiv = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  :hover {
+    background-color: rgb(255, 255, 255, 0.2);
+  }
+`;
+
+export default function MoreInfoForm({
+  signinRef,
+  signInFormRef,
+  moreInfoFormRef,
+  currentUser,
+}) {
   const history = useHistory();
   const myUserId = useSelector((state) => state.myUserId);
 
@@ -108,7 +120,11 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
 
     db_userInfo
       .doc(myUserId)
-      .update({
+      .set({
+        id: myUserId,
+        email: currentUser.email,
+        name: currentUser.displayName,
+        photo: currentUser.photoURL,
         country,
         language,
         introduction,
@@ -118,9 +134,9 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
             : birthday,
       })
       .then(() => {
+        signinRef.current.style.display = "none";
         history.push({ pathname: "home" });
       });
-    signInRef.current.style.display = "none";
   }
 
   function handleSetValue(event, key) {
@@ -139,14 +155,21 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
     }
   }
 
+  function handleBack() {
+    signInFormRef.current.style.display = "flex";
+    moreInfoFormRef.current.style.display = "none";
+  }
+
   return (
     <MoreInfoFormDiv ref={moreInfoFormRef}>
       <MoreInfoFormTitleDiv>MORE ABOUT YOU</MoreInfoFormTitleDiv>
       <MoreInfoFormArea>
-        <Title>Birthday</Title>
+        <Title>
+          <i className="fas fa-birthday-cake"></i>&ensp;Birthday
+        </Title>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
-            label="Birthday"
+            label=""
             value={birthday}
             onChange={(newValue) => {
               setBirthday(newValue);
@@ -158,7 +181,9 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
           />
         </LocalizationProvider>
 
-        <Title>Country</Title>
+        <Title>
+          <i className="fas fa-globe"></i>&ensp;Country
+        </Title>
         <FormControl fullWidth variant="filled">
           <InputLabel id="set-country-label"></InputLabel>
           <CountrySelect
@@ -180,7 +205,9 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
           </CountrySelect>
         </FormControl>
 
-        <Title>Language</Title>
+        <Title>
+          <i className="fas fa-globe"></i>&ensp;Language
+        </Title>
         <LanguageTextField
           inputProps={{
             style: {
@@ -188,7 +215,6 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
               fontSize: 10,
             },
           }}
-          label="set your language"
           size="small"
           placeholder="your language"
           variant="outlined"
@@ -197,7 +223,9 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
           }}
           // ref={input_ref}
         />
-        <Title>Introduction</Title>
+        <Title>
+          <i className="fas fa-list-ul"></i>&ensp;Introduction
+        </Title>
         <IntroductionTextField
           inputProps={{
             style: {
@@ -205,7 +233,6 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
               height: 205,
             },
           }}
-          label="introduce yourself"
           size="small"
           placeholder="introduce yourself"
           variant="outlined"
@@ -216,24 +243,36 @@ export default function MoreInfoForm({ signInRef, moreInfoFormRef }) {
           }}
         />
       </MoreInfoFormArea>
-      <div>
-        <ThemeProvider theme={theme}>
-          <Button
-            variant="contained"
-            color="white"
-            style={{
-              marginTop: "20px",
-              borderRadius: "40px",
-              lineHeight: 1.5,
-              color: "#3A4A58",
-              fontWeight: "bold",
-            }}
-            onClick={handleToWorldPage}
-          >
-            enter
-          </Button>
-        </ThemeProvider>
-      </div>
+      <ThemeProvider theme={signInEnterTheme}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            width: "100px",
+            margin: "4px 0 24px",
+            // border: `2px white solid`,
+            // boxShadow: "1px 3px 10px rgb(80, 80, 80)",
+            boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.6)",
+            color: "white",
+            ":hover": {
+              boxShadow: "2px 3px 10px rgb(80, 80, 80, 0.6)",
+            },
+          }}
+          // style={{
+          //   marginTop: "20px",
+          //   borderRadius: "40px",
+          //   lineHeight: 1.5,
+          //   color: "#3A4A58",
+          //   fontWeight: "bold",
+          // }}
+          onClick={handleToWorldPage}
+        >
+          enter
+        </Button>
+      </ThemeProvider>
+      <BackDiv onClick={handleBack}>
+        <i className="fas fa-arrow-left"></i>
+      </BackDiv>
     </MoreInfoFormDiv>
   );
 }

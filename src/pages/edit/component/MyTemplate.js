@@ -41,6 +41,13 @@ const text1 = {
   padding: "20px 150px",
 };
 
+const slideShow1 = {
+  width: "800px",
+  height: "230px",
+  backgroundColor: "white",
+  display: "flex",
+};
+
 const templateStyle = {
   full_1: full,
   full_2: full,
@@ -53,6 +60,7 @@ const templateStyle = {
   photoText_4: compositionStyle,
   photoText_5: photoText5,
   text_1: text1,
+  slide_show_1: slideShow1,
 };
 
 function FullCanvas(templateObjStyle, preview = false) {
@@ -132,8 +140,11 @@ function text(templateObjStyle, preview = false) {
       backgroundColor: canvasBackgroundColor,
       preserveObjectStacking: true,
     });
-    const newText = new fabric.Textbox("新增文字", {
-      ...templateObjStyle.t1,
+    const newText = new fabric.IText("edit", {
+      left: 50,
+      top: 50,
+      fontSize: 20,
+      fontFamily: "helvetica",
     });
     newText.setControlsVisibility({
       mt: false,
@@ -146,7 +157,26 @@ function text(templateObjStyle, preview = false) {
       tr: false,
     });
     newCanvas.add(newText);
+    newCanvas.setActiveObject(newText);
     return [newCanvas];
+  };
+}
+
+function slideShow(templateObjStyle, preview = false) {
+  fabric.Object.NUM_FRACTION_DIGITS = 8;
+  let canvasBackgroundColor = "#F0F0F0";
+  return function (page) {
+    return Object.values(templateObjStyle).map((objStyle, index) => {
+      const canvasId = preview
+        ? `preview-page${page}-canvas${index}`
+        : `page${page}-canvas${index}`;
+      return new fabric.Canvas(canvasId, {
+        height: objStyle.height,
+        width: objStyle.width,
+        backgroundColor: canvasBackgroundColor,
+        preserveObjectStacking: true,
+      });
+    });
   };
 }
 
@@ -232,10 +262,21 @@ const allTemplateParams = (preview) => ({
     2,
     preview
   ),
-  text_1: text({
-    c: { height: 100, width: 500 },
-    t1: { height: 100, width: 500, fontSize: 15 },
-  }),
+  text_1: text(
+    {
+      c: { height: 100, width: 500 },
+      t1: { height: 100, width: 500, fontSize: 15 },
+    },
+    preview
+  ),
+  slide_show_1: slideShow(
+    {
+      c1: { height: 230, width: 800 },
+      c2: { height: 230, width: 800 },
+      c3: { height: 230, width: 800 },
+    },
+    preview
+  ),
 });
 
 export { templateStyle, allTemplateParams };

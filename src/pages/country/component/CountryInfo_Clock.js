@@ -6,59 +6,87 @@ import "react-clock/dist/Clock.css";
 import "./clock.css";
 
 const ClockDiv = styled.div`
-  /* display: flex;
-  flex-direction: column; */
-  margin-left: 50px;
-  @media (min-height: 1080px) {
-    margin-left: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+
+  /* @media (min-width: 1280px) {
+    display: flex;
   }
+  @media (min-height: 1080px) and (min-width: 1350px) {
+    margin-left: 0px;
+  } */
 `;
 
 const ClockText = styled.div`
-  font-size: 22px;
-  line-height: 28px;
+  margin-top: 20px;
+  font-size: 26px;
+  line-height: 32px;
   font-weight: bold;
-  margin-bottom: 10px;
   width: 100%;
   text-align: center;
-  @media (min-height: 1080px) {
-    margin-bottom: 20px;
+  @media (max-height: 900px) {
+    font-size: 16px;
+    line-height: 20px;
+    margin-top: 10px;
   }
+  @media (max-height: 1120px) {
+    font-size: 22px;
+    line-height: 28px;
+  }
+  /* @media (min-height: 1080px) {
+    margin-bottom: 20px;
+  } */
 `;
 const ClockStyle = styled(Clock)`
-  margin-top: 20px;
-  @media (min-height: 1080px) {
-    margin-top: 40px;
+  margin-top: 15px;
+  display: block;
+  @media (max-height: 900px) {
+    margin-top: 10px;
   }
+  /* @media (min-height: 860px) {
+    display: block;
+  }
+  @media (min-height: 1080px) {
+    margin-top: 20px;
+  } */
 `;
 
 export default function CountryClock({ timezone }) {
   // console.log(timezone);
   // console.log(new Date(new Date().getTime()+(-28800+timezone)*1000));
-  const [localTime, setLocalTime] = useState(
-    new Date(new Date().getTime() + (-28800 + timezone) * 1000)
-  );
+  const [localTime, setLocalTime] = useState(new Date());
   // console.log(localTime);
+
   useEffect(() => {
-    const interval = setInterval(
-      () =>
-        setLocalTime(
-          new Date(new Date().getTime() + (-28800 + timezone) * 1000)
-        ),
-      1000
-    );
-    return () => {
-      clearInterval(interval);
-    };
+    if (timezone !== "No Data") {
+      const interval = setInterval(
+        () =>
+          setLocalTime(
+            new Date(new Date().getTime() + (-28800 + timezone) * 1000)
+          ),
+        1000
+      );
+      return () => {
+        clearInterval(interval);
+      };
+    }
   }, [timezone]);
 
   return (
     <ClockDiv>
-      <ClockText>
-        <div>{localTime.toDateString().slice(4)}</div>
-        <div>{localTime.toTimeString().split("GMT")[0]} </div>
-      </ClockText>
-      <ClockStyle value={localTime} />
+      {timezone !== "No Data" ? (
+        <>
+          <ClockText>
+            <div>{localTime.toDateString().slice(4)}</div>
+            <div>{localTime.toTimeString().split("GMT")[0]} </div>
+          </ClockText>
+          <ClockStyle value={localTime} />
+        </>
+      ) : (
+        <ClockText>No data</ClockText>
+      )}
     </ClockDiv>
   );
 }

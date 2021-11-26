@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { firebase } from "../../../util/firebase";
 
 const MyPhoto = styled(NavLink)`
   /* background-color: white; */
@@ -14,6 +15,10 @@ const MyPhoto = styled(NavLink)`
   right: 40px;
   border-radius: 20px;
   cursor: pointer;
+  z-index: 2;
+  :hover {
+    box-shadow: 0px 0px 16px #bebebe;
+  }
 `;
 
 const GuestIcon = styled.div`
@@ -32,6 +37,10 @@ const GuestIcon = styled.div`
   align-items: center;
   color: white;
   font-size: 40px;
+  z-index: 2;
+  :hover {
+    box-shadow: 0px 0px 20px #bebebe;
+  }
 `;
 
 export default function ToMyPage({ handleSignIn, style }) {
