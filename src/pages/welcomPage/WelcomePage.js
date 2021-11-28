@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "../../util/firebase";
 
 import SigninDiv from "../Signin/Signin";
 import landingPageImg from "../../image/landingPage.jpeg";
-import { WelcomePageBtn } from "../../util/MuiButton";
+import { WelcomePageBtn } from "../../util/muiButton";
 
 const WelcomePageDiv = styled.div`
   width: 100vw;

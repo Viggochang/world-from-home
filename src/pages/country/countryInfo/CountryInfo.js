@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import Weather from "./CountryInfo_Weather";
-import CountryClock from "./CountryInfo_Clock";
+import Weather from "./Weather";
+import CountryClock from "./Clock";
 
 const CountryInfoDiv = styled.div`
   color: white;

@@ -2,13 +2,11 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { SigninMediaBtn } from "../../../util/muiButton";
 
 import { getUserIsExist } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
 import { facebookProvider, googleProvider } from "../../../util/authMethod";
-import { signInBtnTheme } from "../../../util/muiTheme";
 import worldIcon from "../../../image/worldIcon/worldIcon.png";
 
 const SignInFormDiv = styled.div`
@@ -54,21 +52,13 @@ const WorldIcon = styled.div`
   border-radius: 4px;
 `;
 
-const SignInBtnStyle = {
-  width: "100%",
-  marginBottom: "20px",
-  boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
-};
-
 const socialMedia = [
   {
     name: "Google",
-    icon: <i className="fab fa-google" />,
     provider: googleProvider,
   },
   {
     name: "Facebook",
-    icon: <i className="fab fa-facebook" />,
     provider: facebookProvider,
   },
 ];
@@ -106,19 +96,13 @@ export default function SignInForm({
       <SignTitleDiv>SIGN&ensp;IN</SignTitleDiv>
       <SignInBtnArea>
         <WorldIcon />
-        <ThemeProvider theme={signInBtnTheme}>
-          {socialMedia.map((socialMedia) => (
-            <Button
-              key={socialMedia.name}
-              variant="contained"
-              color="primary"
-              sx={SignInBtnStyle}
-              onClick={() => handleSignin(socialMedia.provider)}
-            >
-              {socialMedia.icon}&emsp;&emsp; Sign in with {socialMedia.name}
-            </Button>
-          ))}
-        </ThemeProvider>
+        {socialMedia.map((socialMedia) => (
+          <SigninMediaBtn
+            key={socialMedia.name}
+            content={socialMedia.name}
+            onClick={() => handleSignin(socialMedia.provider)}
+          />
+        ))}
       </SignInBtnArea>
     </SignInFormDiv>
   );

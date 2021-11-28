@@ -80,38 +80,6 @@ function Country({ style, handleClickBack, signinRef }) {
   const myUserInfo = useSelector((state) => state.userInfo);
 
   useEffect(() => {
-    // async function fetchCountryCaptalCityApi() {
-    //   const result = (
-    //     await fetch(countryCaptalCityApi(targetCountry.id))
-    //   ).json()[1];
-    //   console.log((await fetch(countryCaptalCityApi(targetCountry.id))).json());
-    //   let capitalCity = null;
-    //   if (targetCountry.id === "TW") {
-    //     setCaptain({
-    //       capitalCity: "Taipei",
-    //       longitude: 121.5,
-    //       latitude: 25.04,
-    //     });
-    //     capitalCity = "Taipei";
-    //   } else if (result) {
-    //     const { longitude, latitude } = result[0];
-    //     capitalCity = result[0].capitalCity;
-    //     setCaptain({ capitalCity, longitude, latitude });
-    //   }
-    //   console.log(capitalCity);
-    //   if (capitalCity) {
-    //     const weatherData = (await fetch(weatherApi(capitalCity))).json();
-    //     setTimezone(weatherData.timezone || "No Data");
-    //     setWeather({
-    //       temp: weatherData.main ? weatherData.main.temp : "No Data",
-    //       weather: weatherData.weather
-    //         ? weatherData.weather[0].description
-    //         : "No Data",
-    //     });
-    //   }
-    // }
-    // fetchCountryCaptalCityApi();
-
     fetch(countryCaptalCityApi(targetCountry.id))
       .then((res) => res.json())
       .then((res) => {

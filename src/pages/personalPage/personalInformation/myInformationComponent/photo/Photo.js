@@ -6,27 +6,8 @@ import styled from "styled-components";
 import { styled as styledMui } from "@mui/styles";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-      font: "#ffffff",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-      font: "#3A4A58",
-    },
-  },
-});
+import { ThemeProvider } from "@material-ui/core/styles";
+import { whiteBtnTheme } from "../../../../../util/muiTheme";
 
 const MyPhoto = styled.div`
   width: 350px;
@@ -35,6 +16,9 @@ const MyPhoto = styled.div`
   position: relative;
   color: white;
   border-radius: 20px;
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
   @media (max-width: 1180px) {
     width: 250px;
     height: 250px;
@@ -105,11 +89,7 @@ export default function Photo({ id, photo }) {
 
   return (
     <MyPhoto
-      style={{
-        backgroundImage: `url(${photo})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      photo={photo}
       onMouseEnter={() => handleShow(editMyPhotoRef)}
       onMouseLeave={() => handleDisappear(editMyPhotoRef)}
     >
@@ -121,7 +101,7 @@ export default function Photo({ id, photo }) {
             type="file"
             onChange={(e) => handleUploadPhoto(e, "photo")}
           />
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={whiteBtnTheme}>
             <IconButton
               color="white"
               aria-label="upload picture"

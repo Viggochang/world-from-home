@@ -3,17 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
 
+import MyTooltip from "../../util/muiTooltips";
+
 import World from "../world/World";
 import LeafletMap from "../leafletMap/LeafletMap";
 import ToMyPage from "../world/component/ToMyPage";
 import Search from "../world/component/Search";
 import Country from "../country/Country";
-// import GalleryQuestion from "../country/component/GalleryQuestion";
 import SigninDiv from "../Signin/Signin";
 import Album from "../album/Album";
 import MapSwitch from "./MapSwitch";
 import Logout from "../Signin/Logout";
-import { startOfSecond } from "date-fns";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -33,6 +33,7 @@ const BackBtn = styled.div`
   outline: 2px solid #ffffff;
   cursor: pointer;
   z-index: 1;
+  display: ${(props) => (props.mapType === "true" ? "block" : "none")};
   :hover {
     background-color: #bebebe;
   }
@@ -56,10 +57,10 @@ const LogoutDiv = styled.div`
   right: 26px;
   z-index: 1;
   opacity: 0.8;
+  color: ${(props) => (props.mapType === "true" ? "white" : "#3a4a58")};
 `;
 
 export default function HomePage({ mapType, setMapType }) {
-  const galleryQuestionRef = useRef();
   const signinRef = useRef();
   const userInfo = useSelector((state) => state.userInfo);
   const albumIdShow = useSelector((state) => state.albumIdShow);
@@ -68,13 +69,20 @@ export default function HomePage({ mapType, setMapType }) {
   const [maskOpacity, setMaskOpacity] = useState(0);
   const [maskDisplay, setMaskDisplay] = useState("flex");
   const [map, setMap] = useState(undefined);
-  const [currentActive, setCurrentActive] = useState({});
 
   const dispatch = useDispatch();
 
+  function showCountry(currentActive) {
+    dispatch({
+      type: "SET_TARGET_COUNTRY",
+      payload: currentActive.dataItem.dataContext,
+    });
+    setMaskOpacity(0.8);
+    setMaskVisibility("visible");
+  }
+
   function handleClickBack() {
     map.goHome();
-    // polygonSeries.getPolygonById(`${currentActive.dataItem.dataContext.id}`).isActive = false;
     dispatch({
       type: "SET_TARGET_COUNTRY",
       payload: {},
@@ -85,9 +93,6 @@ export default function HomePage({ mapType, setMapType }) {
     setTimeout(() => {
       setMaskDisplay("flex");
     }, 2000);
-
-    console.log(currentActive);
-    // currentActive.isActive = false;
   }
 
   function handleSignIn() {
@@ -110,12 +115,10 @@ export default function HomePage({ mapType, setMapType }) {
       <World
         userInfo={userInfo}
         mapType={mapType}
-        setCurrentActive={setCurrentActive}
-        currentActive={currentActive}
         setMap={setMap}
-        setMaskVisibility={setMaskVisibility}
-        setMaskOpacity={setMaskOpacity}
         map={map}
+        showCountry={showCountry}
+        userPage={false}
       />
       <Title style={{ color: mapType ? "white" : "#3A4A58" }}>
         {`World from ${userInfo.name || "Guest"}`}
@@ -123,26 +126,23 @@ export default function HomePage({ mapType, setMapType }) {
 
       <MapSwitch setMapType={setMapType} mapType={mapType} />
 
-      <BackBtn
-        style={{ display: mapType ? "block" : "none" }}
-        onClick={handleClickBack}
-      >
+      <BackBtn mapType={mapType.toString()} onClick={handleClickBack}>
         <i className="fas fa-home" />
       </BackBtn>
 
-      <Search
-        setMaskVisibility={setMaskVisibility}
-        setMaskOpacity={setMaskOpacity}
-        map={map}
-        setCurrentActive={setCurrentActive}
-        mapType={mapType}
-      />
+      <Search map={map} mapType={mapType} showCountry={showCountry} />
       <ToMyPage handleSignIn={handleSignIn} />
       <SigninDiv signinRef={signinRef} />
-      <Logout />
-      <LogoutDiv style={{ color: mapType ? "white" : "#3a4a58" }}>
-        <Logout />
-      </LogoutDiv>
+      <MyTooltip
+        style={{ fontSize: 14, opacity: 0.9 }}
+        title={"Log out"}
+        placement="left"
+        content={
+          <LogoutDiv mapType={mapType.toString()}>
+            <Logout />
+          </LogoutDiv>
+        }
+      />
 
       <Country
         style={{

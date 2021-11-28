@@ -7,7 +7,7 @@ import FriendSearchResults from "./FriendSearchResults";
 import FriendRequests from "./FriendRequests";
 import FriendList from "./FriendList";
 
-import { db_userInfo } from "../../../util/firebase";
+import { onSnapshotMyFriend } from "../../../util/firebase";
 
 const MyFriendsContentDiv = styled.div`
   display: flex;
@@ -54,27 +54,8 @@ export default function PersonalFriends({ title, userInfo, isMyPage }) {
 
   useEffect(() => {
     if (id) {
-      db_userInfo
-        .where("friends", "array-contains", { id: id, condition: "confirmed" })
-        .onSnapshot((querySnapshot) => {
-          const friends = [];
-          querySnapshot.forEach((friend) => {
-            friends.push(friend.data());
-          });
-          setMyFriends(friends);
-        });
-      db_userInfo
-        .where("friends", "array-contains", {
-          id: id,
-          condition: "send_request",
-        })
-        .onSnapshot((querySnapshot) => {
-          const friendRequests = [];
-          querySnapshot.forEach((friend) => {
-            friendRequests.push(friend.data());
-          });
-          setMyFriendRequests(friendRequests);
-        });
+      onSnapshotMyFriend(id, "confirmed", setMyFriends);
+      onSnapshotMyFriend(id, "send_request", setMyFriendRequests);
     }
   }, [id]);
 

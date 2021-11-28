@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -89,9 +89,7 @@ export default function Birthday({
 }) {
   const myInfo = useSelector((state) => state.userInfo);
   const edit_icon_ref = useRef();
-  const [birthday, setBirthday] = useState(
-    myInfo.birthday ? new Date(myInfo.birthday.seconds * 1000) : undefined
-  ); //to-do
+  const [birthday, setBirthday] = useState(); //to-do
 
   const { birthday: birthdayData } = myInfo;
   const birthdayDate =
@@ -101,6 +99,12 @@ export default function Birthday({
     birthdayData && birthdayDate !== new Date(0).toDateString()
       ? birthdayDate.slice(4)
       : "";
+
+  useEffect(() => {
+    setBirthday(
+      myInfo.birthday ? new Date(myInfo.birthday.seconds * 1000) : undefined
+    );
+  }, [myInfo.birthday]);
 
   return (
     <InfoDiv

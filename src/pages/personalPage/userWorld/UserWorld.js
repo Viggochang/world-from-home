@@ -86,6 +86,7 @@ export default function UserWorld({ userInfo }) {
           setMaskVisibility={setMaskVisibility}
           setMaskOpacity={setMaskOpacity}
           userPage={true}
+          mapType={true}
         />
         <BackBtn onClick={handleBack}>
           <i className="fas fa-home" />

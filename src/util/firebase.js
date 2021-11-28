@@ -83,7 +83,7 @@ function getTouristSpotsData() {
 }
 
 function getFriendsHere(countryId, callback) {
-  db_gallery
+  return db_gallery
     .where("country", "==", countryId)
     .get()
     .then((allAlbums) => callback(allAlbums.docs.map((album) => album.data())));
@@ -109,6 +109,13 @@ function onSnapShotMyTravelCountry(uid, callback) {
     .where("user_id", "==", uid || null)
     .onSnapshot((myAlbums) =>
       callback(myAlbums.docs.map((album) => album.data()))
+    );
+}
+function onSnapshotMyFriend(id, condition, callback) {
+  return db_userInfo
+    .where("friends", "array-contains", { id: id, condition: condition })
+    .onSnapshot((myFriends) =>
+      callback(myFriends.docs.map((friend) => friend.data()))
     );
 }
 function onSnapshotAlbumByAlbumId(albumId, callback) {
@@ -172,6 +179,7 @@ export {
   setTouristSpotDataIntoDb,
   onSnapShotByUid,
   onSnapShotMyTravelCountry,
+  onSnapshotMyFriend,
   onSnapshotAlbumByAlbumId,
   onSnapshotAlbumByUserId,
   onSnapshotAlbumByCountry,

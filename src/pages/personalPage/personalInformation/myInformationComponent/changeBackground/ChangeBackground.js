@@ -1,12 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { ThemeProvider } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import { styled as styledMui } from "@mui/styles";
 
+import { ChangeBackgroundBtn } from "../../../../../util/muiButton";
 import { storage, updateUser } from "../../../../../util/firebase";
 import Compressor from "compressorjs";
-import { changeBackgroundBtnTheme } from "../../../../../util/muiTheme";
+
 const EditBackgroundImage = styled.div`
   position: absolute;
   top: 0px;
@@ -42,7 +41,6 @@ export default function ChangeBackground({ id }) {
       maxWidth: 4096,
       maxHeight: 4096,
       success(result) {
-        // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };
         const storageRef = storage.ref(`user_${key}/${id}`);
         storageRef.put(result, metadata).then(() => {
@@ -60,36 +58,15 @@ export default function ChangeBackground({ id }) {
   }
   return (
     <EditBackgroundImage>
-      <ThemeProvider theme={changeBackgroundBtnTheme}>
-        <label htmlFor="contained-button-file">
-          <Input
-            accept="image/*"
-            id="contained-button-file"
-            type="file"
-            onChange={(e) => handleUploadPhoto(e, "background_photo")}
-          />
-          <Button
-            variant="outlined"
-            component="span"
-            sx={{
-              outline: `1px #ffffff solid`,
-              color: "#ffffff",
-              textAlign: "left",
-              padding: "5px 15px",
-            }}
-            color="primary"
-          >
-            <CameraIcon>
-              <i className="fas fa-camera" />
-            </CameraIcon>
-            <div>
-              change
-              <br />
-              background
-            </div>
-          </Button>
-        </label>
-      </ThemeProvider>
+      <label htmlFor="contained-button-file">
+        <Input
+          accept="image/*"
+          id="contained-button-file"
+          type="file"
+          onChange={(e) => handleUploadPhoto(e, "background_photo")}
+        />
+        <ChangeBackgroundBtn />
+      </label>
     </EditBackgroundImage>
   );
 }

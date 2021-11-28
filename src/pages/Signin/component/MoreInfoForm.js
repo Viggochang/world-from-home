@@ -3,8 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { ThemeProvider } from "@material-ui/core/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -15,9 +13,10 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import { styled as styledMui } from "@mui/styles";
 
+import { SigninEnterBtn } from "../../../util/muiButton";
+
 import { setUserDataIntoDb } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
-import { signInEnterTheme } from "../../../util/muiTheme";
 
 const MoreInfoFormDiv = styled.div`
   width: 400px;
@@ -53,7 +52,6 @@ const MoreInfoFormArea = styled.div`
   padding: 0 20px 20px;
   box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.6);
   border-radius: 10px;
-  /* box-shadow: 0px 0px 6px #000000; */
 `;
 
 const Title = styled.div`
@@ -120,6 +118,7 @@ export default function MoreInfoForm({
       country,
       language,
       introduction,
+      friends: [],
       birthday:
         birthday.toDateString() === new Date().toDateString()
           ? new Date(0)
@@ -241,24 +240,7 @@ export default function MoreInfoForm({
           }}
         />
       </MoreInfoFormArea>
-      <ThemeProvider theme={signInEnterTheme}>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            width: "100px",
-            margin: "4px 0 24px",
-            boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.6)",
-            color: "white",
-            ":hover": {
-              boxShadow: "2px 3px 10px rgb(80, 80, 80, 0.6)",
-            },
-          }}
-          onClick={handleToWorldPage}
-        >
-          enter
-        </Button>
-      </ThemeProvider>
+      <SigninEnterBtn onClick={handleToWorldPage} />
       <BackDiv onClick={handleBack}>
         <i className="fas fa-arrow-left" />
       </BackDiv>

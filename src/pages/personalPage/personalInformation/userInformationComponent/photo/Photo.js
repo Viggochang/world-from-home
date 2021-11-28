@@ -8,9 +8,9 @@ const MyPhoto = styled.div`
   position: relative;
   color: white;
   border-radius: 20px;
-  background-image: ${(props) => `url(${props.backgroundImg})`};
-  background-size: ${() => "cover"};
-  background-position: ${() => "center"};
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
   @media (max-width: 1180px) {
     width: 250px;
     height: 250px;
@@ -27,5 +27,5 @@ const MyPhoto = styled.div`
 `;
 
 export default function Photo({ photo }) {
-  return <MyPhoto backgroundImg={photo} />;
+  return <MyPhoto photo={photo} />;
 }

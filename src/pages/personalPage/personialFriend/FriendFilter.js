@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 import InputBase from "@mui/material/InputBase";
 
+import MyTooltip from "../../../util/muiTooltips";
+
 const FilterDiv = styled.div`
   display: flex;
   align-items: center;
@@ -104,12 +106,19 @@ export default function FriendFilter({
     <FilterDiv>
       <Title>{title}</Title>
       {isMyPage && (
-        <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
-          <i className="fas fa-user-plus" style={{ margin: "auto" }} />
-          {!!myFriendRequests.length && (
-            <RequestAlert>{myFriendRequests.length}</RequestAlert>
-          )}
-        </RequestBtn>
+        <MyTooltip
+          style={{ fontSize: 14, opacity: 0.7 }}
+          title={"Friend Requests"}
+          placement="left"
+          content={
+            <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
+              <i className="fas fa-user-plus" style={{ margin: "auto" }} />
+              {!!myFriendRequests.length && (
+                <RequestAlert>{myFriendRequests.length}</RequestAlert>
+              )}
+            </RequestBtn>
+          }
+        />
       )}
       <SearchInput>
         <InputBase

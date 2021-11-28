@@ -1,28 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Switch } from "@mui/material";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-      font: "#ffffff",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-      font: "#3A4A58",
-    },
-  },
-});
+import { ThemeProvider } from "@material-ui/core/styles";
+import { whiteBtnTheme } from "../../util/muiTheme";
 
 const EditingSwitchDiv = styled.div`
   display: flex;
@@ -41,16 +21,12 @@ const EditLabel = styled.div`
   font-size: 20px;
   margin: 0 20px 0 5px;
   line-height: 30px;
-  /* border-radius: 15px; */
-  /* background-color: rgb(255, 255, 255, 0.7);
-  color: #3a4a58; */
-  /* background-color: #3a4a58; */
   color: rgb(255, 255, 255, 0.9);
 `;
 
 export default function MapSwitch({ setMapType, mapType }) {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={whiteBtnTheme}>
       <EditingSwitchDiv>
         <Switch
           checked={mapType}

@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useHistory } from "react-router";
 
-import { FriendAcceptRemoveBtn } from "../../../util/MuiButton";
+import { FriendAcceptRemoveBtn } from "../../../util/muiButton";
 
 import countryTrans from "../../../util/countryTrans";
 import { updateUser } from "../../../util/firebase";
 import { friendStateObj } from "../../../util/friendStateObj";
+import { swalRemoveFriend } from "../../../util/swal";
 
 const FriendDiv = styled.div`
   display: flex;
@@ -26,9 +27,9 @@ const FriendPhoto = styled.div`
   border-radius: 50%;
   box-shadow: 4px 4px 20px #4f4f4f;
   cursor: pointer;
-  background-image: ${(props) => `url(${props.backgroundImg})`};
-  background-size: ${() => "cover"};
-  background-position: ${() => "center"};
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
   :hover {
     box-shadow: 4px 4px 20px #3c3c3c;
   }
@@ -136,7 +137,7 @@ export default function Friend({ friend: friendInfo, request, isMyPage }) {
 
   return (
     <FriendDiv>
-      <FriendPhoto backgroundImg={friendInfo.photo} onClick={handleQueryUserId}>
+      <FriendPhoto photo={friendInfo.photo} onClick={handleQueryUserId}>
         <FriendMask />
       </FriendPhoto>
       <FriendInfo>
@@ -150,14 +151,16 @@ export default function Friend({ friend: friendInfo, request, isMyPage }) {
             {request && (
               <FriendAcceptRemoveBtn
                 content={"accept"}
-                ref={acceptRef}
-                callback={(e) => handleAcceptRemove(e, "get_request")}
+                innerRef={acceptRef}
+                onClick={(e) => handleAcceptRemove(e, "get_request")}
               />
             )}
             <FriendAcceptRemoveBtn
               content={"remove"}
-              ref={removeRef}
-              callback={(e) => handleAcceptRemove(e, "confirmed")}
+              innerRef={removeRef}
+              onClick={(e) =>
+                swalRemoveFriend(() => handleAcceptRemove(e, "confirmed"))
+              }
             />
           </AcceptRemoveBtnsDiv>
         )}

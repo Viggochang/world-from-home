@@ -8,7 +8,7 @@ import { getUserDataByUid } from "../../util/firebase";
 import Background from "./personalInformation/background/Background";
 import UserInformation from "./personalInformation/UserInformation";
 import UserWorld from "./userWorld/UserWorld";
-import AlbumFriendBtns from "./AlbumFriendBtns";
+import { AlbumFriendBtn } from "../../util/muiButton";
 
 import PersonalAlbum from "./personalAlbum/PersonalAlbum";
 import PersonalFriends from "./personialFriend/PersonalFriends";
@@ -17,7 +17,7 @@ import Logout from "../Signin/Logout";
 import Login from "../Signin/Signin";
 import Album from "../album/Album";
 
-const MyPageDiv = styled.div`
+const UserPageDiv = styled.div`
   padding: 50px 80px;
   display: flex;
   flex-direction: column;
@@ -41,6 +41,21 @@ const AlbumFriendContainer = styled.div`
   }
   @media (max-width: 640px) {
     width: calc(100vw - 60px);
+  }
+`;
+
+const AlbumFriendBtnsDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 932px) {
+    border-top: 1px white solid;
+    padding: 20px 30px 0;
+    width: calc(100% - 60px);
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  @media (max-width: 640px) {
+    justify-content: center;
   }
 `;
 
@@ -101,9 +116,9 @@ const MyPageIcon = styled.div`
   align-items: center;
   cursor: pointer;
   background-color: #b8c3d0;
-  background-image: ${(props) => `url(${props.backgroundImg})`};
-  background-size: ${() => "cover"};
-  background-position: ${() => "center"};
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
   :hover {
     background-color: #667484;
   }
@@ -174,14 +189,15 @@ export default function UserPage() {
 
   return (
     <>
-      <MyPageDiv>
+      <UserPageDiv>
+        <Login signinRef={signinRef} />
         <Background background_photo={background_photo} />
         <ButtonsDiv>
           <HomeDiv onClick={handleHome}>
             <i className="fas fa-home" />
           </HomeDiv>
           {myInfo.id && <Logout />}
-          <MyPageIcon onClick={handleToMyPage} backgroundImg={myInfo.photo}>
+          <MyPageIcon onClick={handleToMyPage} photo={myInfo.photo}>
             {myInfo.photo ? (
               <MyPageIconMask />
             ) : (
@@ -195,20 +211,30 @@ export default function UserPage() {
         <UserWorld userInfo={userInfo} />
 
         <AlbumFriendContainer>
-          <AlbumFriendBtns
-            activeButton={activeButton}
-            setActiveButton={setActiveButton}
-          />
+          <AlbumFriendBtnsDiv>
+            {["Albums", "Friends"].map((btn) => (
+              <AlbumFriendBtn
+                key={btn}
+                content={btn}
+                activeButton={activeButton}
+                onClick={() => setActiveButton(btn)}
+              />
+            ))}
+          </AlbumFriendBtnsDiv>
+
           {activeButton === "Albums" ? (
-            <PersonalAlbum title={"Albums"} id={userInfo.id} />
+            <PersonalAlbum title={"Albums"} id={userInfo.id} isMyPage={false} />
           ) : (
-            <PersonalFriends title={"Friends"} userInfo={userInfo} />
+            <PersonalFriends
+              title={"Friends"}
+              userInfo={userInfo}
+              isMyPage={false}
+            />
           )}
         </AlbumFriendContainer>
-      </MyPageDiv>
+      </UserPageDiv>
 
       <Album />
-      <Login signinRef={signinRef} />
     </>
   );
 }

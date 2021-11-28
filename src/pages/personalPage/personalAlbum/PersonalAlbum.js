@@ -73,9 +73,9 @@ const AlbumCoverDiv = styled.div`
   height: 210px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   cursor: pointer;
-  background-image: ${(props) => `url(${props.backgroundImg})`};
-  background-size: ${() => "cover"};
-  background-position: ${() => "center"};
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
   @media (max-width: 1180px) {
     width: 100%;
     margin-top: 15px;
@@ -184,7 +184,7 @@ export default function PersonalAlbum({ title, id, isMyPage }) {
                   <AlbumInfo album={album} />
                 </AlbumInfoTop>
                 <AlbumCoverDiv
-                  backgroundImg={album.cover_photo}
+                  photo={album.cover_photo}
                   onClick={() => handleShowAlbumId("album_id_show", album.id)}
                 ></AlbumCoverDiv>
                 <AlbumInfoRight>

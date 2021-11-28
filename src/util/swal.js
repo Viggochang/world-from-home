@@ -50,13 +50,50 @@ async function swalDeleteAlbum(
   }
 }
 
-function swalDiscardAlbumInEdit() {}
+async function swalRemoveFriend(removeFriend) {
+  const MySwal = withReactContent(Swal);
+
+  const result = await MySwal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, remove it!",
+    cancelButtonText: "No, cancel!",
+    reverseButtons: true,
+    customClass: {
+      confirmButton: "confirmbutton",
+      cancelButton: "cancelbutton",
+    },
+  });
+  if (result.isConfirmed) {
+    removeFriend();
+
+    MySwal.fire({
+      title: "Remove!",
+      text: "The Friend has been removed.",
+      icon: "success",
+      customClass: {
+        confirmButton: "confirmbutton",
+      },
+    });
+  } else if (result.dismiss === Swal.DismissReason.cancel) {
+    MySwal.fire({
+      title: "Cancelled",
+      // text: "Your album is safe :)",
+      icon: "error",
+      customClass: {
+        confirmButton: "confirmbutton",
+      },
+    });
+  }
+}
 
 async function swalLogout(logoutImg, toHome) {
   const MySwal = withReactContent(Swal);
   await MySwal.fire({
     title: "Logged Out !",
-    text: "The most beautiful thing in the world is, of course, the world itself",
+    text: "The most beautiful thing in the world is, of course, the world itself.",
     imageUrl: logoutImg,
     imageWidth: 400,
     imageHeight: 200,
@@ -108,7 +145,7 @@ function swalDiscardAlbumInEditCancel(MySwal) {
 
 export {
   swalDeleteAlbum,
-  swalDiscardAlbumInEdit,
+  swalRemoveFriend,
   swalLogout,
   swalDiscardAlbumInEditQuestion,
   swalDiscardAlbumInEditConfirm,

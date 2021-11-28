@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import InputBase from "@mui/material/InputBase";
@@ -86,7 +86,11 @@ export default function Language({
 }) {
   const myInfo = useSelector((state) => state.userInfo);
   const edit_icon_ref = useRef();
-  const [language, setLanguage] = useState("Chinese"); //to-do
+  const [language, setLanguage] = useState(); //to-do
+
+  useEffect(() => {
+    setLanguage(myInfo.language);
+  }, [myInfo.language]);
 
   return (
     <InfoDiv
@@ -127,7 +131,7 @@ export default function Language({
                 outline: "1px rgb(58, 74, 88, 0.5) solid",
                 padding: "4px 10px 0",
                 backgroundColor: "rgb(255, 255, 255, 0.4)",
-                borderRadius: "4px",
+                borderRadius: "8px",
               },
             }}
             size="small"

@@ -1,35 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+
 import {
   db_gallery,
   setAlbumDataIntoDb,
   onSnapshotAlbumByCountry,
 } from "../../../util/firebase";
-import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { AddAlbumBtn } from "../../../util/muiButton";
 
-import Album from "./CountryAlbum_album";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-    },
-  },
-});
+import Album from "./Album";
 
 const GalleryBackgroundDiv = styled.div`
   width: calc(65% - 80px);
@@ -151,34 +132,12 @@ export default function CountryAlbums({ signinRef }) {
               })}
             <AlbumHere>
               <AlbumAdd>
-                <ThemeProvider theme={theme}>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleToEdit}
-                    style={{
-                      margin: "auto",
-                      lineHeight: 1.5,
-                      fontSize: "28px",
-                    }}
-                  >
-                    +&emsp; add my album
-                  </Button>
-                </ThemeProvider>
+                <AddAlbumBtn onClick={handleToEdit} fontSize={"28px"} />
               </AlbumAdd>
             </AlbumHere>
           </AlbumDiv>
         ) : (
-          <ThemeProvider theme={theme}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleToEdit}
-              style={{ margin: "auto", lineHeight: 1.5, fontSize: "36px" }}
-            >
-              +&emsp; add my album
-            </Button>
-          </ThemeProvider>
+          <AddAlbumBtn onClick={handleToEdit} fontSize={"36px"} />
         )}
       </GalleryBackgroundDiv>
     </>

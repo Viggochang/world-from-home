@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { templateStyle, allTemplateParams } from "./MyTemplate";
+import { templateStyle, allTemplateParams } from "../../../util/myTemplate";
 
 const PreviewDiv = styled.div`
   background-color: #b8c3d0;
   padding-left: 360px;
   flex-grow: 1;
-  display: flex;
+  display: ${(props) => (props.preview ? "flex" : "none")};
   flex-direction: column;
   align-items: center;
   position: relative;
@@ -68,7 +68,10 @@ export default function Preview({ preview }) {
   }, [preview]);
 
   return (
-    <PreviewDiv style={{ display: preview ? "flex" : "none" }}>
+    <PreviewDiv
+      preview={preview}
+      style={{ display: preview ? "flex" : "none" }}
+    >
       <WorkingSpaceDivInner>
         {Object.values(pageInfo)
           .sort((a, b) => a.page - b.page)

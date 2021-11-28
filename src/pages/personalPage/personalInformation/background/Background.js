@@ -12,6 +12,9 @@ const BackgroundDiv = styled.div`
   left: 0;
   z-index: -1;
   background-color: #b8c3d0;
+  background-image: url(${(props) => props.photo || defaultBackground});
+  background-size: cover;
+  background-position: center;
 `;
 
 const Mask = styled.div`
@@ -22,15 +25,7 @@ const Mask = styled.div`
 
 export default function Background({ background_photo }) {
   return (
-    <BackgroundDiv
-      style={{
-        backgroundImage: background_photo
-          ? `url(${background_photo})`
-          : `url(${defaultBackground})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <BackgroundDiv photo={background_photo}>
       <Mask />
     </BackgroundDiv>
   );

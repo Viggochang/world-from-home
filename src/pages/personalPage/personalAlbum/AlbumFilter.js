@@ -44,8 +44,6 @@ export default function AlbumFilter({
   setAlbumCountry,
   setAlbumOrder,
 }) {
-  console.log(albumData);
-
   useEffect(() => {
     setAlbumCountry("All");
     setAlbumOrder("New");

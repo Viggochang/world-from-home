@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import MoreInfo from "./MoreInfo";
 
-import { MoreInformationBtn } from "../../../../../util/MuiButton";
+import { MoreInformationBtn } from "../../../../../util/muiButton";
 
 export default function MoreInformation({ userInfo }) {
   const [showMoreInfo, setShowMoreInfo] = useState(false);

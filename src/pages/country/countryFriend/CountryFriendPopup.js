@@ -73,6 +73,9 @@ const FriendPhoto = styled.div`
   margin-right: 20px;
   cursor: pointer;
   box-shadow: 0px 0px 10px #bebebe;
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
 `;
 
 const FriendInfo = styled.div`
@@ -124,11 +127,7 @@ export default function CountryFriendPopup({ popupRef, friendHere }) {
           {friendHereInfo.map((friend, index) => (
             <FriendDiv key={`friend-here-${index}`}>
               <FriendPhoto
-                style={{
-                  backgroundImage: `url(${friend.photo})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
+                photo={friend.photo}
                 onClick={() => {
                   history.push({
                     pathname: "user",

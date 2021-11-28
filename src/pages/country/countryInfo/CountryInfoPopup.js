@@ -146,7 +146,6 @@ export default function CountryInfoPopup({
         <CaptitalTitle>Captital City</CaptitalTitle>
         <CaptainCity>{captain.capitalCity}</CaptainCity>
         <WeatherDiv>
-          {/* <img id="wicon" src="http://openweathermap.org/img/w/10d.png" style={{width: '100%'}} alt="Weather icon"></img> */}
           <WeatherTemp>
             <WeatherIcon>
               <i className="fas fa-cloud-sun" />

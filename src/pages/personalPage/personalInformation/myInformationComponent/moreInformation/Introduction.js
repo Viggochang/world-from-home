@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import InputBase from "@mui/material/InputBase";
@@ -92,6 +92,10 @@ export default function Introduction({
   const edit_icon_ref = useRef();
   const [introduction, setIntroduction] = useState(); //to-do
 
+  useEffect(() => {
+    setIntroduction(myInfo.introduction);
+  }, [myInfo.introduction]);
+
   return (
     <InfoDiv
       onMouseEnter={() => handleShow(edit_icon_ref.current)}
@@ -126,12 +130,12 @@ export default function Introduction({
           <InputBase
             inputProps={{
               style: {
-                height: 24,
+                height: 104,
                 fontSize: 16,
                 outline: "1px rgb(58, 74, 88, 0.5) solid",
                 padding: "4px 10px 0",
                 backgroundColor: "rgb(255, 255, 255, 0.4)",
-                borderRadius: "4px",
+                borderRadius: "8px",
               },
             }}
             size="small"

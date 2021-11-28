@@ -7,7 +7,7 @@ import { firebase } from "../../util/firebase";
 
 import Background from "./personalInformation/background/Background";
 import MyInformation from "./personalInformation/MyInformation";
-import AlbumFriendBtns from "./AlbumFriendBtns";
+import { AlbumFriendBtn } from "../../util/muiButton";
 
 import PersonalAlbum from "./personalAlbum/PersonalAlbum";
 import PersonalFriends from "./personialFriend/PersonalFriends";
@@ -82,6 +82,21 @@ const AlbumFriendContainer = styled.div`
   }
 `;
 
+const AlbumFriendBtnsDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 932px) {
+    border-top: 1px white solid;
+    padding: 20px 30px 0;
+    width: calc(100% - 60px);
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
+`;
+
 export default function MyPage() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -118,10 +133,17 @@ export default function MyPage() {
         <MyInformation />
 
         <AlbumFriendContainer>
-          <AlbumFriendBtns
-            activeButton={activeButton}
-            setActiveButton={setActiveButton}
-          />
+          <AlbumFriendBtnsDiv>
+            {["Albums", "Friends"].map((btn) => (
+              <AlbumFriendBtn
+                key={btn}
+                content={btn}
+                activeButton={activeButton}
+                onClick={() => setActiveButton(btn)}
+              />
+            ))}
+          </AlbumFriendBtnsDiv>
+
           {activeButton === "Albums" ? (
             <PersonalAlbum title={"My Albums"} id={id} isMyPage={true} />
           ) : (

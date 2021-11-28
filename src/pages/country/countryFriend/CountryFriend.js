@@ -62,6 +62,9 @@ const FriendHerePhoto = styled.div`
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0px 0px 10px #bebebe;
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
   @media (max-height: 900px) {
     height: calc(100% - 51px);
   }
@@ -115,11 +118,7 @@ export default function CountryFriend({ friendHere }) {
         {friendHereInfo.map((friend, index) => (
           <FriendHere key={`friend-here-${index}`}>
             <FriendHerePhoto
-              style={{
-                backgroundImage: `url(${friend.photo})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
+              photo={friend.photo}
               onClick={() => {
                 history.push({
                   pathname: "user",
