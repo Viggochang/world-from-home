@@ -115,7 +115,6 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
   }
 
   useEffect(() => {
-    console.log(activeObj);
     if (
       activeObj &&
       Object.keys(activeObj).length &&

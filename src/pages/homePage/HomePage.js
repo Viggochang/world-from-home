@@ -40,6 +40,7 @@ const BackBtn = styled.div`
 `;
 
 const Title = styled.div`
+  max-width: calc(100% - 120px);
   color: white;
   font-size: 70px;
   letter-spacing: 2px;
@@ -49,6 +50,16 @@ const Title = styled.div`
   bottom: 40px;
   left: 60px;
   z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  @media (max-width: 920px) {
+    font-size: 50px;
+    left: 50px;
+  }
+  @media (max-width: 720px) {
+    font-size: 30px;
+    left: 30px;
+  }
 `;
 
 const LogoutDiv = styled.div`
@@ -97,11 +108,9 @@ export default function HomePage({ mapType, setMapType }) {
 
   function handleSignIn() {
     signinRef.current.style.zIndex = 2;
-    console.log("sign in");
   }
 
   function handleEsc(event) {
-    console.log(event.key);
     if (event.key === "Escape") {
       if (!albumIdShow) {
         handleClickBack();

@@ -130,8 +130,6 @@ function World({ userInfo, mapType, setMap, userPage, map, showCountry }) {
     }
   }, [myTravelCountries, map, targetCountry, polygonSeries]);
 
-  console.log(targetCountry);
-
   return (
     <Chartdiv
       id="chartdiv"

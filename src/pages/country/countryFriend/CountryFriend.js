@@ -105,7 +105,6 @@ export default function CountryFriend({ friendHere }) {
   useEffect(() => {
     Promise.all(friendHere.map((friend) => getUserDataByUid(friend.id))).then(
       (arr) => {
-        console.log(arr);
         setFriendHereInfo(arr);
       }
     );

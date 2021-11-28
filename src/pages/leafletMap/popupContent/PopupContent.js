@@ -12,17 +12,24 @@ const PopupContentDiv = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   color: #3a4a58;
+  @media (max-width: 600px) {
+    font-size: 16px;
+  }
 `;
 
 const AlbumPhoto = styled.div`
-  width: 400px;
-  height: 270px;
+  width: 360px;
+  height: 250px;
   display: flex;
   margin-top: 10px;
   cursor: pointer;
+  @media (max-width: 600px) {
+    width: 240px;
+    height: 160px;
+  }
 `;
 
 const AlbumOwnerPhoto = styled.div`
@@ -31,11 +38,17 @@ const AlbumOwnerPhoto = styled.div`
   border-radius: 50%;
   margin: 55px 20px;
   position: absolute;
-  bottom: 150px;
-  left: 320px;
+  bottom: 135px;
+  left: 285px;
   box-shadow: rgba(255, 255, 255, 0.6) 0px 10px 27px -5px,
     rgba(255, 255, 255, 0.6) 0px 16px 16px -8px;
   cursor: pointer;
+  @media (max-width: 600px) {
+    width: 40px;
+    height: 40px;
+    bottom: 65px;
+    left: 180px;
+  }
 `;
 
 const Mask = styled.div`

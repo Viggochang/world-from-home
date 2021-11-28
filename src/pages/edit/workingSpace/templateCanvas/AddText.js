@@ -94,7 +94,6 @@ function AddText({ page, id, addTextRef, handleCanvasOn }) {
     });
     thisCanvas.add(newText);
     thisCanvas.setActiveObject(newText);
-    console.log(thisCanvas.getActiveObject());
 
     const record = {};
     record[thisCanvas.lowerCanvasEl.id] =

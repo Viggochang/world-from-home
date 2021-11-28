@@ -210,7 +210,6 @@ export default function CompleteQuestion({
   }, [albumIdEditing]);
 
   useEffect(() => {
-    console.log(touristSpotRef.current);
     touristSpotRef.current.scrollTop = touristSpotRef.current.scrollHeight;
   }, [touristSpot]);
 
@@ -227,7 +226,6 @@ export default function CompleteQuestion({
         );
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
-            console.log(imageUrl);
             setImageUrl(imageUrl);
           });
         });

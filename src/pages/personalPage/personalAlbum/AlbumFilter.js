@@ -83,6 +83,7 @@ export default function AlbumFilter({
                       condition === (pending ? "pending" : "completed")
                   )
                   .map((data) => data.country)
+                  .sort()
               )
             ).map((country) => (
               <MenuItem key={country} value={country} sx={{ color: "#3a4a58" }}>

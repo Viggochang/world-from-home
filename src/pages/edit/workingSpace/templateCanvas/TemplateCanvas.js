@@ -56,9 +56,7 @@ export default function TemplateCanvas({
                 e.target.style.boxShadow = "0px 0px 2px #8e8e8e";
               }
             }}
-            onClick={(e) => {
-              console.log(e.target.parentNode);
-            }}
+            onClick={(e) => {}}
             onMouseEnter={(e) => handleShowIcon(e, `page${page}-canvas${id}`)}
             onMouseLeave={(e) =>
               handleDisplayIcon(e, `page${page}-canvas${id}`)

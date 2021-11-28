@@ -18,6 +18,9 @@ const RequestBtnDiv = styled.div`
   @media (max-width: 932px) {
     left: calc(56% + 80px);
   }
+  @media (max-width: 500px) {
+    left: calc(56% + 20px);
+  }
 `;
 
 const RequestBtn = styled.div`
@@ -27,6 +30,11 @@ const RequestBtn = styled.div`
   border-radius: 50%;
   display: flex;
   cursor: pointer;
+  @media (max-width: 500px) {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
 `;
 const StateText = styled.div`
   width: 125px;
@@ -42,7 +50,7 @@ const RemoveRequest = styled.div`
   bottom: 20px;
   cursor: pointer;
   :hover {
-    color: #ae0000; /*red*/
+    color: #ae0000;
   }
 `;
 
@@ -53,10 +61,7 @@ export default function FriendState({ userInfo }) {
   const [friendState, setFriendState] = useState("none");
 
   const myInfo = useSelector((state) => state.userInfo);
-  const { friends: friendFriends } = userInfo;
   const { friends: myFriends } = myInfo;
-
-  // stateObj[stateObj[friendState].state_change.my_state].style
 
   useEffect(() => {
     if (myFriends) {
@@ -67,23 +72,13 @@ export default function FriendState({ userInfo }) {
           ? friendObj[0].condition
           : "none"
       );
-      console.log(friendObj.length ? friendObj[0].condition : "none");
     }
   }, [myFriends, userInfo.id]);
-
-  // function getStateObj(friendState) {
-  //   if (Object.keys(stateObj).includes(friendState)) {
-  //     return stateObj[friendState];
-  //   } else {
-  //     return stateObj["none"];
-  //   }
-  // }
 
   function handleRequestBtn(e, type) {
     const style = requestBtnRef.current.style;
     const stateText = stateTextRef.current;
     const stateChange = friendStateObj[friendState].state_change.my_state;
-    console.log(stateChange);
     if (type === "leave") {
       style.color = friendStateObj[friendState].style.color;
       style.backgroundColor = friendStateObj[friendState].style.backgroundColor;

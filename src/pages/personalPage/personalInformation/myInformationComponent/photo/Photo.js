@@ -74,7 +74,6 @@ export default function Photo({ id, photo }) {
         const storageRef = storage.ref(`user_${key}/${id}`);
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
-            console.log(imageUrl);
             let photoObj = {};
             photoObj[key] = imageUrl;
             updateUser(id, photoObj);

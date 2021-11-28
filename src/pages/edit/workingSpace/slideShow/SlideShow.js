@@ -69,7 +69,6 @@ export default function SlideShow({
       .forEach((canvas) => (canvas[1].style.opacity = 0));
     canvasDivRef.current[`page${page}-canvas${activeSlide}`].style.zIndex = 1;
     canvasDivRef.current[`page${page}-canvas${activeSlide}`].style.opacity = 1;
-    console.log("slide_show", `page${page}-canvas${activeSlide}`);
   }, [activeSlide]);
 
   function handleLeft() {

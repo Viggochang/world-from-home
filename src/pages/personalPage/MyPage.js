@@ -104,7 +104,6 @@ export default function MyPage() {
   const myInfo = useSelector((state) => state.userInfo);
 
   const { id, background_photo } = myInfo;
-  console.log(id);
   firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
       history.push({ pathname: "/" });

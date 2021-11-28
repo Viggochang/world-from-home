@@ -22,7 +22,7 @@ const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
   height: calc(100vh - 80px);
   background-color: rgb(0, 0, 0, 0.9);
-  display: ${(props) => (props.albumIdShow === "true" ? "flex" : "none")};
+  display: ${(props) => (props.albumIdShow ? "flex" : "none")};
   z-index: 5;
   position: fixed;
   top: 0;
@@ -44,6 +44,7 @@ const BackDiv = styled.div`
   font-weight: bold;
   font-size: 28px;
   cursor: pointer;
+  z-index: 3;
   :hover {
     color: white;
   }
@@ -129,11 +130,7 @@ export default function Album() {
   }
 
   return (
-    <AlbumDiv
-      albumIdShow={!!albumIdShow && albumIdShow.toString()}
-      onKeyDown={handleEsc}
-      tabIndex="0"
-    >
+    <AlbumDiv albumIdShow={albumIdShow} onKeyDown={handleEsc} tabIndex="0">
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times-circle" />
       </BackDiv>

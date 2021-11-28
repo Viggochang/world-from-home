@@ -89,9 +89,7 @@ function LeafletMap() {
               key={index}
               position={[spot.lat, spot.lng]}
               icon={customMarkerIcon}
-              onClick={(spot) => {
-                console.log(spot.text);
-              }}
+              onClick={(spot) => {}}
             >
               <Popup maxWidth="500" maxHeight="auto">
                 <PopupContent spot={spot} />

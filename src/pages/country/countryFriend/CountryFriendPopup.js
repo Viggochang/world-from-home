@@ -103,7 +103,6 @@ export default function CountryFriendPopup({ popupRef, friendHere }) {
   useEffect(() => {
     Promise.all(friendHere.map((friend) => getUserDataByUid(friend.id))).then(
       (arr) => {
-        console.log(arr);
         setFriendHereInfo(arr);
       }
     );

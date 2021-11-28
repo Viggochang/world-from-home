@@ -215,7 +215,6 @@ export default function AlbumQuestion() {
       .then((res) => res.json())
       .then((res) => {
         setCityInCountry(res.data ? res.data.states : []);
-        console.log(res.data ? res.data.states : []);
       });
   }, []);
 
@@ -352,7 +351,6 @@ export default function AlbumQuestion() {
                   multiline
                   onChange={(e) => {
                     setTripIntroduction(e.target.value);
-                    console.log(textAreaRef.current.offsetHeight);
                   }}
                   value={tripIntroduction}
                 />

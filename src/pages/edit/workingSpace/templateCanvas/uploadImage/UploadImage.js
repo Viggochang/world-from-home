@@ -226,8 +226,6 @@ export default function UploadImage({
         );
         storageRef.put(result, metadata).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
-            console.log(imageUrl);
-
             addImg(event, imageUrl, canvas[canvasId]);
           });
         });

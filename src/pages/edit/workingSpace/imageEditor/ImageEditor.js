@@ -98,7 +98,6 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
   };
 
   useEffect(() => {
-    console.log(activeObj);
     if (
       activeObj &&
       Object.keys(activeObj).length &&
@@ -122,7 +121,6 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
     switch (key) {
       case "size":
         const scale = 20 / Math.min(imgStyle.width, imgStyle.height);
-        console.log(scale);
         if (value === "minus") {
           activeImgStyle["scaleX"] = imgStyle.scaleX - scale;
           activeImgStyle["scaleY"] = imgStyle.scaleY - scale;

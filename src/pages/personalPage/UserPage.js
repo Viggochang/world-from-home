@@ -170,12 +170,10 @@ export default function UserPage() {
   const { background_photo } = userInfo;
 
   function handleToMyPage() {
-    console.log(myInfo);
     if (Object.keys(myInfo).length) {
       history.push({ pathname: "mypage" });
     } else {
       signinRef.current.style.zIndex = 1;
-      console.log("sign in");
     }
   }
 

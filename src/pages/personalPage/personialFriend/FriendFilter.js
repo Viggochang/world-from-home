@@ -32,15 +32,19 @@ const RequestBtn = styled.div`
   width: 60px;
   min-width: 60px;
   height: 60px;
-  color: #3a4a58;
+  color: ${(props) =>
+    props.showFriendRequest === "true" ? "white" : "#3a4a58"};
   font-size: 30px;
   border-radius: 50%;
   position: relative;
   display: flex;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: ${(props) =>
+    props.showFriendRequest === "true"
+      ? "rgb(58, 74, 88, 0.8)"
+      : "rgb(255, 255, 255, 0.7)"};
   cursor: pointer;
   :hover {
-    background-color: #b8c3d0;
+    background-color: rgb(184, 195, 208, 0.7);
     color: white;
   }
   @media (max-width: 640px) {
@@ -88,13 +92,7 @@ export default function FriendFilter({
   const friendRequestsRef = useRef();
 
   function handleFriendRequest() {
-    friendRequestsRef.current.style.backgroundColor = showFriendRequest
-      ? "white"
-      : "#3a4a58";
-    friendRequestsRef.current.style.color = showFriendRequest
-      ? "#3a4a58"
-      : "white";
-    setShowFriendRequest(!showFriendRequest);
+    setShowFriendRequest((showFriendRequest) => !showFriendRequest);
   }
 
   function handleSearch(e) {
@@ -111,7 +109,11 @@ export default function FriendFilter({
           title={"Friend Requests"}
           placement="left"
           content={
-            <RequestBtn ref={friendRequestsRef} onClick={handleFriendRequest}>
+            <RequestBtn
+              ref={friendRequestsRef}
+              showFriendRequest={showFriendRequest.toString()}
+              onClick={handleFriendRequest}
+            >
               <i className="fas fa-user-plus" style={{ margin: "auto" }} />
               {!!myFriendRequests.length && (
                 <RequestAlert>{myFriendRequests.length}</RequestAlert>

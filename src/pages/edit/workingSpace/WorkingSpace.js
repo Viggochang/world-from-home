@@ -190,7 +190,6 @@ function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
   }, [pageInfo]);
 
   useEffect(() => {
-    console.log(preview);
     Object.values(canvas).forEach((canvas) => {
       canvas.selectable = !preview;
       canvas.getObjects().forEach((obj) => {
@@ -246,7 +245,6 @@ function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
       (event.key === "z" || event.key === "Z")
     ) {
       if (Object.keys(editRedo).length < 1) {
-        console.log("目前沒有動作可復原");
       } else {
         const latestState = editRedo[Object.keys(editRedo).length - 1];
         let record = {};
@@ -291,13 +289,11 @@ function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
       (event.key === "z" || event.key === "Z")
     ) {
       if (Object.keys(editUndo).length < 1) {
-        console.log("目前沒有動作可復原");
       } else {
         const latestState = editUndo[Object.keys(editUndo).length - 1];
         let redoRecord = {};
         // 如果是刪除page，會存入pageId
         if (typeof latestState === "string") {
-          console.log(latestState);
           const pageInfoObj = {};
           pageInfoObj[latestState] = {
             ...pageInfo[latestState],
@@ -313,7 +309,6 @@ function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
             Object.values(latestState)[0]
           );
           const activeId = Object.keys(latestState)[0];
-          console.log(activeId, canvasState, canvasState[activeId]);
           redoRecord[activeId] = canvasState[activeId];
 
           dispatch({

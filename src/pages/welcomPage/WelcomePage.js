@@ -93,7 +93,6 @@ export default function WelcomePage() {
 
   function handleSignIn() {
     signinRef.current.style.zIndex = 2;
-    console.log("sign in");
   }
 
   function handleGuest() {

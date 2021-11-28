@@ -14,6 +14,10 @@ const EditingSwitchDiv = styled.div`
   z-index: 1;
   background-color: #3a4a58;
   border-radius: 20px;
+  @media (max-width: 700px) {
+    right: 140px;
+    top: 105px;
+  }
 `;
 
 const EditLabel = styled.div`

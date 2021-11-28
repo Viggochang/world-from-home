@@ -112,9 +112,10 @@ function AlbumFriendBtn({ content, activeButton, onClick }) {
 }
 
 function MoreInformationBtn({ showMoreInfo, onClick }) {
+  console.log(window.screen.width);
   const btnStyle = {
-    width: "220px",
-    fontSize: "16px",
+    width: document.body.clientWidth > 500 ? "220px" : "150px",
+    fontSize: document.body.clientWidth > 500 ? "16px" : "12px",
     borderRadius: "40px",
     lineHeight: 1.4,
     fontWeight: "bold",
