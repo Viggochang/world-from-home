@@ -19,6 +19,7 @@ export default function TemplateCanvas({
   addTextRef,
   uploadImageRef,
   handleCanvasOn,
+  allCanvasRef,
 }) {
   function handleShowIcon(e, canvasId) {
     if (!preview) {
@@ -74,7 +75,12 @@ export default function TemplateCanvas({
               uploadImageRef={uploadImageRef}
               handleCanvasOn={handleCanvasOn}
             />
-            <MyCanvas id={`page${page}-canvas${id}`} />
+            <MyCanvas
+              id={`page${page}-canvas${id}`}
+              ref={(el) => {
+                allCanvasRef.current[`page${page}-canvas${id}`] = el;
+              }}
+            />
           </CanvasContainer>
         );
       })}

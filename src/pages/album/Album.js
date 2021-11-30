@@ -12,7 +12,7 @@ import LikeBtn from "./albumBtns/LikeBtn";
 import FriendBtn from "./albumBtns/FriendBtn";
 import EditBtn from "./albumBtns/EditBtn";
 import DeleteBtn from "./albumBtns/DeleteBtn";
-import ToImage from "./showAlbum/ToImage";
+// import ToImage from "./showAlbum/ToImage";
 
 import AlbumOwnerPhoto from "./albumInfo/AlbumOwnerPhoto";
 import AlbumInformation from "./albumInfo/AlbumInformation";
@@ -54,18 +54,28 @@ const BackDiv = styled.div`
 const ButtonsDiv = styled.div`
   position: fixed;
   top: 150px;
-  right: 60px;
+  right: 100px;
   display: flex;
   flex-direction: column;
   z-index: 3;
-  @media (min-width: 1440px) {
-    right: 100px;
+  @media (max-width: 1440px) {
+    right: 60px;
+  }
+  @media (max-width: 800px) {
+    position: static;
+    flex-direction: row;
+  }
+  @media (max-width: 750px) {
+    margin-left: calc((33.33vw - 200px) / 2);
   }
 `;
 
 const AlbumInfoDiv = styled.div`
   display: flex;
   align-items: center;
+  @media (max-width: 750px) {
+    margin-left: calc((33.33vw - 200px) / 2);
+  }
 `;
 
 export default function Album() {
@@ -78,7 +88,6 @@ export default function Album() {
   const [praise, setPraise] = useState(0);
   const [isMyAlbum, setIsMyAlbum] = useState(false);
   const albumRef = useRef();
-  const allCanvasRef = useRef({});
 
   const id = new URLSearchParams(window.location.search).get("album_id_show");
 
@@ -113,9 +122,8 @@ export default function Album() {
 
   function handleClickBack() {
     dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
-    setAlbumData({});
+    // setAlbumData({});
     setOwnerData({});
-    allCanvasRef.current = {};
 
     let params = new URL(window.location).searchParams;
     params.delete("album_id_show");
@@ -138,6 +146,12 @@ export default function Album() {
         <i className="fas fa-times-circle" />
       </BackDiv>
 
+      <AlbumInfoDiv>
+        <AlbumOwnerPhoto ownerData={ownerData} />
+        <AlbumInformation ownerData={ownerData} albumData={albumData} />
+        <AlbumPraise praise={praise} />
+      </AlbumInfoDiv>
+
       {myInfo.id && (
         <ButtonsDiv>
           <LikeBtn praise={albumData.praise} />
@@ -152,20 +166,13 @@ export default function Album() {
             handleClickBack={handleClickBack}
             isMyAlbum={isMyAlbum}
           />
-          <ToImage allCanvas={allCanvasRef.current} />
         </ButtonsDiv>
       )}
 
-      <AlbumInfoDiv>
-        <AlbumOwnerPhoto ownerData={ownerData} />
-        <AlbumInformation ownerData={ownerData} albumData={albumData} />
-        <AlbumPraise praise={praise} />
-      </AlbumInfoDiv>
-
       <ShowAlbum
         albumContent={albumData.content}
+        completeCanvas={albumData.completeCanvas}
         albumRef={albumRef}
-        allCanvasRef={allCanvasRef}
       />
     </AlbumDiv>
   );

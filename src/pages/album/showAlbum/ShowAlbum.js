@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import SlideShow from "./slideShow/SlideShow";
 
-import { templateStyle, allTemplateParams } from "../../../util/myTemplate";
+import { templateStyle, cavasStyle } from "../../../util/myTemplate";
 
 const ShowDiv = styled.div`
   margin-top: 30px;
@@ -18,67 +18,53 @@ const PageContainer = styled.div`
   display: ${(props) => (props.display === "true" ? "block" : "none")};
 `;
 
-const PageCanvasContainer = styled.div``;
+const PageCanvasContainer = styled.div`
+  ${(props) => props.templateStyle}
+  @media(max-width: 1200px) {
+    width: ${({ templateStyle: { width } }) =>
+      Number(width.split("px")[0]) / 12}vw;
+    height: ${({ templateStyle: { height } }) =>
+      Number(height.split("px")[0]) / 12}vw;
+    padding-top: ${({ templateStyle: { padding } }) =>
+      padding && Number(padding.split("px")[0]) / 12}vw;
+    padding-bottom: ${({ templateStyle: { padding } }) =>
+      padding && Number(padding.split("px")[0]) / 12}vw;
+    padding-left: ${({ templateStyle: { padding } }) =>
+      padding && Number(padding.split("px")[1]) / 12}vw;
+    padding-right: ${({ templateStyle: { padding } }) =>
+      padding && Number(padding.split("px")[1]) / 12}vw;
+  }
+`;
 
 const CanvasContainer = styled.div`
   position: relative;
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
+  @media (max-width: 1200px) {
+    width: ${(props) => Number(props.width) / 12}vw;
+    height: ${(props) => Number(props.height) / 12}vw;
+  }
+`;
+const CanvasImg = styled.img`
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
+  @media (max-width: 1200px) {
+    width: ${(props) => Number(props.width) / 12}vw;
+    height: ${(props) => Number(props.height) / 12}vw;
+  }
 `;
 
 const MyCanvas = styled.canvas``;
 
-export default function ShowAlbum({ albumContent, albumRef, allCanvasRef }) {
+export default function ShowAlbum({ albumContent, completeCanvas, albumRef }) {
   const [pageInfo, setPageInfo] = useState({});
-  const [canvasState, setCanvasState] = useState({});
+
   const canvasDivRef = useRef({});
   const pageCanvasContainerRef = useRef();
 
   useEffect(() => {
     setPageInfo(albumContent ? JSON.parse(albumContent.pageInfo) : {});
-    setCanvasState(albumContent ? JSON.parse(albumContent.canvasState) : {});
   }, [albumContent]);
-
-  useEffect(() => {
-    if (Object.keys(pageInfo).length) {
-      Object.values(pageInfo).forEach((pageInfo) => {
-        const { page, templateId } = pageInfo;
-        const CanvasInPage = allTemplateParams("show")[templateId](page);
-        CanvasInPage.forEach((canvas) => {
-          canvas.loadFromJSON(
-            canvasState[canvas.lowerCanvasEl.id.split("preview-")[1]],
-            () => {
-              canvas.selectable = false;
-              canvas.getObjects().forEach((obj) => {
-                obj.selectable = false;
-              });
-              canvas.backgroundColor = "#ffffff";
-              canvas.renderAll();
-            }
-          );
-        });
-      });
-    }
-  }, [pageInfo, canvasState]);
-
-  // useEffect(() => {
-  //   window.onresize = () => {
-  //     Object.values(canvas).forEach((canvas) => {
-  //       console.log(
-  //         canvas.width,
-  //         pageCanvasContainerRef.current.clientWidth,
-  //         800
-  //       );
-  //       const newWidth =
-  //         (800 * pageCanvasContainerRef.current.clientWidth) / 820;
-  //       const newHeight =
-  //         (600 * pageCanvasContainerRef.current.clientWidth) / 820;
-  //       canvas.setWidth(newWidth).setHeight(newHeight);
-  //     });
-  //   };
-
-  //   return () => {
-  //     window.onresize = null;
-  //   };
-  // }, [canvas]);
 
   return (
     <ShowDiv ref={albumRef}>
@@ -94,30 +80,34 @@ export default function ShowAlbum({ albumContent, albumRef, allCanvasRef }) {
             >
               <PageCanvasContainer
                 ref={pageCanvasContainerRef}
-                style={templateStyle[templateId]}
+                templateStyle={templateStyle[templateId]}
               >
                 {templateId === "slide_show_1" ? (
                   <SlideShow
                     canvasDivRef={canvasDivRef}
-                    allCanvasRef={allCanvasRef}
                     page={page}
                     canvasCount={canvasCount}
+                    completeCanvas={completeCanvas}
                   />
                 ) : (
-                  Array.from(new Array(canvasCount).keys()).map((id) => {
+                  Array.from(new Array(canvasCount).keys()).map((id, index) => {
+                    const { height, width } = Object.values(
+                      cavasStyle[templateId]
+                    )[index];
                     return (
                       <CanvasContainer
                         key={`page${page}-canvas${id}`}
                         tabIndex="0"
+                        height={height}
+                        width={width}
                       >
-                        <MyCanvas
-                          id={`preview-page${page}-canvas${id}`}
-                          ref={(el) =>
-                            (allCanvasRef.current[
-                              `preview-page${page}-canvas${id}`
-                            ] = el)
-                          }
+                        <CanvasImg
+                          src={completeCanvas[`page${page}-canvas${id}`]}
+                          alt={`page${page}-canvas${id}`}
+                          height={height}
+                          width={width}
                         />
+                        {/* <MyCanvas id={`preview-page${page}-canvas${id}`} /> */}
                       </CanvasContainer>
                     );
                   })

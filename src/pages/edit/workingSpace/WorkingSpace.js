@@ -57,7 +57,13 @@ const RemovePage = styled.div`
 
 const PageCanvasContainer = styled.div``;
 
-function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
+function WorkingSpace({
+  preview,
+  addWindow,
+  removePageRef,
+  canvasDivRef,
+  allCanvasRef,
+}) {
   const dispatch = useDispatch();
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
@@ -419,7 +425,7 @@ function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
             return (
               <PageContainer
                 key={`page${page}`}
-                display={!!display && display.toString()}
+                display={(!!display && display).toString()}
               >
                 <RemovePage
                   ref={(el) => (removePageRef.current[index] = el)}
@@ -440,6 +446,7 @@ function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
                       addTextRef={addTextRef}
                       uploadImageRef={uploadImageRef}
                       handleCanvasOn={handleCanvasOn}
+                      allCanvasRef={allCanvasRef}
                     />
                   ) : (
                     <TemplateCanvas
@@ -450,6 +457,7 @@ function WorkingSpace({ preview, addWindow, removePageRef, canvasDivRef }) {
                       addTextRef={addTextRef}
                       uploadImageRef={uploadImageRef}
                       handleCanvasOn={handleCanvasOn}
+                      allCanvasRef={allCanvasRef}
                     />
                   )}
                 </PageCanvasContainer>

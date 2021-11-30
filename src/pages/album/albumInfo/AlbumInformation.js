@@ -12,12 +12,20 @@ const AlbumOwnerName = styled.div`
   font-weight: bold;
   font-size: 30px;
   line-height: 40px;
+  @media (max-width: 750px) {
+    font-size: 20px;
+    line-height: 27px;
+  }
 `;
 
 const AlbumDate = styled.div`
   margin-left: 5px;
   font-size: 22px;
   line-height: 40px;
+  @media (max-width: 750px) {
+    font-size: 14px;
+    line-height: 27px;
+  }
 `;
 
 export default function AlbumInformation({ ownerData, albumData }) {

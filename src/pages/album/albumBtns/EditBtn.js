@@ -26,6 +26,12 @@ const ButtonStyle = styled.div`
     height: 80px;
     font-size: 36px;
   }
+  @media (max-width: 800px) {
+    margin: 15px 10px 0;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
   :hover {
     box-shadow: 0px 0px 22px #d0d0d0;
   }

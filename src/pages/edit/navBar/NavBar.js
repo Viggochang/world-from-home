@@ -62,7 +62,7 @@ const LogoutStyle = {
   height: "50px",
 };
 
-export default function NavBar({ saveAlertRef, saveEditing }) {
+export default function NavBar({ saveAlertRef, saveEditing, saveCanvasToImg }) {
   const myInfo = useSelector((state) => state.userInfo);
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const dispatch = useDispatch();
@@ -71,6 +71,7 @@ export default function NavBar({ saveAlertRef, saveEditing }) {
   async function handleMyPage(e, albumId) {
     saveAlertRef.current.style.zIndex = 5;
     await saveEditing(albumId);
+    await saveCanvasToImg(albumId);
     dispatch({
       type: "DISCARD_CANVAS_EDIT",
       payload: "",
@@ -81,6 +82,7 @@ export default function NavBar({ saveAlertRef, saveEditing }) {
   async function handleHome(e, albumId) {
     saveAlertRef.current.style.zIndex = 5;
     await saveEditing(albumId);
+    await saveCanvasToImg(albumId);
     dispatch({
       type: "DISCARD_CANVAS_EDIT",
       payload: "",
@@ -91,6 +93,7 @@ export default function NavBar({ saveAlertRef, saveEditing }) {
   async function handleSaveLogout(e, albumId, logout) {
     saveAlertRef.current.style.zIndex = 5;
     await saveEditing(albumId);
+    await saveCanvasToImg(albumId);
     dispatch({
       type: "DISCARD_CANVAS_EDIT",
       payload: "",

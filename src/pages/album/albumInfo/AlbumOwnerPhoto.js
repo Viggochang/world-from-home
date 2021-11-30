@@ -12,6 +12,10 @@ const AlbumOwnerPhotoDiv = styled.div`
   background-image: url(${(props) => props.photo});
   background-size: cover;
   background-position: center;
+  @media (max-width: 750px) {
+    width: 50px;
+    height: 50px;
+  }
 `;
 
 export default function AlbumOwnerPhoto({ ownerData }) {

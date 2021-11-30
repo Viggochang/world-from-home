@@ -57,6 +57,7 @@ export default function SlideShow({
   addTextRef,
   uploadImageRef,
   handleCanvasOn,
+  allCanvasRef,
 }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -89,6 +90,7 @@ export default function SlideShow({
         addTextRef={addTextRef}
         uploadImageRef={uploadImageRef}
         handleCanvasOn={handleCanvasOn}
+        allCanvasRef={allCanvasRef}
       />
       <ButtonDiv>
         <LeftBtn onClick={handleLeft}>

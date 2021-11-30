@@ -1,4 +1,3 @@
-// to-do 相片上傳依使用者分資料夾
 import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -35,8 +34,6 @@ const UploadImgDiv = styled.div`
 `;
 
 const ImgInputLabel = styled.label`
-  /* width: 200px;
-  height: 50px; */
   font-size: 20px;
   cursor: pointer;
 `;
@@ -88,79 +85,6 @@ export default function UploadImage({
     if (Object.keys(activeCanvas).length) {
       activeCanvas.discardActiveObject().renderAll();
     }
-    // dispatch({
-    //   type: "SET_ACTIVE_CANVAS",
-    //   payload: canvas[id],
-    // });
-
-    // const newImg = new Image();
-    // // newImg.crossOrigin = "Anonymous";
-    // // const newImg = document.createElement("img");
-    // // newImg.crossOrigin = "Anonymous"; // 讓圖片能讓所有人存取
-    // newImg.src = url;
-    // newImg.onload = () => {
-    //   let imgObj = new fabric.Image(newImg);
-    //   // const scale = Math.max(
-    //   //   ...[canvi.height / imgObj.height, canvi.width / imgObj.width]
-    //   // );
-
-    //   fabric.util.loadImage(
-    //     url,
-    //     function (img) {
-    //       var imgObj = new fabric.Image(img);
-    //       const scale = Math.max(
-    //         ...[canvi.height / imgObj.height, canvi.width / imgObj.width]
-    //       );
-    //       imgObj.set({
-    //         scaleX: scale,
-    //         scaleY: scale,
-    //       });
-    //       imgObj.setControlsVisibility({
-    //         mt: false,
-    //         mb: false,
-    //         ml: false,
-    //         mr: false,
-    //       });
-    //       canvas.add(imgObj);
-    //       canvi.sendToBack(imgObj);
-    //       canvas.renderAll();
-    //     },
-    //     { left: 0, top: 0 }
-    //   );
-
-    //   // imgObj.set({
-    //   //   scaleX: scale,
-    //   //   scaleY: scale,
-    //   // });
-    //   // imgObj.setControlsVisibility({
-    //   //   mt: false,
-    //   //   mb: false,
-    //   //   ml: false,
-    //   //   mr: false,
-    //   // });
-    //   // canvi.add(imgObj);
-    //   // canvi.sendToBack(imgObj);
-    //   // canvi.renderAll();
-
-    //   const record = {};
-    //   record[canvi.lowerCanvasEl.id] = canvasState[canvi.lowerCanvasEl.id];
-    //   const stateChange = {};
-    //   stateChange[canvi.lowerCanvasEl.id] = JSON.stringify(canvi.toJSON());
-
-    //   dispatch({
-    //     type: "UNDO",
-    //     payload: [...editUndo, record],
-    //   });
-    //   dispatch({
-    //     type: "SET_CANVAS_STATE",
-    //     payload: stateChange,
-    //   });
-    //   // dispatch({
-    //   //   type: "SET_ACTIVE_OBJ",
-    //   //   payload: canvi.getActiveObject(),
-    //   // });
-    // };
-
     fabric.util.loadImage(
       url,
       function (img) {

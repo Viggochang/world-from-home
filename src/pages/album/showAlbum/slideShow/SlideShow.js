@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { cavasStyle } from "../../../../util/myTemplate";
+
 const CanvasContainer = styled.div`
   position: absolute;
   transition: opacity 1s;
 `;
-
-const MyCanvas = styled.canvas``;
+const CanvasImg = styled.img`
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
+  @media (max-width: 1200px) {
+    width: ${(props) => Number(props.width) / 12}vw;
+    height: ${(props) => Number(props.height) / 12}vw;
+  }
+`;
 
 const ButtonDiv = styled.div`
   width: 100%;
@@ -45,9 +53,9 @@ const RightBtn = styled(BtnStyle)`
 
 export default function SlideShow({
   canvasDivRef,
-  allCanvasRef,
   page,
   canvasCount,
+  completeCanvas,
 }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -84,7 +92,10 @@ export default function SlideShow({
 
   return (
     <>
-      {Array.from(new Array(canvasCount).keys()).map((id) => {
+      {Array.from(new Array(canvasCount).keys()).map((id, index) => {
+        const { height, width } = Object.values(cavasStyle["slide_show_1"])[
+          index
+        ];
         return (
           <CanvasContainer
             ref={(el) =>
@@ -93,11 +104,11 @@ export default function SlideShow({
             key={`preview-page${page}-canvas${id}`}
             tabIndex="0"
           >
-            <MyCanvas
-              id={`preview-page${page}-canvas${id}`}
-              ref={(el) =>
-                (allCanvasRef.current[`preview-page${page}-canvas${id}`] = el)
-              }
+            <CanvasImg
+              src={completeCanvas[`page${page}-canvas${id}`]}
+              alt={`page${page}-canvas${id}`}
+              height={height}
+              width={width}
             />
           </CanvasContainer>
         );

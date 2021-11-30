@@ -152,6 +152,11 @@ function updateAlbum(albumId, body) {
 function updateTouristSpot(spotId, body) {
   return db_tourist_spot.doc(spotId).update(body);
 }
+function updateCompleteCanvas(albumId, data) {
+  return db_gallery.doc(albumId).update({
+    completeCanvas: firebase.firestore.FieldValue.arrayUnion(data),
+  });
+}
 
 function deleteAlbum(albumId) {
   return db_gallery.doc(albumId).delete();
@@ -187,6 +192,7 @@ export {
   updateAlbum,
   updateUser,
   updateTouristSpot,
+  updateCompleteCanvas,
   deleteAlbum,
   deleteTouristSpot,
 };

@@ -6,6 +6,13 @@ const AlbumPraiseDiv = styled.div`
   line-height: 40px;
   margin: auto calc(50% - 400px) 0 auto;
   color: white;
+  @media (max-width: 1200px) {
+    margin-right: calc((33.33vw - 200px) / 2);
+  }
+  @media (max-width: 750px) {
+    font-size: 14px;
+    line-height: 27px;
+  }
 `;
 
 export default function AlbumPraise({ praise }) {

@@ -242,6 +242,7 @@ export default function AlbumQuestion() {
         country: targetCountry.id,
         praise: [],
         condition: "pending",
+        completeCanvas: {},
       };
       await updateAlbum(albumIdEditing, body);
       QuestionRef.current.style.display = "none";

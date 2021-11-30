@@ -5,16 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { Alert, Stack } from "@mui/material";
+import Compressor from "compressorjs";
 
-import { getAlbumIsExist, updateAlbum } from "../../util/firebase";
+import { getAlbumIsExist, updateAlbum, storage } from "../../util/firebase";
 import { allTemplate } from "../../util/myTemplate";
 
 import NavBar from "./navBar/NavBar";
 import EditBar from "./editBar/EditBar";
 import ToolBar from "./toolBar/ToolBar";
-
 import WorkingSpace from "./workingSpace/WorkingSpace";
-
 import AlbumQuestion from "./albumQuestion/AlbumQuestion";
 import CompleteQuestion from "./completeQuestion/CompleteQuestion";
 import ToolContainer from "./toolContainer/ToolContainer";
@@ -51,11 +50,13 @@ function EditSpace() {
   const targetCountry = useSelector((state) => state.targetCountry);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
+  const userInfo = useSelector((state) => state.userInfo);
 
   const saveAlertRef = useRef();
   const completeQuestionRef = useRef();
   const removePageRef = useRef([]);
   const canvasDivRef = useRef({});
+  const allCanvasRef = useRef({});
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -112,6 +113,74 @@ function EditSpace() {
     return updateAlbum(albumId, body);
   }
 
+  function saveCanvasToImg(albumId) {
+    function dataURItoBlob(dataURI) {
+      let byteString;
+      if (dataURI.split(",")[0].indexOf("base64") >= 0)
+        byteString = atob(dataURI.split(",")[1]);
+      else byteString = unescape(dataURI.split(",")[1]);
+
+      let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+
+      let ia = new Uint8Array(byteString.length);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      return new Blob([ia], { type: mimeString });
+    }
+
+    function handleUploadImg(img, canvasId, callback) {
+      return new Promise((resolve, reject) => {
+        new Compressor(img, {
+          quality: 0.6,
+          maxWidth: 2048,
+          maxHeight: 2048,
+          success(result) {
+            // Send the compressed image file to server with XMLHttpRequest.
+            async function putImgToStorage() {
+              const metadata = { contentType: result.type };
+              const storageRef = storage.ref(
+                `user_album/${userInfo.id}/albums/${albumId}/complete_${canvasId}`
+              );
+              await storageRef.put(result, metadata);
+              const imageUrl = await storageRef.getDownloadURL();
+              callback(imageUrl);
+              // updateCompleteCanvas(albumIdEditing, imageUrl);
+            }
+            putImgToStorage();
+            resolve();
+          },
+          error(err) {
+            console.log(err.message);
+            reject();
+          },
+        });
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      const body = {};
+      let promises = [];
+      Object.entries(allCanvasRef.current).forEach(
+        ([canvasId, canvasEl], index) => {
+          console.log(index);
+          promises.push(
+            handleUploadImg(
+              dataURItoBlob(canvasEl.toDataURL()),
+              canvasId,
+              (imageUrl) => {
+                body[canvasId] = imageUrl;
+                updateAlbum(albumId, { completeCanvas: body });
+              }
+            )
+          );
+        }
+      );
+      Promise.all(promises).then(resolve());
+    });
+  }
+
   return (
     <div>
       <AlbumQuestion />
@@ -133,7 +202,11 @@ function EditSpace() {
         </Stack>
       </AlertDiv>
 
-      <NavBar saveAlertRef={saveAlertRef} saveEditing={saveEditing} />
+      <NavBar
+        saveAlertRef={saveAlertRef}
+        saveEditing={saveEditing}
+        saveCanvasToImg={saveCanvasToImg}
+      />
       <EditBar
         preview={preview}
         setPreview={setPreview}
@@ -142,6 +215,8 @@ function EditSpace() {
         saveEditing={saveEditing}
         saveAlertRef={saveAlertRef}
         completeQuestionRef={completeQuestionRef}
+        allCanvasRef={allCanvasRef}
+        saveCanvasToImg={saveCanvasToImg}
       />
 
       <ContainerDiv>
@@ -156,6 +231,7 @@ function EditSpace() {
           addWindow={addWindow}
           removePageRef={removePageRef}
           canvasDivRef={canvasDivRef}
+          allCanvasRef={allCanvasRef}
         />
       </ContainerDiv>
     </div>

@@ -185,92 +185,79 @@ function slideShow(templateObjStyle, preview = false) {
   };
 }
 
+const cavasStyle = {
+  full_1: { c: { height: 230, width: 800 } },
+  full_2: { c: { height: 600, width: 800 } },
+  "3a": {
+    c1: { height: 240, width: 300 },
+    c2: { height: 240, width: 190 },
+    c3: { height: 150, width: 500 },
+  },
+  "4a": {
+    c1: { height: 195, width: 245 },
+    c2: { height: 195, width: 245 },
+    c3: { height: 195, width: 245 },
+    c4: { height: 195, width: 245 },
+  },
+  "4b": {
+    c1: { height: 240, width: 300 },
+    c2: { height: 240, width: 190 },
+    c3: { height: 150, width: 190 },
+    c4: { height: 150, width: 300 },
+  },
+  photoText_1: {
+    c1: { height: 100, width: 500 },
+    c2: { height: 290, width: 500 },
+  },
+  photoText_2: {
+    c1: { height: 290, width: 500 },
+    c2: { height: 100, width: 500 },
+  },
+  photoText_3: {
+    c1: { height: 400, width: 220 },
+    c2: { height: 400, width: 270 },
+  },
+  photoText_4: {
+    c1: { height: 400, width: 270 },
+    c2: { height: 400, width: 220 },
+  },
+  photoText_5: {
+    c1: { height: 160, width: 160 },
+    c2: { height: 160, width: 160 },
+    c3: { height: 160, width: 160 },
+    c4: { height: 80, width: 160 },
+    c5: { height: 80, width: 160 },
+    c6: { height: 80, width: 160 },
+  },
+  text_1: {
+    c: { height: 100, width: 500 },
+  },
+  slide_show_1: {
+    c1: { height: 230, width: 800 },
+    c2: { height: 230, width: 800 },
+    c3: { height: 230, width: 800 },
+  },
+};
+
 const allTemplateParams = (preview) => ({
-  full_1: FullCanvas(
-    {
-      c: { height: 230, width: 800 },
-    },
-    preview
-  ),
-  full_2: FullCanvas(
-    {
-      c: { height: 600, width: 800 },
-    },
-    preview
-  ),
-  "3a": CompositionCanvas(
-    {
-      c1: { height: 240, width: 300 },
-      c2: { height: 240, width: 190 },
-      c3: { height: 150, width: 500 },
-    },
-    preview
-  ),
-  "4a": CompositionCanvas(
-    {
-      c1: { height: 195, width: 245 },
-      c2: { height: 195, width: 245 },
-      c3: { height: 195, width: 245 },
-      c4: { height: 195, width: 245 },
-    },
-    preview
-  ),
-  "4b": CompositionCanvas(
-    {
-      c1: { height: 240, width: 300 },
-      c2: { height: 240, width: 190 },
-      c3: { height: 150, width: 190 },
-      c4: { height: 150, width: 300 },
-    },
-    preview
-  ),
-  photoText_1: PhotoTextCanvas(
-    { c1: { height: 100, width: 500 }, c2: { height: 290, width: 500 } },
-    0,
-    preview
-  ),
-  photoText_2: PhotoTextCanvas(
-    { c1: { height: 290, width: 500 }, c2: { height: 100, width: 500 } },
-    1,
-    preview
-  ),
-  photoText_3: PhotoTextCanvas(
-    { c1: { height: 400, width: 220 }, c2: { height: 400, width: 270 } },
-    0,
-    preview
-  ),
-  photoText_4: PhotoTextCanvas(
-    { c1: { height: 400, width: 270 }, c2: { height: 400, width: 220 } },
-    1,
-    preview
-  ),
-  photoText_5: PhotoTextCanvas(
-    {
-      c1: { height: 160, width: 160 },
-      c2: { height: 160, width: 160 },
-      c3: { height: 160, width: 160 },
-      c4: { height: 80, width: 160 },
-      c5: { height: 80, width: 160 },
-      c6: { height: 80, width: 160 },
-    },
-    2,
-    preview
-  ),
+  full_1: FullCanvas(cavasStyle["full_1"], preview),
+  full_2: FullCanvas(cavasStyle["full_2"], preview),
+  "3a": CompositionCanvas(cavasStyle["3a"], preview),
+  "4a": CompositionCanvas(cavasStyle["4a"], preview),
+  "4b": CompositionCanvas(cavasStyle["4b"], preview),
+  photoText_1: PhotoTextCanvas(cavasStyle["photoText_1"], 0, preview),
+  photoText_2: PhotoTextCanvas(cavasStyle["photoText_2"], 1, preview),
+  photoText_3: PhotoTextCanvas(cavasStyle["photoText_3"], 0, preview),
+  photoText_4: PhotoTextCanvas(cavasStyle["photoText_4"], 1, preview),
+  photoText_5: PhotoTextCanvas(cavasStyle["photoText_5"], 2, preview),
   text_1: text(
     {
-      c: { height: 100, width: 500 },
+      ...cavasStyle["text_1"],
       t1: { height: 100, width: 500, fontSize: 15 },
     },
     preview
   ),
-  slide_show_1: slideShow(
-    {
-      c1: { height: 230, width: 800 },
-      c2: { height: 230, width: 800 },
-      c3: { height: 230, width: 800 },
-    },
-    preview
-  ),
+  slide_show_1: slideShow(cavasStyle["slide_show_1"], preview),
 });
 
 const allTemplate = {
@@ -314,4 +301,4 @@ const allTemplate = {
   },
 };
 
-export { templateStyle, allTemplateParams, allTemplate };
+export { templateStyle, allTemplateParams, cavasStyle, allTemplate };
