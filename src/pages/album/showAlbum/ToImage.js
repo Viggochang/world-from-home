@@ -31,12 +31,19 @@ const saveAs = (blob, fileName) => {
   elem.remove();
 };
 
-export default function ToImage({ albumRef }) {
-  function handleToImage(e) {
-    htmlToImage.toPng(e.target).then((dataUrl) => {
-      // saveAs(dataUrl, "my-node.png");
-      console.log(dataUrl);
+export default function ToImage({ allCanvas }) {
+  function handleToImage() {
+    Object.values(allCanvas).forEach((canvasEl, index) => {
+      console.log(index, canvasEl);
+      // console.log(canvasEl.toDataURL());
+      // canvasEl.get(0).toBlob(function (blob) {
+      //   saveAs(blob, `myIMG_${index}.png`);
+      // });
     });
+    // htmlToImage.toPng(e.target).then((dataUrl) => {
+    //   // saveAs(dataUrl, "my-node.png");
+    //   console.log(dataUrl);
+    // });
   }
 
   return <ToImageDiv onClick={handleToImage}>to img</ToImageDiv>;

@@ -359,7 +359,7 @@ export default function AlbumQuestion() {
           </QuestionDiv>
         </Form>
         <ButtonsDiv>
-          <AlbumQuestionBtn content={"Cancel"} onClick={handleBack} />
+          <AlbumQuestionBtn content="Cancel" onClick={handleBack} />
           <AlbumQuestionBtn
             content={newAlbum ? "Start" : "Continue"}
             onClick={handleStartEdit}

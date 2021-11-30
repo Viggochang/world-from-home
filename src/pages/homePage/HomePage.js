@@ -144,7 +144,7 @@ export default function HomePage({ mapType, setMapType }) {
       <SigninDiv signinRef={signinRef} />
       <MyTooltip
         style={{ fontSize: 14, opacity: 0.9 }}
-        title={"Log out"}
+        title="Log out"
         placement="left"
         content={
           <LogoutDiv mapType={mapType.toString()}>

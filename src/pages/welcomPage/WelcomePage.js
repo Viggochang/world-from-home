@@ -112,7 +112,7 @@ export default function WelcomePage() {
         </Quote>
 
         <ButtonsDiv>
-          <WelcomePageBtn content={"Sign in"} onClick={handleSignIn} />
+          <WelcomePageBtn content="Sign in" onClick={handleSignIn} />
           <WelcomePageBtn
             content={
               signIn ? (

@@ -43,7 +43,12 @@ const RightBtn = styled(BtnStyle)`
   padding-left: 5px;
 `;
 
-export default function SlideShow({ canvasDivRef, page, canvasCount }) {
+export default function SlideShow({
+  canvasDivRef,
+  allCanvasRef,
+  page,
+  canvasCount,
+}) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
@@ -88,7 +93,12 @@ export default function SlideShow({ canvasDivRef, page, canvasCount }) {
             key={`preview-page${page}-canvas${id}`}
             tabIndex="0"
           >
-            <MyCanvas id={`preview-page${page}-canvas${id}`} />
+            <MyCanvas
+              id={`preview-page${page}-canvas${id}`}
+              ref={(el) =>
+                (allCanvasRef.current[`preview-page${page}-canvas${id}`] = el)
+              }
+            />
           </CanvasContainer>
         );
       })}

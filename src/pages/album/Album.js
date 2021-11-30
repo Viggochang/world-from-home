@@ -12,6 +12,7 @@ import LikeBtn from "./albumBtns/LikeBtn";
 import FriendBtn from "./albumBtns/FriendBtn";
 import EditBtn from "./albumBtns/EditBtn";
 import DeleteBtn from "./albumBtns/DeleteBtn";
+import ToImage from "./showAlbum/ToImage";
 
 import AlbumOwnerPhoto from "./albumInfo/AlbumOwnerPhoto";
 import AlbumInformation from "./albumInfo/AlbumInformation";
@@ -77,6 +78,7 @@ export default function Album() {
   const [praise, setPraise] = useState(0);
   const [isMyAlbum, setIsMyAlbum] = useState(false);
   const albumRef = useRef();
+  const allCanvasRef = useRef({});
 
   const id = new URLSearchParams(window.location.search).get("album_id_show");
 
@@ -113,6 +115,7 @@ export default function Album() {
     dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
     setAlbumData({});
     setOwnerData({});
+    allCanvasRef.current = {};
 
     let params = new URL(window.location).searchParams;
     params.delete("album_id_show");
@@ -149,6 +152,7 @@ export default function Album() {
             handleClickBack={handleClickBack}
             isMyAlbum={isMyAlbum}
           />
+          <ToImage allCanvas={allCanvasRef.current} />
         </ButtonsDiv>
       )}
 
@@ -159,9 +163,9 @@ export default function Album() {
       </AlbumInfoDiv>
 
       <ShowAlbum
-        show={true}
         albumContent={albumData.content}
         albumRef={albumRef}
+        allCanvasRef={allCanvasRef}
       />
     </AlbumDiv>
   );

@@ -221,10 +221,10 @@ export default function UserPage() {
           </AlbumFriendBtnsDiv>
 
           {activeButton === "Albums" ? (
-            <PersonalAlbum title={"Albums"} id={userInfo.id} isMyPage={false} />
+            <PersonalAlbum title="Albums" id={userInfo.id} isMyPage={false} />
           ) : (
             <PersonalFriends
-              title={"Friends"}
+              title="Friends"
               userInfo={userInfo}
               isMyPage={false}
             />

@@ -345,8 +345,8 @@ export default function CompleteQuestion({
           </Question>
         </Form>
         <Buttons>
-          <AlbumQuestionBtn content={"Back"} onClick={handleCancel} />
-          <AlbumQuestionBtn content={"Complete"} onClick={handleSubmit} />
+          <AlbumQuestionBtn content="Back" onClick={handleCancel} />
+          <AlbumQuestionBtn content="Complete" onClick={handleSubmit} />
         </Buttons>
       </CompleteQuestionContainer>
     </CompleteQuestionDiv>

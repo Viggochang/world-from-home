@@ -56,7 +56,7 @@ export default function EditBtn({ albumIdShow, albumCountry, isMyAlbum }) {
   return (
     <MyTooltip
       style={{ fontSize: 18, opacity: 0.9 }}
-      title={"Edit"}
+      title="Edit"
       placement="left"
       content={
         <ButtonStyle isMyAlbum={isMyAlbum.toString()} onClick={handleEdit}>

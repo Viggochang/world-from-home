@@ -131,12 +131,12 @@ export default function CountryAlbums({ signinRef }) {
               })}
             <AlbumHere>
               <AlbumAdd>
-                <AddAlbumBtn onClick={handleToEdit} fontSize={"28px"} />
+                <AddAlbumBtn onClick={handleToEdit} fontSize="28px" />
               </AlbumAdd>
             </AlbumHere>
           </AlbumDiv>
         ) : (
-          <AddAlbumBtn onClick={handleToEdit} fontSize={"36px"} />
+          <AddAlbumBtn onClick={handleToEdit} fontSize="36px" />
         )}
       </GalleryBackgroundDiv>
     </>

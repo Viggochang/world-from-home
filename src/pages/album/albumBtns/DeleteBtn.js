@@ -55,7 +55,7 @@ export default function DeleteBtn({ albumIdShow, handleClickBack, isMyAlbum }) {
   return (
     <MyTooltip
       style={{ fontSize: 18, opacity: 0.9 }}
-      title={"Delete"}
+      title="Delete"
       placement="left"
       content={
         <ButtonStyle isMyAlbum={isMyAlbum.toString()} onClick={handleDelete}>

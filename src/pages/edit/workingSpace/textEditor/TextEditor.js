@@ -219,7 +219,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
           min={1}
           max={120}
           step={1}
-          type={"fontSize"}
+          type="fontSize"
           handleFontStyleChange={handleFontStyleChange}
         />
       </FontSizeDiv>
@@ -230,7 +230,7 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
           min={0.5}
           max={2}
           step={0.1}
-          type={"lineHeight"}
+          type="lineHeight"
           handleFontStyleChange={handleFontStyleChange}
         />
       </LineHeightDiv>

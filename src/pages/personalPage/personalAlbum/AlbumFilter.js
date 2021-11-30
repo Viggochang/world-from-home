@@ -71,7 +71,7 @@ export default function AlbumFilter({
             }}
             onChange={(e) => handleSetState(e, setAlbumCountry)}
           >
-            <MenuItem value={"All"} sx={{ color: "#3a4a58" }}>
+            <MenuItem value="All" sx={{ color: "#3a4a58" }}>
               All
             </MenuItem>
 

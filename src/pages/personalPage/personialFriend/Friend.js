@@ -143,20 +143,21 @@ export default function Friend({ friend: friendInfo, request, isMyPage }) {
       <FriendInfo>
         <FriendName onClick={handleQueryUserId}>{friendInfo.name}</FriendName>
         <FriendCountry>
-          <i className="fas fa-globe" />{" "}
+          <i className="fas fa-globe" />
+          &ensp;
           {friendInfo.country ? countryTrans[friendInfo.country].name_en : ""}
         </FriendCountry>
         {isMyPage && (
           <AcceptRemoveBtnsDiv>
             {request && (
               <FriendAcceptRemoveBtn
-                content={"accept"}
+                content="accept"
                 innerRef={acceptRef}
                 onClick={(e) => handleAcceptRemove(e, "get_request")}
               />
             )}
             <FriendAcceptRemoveBtn
-              content={"remove"}
+              content="remove"
               innerRef={removeRef}
               onClick={(e) =>
                 swalRemoveFriend(() => handleAcceptRemove(e, "confirmed"))

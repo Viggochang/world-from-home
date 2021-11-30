@@ -77,7 +77,8 @@ export default function AlbumInfo({ album }) {
       </AlbumPosition>
       <AlbumIntroduction>{album.introduction}</AlbumIntroduction>
       <AlbumDate>
-        <i className="far fa-calendar-alt" />{" "}
+        <i className="far fa-calendar-alt" />
+        &ensp;
         {new Date(album.timestamp.seconds * 1000).toDateString()}
       </AlbumDate>
       <AlbumPraise>

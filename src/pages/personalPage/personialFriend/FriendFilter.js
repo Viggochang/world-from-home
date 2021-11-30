@@ -106,7 +106,7 @@ export default function FriendFilter({
       {isMyPage && (
         <MyTooltip
           style={{ fontSize: 14, opacity: 0.7 }}
-          title={"Friend Requests"}
+          title="Friend Requests"
           placement="left"
           content={
             <RequestBtn

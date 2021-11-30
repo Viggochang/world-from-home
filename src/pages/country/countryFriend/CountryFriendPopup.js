@@ -114,13 +114,12 @@ export default function CountryFriendPopup({ popupRef, friendHere }) {
   return (
     <PopupDiv ref={popupRef}>
       <ContentDiv>
-        {" "}
         <BackDiv onClick={handleClickBack}>
           <i className="fas fa-times-circle" />
         </BackDiv>
         <CaptainTitleDiv>
           <i className="fas fa-users" />
-          &ensp;{`Friends`}
+          &ensp;Friends
         </CaptainTitleDiv>
         <FriendContainer>
           {friendHereInfo.map((friend, index) => (

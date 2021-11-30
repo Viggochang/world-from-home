@@ -164,8 +164,8 @@ export default function CountryInfoPopup({
             <>
               <ClockText>
                 <div>
-                  {localTime.toDateString().slice(4)} &ensp;{" "}
-                  {localTime.toTimeString().split("GMT")[0]}{" "}
+                  {localTime.toDateString().slice(4)} &ensp;
+                  {localTime.toTimeString().split("GMT")[0]}
                 </div>
               </ClockText>
               <ClockStyle value={localTime} />
