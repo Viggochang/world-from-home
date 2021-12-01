@@ -58,7 +58,7 @@ const moreInfoBtnTheme = createTheme({
 });
 const signInBtnTheme = createTheme({
   ...primaryPaletteTheme,
-  shape: { borderRadius: 15 },
+  shape: { borderRadius: 18 },
   typography: {
     button: {
       fontSize: 14,

@@ -1,7 +1,10 @@
 # <img width="60px" src="src/image/favicon.png"/> World from Home
-> A photo editor which makes it easy for users to arrange photos from traveling and share their wonderful albums to others.
+> An album editor which makes it easy for users to arrange photos from traveling and share their wonderful albums with the community.
 ## Introduction 
-
++ Present the traveling trends on the map.
++ Label the countries you've been to your personal world map.
++ Create your onw distinguishing and gorgeous albums using the album editor, and see the ones from others as well. 
++ Establish friendship to other menbers.
 
 ## Link
 Website Link: <https://world-from-home.web.app/><br/>
@@ -39,7 +42,7 @@ Please login with your google account for full experiences.
   + Unit Test: Jest
 
 ## Flow Chart
-
+<img src="src/image/README/userFlow.jpeg"/>
 
 ## Demo
 ### World Map Section 

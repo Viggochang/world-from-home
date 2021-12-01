@@ -81,13 +81,15 @@ const FriendPhoto = styled.div`
 const FriendInfo = styled.div`
   display: flex;
   flex-direction: column;
+  width: calc(100% - 100px);
 `;
 
-const FriendName = styled.div`
+const FriendNameDiv = styled.div`
   color: white;
   font-size: 36px;
   line-height: 50px;
   font-weight: bold;
+  overflow: scroll;
 `;
 
 const FriendCountry = styled.div`
@@ -134,7 +136,9 @@ export default function CountryFriendPopup({ popupRef, friendHere }) {
                 }}
               />
               <FriendInfo>
-                <FriendName>{friend.name}</FriendName>
+                <FriendNameDiv>
+                  <div>{friend.name}</div>
+                </FriendNameDiv>
                 <FriendCountry>
                   <i className="fas fa-globe" />
                   &ensp;{countryTrans[friend.country].name_en}

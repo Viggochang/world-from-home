@@ -38,9 +38,9 @@ const GalleryQuestionContainer = styled.div`
 
   background-color: #b8c3d0;
   width: 45vmin;
-  height: 75vmin;
+  /* height: 800px; */
   margin: auto;
-  padding: 60px 100px 40px;
+  padding: 50px 100px 40px;
   z-index: 5;
   box-shadow: 0px 0px 5px 1px #d0d0d0;
   position: relative;
@@ -150,7 +150,7 @@ const TextFieldDiv = styled.div`
 
 const Inputdiv = styled.input`
   color: #3a4a58;
-  width: 240px;
+  width: 100%;
   :focus {
     outline: none;
   }

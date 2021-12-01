@@ -140,11 +140,18 @@ const TouristSpotDiv = styled.div`
   padding: 10px;
   margin-top: 30px;
   width: 100%;
-  height: calc(100% - 350px);
+  height: 15vmin;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  overflow-y: scroll;
+  overflow: scroll;
+`;
+
+const TouristSpotInnerDiv = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
 `;
 
 const TouristSpotTag = styled.div`
@@ -333,14 +340,16 @@ export default function CompleteQuestion({
               </label>
             </CoverPhotoDiv>
             <TouristSpotDiv ref={touristSpotRef}>
-              {touristSpot.map((spot, index) => (
-                <TouristSpotTag key={index}>
-                  {spot.text}&ensp;
-                  <RemoveTag onClick={() => removeTag(spot)}>
-                    <i className="fas fa-times" />
-                  </RemoveTag>
-                </TouristSpotTag>
-              ))}
+              <TouristSpotInnerDiv>
+                {touristSpot.map((spot, index) => (
+                  <TouristSpotTag key={index}>
+                    {spot.text}&ensp;
+                    <RemoveTag onClick={() => removeTag(spot)}>
+                      <i className="fas fa-times" />
+                    </RemoveTag>
+                  </TouristSpotTag>
+                ))}
+              </TouristSpotInnerDiv>
             </TouristSpotDiv>
           </Question>
         </Form>

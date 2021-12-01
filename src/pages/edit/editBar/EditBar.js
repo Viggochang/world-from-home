@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Compressor from "compressorjs";
 
 import { EditBtn } from "../../../util/muiButton";
 
@@ -18,7 +17,6 @@ import {
   updateAlbum,
   getTouristSpotByAlbumId,
   updateTouristSpot,
-  storage,
 } from "../../../util/firebase";
 
 const TitleBarDiv = styled.div`

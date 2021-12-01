@@ -24,6 +24,7 @@ const InfoFriendDiv = styled.div`
     margin: 0;
   }
   @media (max-width: 600px) {
+    margin-top: 20px;
     height: auto;
     flex-direction: column;
     justify-content: flex-start;
@@ -93,6 +94,7 @@ const InfoFriendBtn = styled.div`
   @media (max-width: 968px) {
     width: 260px;
     margin: 10px 20px 0;
+    font-size: 28px;
   }
   @media (max-width: 600px) {
     width: 270px;
