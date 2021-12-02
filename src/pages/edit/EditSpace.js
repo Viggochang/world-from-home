@@ -158,13 +158,12 @@ function EditSpace() {
         });
       });
     }
-
     return new Promise((resolve, reject) => {
       const body = {};
       let promises = [];
       Object.entries(allCanvasRef.current).forEach(
         ([canvasId, canvasEl], index) => {
-          console.log(index);
+          console.log(index, canvasId, canvasEl);
           promises.push(
             handleUploadImg(
               dataURItoBlob(canvasEl.toDataURL()),
