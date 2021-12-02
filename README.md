@@ -42,7 +42,6 @@ Please login with your google account for full experiences.
   + Unit Test: Jest
 
 ## Flow Chart
-<img src="src/image/README/userFlow.jpeg"/>
 &emsp;<img src="/readme_demo/userFlow.jpeg"/>
 
 ## Demo
