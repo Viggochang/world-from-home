@@ -3,25 +3,16 @@ import "firebase/firestore";
 import "firebase/storage";
 import "firebase/auth";
 
-// const firebaseConfig = {
-//   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-//   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-//   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-//   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-//   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-//   appId: process.env.REACT_APP_FIREBASE_APP_ID,
-//   measurementId: process.env.REACT_APP_FIREBASE_APP_ID,
-// };
-
 const firebaseConfig = {
-  apiKey: "AIzaSyCl-eLi6K19lxYcyM6XNWHQLufcKXRJ3EA",
-  authDomain: "world-from-home.firebaseapp.com",
-  projectId: "world-from-home",
-  storageBucket: "world-from-home.appspot.com",
-  messagingSenderId: "774028887408",
-  appId: "1:774028887408:web:a63d032375b950ddca7bb5",
-  measurementId: "G-JZ4M2WGJKB",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTHDOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
+
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();

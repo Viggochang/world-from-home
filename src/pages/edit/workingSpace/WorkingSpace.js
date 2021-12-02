@@ -19,16 +19,28 @@ const WorkingSpaceDiv = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+  @media (max-width: 1200px) {
+    padding: 130px 0 0 112px;
+  }
+  @media (max-width: 1000px) {
+    padding: 130px 0 0 0;
+  }
 `;
 
 const WorkingSpaceDivInner = styled.div`
-  height: calc(100vh - 160px);
+  height: calc(100vh - 310px);
   width: calc(100vw - 360px);
   margin: 20px 0;
   overflow: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 1200px) {
+    width: calc(100vw - 112px);
+  }
+  @media (max-width: 1000px) {
+    width: 100vw;
+  }
 `;
 
 const PageContainer = styled.div`

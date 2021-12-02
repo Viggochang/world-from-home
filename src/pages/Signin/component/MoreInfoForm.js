@@ -15,7 +15,7 @@ import { styled as styledMui } from "@mui/styles";
 
 import { SigninEnterBtn } from "../../../util/muiButton";
 
-import { setUserDataIntoDb } from "../../../util/firebase";
+import { updateUser } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
 
 const MoreInfoFormDiv = styled.div`
@@ -111,11 +111,6 @@ export default function MoreInfoForm({
 
   function handleToWorldPage() {
     const userData = {
-      id: myUserId,
-      email: currentUser.email,
-      name: currentUser.displayName,
-      photo: currentUser.photoURL,
-      country,
       language,
       introduction,
       friends: [],
@@ -127,7 +122,7 @@ export default function MoreInfoForm({
     };
 
     async function setNewUserData() {
-      await setUserDataIntoDb(myUserId, userData);
+      await updateUser(myUserId, userData);
       signinRef.current.style.display = "none";
       history.push({ pathname: "home" });
     }

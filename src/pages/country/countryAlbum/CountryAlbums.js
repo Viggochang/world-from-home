@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+
+import MediaMessage from "../../edit/mediaMessage/MediaMessage";
 
 import {
   db_gallery,
@@ -80,27 +82,32 @@ export default function CountryAlbums({ signinRef }) {
   const [album, setAlbum] = useState([]);
   const history = useHistory();
   const dispatch = useDispatch();
+  const messageRef = useRef();
 
   function handleToEdit() {
     if (!myUserId) {
       signinRef.current.style.zIndex = 3;
     } else {
-      const newAlbumIdEditing = db_gallery.doc().id;
-      dispatch({
-        type: "SET_ALBUM_ID_EDITING",
-        payload: newAlbumIdEditing,
-      });
-
-      async function albumPending() {
-        await setAlbumDataIntoDb(newAlbumIdEditing, {
-          id: newAlbumIdEditing,
-          condition: "pending",
+      if (document.body.clientWidth > 880) {
+        const newAlbumIdEditing = db_gallery.doc().id;
+        dispatch({
+          type: "SET_ALBUM_ID_EDITING",
+          payload: newAlbumIdEditing,
         });
-        let params = new URL(window.location).searchParams;
-        params.append("album_id_edit", newAlbumIdEditing);
-        history.push({ pathname: "edit", search: params.toString() });
+
+        async function albumPending() {
+          await setAlbumDataIntoDb(newAlbumIdEditing, {
+            id: newAlbumIdEditing,
+            condition: "pending",
+          });
+          let params = new URL(window.location).searchParams;
+          params.append("album_id_edit", newAlbumIdEditing);
+          history.push({ pathname: "edit", search: params.toString() });
+        }
+        albumPending();
+      } else {
+        messageRef.current.style.display = "flex";
       }
-      albumPending();
     }
   }
 
@@ -126,6 +133,7 @@ export default function CountryAlbums({ signinRef }) {
             <AlbumHere>
               <AlbumAdd>
                 <AddAlbumBtn onClick={handleToEdit} fontSize="28px" />
+                <MediaMessage messageRef={messageRef} />
               </AlbumAdd>
             </AlbumHere>
           </AlbumDiv>

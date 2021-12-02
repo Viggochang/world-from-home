@@ -95,65 +95,11 @@ export default function EditBar({
   }
 
   function handleComplete(albumId) {
-    // function dataURItoBlob(dataURI) {
-    //   let byteString;
-    //   if (dataURI.split(",")[0].indexOf("base64") >= 0)
-    //     byteString = atob(dataURI.split(",")[1]);
-    //   else byteString = unescape(dataURI.split(",")[1]);
-
-    //   let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-
-    //   let ia = new Uint8Array(byteString.length);
-    //   for (let i = 0; i < byteString.length; i++) {
-    //     ia[i] = byteString.charCodeAt(i);
-    //   }
-
-    //   return new Blob([ia], { type: mimeString });
-    // }
-    // function handleUploadImg(img, canvasId, callback) {
-    //   new Compressor(img, {
-    //     quality: 0.6,
-    //     maxWidth: 2048,
-    //     maxHeight: 2048,
-    //     success(result) {
-    //       // Send the compressed image file to server with XMLHttpRequest.
-    //       async function putImgToStorage() {
-    //         const metadata = { contentType: result.type };
-    //         const storageRef = storage.ref(
-    //           `user_album/${
-    //             userInfo.id
-    //           }/albums/${albumIdEditing}/complete_${canvasId}_${Date.now()}`
-    //         );
-    //         await storageRef.put(result, metadata);
-    //         const imageUrl = await storageRef.getDownloadURL();
-    //         callback(imageUrl);
-    //         // updateCompleteCanvas(albumIdEditing, imageUrl);
-    //       }
-    //       putImgToStorage();
-    //     },
-    //     error(err) {
-    //       console.log(err.message);
-    //     },
-    //   });
-    // }
-
     if (Object.keys(activeCanvas).length) {
       activeCanvas.discardActiveObject().renderAll();
     }
 
     completeQuestionRef.current.style.zIndex = 5;
-
-    // const body = {};
-    // Object.entries(allCanvasRef.current).forEach(([canvasId, canvasEl]) => {
-    //   handleUploadImg(
-    //     dataURItoBlob(canvasEl.toDataURL()),
-    //     canvasId,
-    //     (imageUrl) => {
-    //       body[canvasId] = imageUrl;
-    //       updateAlbum(albumIdEditing, { completeCanvas: body });
-    //     }
-    //   );
-    // });
     saveCanvasToImg(albumId);
     handleSave(albumId);
   }

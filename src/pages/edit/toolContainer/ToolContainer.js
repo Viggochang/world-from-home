@@ -17,6 +17,18 @@ const ToolContainerDiv = styled.div`
   z-index: 1;
   box-shadow: 0px 0px 10px #8e8e8e;
   border-radius: 7px;
+  @media (max-width: 1200px) {
+    flex-direction: row;
+    width: calc(100% - 172px);
+    padding: 15px 20px;
+    height: 70px;
+    top: 140px;
+    left: 112px;
+  }
+  @media (max-width: 1000px) {
+    width: calc(100% - 440px);
+    left: 380px;
+  }
 `;
 
 const ToolContainerDivInner = styled.div`
@@ -25,6 +37,10 @@ const ToolContainerDivInner = styled.div`
   flex-direction: column;
   align-items: center;
   overflow: scroll;
+  @media (max-width: 1200px) {
+    flex-direction: row;
+    padding: 5px 0;
+  }
 `;
 
 const TemplateIcon = styled.img`
@@ -32,6 +48,10 @@ const TemplateIcon = styled.img`
   margin: 20px 0;
   box-shadow: 0px 0px 10px #667484;
   cursor: pointer;
+  @media (max-width: 1200px) {
+    margin: 0px 20px;
+    width: 80px;
+  }
 `;
 
 export default function ToolContainer({

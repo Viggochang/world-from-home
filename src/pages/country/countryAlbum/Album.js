@@ -116,7 +116,6 @@ export default function Album({ album }) {
       <AlbumInfo>
         <AlbumOwner
           photo={ownerPhoto}
-          // backgroundImg={ownerPhoto}
           onClick={() => {
             history.push({ pathname: "user", search: `?id=${album.user_id}` });
           }}

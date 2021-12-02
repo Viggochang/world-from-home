@@ -19,6 +19,9 @@ const TextEditorDiv = styled.div`
   border-top: 6px #3a4a58 solid;
   display: flex;
   flex-direction: column;
+  @media (max-width: 1200px) {
+    margin-left: 20px;
+  }
 `;
 
 const Title = styled.div`

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { SigninMediaBtn } from "../../../util/muiButton";
 
-import { getUserIsExist } from "../../../util/firebase";
+import { getUserIsExist, setUserDataIntoDb } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
 import { facebookProvider, googleProvider } from "../../../util/authMethod";
 import worldIcon from "../../../image/worldIcon/worldIcon.png";
@@ -74,6 +74,7 @@ export default function SignInForm({
 
   const handleSignin = async (provider) => {
     const res = await socialMediaAuth(provider);
+    console.log(res);
     if (res) {
       setCurrentUser(res);
       dispatch({
@@ -87,6 +88,20 @@ export default function SignInForm({
       } else {
         signInFormRef.current.style.display = "none";
         moreInfoFormRef.current.style.display = "flex";
+
+        const userData = {
+          id: res.uid,
+          email: res.email,
+          name: res.displayName,
+          photo: res.photoURL,
+          country: "TW",
+          language: "",
+          introduction: "",
+          friends: [],
+          birthday: new Date(0),
+          travel_country: [],
+        };
+        setUserDataIntoDb(res.uid, userData);
       }
     }
   };
