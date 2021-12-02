@@ -43,6 +43,7 @@ Please login with your google account for full experiences.
 
 ## Flow Chart
 <img src="src/image/README/userFlow.jpeg"/>
+&emsp;<img src="/readme_demo/userFlow.jpeg"/>
 
 ## Demo
 ### World Map Section 
