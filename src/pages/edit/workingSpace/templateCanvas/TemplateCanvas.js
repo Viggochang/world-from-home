@@ -19,22 +19,21 @@ const CanvasContainer = styled.div`
 const Loading = styled.div`
   background-image: url(${loadingUpload});
   background-position: center;
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   position: absolute;
   width: 100%;
   height: 100%;
-  max-width: 400px;
-  max-height: 300px;
   margin: auto;
   z-index: -1;
   display: flex;
 `;
 
 const LoadingText = styled.div`
+  width: 100%;
   position: absolute;
   text-align: center;
   bottom: 20%;
-  left: 35%;
 `;
 
 export default function TemplateCanvas({
