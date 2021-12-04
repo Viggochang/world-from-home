@@ -43,6 +43,7 @@ export default function UploadImage({
   id,
   uploadImageRef,
   handleCanvasOn,
+  loadingRef,
 }) {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
@@ -88,6 +89,7 @@ export default function UploadImage({
     fabric.util.loadImage(
       url,
       function (img) {
+        loadingRef.style.zIndex = -1;
         var imgObj = new fabric.Image(img);
         const scale = Math.max(
           ...[canvi.height / imgObj.height, canvi.width / imgObj.width]
@@ -137,6 +139,7 @@ export default function UploadImage({
 
   function handleUploadImg(event, canvasId) {
     const img = event.target.files[0];
+    loadingRef.style.zIndex = 1;
 
     new Compressor(img, {
       quality: 0.6,

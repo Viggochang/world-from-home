@@ -1,13 +1,40 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 
 import UploadImage from "./uploadImage/UploadImage";
 import AddText from "./AddText";
 
+import loadingUpload from "../../../../image/loading/loading_upload_photo.gif";
+
 const MyCanvas = styled.canvas``;
 
 const CanvasContainer = styled.div`
   box-shadow: 0px 0px 2px #8e8e8e;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+`;
+
+const Loading = styled.div`
+  background-image: url(${loadingUpload});
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-width: 400px;
+  max-height: 300px;
+  margin: auto;
+  z-index: -1;
+  display: flex;
+`;
+
+const LoadingText = styled.div`
+  position: absolute;
+  text-align: center;
+  bottom: 20%;
+  left: 35%;
 `;
 
 export default function TemplateCanvas({
@@ -21,6 +48,8 @@ export default function TemplateCanvas({
   handleCanvasOn,
   allCanvasRef,
 }) {
+  const loadingRef = useRef([]);
+
   function handleShowIcon(e, canvasId) {
     if (!preview) {
       addTextRef.current[canvasId].style.zIndex = 1;
@@ -57,12 +86,20 @@ export default function TemplateCanvas({
                 e.target.style.boxShadow = "0px 0px 2px #8e8e8e";
               }
             }}
-            onClick={(e) => {}}
             onMouseEnter={(e) => handleShowIcon(e, `page${page}-canvas${id}`)}
             onMouseLeave={(e) =>
               handleDisplayIcon(e, `page${page}-canvas${id}`)
             }
           >
+            <Loading
+              src={loadingUpload}
+              ref={(el) => {
+                loadingRef.current[index] = el;
+              }}
+              alt="loading"
+            >
+              <LoadingText>Loading...</LoadingText>
+            </Loading>
             <AddText
               page={page}
               id={id}
@@ -74,13 +111,14 @@ export default function TemplateCanvas({
               id={id}
               uploadImageRef={uploadImageRef}
               handleCanvasOn={handleCanvasOn}
+              loadingRef={loadingRef.current[index]}
             />
             <MyCanvas
               id={`page${page}-canvas${id}`}
               ref={(el) => {
                 allCanvasRef.current[`page${page}-canvas${id}`] = el;
               }}
-            />
+            ></MyCanvas>
           </CanvasContainer>
         );
       })}

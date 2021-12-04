@@ -1,4 +1,3 @@
-// 旅遊手記layout
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
@@ -51,6 +50,9 @@ function EditSpace() {
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
   const userInfo = useSelector((state) => state.userInfo);
+  const canvas = useSelector((state) => state.canvas);
+  const editUndo = useSelector((state) => state.editUndo);
+  const editRedo = useSelector((state) => state.editRedo);
 
   const saveAlertRef = useRef();
   const completeQuestionRef = useRef();
@@ -146,7 +148,6 @@ function EditSpace() {
               await storageRef.put(result, metadata);
               const imageUrl = await storageRef.getDownloadURL();
               callback(imageUrl);
-              // updateCompleteCanvas(albumIdEditing, imageUrl);
             }
             putImgToStorage();
             resolve();
@@ -158,26 +159,69 @@ function EditSpace() {
         });
       });
     }
+
     return new Promise((resolve, reject) => {
       const body = {};
       let promises = [];
-      Object.entries(allCanvasRef.current).forEach(
-        ([canvasId, canvasEl], index) => {
-          console.log(index, canvasId, canvasEl);
-          promises.push(
-            handleUploadImg(
-              dataURItoBlob(canvasEl.toDataURL()),
-              canvasId,
-              (imageUrl) => {
-                body[canvasId] = imageUrl;
-                updateAlbum(albumId, { completeCanvas: body });
-              }
-            )
-          );
-        }
-      );
+      Object.entries(allCanvasRef.current).forEach(([canvasId, canvasEl]) => {
+        promises.push(
+          handleUploadImg(
+            dataURItoBlob(canvasEl.toDataURL()),
+            canvasId,
+            (imageUrl) => {
+              body[canvasId] = imageUrl;
+              updateAlbum(albumId, { completeCanvas: body });
+            }
+          )
+        );
+      });
       Promise.all(promises).then(resolve());
     });
+  }
+
+  function handleEditHistory(action) {
+    const editHistory = {
+      REDO: editRedo,
+      UNDO: editUndo,
+    };
+    if (editHistory[action].length) {
+      const latestState = editHistory[action].slice(-1)[0];
+      let record = {};
+
+      if (typeof latestState === "string") {
+        const pageInfoObj = {};
+        pageInfoObj[latestState] = {
+          ...pageInfo[latestState],
+          display: pageInfo[latestState].display ? false : true,
+        };
+        dispatch({
+          type: "SET_PAGE_INFO",
+          payload: pageInfoObj,
+        });
+        record = latestState;
+      } else {
+        canvas[Object.keys(latestState)[0]].loadFromJSON(
+          Object.values(latestState)[0]
+        );
+        const activeId = Object.keys(latestState)[0];
+        record[activeId] = canvasState[activeId];
+
+        dispatch({
+          type: "SET_CANVAS_STATE",
+          payload: latestState,
+        });
+      }
+
+      dispatch({
+        type: action,
+        payload: editHistory[action].slice(0, editHistory[action].length - 1),
+      });
+
+      dispatch({
+        type: action === "REDO" ? "UNDO" : "REDO",
+        payload: [...editHistory[action === "REDO" ? "UNDO" : "REDO"], record],
+      });
+    }
   }
 
   return (
@@ -214,8 +258,8 @@ function EditSpace() {
         saveEditing={saveEditing}
         saveAlertRef={saveAlertRef}
         completeQuestionRef={completeQuestionRef}
-        allCanvasRef={allCanvasRef}
         saveCanvasToImg={saveCanvasToImg}
+        handleEditHistory={handleEditHistory}
       />
 
       <ContainerDiv>
@@ -231,6 +275,7 @@ function EditSpace() {
           removePageRef={removePageRef}
           canvasDivRef={canvasDivRef}
           allCanvasRef={allCanvasRef}
+          handleEditHistory={handleEditHistory}
         />
       </ContainerDiv>
     </div>

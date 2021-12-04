@@ -12,7 +12,6 @@ import LikeBtn from "./albumBtns/LikeBtn";
 import FriendBtn from "./albumBtns/FriendBtn";
 import EditBtn from "./albumBtns/EditBtn";
 import DeleteBtn from "./albumBtns/DeleteBtn";
-// import ToImage from "./showAlbum/ToImage";
 
 import AlbumOwnerPhoto from "./albumInfo/AlbumOwnerPhoto";
 import AlbumInformation from "./albumInfo/AlbumInformation";
@@ -23,8 +22,9 @@ const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
   height: calc(100vh - 80px);
   background-color: rgb(0, 0, 0, 0.9);
-  display: ${(props) => (props.albumIdShow ? "flex" : "none")};
-  z-index: 5;
+  display: flex;
+  z-index: ${(props) => (props.albumIdShow ? 5 : -1)};
+  opacity: ${(props) => (props.albumIdShow ? 1 : 0)};
   position: fixed;
   top: 0;
   left: 0;
@@ -88,6 +88,7 @@ export default function Album() {
   const [praise, setPraise] = useState(0);
   const [isMyAlbum, setIsMyAlbum] = useState(false);
   const albumRef = useRef();
+  const loadingRef = useRef();
 
   const id = new URLSearchParams(window.location.search).get("album_id_show");
 
@@ -98,9 +99,7 @@ export default function Album() {
       history.push({ pathname: "notfound" });
     } else {
       setAlbumData(albumData);
-      if (albumData.user_id === myInfo.id) {
-        setIsMyAlbum(true);
-      }
+      setIsMyAlbum(albumData.user_id === myInfo.id);
 
       const ownerData = await getUserDataByUid(albumData.user_id);
       setOwnerData(ownerData);
@@ -112,18 +111,21 @@ export default function Album() {
   }, [id, myInfo]);
 
   useEffect(() => {
+    let unsubscribe = () => {};
     if (albumIdShow) {
-      const unsubscribe = onSnapshotAlbumByAlbumId(albumIdShow, setPraise);
-      return () => {
-        unsubscribe();
-      };
+      unsubscribe = onSnapshotAlbumByAlbumId(albumIdShow, setPraise);
     }
+    return () => {
+      unsubscribe();
+    };
   }, [albumIdShow]);
 
   function handleClickBack() {
     dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
-    // setAlbumData({});
     setOwnerData({});
+    setAlbumData({});
+    albumRef.current.style.opacity = 0;
+    loadingRef.current.style.display = "block";
 
     let params = new URL(window.location).searchParams;
     params.delete("album_id_show");
@@ -173,6 +175,7 @@ export default function Album() {
         albumContent={albumData.content}
         completeCanvas={albumData.completeCanvas}
         albumRef={albumRef}
+        loadingRef={loadingRef}
       />
     </AlbumDiv>
   );

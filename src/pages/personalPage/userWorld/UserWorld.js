@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import World from "../../world/World";
+import World from "./World";
 
 const UserWorldDiv = styled.div`
   display: flex;

@@ -53,22 +53,20 @@ export default function PersonalFriends({ title, userInfo, isMyPage }) {
   const { id } = userInfo;
 
   useEffect(() => {
+    let unsubscribeConfirmed = () => {};
+    let unsubscribeRequest = () => {};
     if (id) {
-      const unsubscribeConfirmed = onSnapshotMyFriend(
-        id,
-        "confirmed",
-        setMyFriends
-      );
-      const unsubscribeRequest = onSnapshotMyFriend(
+      unsubscribeConfirmed = onSnapshotMyFriend(id, "confirmed", setMyFriends);
+      unsubscribeRequest = onSnapshotMyFriend(
         id,
         "send_request",
         setMyFriendRequests
       );
-      return () => {
-        unsubscribeConfirmed();
-        unsubscribeRequest();
-      };
     }
+    return () => {
+      unsubscribeConfirmed();
+      unsubscribeRequest();
+    };
   }, [id]);
 
   return (

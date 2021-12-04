@@ -127,12 +127,13 @@ export default function PersonalAlbum({ title, id, isMyPage }) {
   }, [pending]);
 
   useEffect(() => {
+    let unsubscribe = () => {};
     if (id) {
-      const unsubscribe = onSnapshotAlbumByUserId(id, setAlbumData);
-      return () => {
-        unsubscribe();
-      };
+      unsubscribe = onSnapshotAlbumByUserId(id, setAlbumData);
     }
+    return () => {
+      unsubscribe();
+    };
   }, [id]);
 
   useEffect(() => {

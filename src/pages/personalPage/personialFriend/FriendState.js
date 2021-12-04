@@ -76,19 +76,20 @@ export default function FriendState({ userInfo }) {
   }, [myFriends, userInfo.id]);
 
   function handleRequestBtn(e, type) {
-    const style = requestBtnRef.current.style;
+    const btnStyle = requestBtnRef.current.style;
     const stateText = stateTextRef.current;
     const stateChange = friendStateObj[friendState].state_change.my_state;
     if (type === "leave") {
-      style.color = friendStateObj[friendState].style.color;
-      style.backgroundColor = friendStateObj[friendState].style.backgroundColor;
-      style.outline = friendStateObj[friendState].style.outline;
+      btnStyle.color = friendStateObj[friendState].style.color;
+      btnStyle.backgroundColor =
+        friendStateObj[friendState].style.backgroundColor;
+      btnStyle.outline = friendStateObj[friendState].style.outline;
       stateText.innerText = friendStateObj[friendState].text;
       stateText.style.color = "white";
     } else if (type === "enter") {
-      style.color = friendStateObj[stateChange].style.color;
-      style.backgroundColor = friendStateObj[friendState].color_change;
-      style.outline = friendStateObj[stateChange].style.outline;
+      btnStyle.color = friendStateObj[stateChange].style.color;
+      btnStyle.backgroundColor = friendStateObj[friendState].color_change;
+      btnStyle.outline = friendStateObj[stateChange].style.outline;
       stateText.innerText = friendStateObj[friendState].text_change;
       stateText.style.color = friendStateObj[friendState].color_change;
     }

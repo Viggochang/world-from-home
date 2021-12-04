@@ -112,10 +112,11 @@ export default function CountryAlbums({ signinRef }) {
   }
 
   useEffect(() => {
+    let unsubscribe = () => {};
     if (Object.keys(targetCountry).length) {
-      const unsubscribe = onSnapshotAlbumByCountry(targetCountry.id, setAlbum);
-      return () => unsubscribe();
+      unsubscribe = onSnapshotAlbumByCountry(targetCountry.id, setAlbum);
     }
+    return () => unsubscribe();
   }, [targetCountry]);
 
   return (

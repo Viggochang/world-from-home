@@ -2,7 +2,7 @@ const friendStateObj = {
   none: {
     text: "add friend",
     text_change: "send request",
-    color_change: "#3A4A58", //green
+    color_change: "#b8c3d0", //green
     style: {
       backgroundColor: "white",
       color: "#b8c3d0",

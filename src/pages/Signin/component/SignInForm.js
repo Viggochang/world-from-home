@@ -10,17 +10,16 @@ import { facebookProvider, googleProvider } from "../../../util/authMethod";
 import worldIcon from "../../../image/worldIcon/worldIcon.png";
 
 const SignInFormDiv = styled.div`
-  display: flex; /* to-do */
+  display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
 const SignTitleDiv = styled.div`
-  font-size: 40px;
+  font-size: 50px;
   font-weight: bold;
-  line-height: 40px;
   padding: 0 30px;
-  margin-top: 80px;
+  margin-top: 100px;
   color: #3a4a58;
   display: flex;
   justify-content: center;
@@ -30,8 +29,8 @@ const SignTitleDiv = styled.div`
 const SignInBtnArea = styled.div`
   background-color: white;
   width: 220px;
-  height: 230px;
-  margin-top: 50px;
+  height: 175px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,23 +42,17 @@ const SignInBtnArea = styled.div`
 const WorldIcon = styled.div`
   background-image: url(${worldIcon});
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
-  margin-top: -10px;
-  margin-bottom: 10px;
   width: 200px;
   height: 120px;
-  border-radius: 4px;
+  border-radius: 12px;
 `;
 
 const socialMedia = [
   {
     name: "Google",
     provider: googleProvider,
-  },
-  {
-    name: "Facebook",
-    provider: facebookProvider,
   },
 ];
 
@@ -75,7 +68,7 @@ export default function SignInForm({
   const handleSignin = async (provider) => {
     const res = await socialMediaAuth(provider);
     console.log(res);
-    if (res) {
+    if (res.uid) {
       setCurrentUser(res);
       dispatch({
         type: "SET_MY_USER_ID",

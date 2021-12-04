@@ -2,10 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import Compressor from "compressorjs";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { storage } from "../../../util/firebase";
-import * as htmlToImage from "html-to-image";
 
 const ToImageDiv = styled.div`
   width: 64px;

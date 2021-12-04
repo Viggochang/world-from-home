@@ -8,6 +8,7 @@ import {
   albumFriendBtnTheme,
   signInBtnTheme,
   changeBackgroundBtnTheme,
+  editBarTheme,
 } from "./muiTheme";
 import styled from "styled-components";
 
@@ -43,7 +44,7 @@ function SigninMediaBtn({ content, onClick }) {
 
   const SignInBtnStyle = {
     width: "100%",
-    marginBottom: "20px",
+    marginTop: "20px",
     boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
   };
 
@@ -112,7 +113,6 @@ function AlbumFriendBtn({ content, activeButton, onClick }) {
 }
 
 function MoreInformationBtn({ showMoreInfo, onClick }) {
-  console.log(window.screen.width);
   const btnStyle = {
     width: document.body.clientWidth > 500 ? "220px" : "150px",
     fontSize: document.body.clientWidth > 500 ? "16px" : "12px",
@@ -211,13 +211,32 @@ function EditBtn({ content, onClick, innerRef }) {
     marginRight: "10px",
   };
   return (
-    <ThemeProvider theme={signInBtnTheme}>
+    <ThemeProvider theme={editBarTheme}>
       <Button
         variant="contained"
         color="primary"
         sx={BtnStyle}
         onClick={onClick}
         ref={innerRef}
+      >
+        {content}
+      </Button>
+    </ThemeProvider>
+  );
+}
+
+function EditHistoryBtn({ content, onClick }) {
+  const BtnStyle = {
+    boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
+    marginRight: "10px",
+  };
+  return (
+    <ThemeProvider theme={editBarTheme}>
+      <Button
+        variant="contained"
+        color="secondary"
+        sx={BtnStyle}
+        onClick={onClick}
       >
         {content}
       </Button>
@@ -262,5 +281,6 @@ export {
   AlbumQuestionBtn,
   AddAlbumBtn,
   EditBtn,
+  EditHistoryBtn,
   ChangeBackgroundBtn,
 };

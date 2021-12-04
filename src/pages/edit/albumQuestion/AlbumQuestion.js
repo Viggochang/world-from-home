@@ -35,22 +35,23 @@ const GalleryQuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
   background-color: #b8c3d0;
   width: 45vmin;
-  /* height: 800px; */
+  max-width: 370px;
+  height: 643px;
   margin: auto;
   padding: 50px 100px 40px;
   z-index: 5;
   box-shadow: 0px 0px 5px 1px #d0d0d0;
   position: relative;
+  border-radius: 8px;
 `;
 
 const Form = styled.div`
   margin-top: 20px;
   padding: 0 50px 0 30px;
   width: 88%;
-  height: 50vmin;
+  height: 411px;
   box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.4);
   border-radius: 20px;
   color: #667484;
@@ -86,11 +87,11 @@ const QuestionTitle = styled.div`
   font-weight: 400;
   line-height: 40px;
   font-weight: bold;
-  @media (min-height: 1080px) {
+  /* @media (min-height: 1080px) {
     margin-top: 20px;
     font-size: 36px;
     line-height: 60px;
-  }
+  } */
 `;
 
 const TextAreaDiv = styled.div`
@@ -100,9 +101,9 @@ const TextAreaDiv = styled.div`
   font-size: 20px;
   overflow-y: scroll;
   border-radius: 10px;
-  @media (min-height: 1080px) {
+  /* @media (min-height: 1080px) {
     width: 100%;
-  }
+  } */
 `;
 
 const ButtonsDiv = styled.div`
@@ -117,9 +118,9 @@ const Title = styled.div`
   font-size: 32px;
   font-weight: bold;
   text-align: center;
-  @media (min-height: 1080px) {
+  /* @media (min-height: 1080px) {
     font-size: 48px;
-  }
+  } */
 `;
 const TitleCountry = styled.div`
   color: #ffffff;
@@ -128,9 +129,9 @@ const TitleCountry = styled.div`
   font-weight: bold;
   text-align: center;
   margin: 10px;
-  @media (min-height: 1080px) {
+  /* @media (min-height: 1080px) {
     font-size: 64px;
-  }
+  } */
 `;
 
 const SearchDiv = styled.div`

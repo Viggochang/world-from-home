@@ -10,6 +10,7 @@ const CanvasContainer = styled.div`
 const CanvasImg = styled.img`
   height: ${(props) => props.height}px;
   width: ${(props) => props.width}px;
+  background-color: rgb(0, 0, 0, 0.9);
   @media (max-width: 1200px) {
     width: ${(props) => Number(props.width) / 12}vw;
     height: ${(props) => Number(props.height) / 12}vw;
@@ -56,6 +57,7 @@ export default function SlideShow({
   page,
   canvasCount,
   completeCanvas,
+  handleOnLoad,
 }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -105,10 +107,13 @@ export default function SlideShow({
             tabIndex="0"
           >
             <CanvasImg
-              src={completeCanvas[`page${page}-canvas${id}`]}
+              src={
+                completeCanvas ? completeCanvas[`page${page}-canvas${id}`] : ""
+              }
               alt={`page${page}-canvas${id}`}
               height={height}
               width={width}
+              onLoad={handleOnLoad}
             />
           </CanvasContainer>
         );

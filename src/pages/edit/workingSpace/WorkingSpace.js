@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
 
+import RemovePage from "./removePage/RemovePage";
 import TextEditor from "./textEditor/TextEditor";
 import ImageEditor from "./imageEditor/ImageEditor";
 import TemplateCanvas from "./templateCanvas/TemplateCanvas";
@@ -28,7 +29,7 @@ const WorkingSpaceDiv = styled.div`
 `;
 
 const WorkingSpaceDivInner = styled.div`
-  height: calc(100vh - 310px);
+  height: calc(100vh - 160px);
   width: calc(100vw - 360px);
   margin: 20px 0;
   overflow: scroll;
@@ -37,6 +38,7 @@ const WorkingSpaceDivInner = styled.div`
   align-items: center;
   @media (max-width: 1200px) {
     width: calc(100vw - 112px);
+    height: calc(100vh - 290px);
   }
   @media (max-width: 1000px) {
     width: 100vw;
@@ -48,25 +50,6 @@ const PageContainer = styled.div`
   display: ${(props) => (props.display === "true" ? "block" : "none")};
 `;
 
-const RemovePage = styled.div`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  right: -40px;
-  font-size: 18px;
-  color: #3a4a58;
-  line-height: 30px;
-  cursor: pointer;
-  :hover {
-    background-color: rgb(255, 255, 255, 0.4);
-  }
-`;
-
 const PageCanvasContainer = styled.div``;
 
 function WorkingSpace({
@@ -75,6 +58,7 @@ function WorkingSpace({
   removePageRef,
   canvasDivRef,
   allCanvasRef,
+  handleEditHistory,
 }) {
   const dispatch = useDispatch();
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
@@ -83,7 +67,6 @@ function WorkingSpace({
   const canvasState = useSelector((state) => state.canvasState);
   const activeCanvas = useSelector((state) => state.activeCanvas);
   const editUndo = useSelector((state) => state.editUndo);
-  const editRedo = useSelector((state) => state.editRedo);
 
   const workingSpaceInnerRef = useRef();
   const pageCanvasContainerRef = useRef();
@@ -91,28 +74,6 @@ function WorkingSpace({
   const uploadImageRef = useRef({});
   const textEditorRef = useRef();
   const imageEditorRef = useRef();
-
-  // 畫布縮放功能在這
-  // useEffect(() => {
-  //   window.onresize = () => {
-  //     Object.values(canvas).forEach((canvas) => {
-  //       console.log(
-  //         canvas.width,
-  //         pageCanvasContainerRef.current.clientWidth,
-  //         800
-  //       );
-  //       const newWidth =
-  //         (800 * pageCanvasContainerRef.current.clientWidth) / 820;
-  //       const newHeight =
-  //         (600 * pageCanvasContainerRef.current.clientWidth) / 820;
-  //       canvas.setWidth(newWidth).setHeight(newHeight);
-  //     });
-  //   };
-
-  //   return () => {
-  //     window.onresize = null;
-  //   };
-  // }, [canvas]);
 
   useEffect(() => {
     if (albumIdEditing) {
@@ -262,89 +223,12 @@ function WorkingSpace({
       event.shiftKey &&
       (event.key === "z" || event.key === "Z")
     ) {
-      if (Object.keys(editRedo).length < 1) {
-      } else {
-        const latestState = editRedo[Object.keys(editRedo).length - 1];
-        let record = {};
-
-        if (typeof latestState === "string") {
-          const pageInfoObj = {};
-          pageInfoObj[latestState] = {
-            ...pageInfo[latestState],
-            display: pageInfo[latestState].display ? false : true,
-          };
-          dispatch({
-            type: "SET_PAGE_INFO",
-            payload: pageInfoObj,
-          });
-          record = latestState;
-        } else {
-          canvas[Object.keys(latestState)[0]].loadFromJSON(
-            Object.values(latestState)[0]
-          );
-          const activeId = Object.keys(latestState)[0];
-          record[activeId] = canvasState[activeId];
-
-          dispatch({
-            type: "SET_CANVAS_STATE",
-            payload: latestState,
-          });
-        }
-
-        dispatch({
-          type: "REDO",
-          payload: editRedo.slice(0, editRedo.length - 1),
-        });
-
-        dispatch({
-          type: "UNDO",
-          payload: [...editUndo, record],
-        });
-      }
-      // undo
+      handleEditHistory("REDO");
     } else if (
       (event.ctrlKey || event.metaKey) &&
       (event.key === "z" || event.key === "Z")
     ) {
-      if (Object.keys(editUndo).length < 1) {
-      } else {
-        const latestState = editUndo[Object.keys(editUndo).length - 1];
-        let redoRecord = {};
-        // 如果是刪除page，會存入pageId
-        if (typeof latestState === "string") {
-          const pageInfoObj = {};
-          pageInfoObj[latestState] = {
-            ...pageInfo[latestState],
-            display: pageInfo[latestState].display ? false : true,
-          };
-          dispatch({
-            type: "SET_PAGE_INFO",
-            payload: pageInfoObj,
-          });
-          redoRecord = latestState;
-        } else {
-          canvas[Object.keys(latestState)[0]].loadFromJSON(
-            Object.values(latestState)[0]
-          );
-          const activeId = Object.keys(latestState)[0];
-          redoRecord[activeId] = canvasState[activeId];
-
-          dispatch({
-            type: "SET_CANVAS_STATE",
-            payload: latestState,
-          });
-        }
-
-        dispatch({
-          type: "UNDO",
-          payload: editUndo.slice(0, editUndo.length - 1),
-        });
-
-        dispatch({
-          type: "REDO",
-          payload: [...editRedo, redoRecord],
-        });
-      }
+      handleEditHistory("UNDO");
     } else if (event.key === "Delete" || event.key === "Backspace") {
       handleDelete();
     }
@@ -440,11 +324,11 @@ function WorkingSpace({
                 display={(!!display && display).toString()}
               >
                 <RemovePage
-                  ref={(el) => (removePageRef.current[index] = el)}
-                  onClick={(e) => handleRemovePage(e, page)}
-                >
-                  <i className="fas fa-trash-alt" />
-                </RemovePage>
+                  removePageRef={removePageRef}
+                  index={index}
+                  page={page}
+                  handleRemovePage={handleRemovePage}
+                />
                 <PageCanvasContainer
                   ref={pageCanvasContainerRef}
                   style={templateStyle[templateId]} // page的style格式

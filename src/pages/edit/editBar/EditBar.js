@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-import { EditBtn } from "../../../util/muiButton";
+import { EditBtn, EditHistoryBtn } from "../../../util/muiButton";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -48,14 +48,13 @@ export default function EditBar({
   saveEditing,
   saveAlertRef,
   completeQuestionRef,
-  allCanvasRef,
   saveCanvasToImg,
+  handleEditHistory,
 }) {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const targetCountry = useSelector((state) => state.targetCountry);
   const canvas = useSelector((state) => state.canvas);
   const activeCanvas = useSelector((state) => state.activeCanvas);
-  const userInfo = useSelector((state) => state.userInfo);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -134,6 +133,11 @@ export default function EditBar({
     }
   }
 
+  const editHistoryBtn = [
+    { name: "UNDO", feature: () => handleEditHistory("UNDO") },
+    { name: "REDO", feature: () => handleEditHistory("REDO") },
+  ];
+
   const editBtn = [
     { name: "PREVIEW", feature: handlePreview, ref: previewBtnRef },
     { name: "SAVE", feature: handleSave, ref: null },
@@ -147,6 +151,13 @@ export default function EditBar({
         <i className="fas fa-globe" />
         &ensp;{targetCountry.name}
       </Country>
+      {editHistoryBtn.map(({ name, feature }) => (
+        <EditHistoryBtn
+          key={name}
+          content={name}
+          onClick={() => feature(albumIdEditing)}
+        />
+      ))}
 
       {editBtn.map(({ name, feature, ref }) => (
         <EditBtn
