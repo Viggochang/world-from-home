@@ -1,4 +1,6 @@
-#root > div > div > div.sc-kfPuZi.jTsDyT > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.leaflet-control-zoom.leaflet-bar.leaflet-control{
+/* #root > div > div > div.sc-kfPuZi.jTsDyT > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.leaflet-control-zoom.leaflet-bar.leaflet-control */
+/* #root > div > div > div.sc-bBHxTw.lcYgcn > div.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.leaflet-control-zoom.leaflet-bar.leaflet-control */
+#root > div > div > div.sc-fKVqWL.jvOsCh > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.leaflet-control-zoom.leaflet-bar.leaflet-control{
   /* margin: 0 40px 22.22px 0 ; */
   position: fixed;
   right: 43px;
@@ -17,15 +19,9 @@
   color: #3a4a58;
 }  
 
-.geocoder-control {
-  /* margin: 0 !important;
-  width: 250px !important;  */
-  /* position: fixed;
-  top: 50px;
-  right: 140px; */
-}
-
-#root > div > div > div.sc-kfPuZi.jTsDyT > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.geocoder-control.leaflet-control{
+/* #root > div > div > div.sc-kfPuZi.jTsDyT > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.geocoder-control.leaflet-control */
+/* #root > div > div > div.sc-bBHxTw.lcYgcn > div.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.geocoder-control.leaflet-control */
+#root > div > div > div.sc-fKVqWL.jvOsCh > div.leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom > div.leaflet-control-container > div.leaflet-top.leaflet-left > div.geocoder-control.leaflet-control{
   margin: 0 !important;
   width: 250px !important; 
   position: fixed;

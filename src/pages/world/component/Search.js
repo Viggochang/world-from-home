@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import styled from "styled-components";
 import countryTrans from "../../../util/countryTrans";
@@ -17,6 +17,7 @@ const SearchDiv = styled.div`
   margin-left: 20px;
   display: flex;
   z-index: 1;
+  display: ${(props) => (props.mapType === "true" ? "flex" : "none")};
 `;
 const SearchIconDiv = styled.div`
   font-size: 15px;
@@ -39,15 +40,8 @@ const Inputdiv = styled.input`
   }
 `;
 
-export default function Search({
-  setMaskOpacity,
-  setMaskVisibility,
-  map,
-  setCurrentActive,
-  mapType,
-}) {
+export default function Search({ map, mapType, showCountry }) {
   const searchRef = useRef();
-  const dispatch = useDispatch();
   const [country2id, setCountry2id] = useState({});
   const polygonSeries = useSelector((state) => state.polygonSeries); //test
 
@@ -75,16 +69,8 @@ export default function Search({
           country.dataItem.dataContext.id ===
           country2id[searchRef.current.value]
       )[0];
-      // currentActiveCountry.isActive = true;
+      showCountry(currentActiveCountry);
       map.zoomToMapObject(currentActiveCountry);
-      setMaskOpacity(0.8);
-      setMaskVisibility("visible");
-
-      dispatch({
-        type: "SET_TARGET_COUNTRY",
-        payload: currentActiveCountry.dataItem.dataContext,
-      });
-      setCurrentActive(currentActiveCountry);
       searchRef.current.value = "";
     } else {
       searchRef.current.parentNode.style.outline = "4px #AE0000 solid";
@@ -92,10 +78,7 @@ export default function Search({
   }
 
   return (
-    <SearchDiv
-      style={{ display: mapType ? "flex" : "none" }}
-      onKeyDown={handleEnter}
-    >
+    <SearchDiv mapType={mapType.toString()} onKeyDown={handleEnter}>
       <Inputdiv
         list="country-choice"
         id="search-country"
@@ -120,7 +103,7 @@ export default function Search({
           ))}
       </datalist>
       <SearchIconDiv onClick={handleSearch}>
-        <i className="fas fa-search"></i>
+        <i className="fas fa-search" />
       </SearchIconDiv>
     </SearchDiv>
   );

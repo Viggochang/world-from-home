@@ -2,10 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { firebase } from "../../../util/firebase";
 
 const MyPhoto = styled(NavLink)`
-  /* background-color: white; */
   width: 60px;
   height: 60px;
   box-shadow: 0px 0px 10px #bebebe;
@@ -16,6 +14,9 @@ const MyPhoto = styled(NavLink)`
   border-radius: 20px;
   cursor: pointer;
   z-index: 2;
+  background-image: url(${(props) => props.photo});
+  background-size: cover;
+  background-position: center;
   :hover {
     box-shadow: 0px 0px 16px #bebebe;
   }
@@ -45,23 +46,12 @@ const GuestIcon = styled.div`
 
 export default function ToMyPage({ handleSignIn, style }) {
   const userInfo = useSelector((state) => state.userInfo);
-  // console.log(userInfo);
   if (userInfo.photo) {
-    return (
-      <MyPhoto
-        to="/mypage"
-        style={{
-          backgroundImage: `url(${userInfo.photo})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          ...style,
-        }}
-      />
-    );
+    return <MyPhoto photo={userInfo.photo} to="/mypage" />;
   } else {
     return (
       <GuestIcon style={style} onClick={handleSignIn}>
-        <i className="fas fa-user-alt"></i>
+        <i className="fas fa-user-alt" />
       </GuestIcon>
     );
   }

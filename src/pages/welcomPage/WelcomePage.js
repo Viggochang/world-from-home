@@ -1,32 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { firebase } from "../../util/firebase";
+import { onAuthStateChanged } from "../../util/firebase";
 
-import welcomePage from "../../image/welcomePage.mp4";
 import SigninDiv from "../Signin/Signin";
 import landingPageImg from "../../image/landingPage.jpeg";
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: "#3A4A58",
-      darker: "#053e85",
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-    white: {
-      main: "#ffffff",
-    },
-  },
-});
+import { WelcomePageBtn } from "../../util/muiButton";
 
 const WelcomePageDiv = styled.div`
   width: 100vw;
@@ -48,14 +27,6 @@ const Mask = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-`;
-
-const BackgroundVideo = styled.video`
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
 `;
 
 const TitleDiv = styled.div`
@@ -117,16 +88,11 @@ export default function WelcomePage() {
   const [signIn, setSignIn] = useState(false);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setSignIn(true);
-      }
-    });
+    onAuthStateChanged(setSignIn);
   }, []);
 
   function handleSignIn() {
     signinRef.current.style.zIndex = 2;
-    console.log("sign in");
   }
 
   function handleGuest() {
@@ -136,9 +102,6 @@ export default function WelcomePage() {
   return (
     <>
       <WelcomePageDiv>
-        {/* <BackgroundVideo autoplay id="myVideo">
-        <source src={welcomePage} type="video/mp4"/>
-      </BackgroundVideo> */}
         <Mask />
         <TitleDiv> WORLD </TitleDiv>
         <Title2Div> FROM&ensp;HOME </Title2Div>
@@ -148,69 +111,22 @@ export default function WelcomePage() {
           <br /> – Pico Iyer
         </Quote>
 
-        <ThemeProvider theme={theme}>
-          <ButtonsDiv>
-            {/* <MyButton
-            text="Sign In"
-            style={{ margin: "0 20px" }}
-            onClick={handleSignIn}
-          />
-          <MyButton
-            text="Guest"
-            style={{ margin: "0 20px" }}
-            onClick={handleGuest}
-          /> */}
-            <Button
-              variant="contained"
-              color="white"
-              sx={{
-                width: "200px",
-                fontSize: "24px",
-                fontWeight: "bold",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                margin: "0 20px",
-                color: "#3A4A58",
-                // outline: "3px #3A4A58 solid",
-                boxShadow: "3px 3px 10px 5px rgb(80, 80, 80, 0.7)",
-                ":hover": {
-                  backgroundColor: "#e0e0e0",
-                },
-              }}
-              onClick={handleSignIn}
-            >
-              Sign in
-            </Button>
-            <Button
-              variant="contained"
-              color="white"
-              sx={{
-                width: "200px",
-                fontSize: "24px",
-                fontWeight: "bold",
-                borderRadius: "40px",
-                lineHeight: 1.5,
-                margin: "0 20px",
-                color: "#3A4A58",
-                // outline: "3px #3A4A58 solid",
-                boxShadow: "3px 3px 10px 5px rgb(80, 80, 80, 0.7)",
-                // boxShadow: "3px 3px 10px rgb(80, 80, 80, 0.7)",
-                ":hover": {
-                  backgroundColor: "#e0e0e0",
-                },
-              }}
-              onClick={handleGuest}
-            >
-              {signIn ? (
+        <ButtonsDiv>
+          <WelcomePageBtn content="Sign in" onClick={handleSignIn} />
+          <WelcomePageBtn
+            content={
+              signIn ? (
                 <>
-                  {"Enter"}&ensp; <i class="fas fa-arrow-right"></i>
+                  Enter&ensp;
+                  <i className="fas fa-plane" />
                 </>
               ) : (
                 "Guest"
-              )}
-            </Button>
-          </ButtonsDiv>
-        </ThemeProvider>
+              )
+            }
+            onClick={handleGuest}
+          />
+        </ButtonsDiv>
       </WelcomePageDiv>
       <SigninDiv signinRef={signinRef} />
     </>

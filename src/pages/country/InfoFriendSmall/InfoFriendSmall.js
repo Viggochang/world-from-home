@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 
-import CountryInfoPopup from "../component/countryInfo/CountryInfoPopup";
-import CountryFriendPopup from "../component/countryFriend/CountryFriendPopup";
+import CountryInfoPopup from "../countryInfo/CountryInfoPopup";
+import CountryFriendPopup from "../countryFriend/CountryFriendPopup";
 
 const InfoFriendDiv = styled.div`
   color: white;
@@ -24,6 +24,7 @@ const InfoFriendDiv = styled.div`
     margin: 0;
   }
   @media (max-width: 600px) {
+    margin-top: 20px;
     height: auto;
     flex-direction: column;
     justify-content: flex-start;
@@ -93,6 +94,7 @@ const InfoFriendBtn = styled.div`
   @media (max-width: 968px) {
     width: 260px;
     margin: 10px 20px 0;
+    font-size: 28px;
   }
   @media (max-width: 600px) {
     width: 270px;
@@ -123,15 +125,16 @@ export default function InfoFriendSmall({
     <InfoFriendDiv>
       <InfoTitle>Capital City</InfoTitle>
       <CaptainCity>
-        <i className="fas fa-archway"></i>
+        <i className="fas fa-archway" />
         &ensp;{captain.capitalCity}
       </CaptainCity>
 
       <InfoFriendBtn onClick={() => handlePopup(infoPopupRef)}>
-        <i className="fas fa-info"></i>&ensp;Information
+        <i className="fas fa-info" />
+        &ensp;Information
       </InfoFriendBtn>
       <InfoFriendBtn onClick={() => handlePopup(friendPopupRef)}>
-        <i className="fas fa-users"></i>
+        <i className="fas fa-users" />
         &ensp;Friends
       </InfoFriendBtn>
 

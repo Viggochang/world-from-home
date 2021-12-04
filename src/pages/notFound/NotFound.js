@@ -65,6 +65,7 @@ const Title = styled.div`
 
 const Text = styled.div`
   font-size: 24px;
+  font-weight: bold;
   line-height: 32px;
   @media (max-width: 800px) {
     font-size: 20px;

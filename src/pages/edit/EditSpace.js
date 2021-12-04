@@ -1,155 +1,31 @@
-// 旅遊手記layout
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import { ThemeProvider } from "@material-ui/core/styles";
+
 import { Alert, Stack } from "@mui/material";
-import { signInBtnTheme } from "../../util/muiTheme";
+import Compressor from "compressorjs";
 
-import { db_gallery, db_tourist_spot } from "../../util/firebase";
-import WorkingSpace from "./WorkingSpace";
-import Preview from "./component/Preview";
-import Logout from "../Signin/Logout";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { getAlbumIsExist, updateAlbum, storage } from "../../util/firebase";
+import { allTemplate } from "../../util/myTemplate";
 
-import icon_full from "../../image/template/icon/full.jpeg";
-import icon_composition from "../../image/template/icon/composition.jpeg";
-import icon_photo_text from "../../image/template/icon/photo_text.jpeg";
-import icon_text from "../../image/template/icon/text.jpeg";
-import icon_slide_show from "../../image/template/icon/slide_show.jpeg";
-
-import full_1 from "../../image/template/full_1.jpeg";
-import full_2 from "../../image/template/full_2.jpeg";
-import template_3a from "../../image/template/template_3a.jpeg";
-import template_4a from "../../image/template/template_4a.jpeg";
-import template_4b from "../../image/template/template_4b.jpeg";
-import photoText_1 from "../../image/template/photoText_1.jpeg";
-import photoText_2 from "../../image/template/photoText_2.jpeg";
-import photoText_3 from "../../image/template/photoText_3.jpeg";
-import photoText_4 from "../../image/template/photoText_4.jpeg";
-import photoText_5 from "../../image/template/photoText_5.jpeg";
-import text_1 from "../../image/template/text_1.jpeg";
-import slide_show_1 from "../../image/template/slide_show_1.jpeg";
-
-// import ToMyPage from "../world/component/ToMyPage";
-import GalleryQuestion from "./component/GalleryQuestion";
-import CompleteQuestion from "./component/CompleteQuestion";
+import NavBar from "./navBar/NavBar";
+import EditBar from "./editBar/EditBar";
+import ToolBar from "./toolBar/ToolBar";
+import WorkingSpace from "./workingSpace/WorkingSpace";
+import AlbumQuestion from "./albumQuestion/AlbumQuestion";
+import CompleteQuestion from "./completeQuestion/CompleteQuestion";
+import ToolContainer from "./toolContainer/ToolContainer";
 
 const AlertDiv = styled.div`
   margin: 20px calc(50% - 150px);
   position: relative;
 `;
 
-const NavBarNav = styled.nav`
-  font-size: 30px;
-  width: 100vw;
-  height: 72px;
-  position: fixed;
-  top: 0;
-  background-color: #667484;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  color: white;
-`;
-
-const MyPageDiv = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  box-shadow: 0px 0px 10px #bebebe;
-  margin-right: auto;
-  margin-left: 20px;
-  /* outline: 3px #b8c3d0 solid; */
-  cursor: pointer;
-`;
-const MyPageIconMask = styled.div`
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: rgb(225, 225, 225, 0);
-  :hover {
-    background-color: rgb(225, 225, 225, 0.2);
-  }
-`;
-
-const HomeDiv = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 30px;
-  margin-left: 20px;
-  margin-right: 20px;
-  color: white;
-  cursor: pointer;
-  :hover {
-    /* color: #b8c3d0; */
-    background-color: rgb(255, 255, 255, 0.3);
-  }
-`;
-
-const ToolBarDiv = styled.div`
-  width: 72px;
-  height: calc(100vh - 160px);
-  background-color: rgb(255, 255, 255, 0.9);
-  position: fixed;
-  top: 140px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 1;
-  box-shadow: 0px 0px 10px #8e8e8e;
-  border-radius: 7px;
-`;
-
-const ToolIconDiv = styled.div`
-  width: 100%;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-`;
-
-const IconHover = styled.div`
-  width: 42px;
-  height: 42px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  &:hover {
-    background-color: rgb(184, 195, 208, 0.4);
-  }
-`;
-
-const IconDiv = styled.div`
-  width: 24px;
-  height: 24px;
-  background-color: #b8c3d0;
-`;
-
-const ToolNameDiv = styled.div`
-  text-align: center;
-  line-height: 18px;
-  color: #667484;
-  /* white-space: pre-wrap; */
-  font-size: 12px;
-  margin-top: -2px;
-`;
-
 const ContainerDiv = styled.div`
   width: 100vw;
   min-height: calc(100% - 56px);
   display: flex;
-  /* padding: 56px 0 0 72px; */
   position: fixed;
   top: 120px;
   left: 0;
@@ -157,148 +33,46 @@ const ContainerDiv = styled.div`
   z-index: 1;
 `;
 
-const ToolContainerDiv = styled.div`
-  width: 200px;
-  height: calc(100vh - 220px);
-  padding: 30px 24px 30px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: rgb(255, 255, 255, 0.9);
-  position: fixed;
-  top: 140px;
-  left: 110px;
-  z-index: 1;
-  box-shadow: 0px 0px 10px #8e8e8e;
-  border-radius: 7px;
-`;
-
-const ToolContainerDivInner = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: scroll;
-`;
-
-const TemplateIcon = styled.img`
-  width: 120px;
-  margin: 20px 0;
-  box-shadow: 0px 0px 10px #667484;
-  cursor: pointer;
-`;
-
-const TitleBarDiv = styled.div`
-  width: 100vw;
-  height: 38px;
-  background-color: white;
-  position: fixed;
-  top: 72px;
-  left: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-`;
-
-const Country = styled.div`
-  color: #3a4a58;
-  font-weight: bold;
-  font-size: 30px;
-  margin-left: 20px;
-  margin-right: auto;
-`;
-
-const allTemplate = {
-  full: {
-    name: "全版相片",
-    icon: icon_full,
-    template: [
-      [1, "full_1", full_1],
-      [1, "full_2", full_2],
-    ],
-  },
-  composition: {
-    name: `相片拼貼`,
-    icon: icon_composition,
-    template: [
-      [3, "3a", template_3a],
-      [4, "4a", template_4a],
-      [4, "4b", template_4b],
-    ],
-  },
-  photoText: {
-    name: "圖文搭配",
-    icon: icon_photo_text,
-    template: [
-      [2, "photoText_1", photoText_1],
-      [2, "photoText_2", photoText_2],
-      [2, "photoText_3", photoText_3],
-      [2, "photoText_4", photoText_4],
-      [6, "photoText_5", photoText_5],
-    ],
-  },
-  text: {
-    name: "文字",
-    icon: icon_text,
-    template: [[1, "text_1", text_1]],
-  },
-  slideShow: {
-    name: "slide show",
-    icon: icon_slide_show,
-    template: [[3, "slide_show_1", slide_show_1]],
-  },
-};
-// let templateActive = allTemplate["full"].template;
+const worldBankApi = (targetCountryId) =>
+  `https://api.worldbank.org/v2/country/${targetCountryId}?format=json`;
 
 function EditSpace() {
   const [templateActive, setTemplateActive] = useState(
     allTemplate["full"].template
   );
-
   const [preview, setPreview] = useState(false);
   const [addWindow, setAddWindow] = useState(false);
   const [complete, setComplete] = useState(false);
   const [longitude, setLongitude] = useState(121.5);
   const [latitude, setLatitude] = useState(25.04);
 
-  const editUndo = useSelector((state) => state.editUndo);
-
-  const dispatch = useDispatch();
-  const myInfo = useSelector((state) => state.userInfo);
   const targetCountry = useSelector((state) => state.targetCountry);
-  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
-  const activeCanvas = useSelector((state) => state.activeCanvas);
+  const userInfo = useSelector((state) => state.userInfo);
   const canvas = useSelector((state) => state.canvas);
+  const editUndo = useSelector((state) => state.editUndo);
+  const editRedo = useSelector((state) => state.editRedo);
 
-  const toolIconRef = useRef([]);
-  const previewBtnRef = useRef();
   const saveAlertRef = useRef();
   const completeQuestionRef = useRef();
   const removePageRef = useRef([]);
   const canvasDivRef = useRef({});
+  const allCanvasRef = useRef({});
+
+  const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
-    fetch(
-      `https://api.worldbank.org/v2/country/${targetCountry.id}?format=json`
-    )
+    fetch(worldBankApi(targetCountry.id))
       .then((res) => res.json())
       .then((res) => {
-        // console.log(
-        //   targetCountry.id,
-        //   res[1][0].capitalCity,
-        //   res[1][0].longitude,
-        //   res[1][0].latitude
-        // );
         if (res[1]) {
           setLongitude(res[1][0].longitude || 121.5);
           setLatitude(res[1][0].latitude || 25.04);
         }
       });
-  });
+  }, []);
 
   useEffect(() => {
     const albumIdEditing = new URLSearchParams(window.location.search).get(
@@ -307,22 +81,19 @@ function EditSpace() {
     if (!albumIdEditing) {
       history.push({ pathname: "notfound" });
     } else {
-      db_gallery
-        .doc(albumIdEditing)
-        .get()
-        .then((doc) => {
-          if (!doc.exists) {
-            history.push({ pathname: "notfound" });
-          } else {
-            dispatch({
-              type: "SET_ALBUM_ID_EDITING",
-              payload: albumIdEditing,
-            });
-          }
-        });
+      async function getalbumIdEditing() {
+        if (await getAlbumIsExist(albumIdEditing)) {
+          dispatch({
+            type: "SET_ALBUM_ID_EDITING",
+            payload: albumIdEditing,
+          });
+        } else {
+          history.push({ pathname: "notfound" });
+        }
+      }
+      getalbumIdEditing();
     }
   }, []);
-  // const workingSpaceRef = useRef();
 
   useEffect(() => {
     if (complete) {
@@ -334,281 +105,128 @@ function EditSpace() {
     }
   }, [complete]);
 
-  function handleMoreWindow(canvasCount, templateId) {
-    if (preview === false) {
-      let page = Object.keys(pageInfo).length
-        ? Object.keys(pageInfo).length
-        : 0;
-
-      const pageInfoObj = {};
-      pageInfoObj[`page${page}`] = {
-        page,
-        canvasCount,
-        templateId,
-        display: true,
-      };
-
-      dispatch({
-        type: "SET_PAGE_INFO",
-        payload: pageInfoObj,
-      });
-      dispatch({
-        type: "UNDO",
-        payload: [...editUndo, `page${page}`],
-      });
-      dispatch({
-        type: "REDO",
-        payload: [],
-      });
-      setAddWindow(true);
-    }
-
-    // console.log(workingSpaceRef.current.scrollHeight);
-    // window.scrollTo(0, workingSpaceRef.current.scrollHeight);
-  }
-
-  function handleClickTool(key) {
-    console.log(key);
-    // console.log(key);
-    setTemplateActive(allTemplate[key].template);
-    // setToolActive(key);
-  }
-
-  function handleMyPage(e, albumId) {
-    saveAlertRef.current.style.zIndex = 5;
+  function saveEditing(albumId) {
     const body = {
       content: {
         pageInfo: JSON.stringify(pageInfo),
         canvasState: JSON.stringify(canvasState),
       },
     };
-    db_gallery
-      .doc(albumId)
-      .update(body)
-      .then(() => {
-        dispatch({
-          type: "DISCARD_CANVAS_EDIT",
-          payload: "",
-        });
-        history.push({ pathname: "mypage" });
-      });
+    return updateAlbum(albumId, body);
   }
 
-  function handleHome(e, albumId) {
-    saveAlertRef.current.style.zIndex = 5;
-    const body = {
-      content: {
-        pageInfo: JSON.stringify(pageInfo),
-        canvasState: JSON.stringify(canvasState),
-      },
-    };
-    db_gallery
-      .doc(albumId)
-      .update(body)
-      .then(() => {
-        dispatch({
-          type: "DISCARD_CANVAS_EDIT",
-          payload: "",
-        });
-        history.push({ pathname: "home" });
-      });
-  }
+  function saveCanvasToImg(albumId) {
+    function dataURItoBlob(dataURI) {
+      let byteString;
+      if (dataURI.split(",")[0].indexOf("base64") >= 0)
+        byteString = atob(dataURI.split(",")[1]);
+      else byteString = unescape(dataURI.split(",")[1]);
 
-  function handleSaveLogout(e, albumId, logout) {
-    const body = {
-      content: {
-        pageInfo: JSON.stringify(pageInfo),
-        canvasState: JSON.stringify(canvasState),
-      },
-    };
-    db_gallery
-      .doc(albumId)
-      .update(body)
-      .then(() => {
-        saveAlertRef.current.style.zIndex = 5;
-        dispatch({
-          type: "DISCARD_CANVAS_EDIT",
-          payload: "",
-        });
-      })
-      .then(() => {
-        logout();
-      });
-  }
+      let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
 
-  function handlePreview(e, albumId) {
-    // Object.keys(canvasState).forEach((canvasId) => {
-    // })
-    if (Object.keys(activeCanvas).length) {
-      activeCanvas.discardActiveObject().renderAll();
-    }
-    Object.values(canvas).forEach((canvas) => {
-      canvas.backgroundColor = preview ? "#F0F0F0" : "white";
-      canvas.renderAll();
-    });
-    Object.values(canvasDivRef.current).forEach(
-      (el) => (el.style.boxShadow = preview ? "0px 0px 2px #8e8e8e" : "none")
-    );
-
-    removePageRef.current.forEach((el) => {
-      console.log(el);
-      return (el.style.display = preview ? "flex" : "none");
-    });
-    previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
-    setPreview(!preview);
-
-    const body = {
-      content: {
-        pageInfo: JSON.stringify(pageInfo),
-        canvasState: JSON.stringify(canvasState),
-      },
-    };
-
-    if (!preview) {
-      db_gallery
-        .doc(albumId)
-        .update(body)
-        .then(() => {
-          saveAlertRef.current.style.zIndex = 5;
-          setTimeout(() => {
-            if (saveAlertRef.current) {
-              saveAlertRef.current.style.zIndex = 0;
-            }
-          }, 1000);
-        });
-    }
-  }
-
-  function handleSave(e, albumId) {
-    if (Object.keys(activeCanvas).length) {
-      activeCanvas.discardActiveObject().renderAll();
-    }
-    const body = {
-      content: {
-        pageInfo: JSON.stringify(pageInfo),
-        canvasState: JSON.stringify(canvasState),
-      },
-    };
-    db_gallery
-      .doc(albumId)
-      .update(body)
-      .then(() => {
-        saveAlertRef.current.style.zIndex = 5;
-        setTimeout(() => {
-          if (saveAlertRef.current) {
-            saveAlertRef.current.style.zIndex = 0;
-          }
-        }, 1000);
-      });
-  }
-
-  function handleComplete(e, albumId) {
-    if (Object.keys(activeCanvas).length) {
-      activeCanvas.discardActiveObject().renderAll();
-    }
-    completeQuestionRef.current.style.zIndex = 5;
-    handleSave(e, albumId);
-
-    // const body = {
-    //   content: {
-    //     pageInfo: JSON.stringify(pageInfo),
-    //     canvasState: JSON.stringify(canvasState),
-    //   },
-    // };
-    // db_gallery
-    //   .doc(albumId)
-    //   .update(body)
-    //   .then(() => {
-    //     dispatch({
-    //       type: "DISCARD_CANVAS_EDIT",
-    //       payload: "",
-    //     });
-    //     // history.push({ pathname: "home" });
-    //     saveAlertRef.current.style.zIndex = 5;
-    //     setTimeout(() => {
-    //       saveAlertRef.current.style.zIndex = 0;
-    //     }, 1000);
-    //   });
-  }
-
-  function handleDiscard(e, albumId) {
-    // deleteAlertRef.current.style.zIndex = 5;
-    const MySwal = withReactContent(Swal);
-
-    MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const body = {
-          condition: "discard",
-        };
-        db_gallery
-          .doc(albumId)
-          .update(body)
-          .then(() => {
-            MySwal.fire(
-              "Deleted!",
-              "Your album has been deleted.",
-              "success"
-            ).then((result) => {
-              if (result.isConfirmed) {
-                dispatch({
-                  type: "DISCARD_CANVAS_EDIT",
-                  payload: "",
-                });
-                db_tourist_spot
-                  .where("album_id", "==", albumId)
-                  .get()
-                  .then((snapshot) => {
-                    snapshot.docs.forEach((doc) =>
-                      db_tourist_spot
-                        .doc(doc.id)
-                        .update({ condition: "discard" })
-                    );
-                  });
-                history.push({ pathname: "home" });
-              }
-            });
-          });
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        MySwal.fire("Cancelled", "Your album is safe :)", "error");
+      let ia = new Uint8Array(byteString.length);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
       }
+
+      return new Blob([ia], { type: mimeString });
+    }
+
+    function handleUploadImg(img, canvasId, callback) {
+      return new Promise((resolve, reject) => {
+        new Compressor(img, {
+          quality: 0.6,
+          maxWidth: 2048,
+          maxHeight: 2048,
+          success(result) {
+            // Send the compressed image file to server with XMLHttpRequest.
+            async function putImgToStorage() {
+              const metadata = { contentType: result.type };
+              const storageRef = storage.ref(
+                `user_album/${userInfo.id}/albums/${albumId}/complete_${canvasId}`
+              );
+              await storageRef.put(result, metadata);
+              const imageUrl = await storageRef.getDownloadURL();
+              callback(imageUrl);
+            }
+            putImgToStorage();
+            resolve();
+          },
+          error(err) {
+            console.log(err.message);
+            reject();
+          },
+        });
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      const body = {};
+      let promises = [];
+      Object.entries(allCanvasRef.current).forEach(([canvasId, canvasEl]) => {
+        promises.push(
+          handleUploadImg(
+            dataURItoBlob(canvasEl.toDataURL()),
+            canvasId,
+            (imageUrl) => {
+              body[canvasId] = imageUrl;
+              updateAlbum(albumId, { completeCanvas: body });
+            }
+          )
+        );
+      });
+      Promise.all(promises).then(resolve());
     });
   }
 
-  function handleHoverToolIcon(index) {
-    toolIconRef.current.forEach(
-      (el) => (el.style.backgroundColor = "rgb(0,0,0,0)")
-    );
-    toolIconRef.current[index].style.backgroundColor =
-      "rgb(184, 195, 208, 0.4)";
+  function handleEditHistory(action) {
+    const editHistory = {
+      REDO: editRedo,
+      UNDO: editUndo,
+    };
+    if (editHistory[action].length) {
+      const latestState = editHistory[action].slice(-1)[0];
+      let record = {};
+
+      if (typeof latestState === "string") {
+        const pageInfoObj = {};
+        pageInfoObj[latestState] = {
+          ...pageInfo[latestState],
+          display: pageInfo[latestState].display ? false : true,
+        };
+        dispatch({
+          type: "SET_PAGE_INFO",
+          payload: pageInfoObj,
+        });
+        record = latestState;
+      } else {
+        canvas[Object.keys(latestState)[0]].loadFromJSON(
+          Object.values(latestState)[0]
+        );
+        const activeId = Object.keys(latestState)[0];
+        record[activeId] = canvasState[activeId];
+
+        dispatch({
+          type: "SET_CANVAS_STATE",
+          payload: latestState,
+        });
+      }
+
+      dispatch({
+        type: action,
+        payload: editHistory[action].slice(0, editHistory[action].length - 1),
+      });
+
+      dispatch({
+        type: action === "REDO" ? "UNDO" : "REDO",
+        payload: [...editHistory[action === "REDO" ? "UNDO" : "REDO"], record],
+      });
+    }
   }
-
-  const SignInBtnStyle = {
-    // width: "100%",
-    // marginBottom: "20px",
-    boxShadow: "2px 3px 6px rgb(80, 80, 80, 0.7)",
-    marginRight: "10px",
-  };
-
-  const LogoutStyle = {
-    margin: "0 20px 0 0",
-    width: "50px",
-    height: "50px",
-  };
 
   return (
     <div>
-      <GalleryQuestion />
+      <AlbumQuestion />
       <CompleteQuestion
         completeQuestionRef={completeQuestionRef}
         longitude={longitude}
@@ -627,132 +245,38 @@ function EditSpace() {
         </Stack>
       </AlertDiv>
 
-      <NavBarNav>
-        <MyPageDiv
-          style={{
-            backgroundImage: `url(${myInfo.photo})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          onClick={(e) => handleMyPage(e, albumIdEditing)}
-        >
-          <MyPageIconMask />
-        </MyPageDiv>
-        <HomeDiv onClick={(e) => handleHome(e, albumIdEditing)}>
-          <i className="fas fa-home"></i>
-        </HomeDiv>
-        <Logout
-          LogoutStyle={LogoutStyle}
-          handleSaveLogout={handleSaveLogout}
-          albumIdEditing={albumIdEditing}
-        />
-      </NavBarNav>
-
-      <TitleBarDiv>
-        <Country>
-          <i className="fas fa-globe"></i>
-          &ensp;{targetCountry.name}
-        </Country>
-        {/* 
-        <ThemeProvider theme={signInBtnTheme}>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={() => handleSignin(googleProvider)}
-          >
-            <i className="fab fa-google"></i> &emsp;&emsp; Sign in with Google
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={() => handleSignin(facebookProvider)}
-          >
-            <i className="fab fa-facebook"></i> &emsp;&emsp; Sign in with
-            Facebook
-          </Button>
-        </ThemeProvider> */}
-
-        <ThemeProvider theme={signInBtnTheme}>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={(e) => handlePreview(e, albumIdEditing)}
-            ref={previewBtnRef}
-          >
-            PREVIEW
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={(e) => handleSave(e, albumIdEditing)}
-          >
-            SAVE
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={(e) => handleComplete(e, albumIdEditing)}
-          >
-            COMPLETE
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={SignInBtnStyle}
-            onClick={(e) => handleDiscard(e, albumIdEditing)}
-          >
-            DISCARD
-          </Button>
-        </ThemeProvider>
-      </TitleBarDiv>
+      <NavBar
+        saveAlertRef={saveAlertRef}
+        saveEditing={saveEditing}
+        saveCanvasToImg={saveCanvasToImg}
+      />
+      <EditBar
+        preview={preview}
+        setPreview={setPreview}
+        canvasDivRef={canvasDivRef}
+        removePageRef={removePageRef}
+        saveEditing={saveEditing}
+        saveAlertRef={saveAlertRef}
+        completeQuestionRef={completeQuestionRef}
+        saveCanvasToImg={saveCanvasToImg}
+        handleEditHistory={handleEditHistory}
+      />
 
       <ContainerDiv>
-        <ToolBarDiv>
-          {Object.keys(allTemplate).map((tool, index) => (
-            <ToolIconDiv key={tool} onClick={(e) => handleClickTool(tool)}>
-              <IconHover
-                ref={(el) => (toolIconRef.current[index] = el)}
-                onClick={() => handleHoverToolIcon(index)}
-              >
-                <IconDiv
-                  style={{
-                    backgroundImage: `url(${allTemplate[tool].icon})`,
-                    backgroundPosition: "center",
-                    backgroundSize: "cover",
-                  }}
-                />
-              </IconHover>
-              <ToolNameDiv>{allTemplate[tool].name}</ToolNameDiv>
-            </ToolIconDiv>
-          ))}
-        </ToolBarDiv>
-        <ToolContainerDiv>
-          <ToolContainerDivInner>
-            {templateActive.map((template) => (
-              <div
-                onClick={() => handleMoreWindow(template[0], template[1])}
-                key={template[1]}
-              >
-                <TemplateIcon
-                  alt={`template-${template[1]}`}
-                  src={template[2]}
-                />
-              </div>
-            ))}
-          </ToolContainerDivInner>
-        </ToolContainerDiv>
+        <ToolBar setTemplateActive={setTemplateActive} />
+        <ToolContainer
+          templateActive={templateActive}
+          preview={preview}
+          setAddWindow={setAddWindow}
+        />
         <WorkingSpace
           preview={preview}
           addWindow={addWindow}
           removePageRef={removePageRef}
           canvasDivRef={canvasDivRef}
+          allCanvasRef={allCanvasRef}
+          handleEditHistory={handleEditHistory}
         />
-        {/* <Preview preview={preview} /> */}
       </ContainerDiv>
     </div>
   );

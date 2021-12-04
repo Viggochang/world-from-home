@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import { db_gallery, db_userInfo } from "../../../util/firebase";
+import { getAlbumDataById, getUserDataByUid } from "../../../util/firebase";
 
 const PopupContentDiv = styled.div`
-  /* width: 500px;
-  height: 400px; */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -14,17 +12,24 @@ const PopupContentDiv = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   color: #3a4a58;
+  @media (max-width: 600px) {
+    font-size: 16px;
+  }
 `;
 
 const AlbumPhoto = styled.div`
-  width: 400px;
-  height: 270px;
+  width: 360px;
+  height: 250px;
   display: flex;
   margin-top: 10px;
   cursor: pointer;
+  @media (max-width: 600px) {
+    width: 240px;
+    height: 160px;
+  }
 `;
 
 const AlbumOwnerPhoto = styled.div`
@@ -33,13 +38,17 @@ const AlbumOwnerPhoto = styled.div`
   border-radius: 50%;
   margin: 55px 20px;
   position: absolute;
-  bottom: 150px;
-  left: 320px;
-  /* box-shadow: rgba(255, 255, 255, 0.7) 0px 8px 24px; */
+  bottom: 135px;
+  left: 285px;
   box-shadow: rgba(255, 255, 255, 0.6) 0px 10px 27px -5px,
     rgba(255, 255, 255, 0.6) 0px 16px 16px -8px;
-  /* outline: 2px #b8c3d0 solid; */
   cursor: pointer;
+  @media (max-width: 600px) {
+    width: 40px;
+    height: 40px;
+    bottom: 65px;
+    left: 180px;
+  }
 `;
 
 const Mask = styled.div`
@@ -58,18 +67,13 @@ export default function PopupContent({ spot }) {
   const history = useHistory();
 
   useEffect(() => {
-    db_gallery
-      .doc(spot.album_id)
-      .get()
-      .then((doc) => {
-        setAlbum(doc.data());
-        db_userInfo
-          .doc(doc.data().user_id)
-          .get()
-          .then((doc) => {
-            setAlbumOwner(doc.data());
-          });
-      });
+    async function getPopupContent() {
+      const albumData = await getAlbumDataById(spot.album_id);
+      const albumOwnerData = await getUserDataByUid(albumData.user_id);
+      setAlbum(albumData);
+      setAlbumOwner(albumOwnerData);
+    }
+    getPopupContent();
   }, [spot]);
 
   function handleShowAlbumId(key, value) {
@@ -92,7 +96,11 @@ export default function PopupContent({ spot }) {
 
   return (
     <PopupContentDiv>
-      <Title>{spot.text}</Title>
+      <Title>
+        <i className="fas fa-map-marker-alt" />
+        &ensp;
+        {spot.text}
+      </Title>
       <AlbumPhoto
         style={{
           backgroundImage: `url(${album.cover_photo})`,

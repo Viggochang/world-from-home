@@ -25,6 +25,7 @@ const ContentDiv = styled.div`
   display: flex;
   position: relative;
   border-radius: 10px;
+  box-shadow: 0px 0px 4px 1px #d0d0d0;
   @media (max-width: 1000px) {
     width: 90vw;
   }
@@ -50,8 +51,6 @@ const PhotoDiv = styled.div`
 `;
 
 export default function Login({ signinRef }) {
-  // const signInChoiceRef = useRef();
-
   return (
     <SigninDiv ref={signinRef}>
       <ContentDiv>

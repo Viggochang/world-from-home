@@ -18,7 +18,6 @@ const data = {
 };
 
 const rootReducer = (state = data, action) => {
-  // console.log(state);
   switch (action.type) {
     case "SET_POLYGONSERIES":
       return { ...state, polygonSeries: action.payload };

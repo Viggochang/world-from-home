@@ -3,8 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import { ThemeProvider } from "@material-ui/core/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -15,9 +13,10 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import { styled as styledMui } from "@mui/styles";
 
-import { db_userInfo } from "../../../util/firebase";
+import { SigninEnterBtn } from "../../../util/muiButton";
+
+import { updateUser } from "../../../util/firebase";
 import countryTrans from "../../../util/countryTrans";
-import { signInEnterTheme } from "../../../util/muiTheme";
 
 const MoreInfoFormDiv = styled.div`
   width: 400px;
@@ -53,7 +52,6 @@ const MoreInfoFormArea = styled.div`
   padding: 0 20px 20px;
   box-shadow: 4px 6px 10px rgb(80, 80, 80, 0.6);
   border-radius: 10px;
-  /* box-shadow: 0px 0px 6px #000000; */
 `;
 
 const Title = styled.div`
@@ -112,31 +110,23 @@ export default function MoreInfoForm({
   const [introduction, setIntroduction] = useState("");
 
   function handleToWorldPage() {
-    console.log(
-      new Date(birthday.seconds * 1000).toDateString(),
-      new Date().toDateString()
-    );
-    console.log(birthday, birthday.toDateString());
+    const userData = {
+      language,
+      introduction,
+      friends: [],
+      birthday:
+        birthday.toDateString() === new Date().toDateString()
+          ? new Date(0)
+          : birthday,
+      travel_country: [],
+    };
 
-    db_userInfo
-      .doc(myUserId)
-      .set({
-        id: myUserId,
-        email: currentUser.email,
-        name: currentUser.displayName,
-        photo: currentUser.photoURL,
-        country,
-        language,
-        introduction,
-        birthday:
-          birthday.toDateString() === new Date().toDateString()
-            ? new Date(0)
-            : birthday,
-      })
-      .then(() => {
-        signinRef.current.style.display = "none";
-        history.push({ pathname: "home" });
-      });
+    async function setNewUserData() {
+      await updateUser(myUserId, userData);
+      signinRef.current.style.display = "none";
+      history.push({ pathname: "home" });
+    }
+    setNewUserData();
   }
 
   function handleSetValue(event, key) {
@@ -165,7 +155,8 @@ export default function MoreInfoForm({
       <MoreInfoFormTitleDiv>MORE ABOUT YOU</MoreInfoFormTitleDiv>
       <MoreInfoFormArea>
         <Title>
-          <i className="fas fa-birthday-cake"></i>&ensp;Birthday
+          <i className="fas fa-birthday-cake" />
+          &ensp;Birthday
         </Title>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
@@ -182,7 +173,8 @@ export default function MoreInfoForm({
         </LocalizationProvider>
 
         <Title>
-          <i className="fas fa-globe"></i>&ensp;Country
+          <i className="fas fa-globe" />
+          &ensp;Country
         </Title>
         <FormControl fullWidth variant="filled">
           <InputLabel id="set-country-label"></InputLabel>
@@ -206,7 +198,8 @@ export default function MoreInfoForm({
         </FormControl>
 
         <Title>
-          <i className="fas fa-globe"></i>&ensp;Language
+          <i className="fas fa-globe" />
+          &ensp;Language
         </Title>
         <LanguageTextField
           inputProps={{
@@ -221,10 +214,10 @@ export default function MoreInfoForm({
           onChange={(e) => {
             handleSetValue(e, "language");
           }}
-          // ref={input_ref}
         />
         <Title>
-          <i className="fas fa-list-ul"></i>&ensp;Introduction
+          <i className="fas fa-list-ul" />
+          &ensp;Introduction
         </Title>
         <IntroductionTextField
           inputProps={{
@@ -236,42 +229,15 @@ export default function MoreInfoForm({
           size="small"
           placeholder="introduce yourself"
           variant="outlined"
-          // ref={input_ref}
           multiline
           onChange={(e) => {
             handleSetValue(e, "introduction");
           }}
         />
       </MoreInfoFormArea>
-      <ThemeProvider theme={signInEnterTheme}>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            width: "100px",
-            margin: "4px 0 24px",
-            // border: `2px white solid`,
-            // boxShadow: "1px 3px 10px rgb(80, 80, 80)",
-            boxShadow: "4px 6px 10px rgb(80, 80, 80, 0.6)",
-            color: "white",
-            ":hover": {
-              boxShadow: "2px 3px 10px rgb(80, 80, 80, 0.6)",
-            },
-          }}
-          // style={{
-          //   marginTop: "20px",
-          //   borderRadius: "40px",
-          //   lineHeight: 1.5,
-          //   color: "#3A4A58",
-          //   fontWeight: "bold",
-          // }}
-          onClick={handleToWorldPage}
-        >
-          enter
-        </Button>
-      </ThemeProvider>
+      <SigninEnterBtn onClick={handleToWorldPage} />
       <BackDiv onClick={handleBack}>
-        <i className="fas fa-arrow-left"></i>
+        <i className="fas fa-arrow-left" />
       </BackDiv>
     </MoreInfoFormDiv>
   );
