@@ -12,11 +12,17 @@ const LoadingDiv = styled.div`
   position: absolute;
   top: 200px;
   left: calc(50% - 400px);
-  height: 600px;
-  width: 800px;
+  height: 450px;
+  width: 600px;
+  margin-left: 100px;
   @media (max-width: 1200px) {
-    width: ${800 / 12}vw;
-    height: ${600 / 12}vw;
+    width: ${600 / 12}vw;
+    height: ${450 / 12}vw;
+    margin-left: ${100 / 12}vw;
+    left: calc(50% - 33.33vw);
+  }
+  @media (max-width: 750px) {
+    top: 100px;
   }
 `;
 
