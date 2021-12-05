@@ -2,7 +2,7 @@ const friendStateObj = {
   none: {
     text: "add friend",
     text_change: "send request",
-    color_change: "#b8c3d0", //green
+    color_change: "#b8c3d0",
     style: {
       backgroundColor: "white",
       color: "#b8c3d0",
@@ -16,7 +16,7 @@ const friendStateObj = {
   send_request: {
     text: "request sent",
     text_change: "remove request",
-    color_change: "#AE0000", //red
+    color_change: "#AE0000",
     style: {
       backgroundColor: "#b8c3d0",
       color: "white",
@@ -30,7 +30,7 @@ const friendStateObj = {
   get_request: {
     text: "friend request",
     text_change: "accept request",
-    color_change: "#3A4A58", //green
+    color_change: "#3A4A58",
     style: {
       backgroundColor: "#b8c3d0",
       color: "white",
@@ -44,7 +44,7 @@ const friendStateObj = {
   confirmed: {
     text: "friend",
     text_change: "remove friend",
-    color_change: "#AE0000", //red
+    color_change: "#AE0000",
     style: {
       backgroundColor: "#3A4A58",
       color: "white",

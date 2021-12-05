@@ -52,7 +52,6 @@ export default function TextEditorSlider({
         </Box>
       </ThemeProvider>
       <ShowValue>{value}</ShowValue>
-      {/* <ValueInput value={value} onChange={handleInputChange}></ValueInput> */}
     </TextEditorDiv>
   );
 }
