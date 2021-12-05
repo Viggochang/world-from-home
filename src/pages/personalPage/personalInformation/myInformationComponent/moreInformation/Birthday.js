@@ -79,6 +79,13 @@ const Cancel = styled.div`
   }
 `;
 
+function getBirthdayString(birthday) {
+  return birthday &&
+    birthday.toDateString() !== new Date(1900, 0, 1).toDateString()
+    ? birthday.toDateString().slice(4)
+    : "";
+}
+
 const allInfo = ["language", "birthday", "introduction"];
 export default function Birthday({
   handleShow,
@@ -91,20 +98,15 @@ export default function Birthday({
   const edit_icon_ref = useRef();
   const [birthday, setBirthday] = useState(); //to-do
 
-  const { birthday: birthdayData } = myInfo;
-  const birthdayDate =
-    birthdayData && new Date(birthdayData.seconds * 1000).toDateString();
-
-  const birthdayFormat =
-    birthdayData && birthdayDate !== new Date(0).toDateString()
-      ? birthdayDate.slice(4)
-      : "";
+  const birthdayString = getBirthdayString(
+    myInfo.birthday ? new Date(myInfo.birthday.seconds * 1000) : undefined
+  );
 
   useEffect(() => {
     setBirthday(
-      myInfo.birthday ? new Date(myInfo.birthday.seconds * 1000) : undefined
+      birthdayString ? new Date(myInfo.birthday.seconds * 1000) : new Date()
     );
-  }, [myInfo.birthday]);
+  }, [birthdayString]);
 
   return (
     <InfoDiv
@@ -134,7 +136,7 @@ export default function Birthday({
           </EditIcon>
         </TitleDiv>
         <InfoTextDiv ref={(el) => (infoRef.current["birthday"] = el)}>
-          {birthdayFormat}
+          {birthdayString}
         </InfoTextDiv>
         <EditDiv ref={(el) => (editRef.current["birthday"] = el)}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -175,3 +177,5 @@ export default function Birthday({
     </InfoDiv>
   );
 }
+
+export { getBirthdayString };

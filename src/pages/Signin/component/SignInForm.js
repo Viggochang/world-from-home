@@ -6,7 +6,7 @@ import { SigninMediaBtn } from "../../../util/muiButton";
 
 import { getUserIsExist, setUserDataIntoDb } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
-import { facebookProvider, googleProvider } from "../../../util/authMethod";
+import { googleProvider } from "../../../util/authMethod";
 import worldIcon from "../../../image/worldIcon/worldIcon.png";
 
 const SignInFormDiv = styled.div`
@@ -91,7 +91,7 @@ export default function SignInForm({
           language: "",
           introduction: "",
           friends: [],
-          birthday: new Date(0),
+          birthday: new Date(1900, 0, 1),
           travel_country: [],
         };
         setUserDataIntoDb(res.uid, userData);
