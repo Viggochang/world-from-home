@@ -15,6 +15,7 @@ const LoadingDiv = styled.div`
   height: 450px;
   width: 600px;
   margin-left: 100px;
+  color: white;
   @media (max-width: 1200px) {
     width: ${600 / 12}vw;
     height: ${450 / 12}vw;
@@ -86,12 +87,14 @@ export default function ShowAlbum({
   loadingRef,
 }) {
   const [pageInfo, setPageInfo] = useState({});
+  const [onLoadCount, setOnLoadCount] = useState(0);
 
   const canvasDivRef = useRef({});
   const pageCanvasContainerRef = useRef();
 
   useEffect(() => {
     setPageInfo(albumContent ? JSON.parse(albumContent.pageInfo) : {});
+    setOnLoadCount(0);
   }, [albumContent]);
 
   const canvasTotal =
@@ -102,11 +105,10 @@ export default function ShowAlbum({
         return acc + cur.canvasCount;
       }, 0);
 
-  let onLoadCount = 0;
   function handleOnLoad() {
-    onLoadCount += 1;
-    console.log(onLoadCount, canvasTotal);
-    if (canvasTotal && onLoadCount === canvasTotal) {
+    setOnLoadCount((onLoadCount) => onLoadCount + 1);
+    console.log(onLoadCount + 1, canvasTotal);
+    if (canvasTotal && onLoadCount + 1 === canvasTotal) {
       loadingRef.current.style.display = "none";
       albumRef.current.style.opacity = 1;
     }
@@ -114,7 +116,9 @@ export default function ShowAlbum({
 
   return (
     <>
-      <LoadingDiv ref={loadingRef} />
+      <LoadingDiv
+        ref={loadingRef}
+      >{`${onLoadCount} / ${canvasTotal}`}</LoadingDiv>
       <ShowDiv ref={albumRef}>
         {Object.values(pageInfo)
           .sort((a, b) => a.page - b.page)

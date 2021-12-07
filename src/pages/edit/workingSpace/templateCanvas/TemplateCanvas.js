@@ -22,8 +22,10 @@ const Loading = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
+  top: 25%;
+  left: 25%;
   margin: auto;
   z-index: -1;
   display: flex;

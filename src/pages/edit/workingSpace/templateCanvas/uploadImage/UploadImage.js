@@ -142,16 +142,15 @@ export default function UploadImage({
     loadingRef.style.zIndex = 1;
 
     new Compressor(img, {
-      quality: 0.6,
-      maxWidth: 2048,
-      maxHeight: 2048,
+      quality: 1,
+      maxWidth: 800,
       success(result) {
         // Send the compressed image file to server with XMLHttpRequest.
-        const metadata = { contentType: result.type };
+        console.log(result);
         const storageRef = storage.ref(
           `user_album/${myUserId}/albums/${albumIdEditing}/${canvasId}_${Date.now()}`
         );
-        storageRef.put(result, metadata).then(() => {
+        storageRef.put(result).then(() => {
           storageRef.getDownloadURL().then((imageUrl) => {
             addImg(event, imageUrl, canvas[canvasId]);
           });
