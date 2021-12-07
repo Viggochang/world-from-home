@@ -224,7 +224,8 @@ export default function CompleteQuestion({
     const img = event.target.files[0];
 
     new Compressor(img, {
-      quality: 0.6,
+      quality: 1,
+      maxWidth: 800,
       success(result) {
         // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };

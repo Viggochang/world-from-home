@@ -135,9 +135,8 @@ function EditSpace() {
     function handleUploadImg(img, canvasId, callback) {
       return new Promise((resolve, reject) => {
         new Compressor(img, {
-          quality: 0.6,
-          maxWidth: 2048,
-          maxHeight: 2048,
+          quality: 1,
+          maxWidth: 800,
           success(result) {
             // Send the compressed image file to server with XMLHttpRequest.
             async function putImgToStorage() {
