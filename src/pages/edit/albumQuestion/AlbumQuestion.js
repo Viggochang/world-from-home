@@ -118,9 +118,6 @@ const Title = styled.div`
   font-size: 32px;
   font-weight: bold;
   text-align: center;
-  /* @media (min-height: 1080px) {
-    font-size: 48px;
-  } */
 `;
 const TitleCountry = styled.div`
   color: #ffffff;
@@ -129,9 +126,6 @@ const TitleCountry = styled.div`
   font-weight: bold;
   text-align: center;
   margin: 10px;
-  /* @media (min-height: 1080px) {
-    font-size: 64px;
-  } */
 `;
 
 const SearchDiv = styled.div`

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
 
 import countryTrans from "../../util/countryTrans";
@@ -20,6 +21,8 @@ const Chartdiv = styled.div`
     props.userPage === "true" || props.mapType === "true" ? "block" : "none"};
   position: ${(props) => (props.userPage === "true" ? "static" : "fixed")};
 `;
+
+am4core.useTheme(am4themes_animated);
 
 function World({ userInfo, mapType, setMap, userPage, map, showCountry }) {
   const dispatch = useDispatch();
@@ -47,7 +50,7 @@ function World({ userInfo, mapType, setMap, userPage, map, showCountry }) {
     };
   }, [userInfo]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let map = am4core.create("chartdiv", am4maps.MapChart);
     setMap(map);
     map.geodata = am4geodata_worldLow;
