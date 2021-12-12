@@ -80,7 +80,6 @@ async function swalRemoveFriend(removeFriend) {
   } else if (result.dismiss === Swal.DismissReason.cancel) {
     MySwal.fire({
       title: "Cancelled",
-      // text: "Your album is safe :)",
       icon: "error",
       customClass: {
         confirmButton: "confirmbutton",

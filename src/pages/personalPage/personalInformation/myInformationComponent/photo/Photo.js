@@ -69,7 +69,6 @@ export default function Photo({ id, photo }) {
     new Compressor(img, {
       quality: 0.6,
       success(result) {
-        // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };
         const storageRef = storage.ref(`user_${key}/${id}`);
         storageRef.put(result, metadata).then(() => {

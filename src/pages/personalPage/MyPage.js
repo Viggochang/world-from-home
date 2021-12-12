@@ -13,7 +13,7 @@ import PersonalAlbum from "./personalAlbum/PersonalAlbum";
 import PersonalFriends from "./personialFriend/PersonalFriends";
 
 import Album from "../album/Album";
-import Logout from "../Signin/Logout";
+import Logout from "../signin/Logout";
 
 const MyPageDiv = styled.div`
   padding: 50px 80px;

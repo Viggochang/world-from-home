@@ -34,7 +34,6 @@ const ContentDiv = styled.div`
   justify-content: space-between;
   background-color: rgb(255, 255, 255, 0.5);
   border-radius: 10px;
-  /* overflow: scroll; */
   @media (max-width: 932px) {
     flex-direction: column;
     align-items: center;

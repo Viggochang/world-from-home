@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import { Alert, Stack } from "@mui/material";
 import Compressor from "compressorjs";
@@ -74,10 +74,9 @@ function EditSpace() {
       });
   }, []);
 
+  const { search } = useLocation();
   useEffect(() => {
-    const albumIdEditing = new URLSearchParams(window.location.search).get(
-      "album_id_edit"
-    );
+    const albumIdEditing = new URLSearchParams(search).get("album_id_edit");
     if (!albumIdEditing) {
       history.push({ pathname: "notfound" });
     } else {
@@ -136,9 +135,8 @@ function EditSpace() {
       return new Promise((resolve, reject) => {
         new Compressor(img, {
           quality: 1,
-          maxWidth: 800,
+          maxWidth: 1024,
           success(result) {
-            // Send the compressed image file to server with XMLHttpRequest.
             async function putImgToStorage() {
               const metadata = { contentType: result.type };
               const storageRef = storage.ref(
@@ -165,7 +163,7 @@ function EditSpace() {
       Object.entries(allCanvasRef.current).forEach(([canvasId, canvasEl]) => {
         promises.push(
           handleUploadImg(
-            dataURItoBlob(canvasEl.toDataURL()),
+            dataURItoBlob(canvasEl.toDataURL("image/jpeg")),
             canvasId,
             (imageUrl) => {
               body[canvasId] = imageUrl;

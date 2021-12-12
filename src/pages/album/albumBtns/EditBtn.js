@@ -11,7 +11,7 @@ import MediaMessage from "../../edit/mediaMessage/MediaMessage";
 
 const ButtonStyle = styled.div`
   margin-bottom: 30px;
-  display: ${(props) => (props.isMyAlbum === "true" ? "flex" : "none")};
+  display: ${(props) => (props.display === "true" ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   width: 64px;
@@ -68,11 +68,11 @@ export default function EditBtn({ albumIdShow, albumCountry, isMyAlbum }) {
   return (
     <>
       <MyTooltip
-        style={{ fontSize: 18, opacity: 0.9 }}
+        styleParams={{ fontSize: 18, opacity: 0.9 }}
         title="Edit"
         placement="left"
         content={
-          <ButtonStyle isMyAlbum={isMyAlbum.toString()} onClick={handleEdit}>
+          <ButtonStyle display={isMyAlbum.toString()} onClick={handleEdit}>
             <i className="fas fa-pencil-alt" />
           </ButtonStyle>
         }

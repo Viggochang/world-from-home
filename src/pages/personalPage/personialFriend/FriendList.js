@@ -29,7 +29,6 @@ const FriendListContent = styled.div`
   flex-wrap: wrap;
   @media (max-width: 1180px) {
     flex-direction: column;
-    /* align-items: center; */
   }
 `;
 

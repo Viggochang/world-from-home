@@ -32,14 +32,13 @@ const RequestBtn = styled.div`
   width: 60px;
   min-width: 60px;
   height: 60px;
-  color: ${(props) =>
-    props.showFriendRequest === "true" ? "white" : "#3a4a58"};
+  color: ${(props) => (props.request === "true" ? "white" : "#3a4a58")};
   font-size: 30px;
   border-radius: 50%;
   position: relative;
   display: flex;
   background-color: ${(props) =>
-    props.showFriendRequest === "true"
+    props.request === "true"
       ? "rgb(58, 74, 88, 0.8)"
       : "rgb(255, 255, 255, 0.7)"};
   cursor: pointer;
@@ -81,6 +80,10 @@ const SearchIconDiv = styled.div`
   color: #3a4a58;
 `;
 
+const FontIcon = styled.i`
+  margin: auto;
+`;
+
 export default function FriendFilter({
   title,
   isMyPage,
@@ -105,16 +108,16 @@ export default function FriendFilter({
       <Title>{title}</Title>
       {isMyPage && (
         <MyTooltip
-          style={{ fontSize: 14, opacity: 0.7 }}
+          styleParams={{ fontSize: 14, opacity: 0.7 }}
           title="Friend Requests"
           placement="left"
           content={
             <RequestBtn
               ref={friendRequestsRef}
-              showFriendRequest={showFriendRequest.toString()}
+              request={showFriendRequest.toString()}
               onClick={handleFriendRequest}
             >
-              <i className="fas fa-user-plus" style={{ margin: "auto" }} />
+              <FontIcon className="fas fa-user-plus" />
               {!!myFriendRequests.length && (
                 <RequestAlert>{myFriendRequests.length}</RequestAlert>
               )}

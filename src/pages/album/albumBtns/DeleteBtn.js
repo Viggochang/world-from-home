@@ -13,7 +13,7 @@ import { swalDeleteAlbum } from "../../../util/swal";
 
 const ButtonStyle = styled.div`
   margin-bottom: 30px;
-  display: ${(props) => (props.isMyAlbum === "true" ? "flex" : "none")};
+  display: ${(props) => (props.display === "true" ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   width: 64px;
@@ -60,14 +60,14 @@ export default function DeleteBtn({ albumIdShow, handleClickBack, isMyAlbum }) {
 
   return (
     <MyTooltip
-      style={{ fontSize: 18, opacity: 0.9 }}
+      styleParams={{ fontSize: 18, opacity: 0.9 }}
       title="Delete"
       placement="left"
       content={
-        <ButtonStyle isMyAlbum={isMyAlbum.toString()} onClick={handleDelete}>
+        <ButtonStyle display={isMyAlbum.toString()} onClick={handleDelete}>
           <i className="fas fa-trash-alt" />
         </ButtonStyle>
       }
-    ></MyTooltip>
+    />
   );
 }

@@ -107,7 +107,6 @@ export default function ShowAlbum({
 
   function handleOnLoad() {
     setOnLoadCount((onLoadCount) => onLoadCount + 1);
-    console.log(onLoadCount + 1, canvasTotal);
     if (canvasTotal && onLoadCount + 1 === canvasTotal) {
       loadingRef.current.style.display = "none";
       albumRef.current.style.opacity = 1;

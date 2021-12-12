@@ -90,7 +90,7 @@ export default function Introduction({
 }) {
   const myInfo = useSelector((state) => state.userInfo);
   const edit_icon_ref = useRef();
-  const [introduction, setIntroduction] = useState(); //to-do
+  const [introduction, setIntroduction] = useState();
 
   useEffect(() => {
     setIntroduction(myInfo.introduction);

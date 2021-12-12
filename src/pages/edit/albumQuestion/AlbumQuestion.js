@@ -87,11 +87,6 @@ const QuestionTitle = styled.div`
   font-weight: 400;
   line-height: 40px;
   font-weight: bold;
-  /* @media (min-height: 1080px) {
-    margin-top: 20px;
-    font-size: 36px;
-    line-height: 60px;
-  } */
 `;
 
 const TextAreaDiv = styled.div`
@@ -101,9 +96,6 @@ const TextAreaDiv = styled.div`
   font-size: 20px;
   overflow-y: scroll;
   border-radius: 10px;
-  /* @media (min-height: 1080px) {
-    width: 100%;
-  } */
 `;
 
 const ButtonsDiv = styled.div`
@@ -146,6 +138,9 @@ const TextFieldDiv = styled.div`
 const Inputdiv = styled.input`
   color: #3a4a58;
   width: 100%;
+  border: none;
+  background: "none";
+  font-size: "20px";
   :focus {
     outline: none;
   }
@@ -299,11 +294,6 @@ export default function AlbumQuestion() {
                     id="search-country"
                     name="search-country"
                     placeholder="City/State"
-                    style={{
-                      border: "none",
-                      background: "none",
-                      fontSize: "20px",
-                    }}
                     value={tripMainCity}
                     onChange={(e) => {
                       setTripMainCity(e.target.value);

@@ -21,7 +21,7 @@ import countryTrans from "../../../util/countryTrans";
 const MoreInfoFormDiv = styled.div`
   width: 400px;
   height: 100%;
-  display: none; /* to-do */
+  display: none;
   flex-direction: column;
   align-items: center;
   position: relative;

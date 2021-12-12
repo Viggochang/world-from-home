@@ -12,7 +12,6 @@ import UserPage from "./pages/personalPage/UserPage";
 import NotFound from "./pages/notFound/NotFound";
 
 function App() {
-  // const query = useQuery();
   const dispatch = useDispatch();
   const [mapType, setMapType] = useState(false);
 

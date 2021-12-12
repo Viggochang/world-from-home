@@ -96,7 +96,7 @@ export default function Birthday({
 }) {
   const myInfo = useSelector((state) => state.userInfo);
   const edit_icon_ref = useRef();
-  const [birthday, setBirthday] = useState(); //to-do
+  const [birthday, setBirthday] = useState();
 
   const birthdayString = getBirthdayString(
     myInfo.birthday ? new Date(myInfo.birthday.seconds * 1000) : undefined

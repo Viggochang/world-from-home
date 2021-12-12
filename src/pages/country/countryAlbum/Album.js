@@ -51,7 +51,8 @@ const AlbumPositionDate = styled.div`
 `;
 
 const AlbumPosition = styled.div`
-  width: calc(450px - 75px);
+  width: fit-content;
+  white-space: nowrap;
   margin-left: 5px;
   font-weight: bold;
   font-size: 30px;

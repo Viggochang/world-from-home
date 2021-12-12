@@ -62,7 +62,6 @@ function World({ userInfo, mapType, setMap, userPage, map, showCountry }) {
     polygonTemplate.tooltipText = "{name}";
     polygonTemplate.fill = am4core.color("#667484");
     polygonTemplate.stroke = am4core.color("#3A4A58");
-    // polygonTemplate.nonScaling = true;
 
     polygonSeries.exclude = ["AQ"];
     dispatch({

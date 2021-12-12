@@ -9,7 +9,7 @@ const FriendRequeststDiv = styled.div`
   width: 100%;
   margin-bottom: 30px;
   flex-direction: column;
-  display: ${(props) => (props.showFriendRequest === "true" ? "flex" : "none")};
+  display: ${(props) => (props.request === "true" ? "flex" : "none")};
 `;
 
 const ResultTitle = styled.div`
@@ -35,7 +35,7 @@ export default function FriendRequests({
   isMyPage,
 }) {
   return (
-    <FriendRequeststDiv showFriendRequest={showFriendRequest.toString()}>
+    <FriendRequeststDiv request={showFriendRequest.toString()}>
       <ResultTitle>
         {myFriendRequests.length ? "Friend Requests" : "No Friend Requests!"}
       </ResultTitle>

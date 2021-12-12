@@ -27,11 +27,6 @@ const Input = styledMui("input")({
   display: "none",
 });
 
-const CameraIcon = styled.div`
-  font-size: 18px;
-  margin-right: 10px;
-`;
-
 export default function ChangeBackground({ id }) {
   function handleUploadPhoto(event, key) {
     const img = event.target.files[0];

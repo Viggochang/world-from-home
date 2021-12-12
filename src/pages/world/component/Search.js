@@ -17,7 +17,7 @@ const SearchDiv = styled.div`
   margin-left: 20px;
   display: flex;
   z-index: 1;
-  display: ${(props) => (props.mapType === "true" ? "flex" : "none")};
+  display: ${(props) => (props.type === "true" ? "flex" : "none")};
 `;
 const SearchIconDiv = styled.div`
   font-size: 15px;
@@ -32,6 +32,10 @@ const SearchIconDiv = styled.div`
 `;
 
 const Inputdiv = styled.input`
+  border: none;
+  background: none;
+  color: #b8c3d0;
+  width: 100%;
   :focus {
     outline: none;
   }
@@ -43,7 +47,7 @@ const Inputdiv = styled.input`
 export default function Search({ map, mapType, showCountry }) {
   const searchRef = useRef();
   const [country2id, setCountry2id] = useState({});
-  const polygonSeries = useSelector((state) => state.polygonSeries); //test
+  const polygonSeries = useSelector((state) => state.polygonSeries);
 
   useEffect(() => {
     const country2id = Object.entries(countryTrans).reduce(
@@ -78,18 +82,12 @@ export default function Search({ map, mapType, showCountry }) {
   }
 
   return (
-    <SearchDiv mapType={mapType.toString()} onKeyDown={handleEnter}>
+    <SearchDiv type={mapType.toString()} onKeyDown={handleEnter}>
       <Inputdiv
         list="country-choice"
         id="search-country"
         name="search-country"
         placeholder="Discover the world"
-        style={{
-          border: "none",
-          background: "none",
-          color: "#B8C3D0",
-          width: "100%",
-        }}
         ref={searchRef}
         onChange={(e) => {
           e.target.parentNode.style.outline = "4px #b8c3d0 solid";

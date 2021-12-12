@@ -27,6 +27,9 @@ const ImageSizeDiv = styled.div`
   padding-bottom: 15px;
   border-bottom: 1px solid rgb(184, 195, 208, 0.7);
 `;
+const ImageFilterDiv = styled(ImageSizeDiv)`
+  padding: 10px 0;
+`;
 
 const Title = styled.div`
   color: rgb(58, 74, 88, 0.6);
@@ -72,8 +75,12 @@ const FilterBtn = styled.div`
   font-weight: bold;
   cursor: pointer;
   border: 4px rgb(184, 195, 208, 1) solid;
-  background-color: ${(props) =>
-    props.active ? "rgb(58, 74, 88, 0.9)" : "rgb(184, 195, 208, 0.5)"};
+
+  background-color: ${(props) => {
+    return props.active === "true"
+      ? "rgb(58, 74, 88, 0.9)"
+      : "rgb(184, 195, 208, 0.5)";
+  }};
   color: ${(props) => (props.active === "true" ? "white" : "#3a4a58")};
 `;
 
@@ -93,7 +100,7 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
     Grayscale: new fabric.Image.filters.Grayscale(),
     Invert: new fabric.Image.filters.Invert(),
     Sepia: new fabric.Image.filters.Sepia(),
-    "Black/White": new fabric.Image.filters.BlackWhite(),
+    BlackWhite: new fabric.Image.filters.BlackWhite(),
     Brownie: new fabric.Image.filters.Brownie(),
     Vintage: new fabric.Image.filters.Vintage(),
     Technicolor: new fabric.Image.filters.Technicolor(),
@@ -172,7 +179,7 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
           </SizeBtn>
         </BtnDiv>
       </ImageSizeDiv>
-      <ImageSizeDiv>
+      <ImageFilterDiv>
         <Title>Image Filters</Title>
         <BtnDiv>
           {Object.keys(allFilters).map((filter) => (
@@ -180,18 +187,12 @@ export default function ImageEditor({ imageEditorRef, handleCanvasOn }) {
               key={filter}
               onClick={(e) => handleImgStyle(e, filter, "filter")}
               active={imgFilters.includes(filter).toString()}
-              style={{
-                backgroundColor: imgFilters.includes(filter)
-                  ? "rgb(58, 74, 88, 0.9)"
-                  : "rgb(184, 195, 208, 0.5)",
-                color: imgFilters.includes(filter) ? "white" : "#3a4a58",
-              }}
             >
               {filter}
             </FilterBtn>
           ))}
         </BtnDiv>
-      </ImageSizeDiv>
+      </ImageFilterDiv>
     </ImageEditorDiv>
   );
 }

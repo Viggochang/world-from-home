@@ -23,8 +23,8 @@ const AlbumDiv = styled.div`
   height: calc(100vh - 80px);
   background-color: rgb(0, 0, 0, 0.9);
   display: flex;
-  z-index: ${(props) => (props.albumIdShow ? 5 : -1)};
-  opacity: ${(props) => (props.albumIdShow ? 1 : 0)};
+  z-index: ${(props) => (props.show ? 5 : -1)};
+  opacity: ${(props) => (props.show ? 1 : 0)};
   position: fixed;
   top: 0;
   left: 0;
@@ -143,7 +143,7 @@ export default function Album() {
   }
 
   return (
-    <AlbumDiv albumIdShow={albumIdShow} onKeyDown={handleEsc} tabIndex="0">
+    <AlbumDiv show={albumIdShow} onKeyDown={handleEsc} tabIndex="0">
       <BackDiv onClick={handleClickBack}>
         <i className="fas fa-times-circle" />
       </BackDiv>

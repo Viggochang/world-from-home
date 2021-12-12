@@ -36,6 +36,10 @@ const RequestBtn = styled.div`
     font-size: 20px;
   }
 `;
+const FontIcon = styled.i`
+  margin: auto;
+`;
+
 const StateText = styled.div`
   width: 125px;
   text-align: center;
@@ -141,7 +145,7 @@ export default function FriendState({ userInfo }) {
     const stateText = stateTextRef.current;
     if (type === "enter") {
       stateText.innerText = "remove request";
-      stateText.style.color = "#AE0000"; //red
+      stateText.style.color = "#AE0000";
     }
   }
 
@@ -155,9 +159,9 @@ export default function FriendState({ userInfo }) {
         onClick={handleFriendState}
       >
         {friendState === "confirmed" ? (
-          <i className="fas fa-user-friends" style={{ margin: "auto" }} />
+          <FontIcon className="fas fa-user-friends" />
         ) : (
-          <i className="fas fa-user-plus" style={{ margin: "auto" }} />
+          <FontIcon className="fas fa-user-plus" />
         )}
       </RequestBtn>
       <StateText ref={stateTextRef}>

@@ -41,7 +41,7 @@ export default function Logout({
           payload: "",
         });
         dispatch({
-          type: "SET_USER_INFO", // 使用者的資訊
+          type: "SET_USER_INFO",
           payload: {},
         });
       })

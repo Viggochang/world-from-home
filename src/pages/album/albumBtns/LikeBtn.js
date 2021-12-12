@@ -57,7 +57,7 @@ export default function LikeBtn({ praise }) {
 
   return (
     <MyTooltip
-      style={{ fontSize: 18, opacity: 0.9 }}
+      styleParams={{ fontSize: 18, opacity: 0.9 }}
       title={liked ? "Liked" : "Like"}
       placement="left"
       content={

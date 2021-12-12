@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
@@ -13,8 +13,8 @@ import { AlbumFriendBtn } from "../../util/muiButton";
 import PersonalAlbum from "./personalAlbum/PersonalAlbum";
 import PersonalFriends from "./personialFriend/PersonalFriends";
 
-import Logout from "../Signin/Logout";
-import Login from "../Signin/Signin";
+import Logout from "../signin/Logout";
+import Login from "../signin/Signin";
 import Album from "../album/Album";
 
 const UserPageDiv = styled.div`
@@ -149,7 +149,11 @@ export default function UserPage() {
   const queryUserId = useSelector((state) => state.queryUserId);
   const history = useHistory();
 
-  const id = new URLSearchParams(window.location.search).get("id");
+  function useQuery() {
+    const { search } = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+  }
+  const id = useQuery().get("id");
 
   useEffect(() => {
     async function getUserData(id) {
@@ -165,7 +169,7 @@ export default function UserPage() {
       }
     }
     getUserData(id);
-  }, [myUserId, window.location.search, queryUserId]);
+  }, [myUserId, id, queryUserId]);
 
   const { background_photo } = userInfo;
 

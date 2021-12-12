@@ -48,6 +48,10 @@ const TextFieldDiv = styled.div`
 `;
 const Inputdiv = styled.input`
   width: 240px;
+  border: none;
+  background: none;
+  color: white;
+  font-size: 20px;
   :focus {
     outline: none;
   }
@@ -137,12 +141,6 @@ export default function Country({ country }) {
               id="search-country"
               name="search-country"
               placeholder="Choose your country"
-              style={{
-                border: "none",
-                background: "none",
-                color: "white",
-                fontSize: "20px",
-              }}
               ref={countryInputRef}
               onChange={(e) => {
                 e.target.parentNode.parentNode.style.outline = "none";

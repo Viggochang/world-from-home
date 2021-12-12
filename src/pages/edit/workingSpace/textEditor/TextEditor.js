@@ -62,6 +62,25 @@ const IconDiv = styled.div`
   width: 16px;
   display: flex;
   justify-content: center;
+  background-color: ${(props) =>
+    props.fontWeight === "bold" ||
+    props.fontStyle === "italic" ||
+    props.underline
+      ? "rgb(184, 195, 208, 0.3)"
+      : "white"};
+`;
+
+const IconLeftDiv = styled(IconDiv)`
+  outline: ${(props) =>
+    props.textAlign === "left" ? "1px #b8c3d0 solid" : "none"};
+`;
+const IconCenterDiv = styled(IconDiv)`
+  outline: ${(props) =>
+    props.textAlign === "center" ? "1px #b8c3d0 solid" : "none"};
+`;
+const IconRightDiv = styled(IconDiv)`
+  outline: ${(props) =>
+    props.textAlign === "right" ? "1px #b8c3d0 solid" : "none"};
 `;
 
 const TextStyleDiv = styled.div`
@@ -149,66 +168,43 @@ export default function TextEditor({ textEditorRef, handleCanvasOn }) {
       <AlignStyleDiv>
         <TextAlignDiv>
           <Title>Text Align</Title>
-          <IconDiv
+          <IconLeftDiv
             onClick={() => handleFontStyleChange("left", "textAlign")}
-            style={{
-              outline:
-                textStyle.textAlign === "left" ? "1px #b8c3d0 solid" : "none",
-            }}
+            textAlign={textStyle.textAlign}
           >
             <i className="fas fa-align-left" />
-          </IconDiv>
-          <IconDiv
+          </IconLeftDiv>
+          <IconCenterDiv
             onClick={() => handleFontStyleChange("center", "textAlign")}
-            style={{
-              outline:
-                textStyle.textAlign === "center" ? "1px #b8c3d0 solid" : "none",
-            }}
+            textAlign={textStyle.textAlign}
           >
             <i className="fas fa-align-center" />
-          </IconDiv>
-          <IconDiv
+          </IconCenterDiv>
+          <IconRightDiv
             onClick={() => handleFontStyleChange("right", "textAlign")}
-            style={{
-              outline:
-                textStyle.textAlign === "right" ? "1px #b8c3d0 solid" : "none",
-            }}
+            textAlign={textStyle.textAlign}
           >
             <i className="fas fa-align-right" />
-          </IconDiv>
+          </IconRightDiv>
         </TextAlignDiv>
 
         <TextStyleDiv>
           <Title>Font Style</Title>
           <IconDiv
             onClick={() => handleFontStyleChange("bold", "fontWeight")}
-            style={{
-              backgroundColor:
-                textStyle.fontWeight === "bold"
-                  ? "rgb(184, 195, 208, 0.3)"
-                  : "white",
-            }}
+            fontWeight={textStyle.fontWeight}
           >
             <i className="fas fa-bold" />
           </IconDiv>
           <IconDiv
             onClick={() => handleFontStyleChange("italic", "fontStyle")}
-            style={{
-              backgroundColor:
-                textStyle.fontStyle === "italic"
-                  ? "rgb(184, 195, 208, 0.3)"
-                  : "white",
-            }}
+            fontStyle={textStyle.fontStyle}
           >
             <i className="fas fa-italic" />
           </IconDiv>
           <IconDiv
             onClick={() => handleFontStyleChange("true", "underline")}
-            style={{
-              backgroundColor: textStyle.underline
-                ? "rgb(184, 195, 208, 0.3)"
-                : "white",
-            }}
+            underline={textStyle.underline}
           >
             <i className="fas fa-underline" />
           </IconDiv>

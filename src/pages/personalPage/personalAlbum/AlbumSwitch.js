@@ -6,7 +6,7 @@ import { whiteBtnTheme } from "../../../util/muiTheme";
 import { Switch } from "@mui/material";
 
 const EditingSwitchDiv = styled.div`
-  display: ${(props) => (props.isMyPage === "true" ? "flex" : "none")};
+  display: ${(props) => (props.display === "true" ? "flex" : "none")};
   align-items: center;
   margin-top: 10px;
   margin-left: auto;
@@ -40,7 +40,7 @@ const CompleteLabel = styled(AlbumStatusLabel)`
 export default function AlbumSwitch({ pending, setPending, isMyPage }) {
   return (
     <ThemeProvider theme={whiteBtnTheme}>
-      <EditingSwitchDiv isMyPage={isMyPage.toString()}>
+      <EditingSwitchDiv display={isMyPage.toString()}>
         <EditingLabel pending={pending}>complete</EditingLabel>
         <Switch
           checked={pending}

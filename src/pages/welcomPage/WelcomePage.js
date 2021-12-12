@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { onAuthStateChanged } from "../../util/firebase";
 
-import SigninDiv from "../Signin/Signin";
+import SigninDiv from "../signin/Signin";
 import landingPageImg from "../../image/landingPage.jpeg";
 import { WelcomePageBtn } from "../../util/muiButton";
 

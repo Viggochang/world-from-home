@@ -23,6 +23,13 @@ const CountryDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   border-radius: 10px;
+
+  visibility: ${(props) => props.params.maskVisibility};
+  background-color: ${(props) =>
+    `rgba(63, 63, 63, ${props.params.maskOpacity})`};
+  display: ${(props) => props.params.maskDisplay};
+  opacity: ${(props) => props.params.maskOpacity + 0.2};
+
   @media (max-width: 1180px) {
     width: calc(90% - 60px);
     height: calc(85% - 50px);
@@ -70,7 +77,7 @@ const countryCaptalCityApi = (countryId) =>
 const weatherApi = (capitalCity) =>
   `https://api.openweathermap.org/data/2.5/weather?q=${capitalCity}&appid=${process.env.REACT_APP_OPENWEATHERMAP_APPID}&units=metric`;
 
-function Country({ style, handleClickBack, signinRef }) {
+function Country({ styleParams, handleClickBack, signinRef }) {
   const targetCountry = useSelector((state) => state.targetCountry);
 
   const [captain, setCaptain] = useState({});
@@ -136,7 +143,7 @@ function Country({ style, handleClickBack, signinRef }) {
   }, [myUserInfo, targetCountry]);
 
   return (
-    <CountryDiv style={style}>
+    <CountryDiv params={styleParams}>
       <CountryShape />
       <CountryAlbums signinRef={signinRef} />
       <InfoFriendDiv>

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-import Logout from "../../Signin/Logout";
+import Logout from "../../signin/Logout";
 
 const NavBarNav = styled.nav`
   font-size: 30px;

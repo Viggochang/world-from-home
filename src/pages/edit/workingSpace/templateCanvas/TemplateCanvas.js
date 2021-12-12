@@ -14,6 +14,8 @@ const CanvasContainer = styled.div`
   width: fit-content;
   height: fit-content;
   display: flex;
+  position: ${(props) => (props.slideshow ? "absolute" : "relative")};
+  transition: "opacity 1s";
 `;
 
 const Loading = styled.div`
@@ -70,10 +72,7 @@ export default function TemplateCanvas({
         return (
           <CanvasContainer
             ref={(el) => (canvasDivRef.current[`page${page}-canvas${id}`] = el)}
-            style={{
-              position: slideShow ? "absolute" : "relative",
-              transition: "opacity 1s",
-            }}
+            slideshow={slideShow}
             key={`page${page}-canvas${id}`}
             tabIndex="0"
             onFocus={(e) => {

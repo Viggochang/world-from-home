@@ -86,7 +86,7 @@ export default function Language({
 }) {
   const myInfo = useSelector((state) => state.userInfo);
   const edit_icon_ref = useRef();
-  const [language, setLanguage] = useState(); //to-do
+  const [language, setLanguage] = useState();
 
   useEffect(() => {
     setLanguage(myInfo.language);

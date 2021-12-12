@@ -28,6 +28,11 @@ const CountryShapeFrameDiv = styled.div`
   }
 `;
 
+const ShapeDiv = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
 const CountryNameDiv = styled.div`
   margin: 20px;
   font-size: 50px;
@@ -69,7 +74,7 @@ export default function CountryShape() {
 
   return (
     <CountryShapeFrameDiv>
-      <div id="countryShape" style={{ width: "100%", height: "100%" }} />
+      <ShapeDiv id="countryShape" />
       <CountryNameDiv>{targetCountry.name}</CountryNameDiv>
     </CountryShapeFrameDiv>
   );

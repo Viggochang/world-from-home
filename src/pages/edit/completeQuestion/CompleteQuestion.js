@@ -129,6 +129,10 @@ const CoverPhoto = styled.div`
   background-position: center;
 `;
 
+const InputNone = styled.input`
+  display: none;
+`;
+
 const TouristSpotMapDiv = styled.div`
   width: 100%;
   height: 48vmin;
@@ -225,9 +229,8 @@ export default function CompleteQuestion({
 
     new Compressor(img, {
       quality: 1,
-      maxWidth: 800,
+      maxWidth: 1024,
       success(result) {
-        // Send the compressed image file to server with XMLHttpRequest.
         const metadata = { contentType: result.type };
         const storageRef = storage.ref(
           `userId/albums/${albumIdEditing}/cover_photo`
@@ -329,10 +332,9 @@ export default function CompleteQuestion({
             <CoverPhotoDiv>
               <CoverPhoto photo={imageUrl} />
               <label>
-                <input
+                <InputNone
                   type="file"
                   accept="image/*"
-                  style={{ display: "none" }}
                   onChange={handleUploadImg}
                 />
                 <CameraBtn>

@@ -67,7 +67,6 @@ export default function SignInForm({
 
   const handleSignin = async (provider) => {
     const res = await socialMediaAuth(provider);
-    console.log(res);
     if (res.uid) {
       setCurrentUser(res);
       dispatch({

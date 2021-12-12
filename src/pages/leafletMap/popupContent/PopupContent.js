@@ -26,6 +26,9 @@ const AlbumPhoto = styled.div`
   display: flex;
   margin-top: 10px;
   cursor: pointer;
+  background-image: ${(props) => `url(${props.photo})`};
+  background-position: center;
+  background-size: cover;
   @media (max-width: 600px) {
     width: 240px;
     height: 160px;
@@ -43,6 +46,9 @@ const AlbumOwnerPhoto = styled.div`
   box-shadow: rgba(255, 255, 255, 0.6) 0px 10px 27px -5px,
     rgba(255, 255, 255, 0.6) 0px 16px 16px -8px;
   cursor: pointer;
+  background-image: ${(props) => `url(${props.photo})`};
+  background-position: center;
+  background-size: cover;
   @media (max-width: 600px) {
     width: 40px;
     height: 40px;
@@ -102,19 +108,11 @@ export default function PopupContent({ spot }) {
         {spot.text}
       </Title>
       <AlbumPhoto
-        style={{
-          backgroundImage: `url(${album.cover_photo})`,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-        }}
+        photo={album.cover_photo}
         onClick={() => handleShowAlbumId("album_id_show", spot.album_id)}
       ></AlbumPhoto>
       <AlbumOwnerPhoto
-        style={{
-          backgroundImage: `url(${albumOwner.photo})`,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-        }}
+        photo={albumOwner.photo}
         onClick={() => handleUserPage(albumOwner.id)}
       >
         <Mask />

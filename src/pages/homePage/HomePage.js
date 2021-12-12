@@ -10,10 +10,10 @@ import LeafletMap from "../leafletMap/LeafletMap";
 import ToMyPage from "../world/component/ToMyPage";
 import Search from "../world/component/Search";
 import Country from "../country/Country";
-import SigninDiv from "../Signin/Signin";
+import SigninDiv from "../signin/Signin";
 import Album from "../album/Album";
 import MapSwitch from "./MapSwitch";
-import Logout from "../Signin/Logout";
+import Logout from "../signin/Logout";
 
 const HomePageDiv = styled.div`
   width: 100vw;
@@ -33,7 +33,7 @@ const BackBtn = styled.div`
   outline: 2px solid #ffffff;
   cursor: pointer;
   z-index: 1;
-  display: ${(props) => (props.mapType === "true" ? "block" : "none")};
+  display: ${(props) => (props.type === "true" ? "block" : "none")};
   :hover {
     background-color: #bebebe;
   }
@@ -41,7 +41,6 @@ const BackBtn = styled.div`
 
 const Title = styled.div`
   max-width: calc(100% - 120px);
-  color: white;
   font-size: 70px;
   letter-spacing: 2px;
   font-weight: bold;
@@ -52,6 +51,7 @@ const Title = styled.div`
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
+  color: ${(props) => (props.type === "true" ? "white" : "#3A4A58")};
   @media (max-width: 920px) {
     font-size: 50px;
     left: 50px;
@@ -68,7 +68,7 @@ const LogoutDiv = styled.div`
   right: 26px;
   z-index: 1;
   opacity: 0.8;
-  color: ${(props) => (props.mapType === "true" ? "white" : "#3a4a58")};
+  color: ${(props) => (props.type === "true" ? "white" : "#3a4a58")};
 `;
 
 export default function HomePage({ mapType, setMapType }) {
@@ -129,13 +129,13 @@ export default function HomePage({ mapType, setMapType }) {
         showCountry={showCountry}
         userPage={false}
       />
-      <Title style={{ color: mapType ? "white" : "#3A4A58" }}>
-        {`World from ${userInfo.name || "Guest"}`}
-      </Title>
+      <Title type={mapType.toString()}>{`World from ${
+        userInfo.name || "Guest"
+      }`}</Title>
 
       <MapSwitch setMapType={setMapType} mapType={mapType} />
 
-      <BackBtn mapType={mapType.toString()} onClick={handleClickBack}>
+      <BackBtn type={mapType.toString()} onClick={handleClickBack}>
         <i className="fas fa-home" />
       </BackBtn>
 
@@ -143,23 +143,18 @@ export default function HomePage({ mapType, setMapType }) {
       <ToMyPage handleSignIn={handleSignIn} />
       <SigninDiv signinRef={signinRef} />
       <MyTooltip
-        style={{ fontSize: 14, opacity: 0.9 }}
+        styleParams={{ fontSize: 14, opacity: 0.9 }}
         title="Log out"
         placement="left"
         content={
-          <LogoutDiv mapType={mapType.toString()}>
+          <LogoutDiv type={mapType.toString()}>
             <Logout />
           </LogoutDiv>
         }
       />
 
       <Country
-        style={{
-          visibility: maskVisibility,
-          backgroundColor: `rgba(63, 63, 63, ${maskOpacity})`,
-          display: maskDisplay,
-          opacity: maskOpacity + 0.2,
-        }}
+        styleParams={{ maskVisibility, maskOpacity, maskDisplay }}
         handleClickBack={handleClickBack}
         signinRef={signinRef}
       />

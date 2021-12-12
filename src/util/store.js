@@ -51,7 +51,6 @@ const rootReducer = (state = data, action) => {
         ...state,
         canvasId: { ...state.canvasId, ...action.payload },
       };
-    // discard album編輯
     case "DISCARD_CANVAS_EDIT":
       return {
         ...state,

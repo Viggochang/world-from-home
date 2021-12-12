@@ -38,6 +38,10 @@ const ImgInputLabel = styled.label`
   cursor: pointer;
 `;
 
+const InputNone = styled.input`
+  display: none;
+`;
+
 export default function UploadImage({
   page,
   id,
@@ -143,10 +147,8 @@ export default function UploadImage({
 
     new Compressor(img, {
       quality: 1,
-      maxWidth: 800,
+      maxWidth: 1024,
       success(result) {
-        // Send the compressed image file to server with XMLHttpRequest.
-        console.log(result);
         const storageRef = storage.ref(
           `user_album/${myUserId}/albums/${albumIdEditing}/${canvasId}_${Date.now()}`
         );
@@ -170,10 +172,9 @@ export default function UploadImage({
         }}
       >
         <ImgInputLabel>
-          <input
+          <InputNone
             type="file"
             accept="image/*"
-            style={{ display: "none" }}
             onChange={(e) => handleUploadImg(e, `page${page}-canvas${id}`)}
           />
           <InsertPhotoIcon />

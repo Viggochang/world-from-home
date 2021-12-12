@@ -33,8 +33,6 @@ export default function AlbumInformation({ ownerData, albumData }) {
     <AlbumInformationDiv>
       <AlbumOwnerName>{ownerData.name}</AlbumOwnerName>
       <AlbumDate>
-        {/* <i className="fas fa-map-marker-alt" />
-        &ensp;{albumData.position}&emsp; */}
         <i className="far fa-calendar-alt" />
         &ensp;
         {albumData.timestamp
