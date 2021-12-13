@@ -4,6 +4,8 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import { getAlbumDataById, getUserDataByUid } from "../../../util/firebase";
 
+import { setAlbumIdShow } from "../../../util/redux/action";
+
 const PopupContentDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -87,10 +89,7 @@ export default function PopupContent({ spot }) {
     params.append(key, value);
     history.push({ search: params.toString() });
 
-    dispatch({
-      type: "SET_ALBUM_ID_SHOW",
-      payload: value,
-    });
+    dispatch(setAlbumIdShow(value));
   }
 
   function handleUserPage(id) {

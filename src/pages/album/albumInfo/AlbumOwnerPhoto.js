@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 
+import { setAlbumIdShow } from "../../../util/redux/action";
+
 const AlbumOwnerPhotoDiv = styled.div`
   width: 80px;
   height: 80px;
@@ -25,10 +27,7 @@ export default function AlbumOwnerPhoto({ ownerData }) {
     <AlbumOwnerPhotoDiv
       photo={ownerData.photo}
       onClick={() => {
-        dispatch({
-          type: "SET_ALBUM_ID_SHOW",
-          payload: "",
-        });
+        dispatch(setAlbumIdShow(""));
         history.push({
           pathname: "user",
           search: `?id=${ownerData.id}`,

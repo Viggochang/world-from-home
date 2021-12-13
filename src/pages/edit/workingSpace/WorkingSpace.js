@@ -12,6 +12,17 @@ import SlideShow from "./slideShow/SlideShow";
 import { templateStyle, allTemplateParams } from "../../../util/myTemplate";
 import { getAlbumDataById } from "../../../util/firebase";
 
+import {
+  setCanvas,
+  setPageInfo,
+  setCanvasState,
+  setActiveCanvas,
+  setActiveObj,
+  setEditUndo,
+  setEditRedo,
+  removeCanvas,
+} from "../../../util/redux/action";
+
 const WorkingSpaceDiv = styled.div`
   background-color: #b8c3d0;
   padding-left: 360px;
@@ -82,14 +93,8 @@ function WorkingSpace({
         if (albumData.content) {
           const pageInfo = JSON.parse(albumData.content.pageInfo);
           const canvasState = JSON.parse(albumData.content.canvasState);
-          dispatch({
-            type: "SET_PAGE_INFO",
-            payload: pageInfo,
-          });
-          dispatch({
-            type: "SET_CANVAS_STATE",
-            payload: canvasState,
-          });
+          dispatch(setPageInfo(pageInfo));
+          dispatch(setCanvasState(canvasState));
 
           Object.values(pageInfo).forEach(({ page, templateId }) => {
             allTemplateParams()
@@ -115,10 +120,7 @@ function WorkingSpace({
                       }
                     });
                     canvas.renderAll();
-                    dispatch({
-                      type: "SET_CANVAS",
-                      payload: newCanvas,
-                    });
+                    dispatch(setCanvas(newCanvas));
                   }
                 );
               });
@@ -137,31 +139,27 @@ function WorkingSpace({
       )[pageLength - 1];
       const newCanvas = allTemplateParams()[templateId](page);
       // 儲存每一個canvas
-      dispatch({
-        type: "SET_CANVAS",
-        payload: newCanvas.reduce((acc, cur) => {
-          acc[cur.lowerCanvasEl.id] = cur;
-          return acc;
-        }, {}),
-      });
+      dispatch(
+        newCanvas(
+          newCanvas.reduce((acc, cur) => {
+            acc[cur.lowerCanvasEl.id] = cur;
+            return acc;
+          }, {})
+        )
+      );
       // 儲存初始狀態
-      dispatch({
-        type: "SET_CANVAS_STATE",
-        payload: newCanvas.reduce((acc, cur) => {
-          acc[cur.lowerCanvasEl.id] = JSON.stringify(cur.toJSON());
-          return acc;
-        }, {}),
-      });
+      dispatch(
+        setCanvasState(
+          newCanvas.reduce((acc, cur) => {
+            acc[cur.lowerCanvasEl.id] = JSON.stringify(cur.toJSON());
+            return acc;
+          }, {})
+        )
+      );
 
       if (templateId === "text_1") {
-        dispatch({
-          type: "SET_ACTIVE_CANVAS",
-          payload: newCanvas[0],
-        });
-        dispatch({
-          type: "SET_ACTIVE_OBJ",
-          payload: newCanvas[0].getActiveObject(),
-        });
+        dispatch(setActiveCanvas(newCanvas[0]));
+        dispatch(setActiveObj(newCanvas[0].getActiveObject()));
       }
     }
     workingSpaceInnerRef.current.scrollTop =
@@ -202,18 +200,9 @@ function WorkingSpace({
     const stateChange = {};
     stateChange[canvas.lowerCanvasEl.id] = JSON.stringify(canvas.toJSON());
 
-    dispatch({
-      type: "UNDO",
-      payload: [...editUndo, record],
-    });
-    dispatch({
-      type: "SET_CANVAS_STATE",
-      payload: stateChange,
-    });
-    dispatch({
-      type: "REDO",
-      payload: [],
-    });
+    dispatch(setEditUndo([...editUndo, record]));
+    dispatch(setCanvasState(stateChange));
+    dispatch(setEditRedo([]));
   }
 
   function handleKeyDown(event) {
@@ -271,32 +260,17 @@ function WorkingSpace({
       !textEditorRef.current.contains(e.target) &&
       !imageEditorRef.current.contains(e.target)
     ) {
-      dispatch({
-        type: "SET_ACTIVE_CANVAS",
-        payload: thisCanvas,
-      });
-      dispatch({
-        type: "SET_ACTIVE_OBJ",
-        payload: activeObj,
-      });
+      dispatch(setActiveCanvas(thisCanvas));
+      dispatch(setActiveObj(activeObj));
     }
   }
 
   function handleRemovePage(e, page) {
     const removePageObj = { ...pageInfo };
     removePageObj[`page${page}`].display = false;
-    dispatch({
-      type: "REMOVE_CANVAS",
-      payload: removePageObj,
-    });
-    dispatch({
-      type: "UNDO",
-      payload: [...editUndo, `page${page}`],
-    });
-    dispatch({
-      type: "REDO",
-      payload: [],
-    });
+    dispatch(removeCanvas(removePageObj));
+    dispatch(setEditUndo([...editUndo, `page${page}`]));
+    dispatch(setEditRedo([]));
   }
 
   return (

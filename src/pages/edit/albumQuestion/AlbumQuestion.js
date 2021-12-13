@@ -11,6 +11,8 @@ import DatePicker from "@mui/lab/DatePicker";
 
 import { AlbumQuestionBtn } from "../../../util/muiButton";
 
+import { setAlbumIdEditing } from "../../../util/redux/action";
+
 import {
   getAlbumDataById,
   deleteAlbum,
@@ -209,10 +211,7 @@ export default function AlbumQuestion() {
   }, []);
 
   async function handleBack() {
-    dispatch({
-      type: "SET_ALBUM_ID_EDITING",
-      payload: "",
-    });
+    dispatch(setAlbumIdEditing(""));
     if (newAlbum) {
       await deleteAlbum(albumIdEditing);
     }

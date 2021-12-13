@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { SigninMediaBtn } from "../../../util/muiButton";
+import { setMyUserId } from "../../../util/redux/action";
 
 import { getUserIsExist, setUserDataIntoDb } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";
@@ -69,10 +70,7 @@ export default function SignInForm({
     const res = await socialMediaAuth(provider);
     if (res.uid) {
       setCurrentUser(res);
-      dispatch({
-        type: "SET_MY_USER_ID",
-        payload: res.uid,
-      });
+      dispatch(setMyUserId(res.uid));
 
       if (await getUserIsExist(res.uid)) {
         signinRef.current.style.display = "none";

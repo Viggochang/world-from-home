@@ -9,6 +9,8 @@ import AlbumFilter from "./AlbumFilter";
 import AlbumSwitch from "./AlbumSwitch";
 import AlbumInfo from "./AlbumInfo";
 
+import { setAlbumIdShow } from "../../../util/redux/action";
+
 const MyGalleryContentDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -153,10 +155,7 @@ export default function PersonalAlbum({ title, id, isMyPage }) {
     let params = new URL(window.location).searchParams;
     params.append(key, value);
     history.push({ search: params.toString() });
-    dispatch({
-      type: "SET_ALBUM_ID_SHOW",
-      payload: value,
-    });
+    dispatch(setAlbumIdShow(value));
   }
 
   return (

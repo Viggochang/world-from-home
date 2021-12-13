@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-
 import styled from "styled-components";
 import { firebase } from "../../util/firebase";
 
 import Background from "./personalInformation/background/Background";
 import MyInformation from "./personalInformation/MyInformation";
 import { AlbumFriendBtn } from "../../util/muiButton";
-
 import PersonalAlbum from "./personalAlbum/PersonalAlbum";
 import PersonalFriends from "./personialFriend/PersonalFriends";
-
 import Album from "../album/Album";
 import Logout from "../signin/Logout";
+
+import { setTargetCountry } from "../../util/redux/action";
 
 const MyPageDiv = styled.div`
   padding: 50px 80px;
@@ -111,10 +110,7 @@ export default function MyPage() {
   });
 
   function handleHome() {
-    dispatch({
-      type: "SET_TARGET_COUNTRY",
-      payload: {},
-    });
+    dispatch(setTargetCountry({}));
     history.push({ pathname: "home" });
   }
 

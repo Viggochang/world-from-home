@@ -1,11 +1,10 @@
 import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-
 import styled from "styled-components";
-
 import MyTooltip from "../../../util/muiTooltips";
 import countryTrans from "../../../util/countryTrans";
+import { setTargetCountry, setAlbumIdShow } from "../../../util/redux/action";
 
 import MediaMessage from "../../edit/mediaMessage/MediaMessage";
 
@@ -45,17 +44,13 @@ export default function EditBtn({ albumIdShow, albumCountry, isMyAlbum }) {
 
   function handleEdit() {
     if (document.body.clientWidth > 880) {
-      dispatch({
-        type: "SET_ALBUM_ID_SHOW",
-        payload: "",
-      });
-      dispatch({
-        type: "SET_TARGET_COUNTRY",
-        payload: {
+      dispatch(setAlbumIdShow(""));
+      dispatch(
+        setTargetCountry({
           id: albumCountry,
           name: countryTrans[albumCountry].name_en,
-        },
-      });
+        })
+      );
       history.push({
         pathname: "edit",
         search: `?album_id_edit=${albumIdShow}`,

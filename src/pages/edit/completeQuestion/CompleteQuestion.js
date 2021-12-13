@@ -18,6 +18,8 @@ import { AlbumQuestionBtn } from "../../../util/muiButton";
 
 import LeafletMap from "./CompleteQuestion_leaflet";
 
+import { discardCanvasEdit } from "../../../util/redux/action";
+
 const CompleteQuestionDiv = styled.div`
   background-color: rgb(0, 0, 0, 0.7);
   position: fixed;
@@ -280,10 +282,7 @@ export default function CompleteQuestion({
 
     async function CompleteAlbum() {
       await updateAlbum(albumIdEditing, body);
-      dispatch({
-        type: "DISCARD_CANVAS_EDIT",
-        payload: "",
-      });
+      dispatch(discardCanvasEdit(""));
       setComplete(true);
     }
     CompleteAlbum();

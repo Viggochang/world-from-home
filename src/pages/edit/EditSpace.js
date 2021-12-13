@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-
 import { Alert, Stack } from "@mui/material";
 import Compressor from "compressorjs";
 
@@ -16,6 +15,14 @@ import WorkingSpace from "./workingSpace/WorkingSpace";
 import AlbumQuestion from "./albumQuestion/AlbumQuestion";
 import CompleteQuestion from "./completeQuestion/CompleteQuestion";
 import ToolContainer from "./toolContainer/ToolContainer";
+
+import {
+  setAlbumIdEditing,
+  setPageInfo,
+  setCanvasState,
+  setEditUndo,
+  setEditRedo,
+} from "../../util/redux/action";
 
 const AlertDiv = styled.div`
   margin: 20px calc(50% - 150px);
@@ -82,10 +89,7 @@ function EditSpace() {
     } else {
       async function getalbumIdEditing() {
         if (await getAlbumIsExist(albumIdEditing)) {
-          dispatch({
-            type: "SET_ALBUM_ID_EDITING",
-            payload: albumIdEditing,
-          });
+          dispatch(setAlbumIdEditing(albumIdEditing));
         } else {
           history.push({ pathname: "notfound" });
         }
@@ -181,6 +185,10 @@ function EditSpace() {
       REDO: editRedo,
       UNDO: editUndo,
     };
+    const reducers = {
+      REDO: setEditRedo,
+      UNDO: setEditUndo,
+    };
     if (editHistory[action].length) {
       const latestState = editHistory[action].slice(-1)[0];
       let record = {};
@@ -191,10 +199,7 @@ function EditSpace() {
           ...pageInfo[latestState],
           display: pageInfo[latestState].display ? false : true,
         };
-        dispatch({
-          type: "SET_PAGE_INFO",
-          payload: pageInfoObj,
-        });
+        dispatch(setPageInfo(pageInfoObj));
         record = latestState;
       } else {
         canvas[Object.keys(latestState)[0]].loadFromJSON(
@@ -203,21 +208,21 @@ function EditSpace() {
         const activeId = Object.keys(latestState)[0];
         record[activeId] = canvasState[activeId];
 
-        dispatch({
-          type: "SET_CANVAS_STATE",
-          payload: latestState,
-        });
+        dispatch(setCanvasState(latestState));
       }
 
-      dispatch({
-        type: action,
-        payload: editHistory[action].slice(0, editHistory[action].length - 1),
-      });
+      dispatch(
+        reducers[action](
+          editHistory[action].slice(0, editHistory[action].length - 1)
+        )
+      );
 
-      dispatch({
-        type: action === "REDO" ? "UNDO" : "REDO",
-        payload: [...editHistory[action === "REDO" ? "UNDO" : "REDO"], record],
-      });
+      dispatch(
+        reducers[action === "REDO" ? "UNDO" : "REDO"]([
+          ...editHistory[action === "REDO" ? "UNDO" : "REDO"],
+          record,
+        ])
+      );
     }
   }
 

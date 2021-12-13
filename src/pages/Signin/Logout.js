@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useHistory } from "react-router";
 import { firebase } from "../../util/firebase";
+import { setMyUserId, setUserInfo } from "../../util/redux/action";
 
 import logoutImg from "../../image/logout.jpeg";
 import { swalLogout } from "../../util/swal";
@@ -36,14 +37,8 @@ export default function Logout({
       .auth()
       .signOut()
       .then(() => {
-        dispatch({
-          type: "SET_MY_USER_ID",
-          payload: "",
-        });
-        dispatch({
-          type: "SET_USER_INFO",
-          payload: {},
-        });
+        dispatch(setMyUserId(""));
+        dispatch(setUserInfo({}));
       })
       .then(() => {
         swalLogout(logoutImg, () => {

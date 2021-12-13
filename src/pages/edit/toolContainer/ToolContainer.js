@@ -3,6 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
 
+import {
+  setPageInfo,
+  setEditUndo,
+  setEditRedo,
+} from "../../../util/redux/action";
+
 const ToolContainerDiv = styled.div`
   width: 200px;
   height: calc(100vh - 220px);
@@ -77,18 +83,9 @@ export default function ToolContainer({
         display: true,
       };
 
-      dispatch({
-        type: "SET_PAGE_INFO",
-        payload: pageInfoObj,
-      });
-      dispatch({
-        type: "UNDO",
-        payload: [...editUndo, `page${page}`],
-      });
-      dispatch({
-        type: "REDO",
-        payload: [],
-      });
+      dispatch(setPageInfo(pageInfoObj));
+      dispatch(setEditUndo([...editUndo, `page${page}`]));
+      dispatch(setEditRedo([]));
       setAddWindow(true);
     }
   }

@@ -3,6 +3,7 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { onAuthStateChanged, onSnapShotByUid } from "./util/firebase";
 import "firebase/auth";
+import { setMyUserId, setUserInfo, setAlbumIdShow } from "./util/redux/action";
 
 import WelcomePage from "./pages/welcomPage/WelcomePage";
 import HomePage from "./pages/homePage/HomePage";
@@ -16,25 +17,18 @@ function App() {
   const [mapType, setMapType] = useState(false);
 
   useEffect(() => {
-    dispatch({
-      type: "SET_ALBUM_ID_SHOW",
-      payload: new URL(window.location).searchParams.get("album_id_show"),
-    });
+    dispatch(
+      setAlbumIdShow(new URL(window.location).searchParams.get("album_id_show"))
+    );
   }, []);
 
   useEffect(() => {
     async function dispatchUserData(user) {
       if (user) {
         onSnapShotByUid(user.uid, (user_info) => {
-          dispatch({
-            type: "SET_USER_INFO",
-            payload: user_info,
-          });
+          dispatch(setUserInfo(user_info));
         });
-        dispatch({
-          type: "SET_MY_USER_ID",
-          payload: user.uid,
-        });
+        dispatch(setMyUserId(user.uid));
       }
     }
     onAuthStateChanged(dispatchUserData);

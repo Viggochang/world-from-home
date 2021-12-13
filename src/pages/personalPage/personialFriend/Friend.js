@@ -9,6 +9,7 @@ import countryTrans from "../../../util/countryTrans";
 import { updateUser } from "../../../util/firebase";
 import { friendStateObj } from "../../../util/friendStateObj";
 import { swalRemoveFriend } from "../../../util/swal";
+import { setQueryUserId } from "../../../util/redux/action";
 
 const FriendDiv = styled.div`
   display: flex;
@@ -128,10 +129,7 @@ export default function Friend({ friend: friendInfo, request, isMyPage }) {
   }
 
   function handleQueryUserId() {
-    dispatch({
-      type: "SET_QUERY_USER_ID",
-      payload: friendInfo.id,
-    });
+    dispatch(setQueryUserId(friendInfo.id));
     history.push({ pathname: "user", search: `?id=${friendInfo.id}` });
   }
 

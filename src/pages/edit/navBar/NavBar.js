@@ -5,6 +5,8 @@ import styled from "styled-components";
 
 import Logout from "../../signin/Logout";
 
+import { discardCanvasEdit } from "../../../util/redux/action";
+
 const NavBarNav = styled.nav`
   font-size: 30px;
   width: 100vw;
@@ -72,10 +74,7 @@ export default function NavBar({ saveAlertRef, saveEditing, saveCanvasToImg }) {
     saveAlertRef.current.style.zIndex = 5;
     await saveEditing(albumId);
     await saveCanvasToImg(albumId);
-    dispatch({
-      type: "DISCARD_CANVAS_EDIT",
-      payload: "",
-    });
+    dispatch(discardCanvasEdit(""));
     history.push({ pathname: "mypage" });
   }
 
@@ -83,10 +82,7 @@ export default function NavBar({ saveAlertRef, saveEditing, saveCanvasToImg }) {
     saveAlertRef.current.style.zIndex = 5;
     await saveEditing(albumId);
     await saveCanvasToImg(albumId);
-    dispatch({
-      type: "DISCARD_CANVAS_EDIT",
-      payload: "",
-    });
+    dispatch(discardCanvasEdit(""));
     history.push({ pathname: "home" });
   }
 
@@ -94,10 +90,7 @@ export default function NavBar({ saveAlertRef, saveEditing, saveCanvasToImg }) {
     saveAlertRef.current.style.zIndex = 5;
     await saveEditing(albumId);
     await saveCanvasToImg(albumId);
-    dispatch({
-      type: "DISCARD_CANVAS_EDIT",
-      payload: "",
-    });
+    dispatch(discardCanvasEdit(""));
     logout();
   }
 

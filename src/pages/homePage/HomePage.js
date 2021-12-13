@@ -2,8 +2,9 @@ import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components";
-
 import MyTooltip from "../../util/muiTooltips";
+
+import { setTargetCountry } from "../../util/redux/action";
 
 import World from "../world/World";
 import LeafletMap from "../leafletMap/LeafletMap";
@@ -84,20 +85,14 @@ export default function HomePage({ mapType, setMapType }) {
   const dispatch = useDispatch();
 
   function showCountry(currentActive) {
-    dispatch({
-      type: "SET_TARGET_COUNTRY",
-      payload: currentActive.dataItem.dataContext,
-    });
+    dispatch(setTargetCountry(currentActive.dataItem.dataContext));
     setMaskOpacity(0.8);
     setMaskVisibility("visible");
   }
 
   function handleClickBack() {
     map.goHome();
-    dispatch({
-      type: "SET_TARGET_COUNTRY",
-      payload: {},
-    });
+    dispatch(setTargetCountry({}));
     setMaskOpacity(0);
     setMaskVisibility("hidden");
     setMaskDisplay("none");

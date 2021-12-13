@@ -5,6 +5,12 @@ import Tooltip from "@mui/material/Tooltip";
 
 import styled from "styled-components";
 import deleteIcon from "../../../../image/deleteIcon/delete_icon.png";
+import {
+  setCanvasState,
+  setActiveCanvas,
+  setActiveObj,
+  setEditUndo,
+} from "../../../../util/redux/action";
 
 let deleteIconImg = document.createElement("img");
 deleteIconImg.src = deleteIcon;
@@ -70,10 +76,7 @@ function AddText({ page, id, addTextRef, handleCanvasOn }) {
     if (Object.keys(activeCanvas).length) {
       activeCanvas.discardActiveObject().renderAll();
     }
-    dispatch({
-      type: "SET_ACTIVE_CANVAS",
-      payload: canvas[id],
-    });
+    dispatch(setActiveCanvas(canvas[id]));
 
     const thisCanvas = canvas[id];
     const newText = new fabric.IText("edit", {
@@ -103,18 +106,9 @@ function AddText({ page, id, addTextRef, handleCanvasOn }) {
       thisCanvas.toJSON()
     );
 
-    dispatch({
-      type: "UNDO",
-      payload: [...editUndo, record],
-    });
-    dispatch({
-      type: "SET_CANVAS_STATE",
-      payload: stateChange,
-    });
-    dispatch({
-      type: "SET_ACTIVE_OBJ",
-      payload: thisCanvas.getActiveObject(),
-    });
+    dispatch(setEditUndo([...editUndo, record]));
+    dispatch(setCanvasState(stateChange));
+    dispatch(setActiveObj(thisCanvas.getActiveObject()));
   };
 
   return (

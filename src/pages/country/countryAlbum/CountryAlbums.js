@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import MediaMessage from "../../edit/mediaMessage/MediaMessage";
+import { setAlbumIdEditing } from "../../../util/redux/action";
 
 import {
   db_gallery,
@@ -90,10 +91,7 @@ export default function CountryAlbums({ signinRef }) {
     } else {
       if (document.body.clientWidth > 880) {
         const newAlbumIdEditing = db_gallery.doc().id;
-        dispatch({
-          type: "SET_ALBUM_ID_EDITING",
-          payload: newAlbumIdEditing,
-        });
+        dispatch(setAlbumIdEditing(newAlbumIdEditing));
 
         async function albumPending() {
           await setAlbumDataIntoDb(newAlbumIdEditing, {

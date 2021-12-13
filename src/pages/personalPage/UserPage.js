@@ -9,13 +9,13 @@ import Background from "./personalInformation/background/Background";
 import UserInformation from "./personalInformation/UserInformation";
 import UserWorld from "./userWorld/UserWorld";
 import { AlbumFriendBtn } from "../../util/muiButton";
-
 import PersonalAlbum from "./personalAlbum/PersonalAlbum";
 import PersonalFriends from "./personialFriend/PersonalFriends";
-
 import Logout from "../signin/Logout";
 import Login from "../signin/Signin";
 import Album from "../album/Album";
+
+import { setTargetCountry } from "../../util/redux/action";
 
 const UserPageDiv = styled.div`
   padding: 50px 80px;
@@ -182,10 +182,7 @@ export default function UserPage() {
   }
 
   function handleHome() {
-    dispatch({
-      type: "SET_TARGET_COUNTRY",
-      payload: {},
-    });
+    dispatch(setTargetCountry({}));
     history.push({ pathname: "home" });
   }
 

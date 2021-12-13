@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import { getUserDataByUid } from "../../../util/firebase";
+import { setAlbumIdShow } from "../../../util/redux/action";
 
 const AlbumHere = styled.div`
   width: 50%;
@@ -106,10 +107,7 @@ export default function Album({ album }) {
     params.append(key, value);
     history.push({ search: params.toString() });
 
-    dispatch({
-      type: "SET_ALBUM_ID_SHOW",
-      payload: value,
-    });
+    dispatch(setAlbumIdShow(value));
   }
 
   return (

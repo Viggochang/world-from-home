@@ -18,6 +18,8 @@ import AlbumInformation from "./albumInfo/AlbumInformation";
 import AlbumPraise from "./albumInfo/AlbumPraise";
 import ShowAlbum from "./showAlbum/ShowAlbum";
 
+import { setAlbumIdShow } from "../../util/redux/action";
+
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
   height: calc(100vh - 80px);
@@ -121,7 +123,7 @@ export default function Album() {
   }, [albumIdShow]);
 
   function handleClickBack() {
-    dispatch({ type: "SET_ALBUM_ID_SHOW", payload: "" });
+    dispatch(setAlbumIdShow(""));
     setOwnerData({});
     setAlbumData({});
     albumRef.current.style.opacity = 0;

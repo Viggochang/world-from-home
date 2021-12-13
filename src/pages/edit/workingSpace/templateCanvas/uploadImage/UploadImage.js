@@ -7,8 +7,14 @@ import Compressor from "compressorjs";
 import styled from "styled-components";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import Tooltip from "@mui/material/Tooltip";
+import { setCanvasState } from "../../../../../util/redux/action";
 
 import deleteIcon from "../../../../../image/deleteIcon/delete_icon.png";
+import {
+  setActiveCanvas,
+  setActiveObj,
+  setEditUndo,
+} from "../../../../../util/redux/action";
 
 let deleteIconImg = document.createElement("img");
 deleteIconImg.src = deleteIcon;
@@ -118,23 +124,11 @@ export default function UploadImage({
         const stateChange = {};
         stateChange[canvi.lowerCanvasEl.id] = JSON.stringify(canvi.toJSON());
 
-        dispatch({
-          type: "SET_ACTIVE_CANVAS",
-          payload: canvi,
-        });
+        dispatch(setActiveCanvas(canvi));
 
-        dispatch({
-          type: "UNDO",
-          payload: [...editUndo, record],
-        });
-        dispatch({
-          type: "SET_CANVAS_STATE",
-          payload: stateChange,
-        });
-        dispatch({
-          type: "SET_ACTIVE_OBJ",
-          payload: canvi.getActiveObject(),
-        });
+        dispatch(setEditUndo([...editUndo, record]));
+        dispatch(setCanvasState(stateChange));
+        dispatch(setActiveObj(canvi.getActiveObject()));
       },
       null,
       { crossOrigin: "anonymous" }
