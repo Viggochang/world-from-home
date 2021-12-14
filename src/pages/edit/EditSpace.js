@@ -226,6 +226,18 @@ function EditSpace() {
     }
   }
 
+  function discardCanvasEdit() {
+    dispatch({ type: "DELETE_ACTIVE_CANVAS" });
+    dispatch({ type: "DELETE_ACTIVE_OBJ" });
+    dispatch({ type: "DELETE_ALBUM_ID_EDITING" });
+    dispatch({ type: "DELETE_CANVAS" });
+    dispatch({ type: "DELETE_CANVAS_STATE" });
+    dispatch({ type: "DELETE_REDO" });
+    dispatch({ type: "DELETE_UNDO" });
+    dispatch({ type: "DELETE_PAGE_INFO" });
+    dispatch({ type: "DELETE_TARGET_COUNTRY" });
+  }
+
   return (
     <div>
       <AlbumQuestion />
@@ -234,6 +246,7 @@ function EditSpace() {
         longitude={longitude}
         latitude={latitude}
         setComplete={setComplete}
+        discardCanvasEdit={discardCanvasEdit}
       />
       <AlertDiv>
         <Stack sx={{ width: "300px" }} spacing={2}>
@@ -251,6 +264,7 @@ function EditSpace() {
         saveAlertRef={saveAlertRef}
         saveEditing={saveEditing}
         saveCanvasToImg={saveCanvasToImg}
+        discardCanvasEdit={discardCanvasEdit}
       />
       <EditBar
         preview={preview}
@@ -262,6 +276,7 @@ function EditSpace() {
         completeQuestionRef={completeQuestionRef}
         saveCanvasToImg={saveCanvasToImg}
         handleEditHistory={handleEditHistory}
+        discardCanvasEdit={discardCanvasEdit}
       />
 
       <ContainerDiv>

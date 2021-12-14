@@ -1,11 +1,9 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import Logout from "../../signin/Logout";
-
-import { discardCanvasEdit } from "../../../util/redux/action";
 
 const NavBarNav = styled.nav`
   font-size: 30px;
@@ -64,33 +62,35 @@ const LogoutStyle = {
   height: "50px",
 };
 
-export default function NavBar({ saveAlertRef, saveEditing, saveCanvasToImg }) {
+export default function NavBar({
+  saveAlertRef,
+  saveEditing,
+  saveCanvasToImg,
+  discardCanvasEdit,
+}) {
   const myInfo = useSelector((state) => state.userInfo);
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
-  const dispatch = useDispatch();
   const history = useHistory();
 
-  async function handleMyPage(e, albumId) {
+  async function saveAlbumBeforeLeaving(albumId) {
     saveAlertRef.current.style.zIndex = 5;
     await saveEditing(albumId);
     await saveCanvasToImg(albumId);
-    dispatch(discardCanvasEdit(""));
+    discardCanvasEdit();
+  }
+
+  async function handleMyPage(e, albumId) {
+    await saveAlbumBeforeLeaving(albumId);
     history.push({ pathname: "mypage" });
   }
 
   async function handleHome(e, albumId) {
-    saveAlertRef.current.style.zIndex = 5;
-    await saveEditing(albumId);
-    await saveCanvasToImg(albumId);
-    dispatch(discardCanvasEdit(""));
+    await saveAlbumBeforeLeaving(albumId);
     history.push({ pathname: "home" });
   }
 
   async function handleSaveLogout(e, albumId, logout) {
-    saveAlertRef.current.style.zIndex = 5;
-    await saveEditing(albumId);
-    await saveCanvasToImg(albumId);
-    dispatch(discardCanvasEdit(""));
+    await saveAlbumBeforeLeaving(albumId);
     logout();
   }
 

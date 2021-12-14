@@ -89,13 +89,6 @@ export const removeCanvas = (remove) => {
   };
 };
 
-export const discardCanvasEdit = () => {
-  return {
-    type: "DISCARD_CANVAS_EDIT",
-    payload: "",
-  };
-};
-
 export const setUserInfo = (UserInfo) => {
   return {
     type: "SET_USER_INFO",

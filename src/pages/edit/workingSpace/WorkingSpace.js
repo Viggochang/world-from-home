@@ -140,7 +140,7 @@ function WorkingSpace({
       const newCanvas = allTemplateParams()[templateId](page);
       // 儲存每一個canvas
       dispatch(
-        newCanvas(
+        setCanvas(
           newCanvas.reduce((acc, cur) => {
             acc[cur.lowerCanvasEl.id] = cur;
             return acc;
@@ -268,7 +268,7 @@ function WorkingSpace({
   function handleRemovePage(e, page) {
     const removePageObj = { ...pageInfo };
     removePageObj[`page${page}`].display = false;
-    dispatch(removeCanvas(removePageObj));
+    // dispatch(removeCanvas(removePageObj));
     dispatch(setEditUndo([...editUndo, `page${page}`]));
     dispatch(setEditRedo([]));
   }

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Compressor from "compressorjs";
 
@@ -17,8 +17,6 @@ import {
 import { AlbumQuestionBtn } from "../../../util/muiButton";
 
 import LeafletMap from "./CompleteQuestion_leaflet";
-
-import { discardCanvasEdit } from "../../../util/redux/action";
 
 const CompleteQuestionDiv = styled.div`
   background-color: rgb(0, 0, 0, 0.7);
@@ -199,6 +197,7 @@ export default function CompleteQuestion({
   longitude,
   latitude,
   setComplete,
+  discardCanvasEdit,
 }) {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [imageUrl, setImageUrl] = useState("");
@@ -207,7 +206,6 @@ export default function CompleteQuestion({
   const targetCountry = useSelector((state) => state.targetCountry);
 
   const touristSpotRef = useRef();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (albumIdEditing) {
@@ -282,7 +280,7 @@ export default function CompleteQuestion({
 
     async function CompleteAlbum() {
       await updateAlbum(albumIdEditing, body);
-      dispatch(discardCanvasEdit(""));
+      discardCanvasEdit();
       setComplete(true);
     }
     CompleteAlbum();

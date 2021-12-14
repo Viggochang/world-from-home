@@ -19,8 +19,6 @@ import {
   updateTouristSpot,
 } from "../../../util/firebase";
 
-import { discardCanvasEdit } from "../../../util/redux/action";
-
 const TitleBarDiv = styled.div`
   width: 100vw;
   height: 38px;
@@ -52,6 +50,7 @@ export default function EditBar({
   completeQuestionRef,
   saveCanvasToImg,
   handleEditHistory,
+  discardCanvasEdit,
 }) {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const targetCountry = useSelector((state) => state.targetCountry);
@@ -117,7 +116,7 @@ export default function EditBar({
       await updateAlbum(albumId, { condition: "discard" });
       const result = await swalDiscardAlbumInEditConfirm(MySwal);
       if (result.isConfirmed) {
-        dispatch(discardCanvasEdit(""));
+        discardCanvasEdit();
         discardTouristSpot();
         history.push({ pathname: "home" });
       }
