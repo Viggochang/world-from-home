@@ -147,13 +147,12 @@ export default function UserPage() {
   const [activeButton, setActiveButton] = useState("Albums");
   const myInfo = useSelector((state) => state.userInfo);
   const myUserId = useSelector((state) => state.myUserId);
-  const queryUserId = useSelector((state) => state.queryUserId);
   const history = useHistory();
   const id = useQuery().get("id");
 
   useEffect(() => {
     async function getUserData(id) {
-      if (myUserId && (queryUserId === myUserId || id === myUserId)) {
+      if (myUserId && id === myUserId) {
         history.push({ pathname: "mypage" });
       } else {
         const userData = await getUserDataByUid(id);
@@ -165,7 +164,7 @@ export default function UserPage() {
       }
     }
     getUserData(id);
-  }, [myUserId, id, queryUserId]);
+  }, [myUserId, id]);
 
   const { background_photo } = userInfo;
 

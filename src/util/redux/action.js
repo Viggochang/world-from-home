@@ -12,13 +12,6 @@ export const setMyUserId = (userId) => {
   };
 };
 
-export const setQueryUserId = (queryUserId) => {
-  return {
-    type: "SET_QUERY_USER_ID",
-    payload: queryUserId,
-  };
-};
-
 export const setTargetCountry = (countryObj) => {
   return {
     type: "SET_TARGET_COUNTRY",

@@ -9,7 +9,6 @@ import editUndo from "./editUndoReducer";
 import myUserId from "./myUserIdProducer";
 import pageInfo from "./pageInfoReducer";
 import polygonSeries from "./polygonReducer";
-import queryUserId from "./queryUserIdReducer";
 import targetCountry from "./targetCountryReducer";
 import userInfo from "./userInfoReducer";
 
@@ -24,7 +23,6 @@ const rootReducer = combineReducers({
   myUserId,
   pageInfo,
   polygonSeries,
-  queryUserId,
   targetCountry,
   userInfo,
 });
