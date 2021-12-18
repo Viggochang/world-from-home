@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useQuery } from "../../util/customHook";
 import { Alert, Stack } from "@mui/material";
 import Compressor from "compressorjs";
 
@@ -69,6 +70,7 @@ function EditSpace() {
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const albumIdEditing = useQuery().get("album_id_edit");
 
   useEffect(() => {
     fetch(worldBankApi(targetCountry.id))
@@ -81,9 +83,7 @@ function EditSpace() {
       });
   }, []);
 
-  const { search } = useLocation();
   useEffect(() => {
-    const albumIdEditing = new URLSearchParams(search).get("album_id_edit");
     if (!albumIdEditing) {
       history.push({ pathname: "notfound" });
     } else {

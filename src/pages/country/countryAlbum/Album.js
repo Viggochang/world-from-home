@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useShowAlbum } from "../../../util/customHook";
+
 import styled from "styled-components";
 
 import { getUserDataByUid } from "../../../util/firebase";
-import { setAlbumIdShow } from "../../../util/redux/action";
 
 const AlbumHere = styled.div`
   width: 50%;
@@ -46,7 +46,6 @@ const AlbumOwner = styled.div`
 const AlbumPositionDate = styled.div`
   display: flex;
   flex-direction: column;
-  overflow: scroll;
   width: calc(63vw - 70px);
   max-width: calc(450px - 70px);
 `;
@@ -91,7 +90,6 @@ const AlbumPraise = styled.div`
 
 export default function Album({ album }) {
   const [ownerPhoto, setOwnerPhoto] = useState("");
-  const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
@@ -102,13 +100,7 @@ export default function Album({ album }) {
     getUserPhoto();
   }, [album]);
 
-  function handleShowAlbumId(key, value) {
-    let params = new URL(window.location).searchParams;
-    params.append(key, value);
-    history.push({ search: params.toString() });
-
-    dispatch(setAlbumIdShow(value));
-  }
+  const handleShowAlbumId = useShowAlbum();
 
   return (
     <AlbumHere key={album.id}>

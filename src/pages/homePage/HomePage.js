@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "../../util/customHook";
 
 import styled from "styled-components";
 import MyTooltip from "../../util/muiTooltips";
@@ -75,7 +76,7 @@ const LogoutDiv = styled.div`
 export default function HomePage({ mapType, setMapType }) {
   const signinRef = useRef();
   const userInfo = useSelector((state) => state.userInfo);
-  const albumIdShow = useSelector((state) => state.albumIdShow);
+  const albumIdShow = useQuery().get("album_id_show");
 
   const [maskVisibility, setMaskVisibility] = useState("hidden");
   const [maskOpacity, setMaskOpacity] = useState(0);

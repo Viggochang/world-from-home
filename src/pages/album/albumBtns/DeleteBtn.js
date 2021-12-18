@@ -1,4 +1,5 @@
 import React from "react";
+import { useQuery } from "../../../util/customHook";
 
 import styled from "styled-components";
 
@@ -40,7 +41,9 @@ const ButtonStyle = styled.div`
   }
 `;
 
-export default function DeleteBtn({ albumIdShow, handleClickBack, isMyAlbum }) {
+export default function DeleteBtn({ handleClickBack, isMyAlbum }) {
+  const albumIdShow = useQuery().get("album_id_show");
+
   function handleDelete() {
     async function discardTouristSpot() {
       const allSpots = await getTouristSpotByAlbumId(albumIdShow);

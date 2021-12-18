@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useQuery } from "../../../util/customHook";
 
 import styled from "styled-components";
 
@@ -39,8 +40,8 @@ const ButtonStyle = styled.div`
 
 export default function LikeBtn({ praise }) {
   const myInfo = useSelector((state) => state.userInfo);
-  const albumIdShow = useSelector((state) => state.albumIdShow);
   const [liked, setLiked] = useState(false);
+  const albumIdShow = useQuery().get("album_id_show");
 
   useEffect(() => {
     setLiked(praise && praise.includes(myInfo.id));

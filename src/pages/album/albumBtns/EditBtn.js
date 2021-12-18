@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { useQuery } from "../../../util/customHook";
+
 import styled from "styled-components";
 import MyTooltip from "../../../util/muiTooltips";
 import countryTrans from "../../../util/countryTrans";
-import { setTargetCountry, setAlbumIdShow } from "../../../util/redux/action";
+import { setTargetCountry } from "../../../util/redux/action";
 
 import MediaMessage from "../../edit/mediaMessage/MediaMessage";
 
@@ -37,14 +39,14 @@ const ButtonStyle = styled.div`
   }
 `;
 
-export default function EditBtn({ albumIdShow, albumCountry, isMyAlbum }) {
+export default function EditBtn({ albumCountry, isMyAlbum }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const messageRef = useRef();
+  const albumIdShow = useQuery().get("album_id_show");
 
   function handleEdit() {
     if (document.body.clientWidth > 880) {
-      dispatch(setAlbumIdShow(""));
       dispatch(
         setTargetCountry({
           id: albumCountry,

@@ -11,7 +11,11 @@ import DatePicker from "@mui/lab/DatePicker";
 
 import { AlbumQuestionBtn } from "../../../util/muiButton";
 
-import { setAlbumIdEditing } from "../../../util/redux/action";
+import {
+  setAlbumIdEditing,
+  setTargetCountry,
+} from "../../../util/redux/action";
+import countryTrans from "../../../util/countryTrans";
 
 import {
   getAlbumDataById,
@@ -163,7 +167,7 @@ export default function AlbumQuestion() {
   const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [cityInCountry, setCityInCountry] = useState([]);
 
-  const [newAlbum, setNewAlbum] = useState(false);
+  const [isNewAlbum, setIsNewAlbum] = useState(false);
   const [tripDate, setTripDate] = useState(new Date());
   const [tripMainCity, setTripMainCity] = useState("");
   const [tripIntroduction, setTripIntroduction] = useState("");
@@ -183,7 +187,7 @@ export default function AlbumQuestion() {
         if (!albumData) {
           history.push({ pathname: "notfound" });
         } else if (!albumData.country) {
-          setNewAlbum(true);
+          setIsNewAlbum(true);
         } else {
           setTripDate(
             albumData.timestamp
@@ -192,6 +196,14 @@ export default function AlbumQuestion() {
           );
           setTripMainCity(albumData.position || "");
           setTripIntroduction(albumData.introduction || "");
+          if (!targetCountry.name) {
+            dispatch(
+              setTargetCountry({
+                id: albumData.country,
+                name: countryTrans[albumData.country].name_en,
+              })
+            );
+          }
         }
       }
       getTripData();
@@ -199,20 +211,22 @@ export default function AlbumQuestion() {
   }, [albumIdEditing]);
 
   useEffect(() => {
-    fetch(CountryStateApi, {
-      body: JSON.stringify({ country: targetCountry.name }),
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setCityInCountry(res.data ? res.data.states : []);
-      });
-  }, []);
+    if (targetCountry.name) {
+      fetch(CountryStateApi, {
+        body: JSON.stringify({ country: targetCountry.name }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          setCityInCountry(res.data ? res.data.states : []);
+        });
+    }
+  }, [targetCountry]);
 
   async function handleBack() {
     dispatch(setAlbumIdEditing(""));
-    if (newAlbum) {
+    if (isNewAlbum) {
       await deleteAlbum(albumIdEditing);
     }
     history.push({ pathname: "home" });
@@ -346,7 +360,7 @@ export default function AlbumQuestion() {
         <ButtonsDiv>
           <AlbumQuestionBtn content="Cancel" onClick={handleBack} />
           <AlbumQuestionBtn
-            content={newAlbum ? "Start" : "Continue"}
+            content={isNewAlbum ? "Start" : "Continue"}
             onClick={handleStartEdit}
           />
         </ButtonsDiv>

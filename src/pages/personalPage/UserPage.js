@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
+import { useQuery } from "../../util/customHook";
 
 import styled from "styled-components";
 import { getUserDataByUid } from "../../util/firebase";
@@ -148,11 +149,6 @@ export default function UserPage() {
   const myUserId = useSelector((state) => state.myUserId);
   const queryUserId = useSelector((state) => state.queryUserId);
   const history = useHistory();
-
-  function useQuery() {
-    const { search } = useLocation();
-    return React.useMemo(() => new URLSearchParams(search), [search]);
-  }
   const id = useQuery().get("id");
 
   useEffect(() => {

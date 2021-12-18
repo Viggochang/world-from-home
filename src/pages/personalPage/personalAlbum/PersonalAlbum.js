@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { useShowAlbum } from "../../../util/customHook";
 
 import styled from "styled-components";
 
@@ -8,8 +8,6 @@ import { onSnapshotAlbumByUserId } from "../../../util/firebase";
 import AlbumFilter from "./AlbumFilter";
 import AlbumSwitch from "./AlbumSwitch";
 import AlbumInfo from "./AlbumInfo";
-
-import { setAlbumIdShow } from "../../../util/redux/action";
 
 const MyGalleryContentDiv = styled.div`
   display: flex;
@@ -113,7 +111,6 @@ export default function PersonalAlbum({ title, id, isMyPage }) {
   const [albumCountry, setAlbumCountry] = useState("All");
   const [albumOrder, setAlbumOrder] = useState("New");
   const [pending, setPending] = useState(false);
-  const dispatch = useDispatch();
   const history = useHistory();
 
   const order = {
@@ -151,12 +148,7 @@ export default function PersonalAlbum({ title, id, isMyPage }) {
     );
   }, [albumData, pending, albumCountry, albumOrder]);
 
-  function handleShowAlbumId(key, value) {
-    let params = new URL(window.location).searchParams;
-    params.append(key, value);
-    history.push({ search: params.toString() });
-    dispatch(setAlbumIdShow(value));
-  }
+  const handleShowAlbumId = useShowAlbum();
 
   return (
     <MyGalleryContentDiv>

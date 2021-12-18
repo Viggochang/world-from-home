@@ -98,9 +98,10 @@ export default function CountryAlbums({ signinRef }) {
             id: newAlbumIdEditing,
             condition: "pending",
           });
-          let params = new URL(window.location).searchParams;
-          params.append("album_id_edit", newAlbumIdEditing);
-          history.push({ pathname: "edit", search: params.toString() });
+          history.push({
+            pathname: "edit",
+            search: `album_id_edit=${newAlbumIdEditing}`,
+          });
         }
         albumPending();
       } else {

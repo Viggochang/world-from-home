@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { useQuery } from "../../util/customHook";
 import {
   getAlbumDataById,
   getUserDataByUid,
@@ -17,8 +18,6 @@ import AlbumOwnerPhoto from "./albumInfo/AlbumOwnerPhoto";
 import AlbumInformation from "./albumInfo/AlbumInformation";
 import AlbumPraise from "./albumInfo/AlbumPraise";
 import ShowAlbum from "./showAlbum/ShowAlbum";
-
-import { setAlbumIdShow } from "../../util/redux/action";
 
 const AlbumDiv = styled.div`
   width: calc(100vw - 200px);
@@ -81,18 +80,16 @@ const AlbumInfoDiv = styled.div`
 `;
 
 export default function Album() {
-  const albumIdShow = useSelector((state) => state.albumIdShow);
   const myInfo = useSelector((state) => state.userInfo);
   const history = useHistory();
-  const dispatch = useDispatch();
   const [albumData, setAlbumData] = useState({});
   const [ownerData, setOwnerData] = useState({});
   const [praise, setPraise] = useState(0);
   const [isMyAlbum, setIsMyAlbum] = useState(false);
   const albumRef = useRef();
   const loadingRef = useRef();
-
-  const id = new URLSearchParams(window.location.search).get("album_id_show");
+  const query = useQuery();
+  const albumIdShow = query.get("album_id_show");
 
   async function getAlbumData(id) {
     const albumData = await getAlbumDataById(id);
@@ -109,8 +106,8 @@ export default function Album() {
   }
 
   useEffect(() => {
-    id && getAlbumData(id);
-  }, [id, myInfo]);
+    albumIdShow && getAlbumData(albumIdShow);
+  }, [albumIdShow, myInfo]);
 
   useEffect(() => {
     let unsubscribe = () => {};
@@ -123,16 +120,14 @@ export default function Album() {
   }, [albumIdShow]);
 
   function handleClickBack() {
-    dispatch(setAlbumIdShow(""));
     setOwnerData({});
     setAlbumData({});
     albumRef.current.style.opacity = 0;
     loadingRef.current.style.display = "block";
 
-    let params = new URL(window.location).searchParams;
-    params.delete("album_id_show");
+    query.delete("album_id_show");
     history.push({
-      search: params.toString(),
+      search: query.toString(),
     });
   }
 
@@ -160,16 +155,8 @@ export default function Album() {
         <ButtonsDiv>
           <LikeBtn praise={albumData.praise} />
           <FriendBtn ownerData={ownerData} isMyAlbum={isMyAlbum} />
-          <EditBtn
-            albumIdShow={albumIdShow}
-            albumCountry={albumData.country}
-            isMyAlbum={isMyAlbum}
-          />
-          <DeleteBtn
-            albumIdShow={albumIdShow}
-            handleClickBack={handleClickBack}
-            isMyAlbum={isMyAlbum}
-          />
+          <EditBtn albumCountry={albumData.country} isMyAlbum={isMyAlbum} />
+          <DeleteBtn handleClickBack={handleClickBack} isMyAlbum={isMyAlbum} />
         </ButtonsDiv>
       )}
 

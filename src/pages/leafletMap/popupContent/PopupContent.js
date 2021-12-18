@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { useShowAlbum } from "../../../util/customHook";
+
 import styled from "styled-components";
 import { getAlbumDataById, getUserDataByUid } from "../../../util/firebase";
-
-import { setAlbumIdShow } from "../../../util/redux/action";
 
 const PopupContentDiv = styled.div`
   display: flex;
@@ -71,7 +70,6 @@ const Mask = styled.div`
 export default function PopupContent({ spot }) {
   const [album, setAlbum] = useState({});
   const [albumOwner, setAlbumOwner] = useState({});
-  const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
@@ -84,13 +82,7 @@ export default function PopupContent({ spot }) {
     getPopupContent();
   }, [spot]);
 
-  function handleShowAlbumId(key, value) {
-    let params = new URL(window.location).searchParams;
-    params.append(key, value);
-    history.push({ search: params.toString() });
-
-    dispatch(setAlbumIdShow(value));
-  }
+  const handleShowAlbumId = useShowAlbum();
 
   function handleUserPage(id) {
     history.push({
