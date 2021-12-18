@@ -38,7 +38,7 @@ export default function MapSwitch({ setMapType, mapType }) {
           inputProps={{ "aria-label": "controlled" }}
           color="white"
         />
-        <EditLabel>To My World</EditLabel>
+        <EditLabel>Edit My World</EditLabel>
       </EditingSwitchDiv>
     </ThemeProvider>
   );

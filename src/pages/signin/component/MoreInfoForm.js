@@ -189,8 +189,8 @@ export default function MoreInfoForm({
           >
             {Object.entries(countryTrans)
               .filter((country) => country.country !== "AQ")
-              .map((country, index) => (
-                <MenuItem key={index} value={country[0]}>
+              .map((country) => (
+                <MenuItem key={country} value={country[0]}>
                   {country[1].name_en}
                 </MenuItem>
               ))}

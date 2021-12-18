@@ -129,7 +129,7 @@ export default function MoreInfo({ innerRef, userInfo, handleMoreInfo }) {
       {infoData.map((info, index) => {
         const { title, info_data, icon } = info;
         return (
-          <InfoDiv key={index}>
+          <InfoDiv key={title}>
             <InfoIcon>{icon}</InfoIcon>
             <InfoText>
               <Title>{title}</Title>

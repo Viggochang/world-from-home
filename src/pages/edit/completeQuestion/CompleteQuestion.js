@@ -345,8 +345,8 @@ export default function CompleteQuestion({
             </CoverPhotoDiv>
             <TouristSpotDiv ref={touristSpotRef}>
               <TouristSpotInnerDiv>
-                {touristSpot.map((spot, index) => (
-                  <TouristSpotTag key={index}>
+                {touristSpot.map((spot) => (
+                  <TouristSpotTag key={spot.id}>
                     {spot.text}&ensp;
                     <RemoveTag onClick={() => removeTag(spot)}>
                       <i className="fas fa-times" />

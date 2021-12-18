@@ -105,8 +105,8 @@ export default function AlbumFilter({
             }}
             onChange={(e) => handleSetState(e, setAlbumOrder)}
           >
-            {["New", "Old", "Popular", "Unpopular"].map((order, index) => (
-              <MenuItem key={index} sx={{ color: "#3a4a58" }} value={order}>
+            {["New", "Old", "Popular", "Unpopular"].map((order) => (
+              <MenuItem key={order} sx={{ color: "#3a4a58" }} value={order}>
                 {order}
               </MenuItem>
             ))}

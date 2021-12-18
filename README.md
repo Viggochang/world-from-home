@@ -48,7 +48,7 @@ Please login with your google account for full experiences.
 ### World Map Section 
 + This map show the tourist spots labled from users. <br/>As the map zoom in, these spots will spread and show the pop up window after clicking.
 &emsp;<img src="/readme_demo/leaflet_map_.gif"/> 
-+ Switching to my world, show the information and albums of the country after clicking it or use the search box. 
++ Switching edit my world, show the information and albums of the country after clicking it or use the search box. 
 &emsp;<img src="/readme_demo/amChart_.gif"/>
 ### Edit Section
 + In edit section, use the tools at left side to create new template, and upload image or add text into the board.<br/> After editing, upload the cover photo and label the tourist spots.

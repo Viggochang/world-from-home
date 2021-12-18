@@ -84,12 +84,11 @@ function LeafletMap() {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
         />
         <MarkerClusterGroup>
-          {allSpot.map((spot, index) => (
+          {allSpot.map((spot) => (
             <Marker
-              key={index}
+              key={spot.id}
               position={[spot.lat, spot.lng]}
               icon={customMarkerIcon}
-              onClick={(spot) => {}}
             >
               <Popup maxWidth="500" maxHeight="auto">
                 <PopupContent spot={spot} />
