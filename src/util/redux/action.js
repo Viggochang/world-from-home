@@ -95,10 +95,3 @@ export const setUserInfo = (UserInfo) => {
     payload: UserInfo,
   };
 };
-
-export const setAlbumIdShow = (albumIdShow) => {
-  return {
-    type: "SET_ALBUM_ID_SHOW",
-    payload: albumIdShow,
-  };
-};

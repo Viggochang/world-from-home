@@ -2,7 +2,6 @@ import { combineReducers } from "redux";
 import activeCanvas from "./activeCanvasReducer";
 import activeObj from "./activeObjReducer";
 import albumIdEditing from "./albumIdEditingReducer";
-import albumIdShow from "./albumIdShowReducer";
 import canvas from "./canvasReducer";
 import canvasState from "./canvasStateReducer";
 import editRedo from "./editRedoReducer";
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
   activeCanvas,
   activeObj,
   albumIdEditing,
-  albumIdShow,
   canvas,
   canvasState,
   editRedo,
