@@ -9,9 +9,9 @@ export function useQuery() {
 
 export function useShowAlbum() {
   const history = useHistory();
-  let params = new URL(window.location).searchParams;
+  const query = useQuery();
   return (key, value) => {
-    params.append(key, value);
-    history.push({ search: params.toString() });
+    query.append(key, value);
+    history.push({ search: query.toString() });
   };
 }

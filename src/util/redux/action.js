@@ -19,13 +19,6 @@ export const setTargetCountry = (countryObj) => {
   };
 };
 
-export const setAlbumIdEditing = (albumId) => {
-  return {
-    type: "SET_ALBUM_ID_EDITING",
-    payload: albumId,
-  };
-};
-
 export const setCanvas = (canvas) => {
   return {
     type: "SET_CANVAS",

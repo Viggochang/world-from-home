@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import MediaMessage from "../../edit/mediaMessage/MediaMessage";
-import { setAlbumIdEditing } from "../../../util/redux/action";
 
 import {
   db_gallery,
@@ -82,7 +81,6 @@ export default function CountryAlbums({ signinRef }) {
   const targetCountry = useSelector((state) => state.targetCountry);
   const [album, setAlbum] = useState([]);
   const history = useHistory();
-  const dispatch = useDispatch();
   const messageRef = useRef();
 
   function handleToEdit() {
@@ -91,7 +89,6 @@ export default function CountryAlbums({ signinRef }) {
     } else {
       if (document.body.clientWidth > 880) {
         const newAlbumIdEditing = db_gallery.doc().id;
-        dispatch(setAlbumIdEditing(newAlbumIdEditing));
 
         async function albumPending() {
           await setAlbumDataIntoDb(newAlbumIdEditing, {

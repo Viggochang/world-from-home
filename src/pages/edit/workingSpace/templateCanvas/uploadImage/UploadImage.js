@@ -1,5 +1,6 @@
 import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
+import { useQuery } from "../../../../../util/customHook";
 
 import { storage } from "../../../../../util/firebase";
 import Compressor from "compressorjs";
@@ -55,13 +56,13 @@ export default function UploadImage({
   handleCanvasOn,
   loadingRef,
 }) {
-  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
   const canvasState = useSelector((state) => state.canvasState);
   const editUndo = useSelector((state) => state.editUndo);
   const activeCanvas = useSelector((state) => state.activeCanvas);
   const myUserId = useSelector((state) => state.myUserId);
   const dispatch = useDispatch();
+  const albumIdEditing = useQuery().get("album_id_edit");
 
   function deleteObject(eventData, transform) {
     var target = transform.target;

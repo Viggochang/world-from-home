@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useQuery } from "../../../util/customHook";
 import styled from "styled-components";
+import { getAlbumIsExist } from "../../../util/firebase";
 import Compressor from "compressorjs";
 
 import {
@@ -199,25 +201,27 @@ export default function CompleteQuestion({
   setComplete,
   discardCanvasEdit,
 }) {
-  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [imageUrl, setImageUrl] = useState("");
   const [touristSpot, setTouristSpot] = useState([]);
   const myInfo = useSelector((state) => state.userInfo);
   const targetCountry = useSelector((state) => state.targetCountry);
+  const albumIdEditing = useQuery().get("album_id_edit");
 
   const touristSpotRef = useRef();
 
   useEffect(() => {
-    if (albumIdEditing) {
-      async function getCoverPhoto() {
-        setImageUrl((await getAlbumDataById(albumIdEditing)).cover_photo || "");
-      }
-      async function getTouristSpot() {
-        setTouristSpot((await getTouristSpotByAlbumId(albumIdEditing)) || []);
-      }
-      getCoverPhoto();
-      getTouristSpot();
+    async function getCoverPhoto() {
+      setImageUrl((await getAlbumDataById(albumIdEditing)).cover_photo || "");
     }
+    async function getTouristSpot() {
+      setTouristSpot((await getTouristSpotByAlbumId(albumIdEditing)) || []);
+    }
+    (async function () {
+      if (albumIdEditing && (await getAlbumIsExist(albumIdEditing))) {
+        getCoverPhoto();
+        getTouristSpot();
+      }
+    })();
   }, [albumIdEditing]);
 
   useEffect(() => {

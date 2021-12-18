@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "../../../util/customHook";
 import styled from "styled-components";
 
 import InputBase from "@mui/material/InputBase";
@@ -11,10 +12,7 @@ import DatePicker from "@mui/lab/DatePicker";
 
 import { AlbumQuestionBtn } from "../../../util/muiButton";
 
-import {
-  setAlbumIdEditing,
-  setTargetCountry,
-} from "../../../util/redux/action";
+import { setTargetCountry } from "../../../util/redux/action";
 import countryTrans from "../../../util/countryTrans";
 
 import {
@@ -164,8 +162,8 @@ export default function AlbumQuestion() {
   const mainCityInputRef = useRef();
   const textAreaRef = useRef();
   const targetCountry = useSelector((state) => state.targetCountry);
-  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const [cityInCountry, setCityInCountry] = useState([]);
+  const albumIdEditing = useQuery().get("album_id_edit");
 
   const [isNewAlbum, setIsNewAlbum] = useState(false);
   const [tripDate, setTripDate] = useState(new Date());
@@ -225,7 +223,6 @@ export default function AlbumQuestion() {
   }, [targetCountry]);
 
   async function handleBack() {
-    dispatch(setAlbumIdEditing(""));
     if (isNewAlbum) {
       await deleteAlbum(albumIdEditing);
     }

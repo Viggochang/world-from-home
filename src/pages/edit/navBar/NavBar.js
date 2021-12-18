@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useQuery } from "../../../util/customHook";
 import styled from "styled-components";
 
 import Logout from "../../signin/Logout";
@@ -69,8 +70,8 @@ export default function NavBar({
   discardCanvasEdit,
 }) {
   const myInfo = useSelector((state) => state.userInfo);
-  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const history = useHistory();
+  const albumIdEditing = useQuery().get("album_id_edit");
 
   async function saveAlbumBeforeLeaving(albumId) {
     saveAlertRef.current.style.zIndex = 5;
@@ -105,11 +106,7 @@ export default function NavBar({
       <HomeDiv onClick={(e) => handleHome(e, albumIdEditing)}>
         <i className="fas fa-home" />
       </HomeDiv>
-      <Logout
-        LogoutStyle={LogoutStyle}
-        handleSaveLogout={handleSaveLogout}
-        albumIdEditing={albumIdEditing}
-      />
+      <Logout LogoutStyle={LogoutStyle} handleSaveLogout={handleSaveLogout} />
     </NavBarNav>
   );
 }

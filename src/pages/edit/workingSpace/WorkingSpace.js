@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useQuery } from "../../../util/customHook";
 
 import styled from "styled-components";
 
@@ -10,7 +11,7 @@ import TemplateCanvas from "./templateCanvas/TemplateCanvas";
 import SlideShow from "./slideShow/SlideShow";
 
 import { templateStyle, allTemplateParams } from "../../../util/myTemplate";
-import { getAlbumDataById } from "../../../util/firebase";
+import { getAlbumDataById, getAlbumIsExist } from "../../../util/firebase";
 
 import {
   setCanvas,
@@ -20,7 +21,6 @@ import {
   setActiveObj,
   setEditUndo,
   setEditRedo,
-  removeCanvas,
 } from "../../../util/redux/action";
 
 const WorkingSpaceDiv = styled.div`
@@ -72,7 +72,6 @@ function WorkingSpace({
   handleEditHistory,
 }) {
   const dispatch = useDispatch();
-  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const canvas = useSelector((state) => state.canvas);
   const pageInfo = useSelector((state) => state.pageInfo);
   const canvasState = useSelector((state) => state.canvasState);
@@ -86,49 +85,51 @@ function WorkingSpace({
   const textEditorRef = useRef();
   const imageEditorRef = useRef();
 
-  useEffect(() => {
-    if (albumIdEditing) {
-      async function loadCanvasFromDb() {
-        const albumData = await getAlbumDataById(albumIdEditing);
-        if (albumData.content) {
-          const pageInfo = JSON.parse(albumData.content.pageInfo);
-          const canvasState = JSON.parse(albumData.content.canvasState);
-          dispatch(setPageInfo(pageInfo));
-          dispatch(setCanvasState(canvasState));
+  const albumIdEditing = useQuery().get("album_id_edit");
 
-          Object.values(pageInfo).forEach(({ page, templateId }) => {
-            allTemplateParams()
-              [templateId](page)
-              .forEach((canvas) => {
-                const newCanvas = {};
-                canvas.loadFromJSON(
-                  canvasState[canvas.lowerCanvasEl.id],
-                  () => {
-                    newCanvas[canvas.lowerCanvasEl.id] = canvas;
-                    canvas.getObjects().forEach((obj) => {
-                      if (obj.type === "i-text") {
-                        obj.setControlsVisibility({
-                          mt: false,
-                          mb: false,
-                          ml: false,
-                          mr: false,
-                          bl: false,
-                          br: false,
-                          tl: false,
-                          tr: false,
-                        });
-                      }
+  useEffect(() => {
+    async function loadCanvasFromDb() {
+      const albumData = await getAlbumDataById(albumIdEditing);
+      if (albumData.content) {
+        const pageInfo = JSON.parse(albumData.content.pageInfo);
+        const canvasState = JSON.parse(albumData.content.canvasState);
+        dispatch(setPageInfo(pageInfo));
+        dispatch(setCanvasState(canvasState));
+
+        Object.values(pageInfo).forEach(({ page, templateId }) => {
+          allTemplateParams()
+            [templateId](page)
+            .forEach((canvas) => {
+              const newCanvas = {};
+              canvas.loadFromJSON(canvasState[canvas.lowerCanvasEl.id], () => {
+                newCanvas[canvas.lowerCanvasEl.id] = canvas;
+                canvas.getObjects().forEach((obj) => {
+                  if (obj.type === "i-text") {
+                    obj.setControlsVisibility({
+                      mt: false,
+                      mb: false,
+                      ml: false,
+                      mr: false,
+                      bl: false,
+                      br: false,
+                      tl: false,
+                      tr: false,
                     });
-                    canvas.renderAll();
-                    dispatch(setCanvas(newCanvas));
                   }
-                );
+                });
+                canvas.renderAll();
+                dispatch(setCanvas(newCanvas));
               });
-          });
-        }
+            });
+        });
       }
-      loadCanvasFromDb();
     }
+
+    (async function () {
+      if (albumIdEditing && (await getAlbumIsExist(albumIdEditing))) {
+        loadCanvasFromDb();
+      }
+    })();
   }, [albumIdEditing]);
 
   useEffect(() => {
@@ -268,7 +269,6 @@ function WorkingSpace({
   function handleRemovePage(e, page) {
     const removePageObj = { ...pageInfo };
     removePageObj[`page${page}`].display = false;
-    // dispatch(removeCanvas(removePageObj));
     dispatch(setEditUndo([...editUndo, `page${page}`]));
     dispatch(setEditRedo([]));
   }

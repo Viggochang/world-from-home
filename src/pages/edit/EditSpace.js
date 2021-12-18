@@ -18,7 +18,6 @@ import CompleteQuestion from "./completeQuestion/CompleteQuestion";
 import ToolContainer from "./toolContainer/ToolContainer";
 
 import {
-  setAlbumIdEditing,
   setPageInfo,
   setCanvasState,
   setEditUndo,
@@ -89,7 +88,6 @@ function EditSpace() {
     } else {
       async function getalbumIdEditing() {
         if (await getAlbumIsExist(albumIdEditing)) {
-          dispatch(setAlbumIdEditing(albumIdEditing));
         } else {
           history.push({ pathname: "notfound" });
         }

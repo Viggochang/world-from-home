@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useQuery } from "../../../util/customHook";
 import styled from "styled-components";
 
 import { EditBtn, EditHistoryBtn } from "../../../util/muiButton";
@@ -52,12 +53,11 @@ export default function EditBar({
   handleEditHistory,
   discardCanvasEdit,
 }) {
-  const albumIdEditing = useSelector((state) => state.albumIdEditing);
   const targetCountry = useSelector((state) => state.targetCountry);
   const canvas = useSelector((state) => state.canvas);
   const activeCanvas = useSelector((state) => state.activeCanvas);
+  const albumIdEditing = useQuery().get("album_id_edit");
 
-  const dispatch = useDispatch();
   const history = useHistory();
   const previewBtnRef = useRef();
 

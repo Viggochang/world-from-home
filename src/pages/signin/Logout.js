@@ -1,7 +1,9 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import { useHistory } from "react-router";
+import { useQuery } from "../../util/customHook";
+
+import styled from "styled-components";
 import { firebase } from "../../util/firebase";
 import { setMyUserId, setUserInfo } from "../../util/redux/action";
 
@@ -24,13 +26,10 @@ const LogoutDiv = styled.div`
   }
 `;
 
-export default function Logout({
-  LogoutStyle,
-  handleSaveLogout,
-  albumIdEditing,
-}) {
+export default function Logout({ LogoutStyle, handleSaveLogout }) {
   const history = useHistory();
   const dispatch = useDispatch();
+  const albumIdEditing = useQuery().get("album_id_edit");
 
   function handleLogout() {
     firebase
