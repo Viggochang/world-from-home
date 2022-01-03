@@ -36,7 +36,6 @@ Please login with your google account for full experiences.
   + material UI
   + sweetalert2
 + Other
-  + CI / CD: GitHub Actions
   + Lint Tool: ESLint / Prettier
   + Version Control : Git / GitHub
   + Unit Test: Jest
