@@ -5,7 +5,7 @@ import { useQuery } from "../../util/customHook";
 import styled from "styled-components";
 import MyTooltip from "../../util/muiTooltips";
 
-import { setTargetCountry } from "../../util/redux/action";
+import { setTargetCountry } from "../../redux/action";
 
 import World from "../world/World";
 import LeafletMap from "../leafletMap/LeafletMap";

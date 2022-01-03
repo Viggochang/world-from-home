@@ -12,7 +12,7 @@ import DatePicker from "@mui/lab/DatePicker";
 
 import { AlbumQuestionBtn } from "../../../util/muiButton";
 
-import { setTargetCountry } from "../../../util/redux/action";
+import { setTargetCountry } from "../../../redux/action";
 import countryTrans from "../../../util/countryTrans";
 
 import {

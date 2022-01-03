@@ -12,7 +12,7 @@ import PersonalFriends from "./personialFriend/PersonalFriends";
 import Album from "../album/Album";
 import Logout from "../signin/Logout";
 
-import { setTargetCountry } from "../../util/redux/action";
+import { setTargetCountry } from "../../redux/action";
 
 const MyPageDiv = styled.div`
   padding: 50px 80px;

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { SigninMediaBtn } from "../../../util/muiButton";
-import { setMyUserId } from "../../../util/redux/action";
+import { setMyUserId } from "../../../redux/action";
 
 import { getUserIsExist, setUserDataIntoDb } from "../../../util/firebase";
 import socialMediaAuth from "../../../util/auth";

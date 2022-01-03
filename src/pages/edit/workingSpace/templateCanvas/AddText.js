@@ -10,7 +10,7 @@ import {
   setActiveCanvas,
   setActiveObj,
   setEditUndo,
-} from "../../../../util/redux/action";
+} from "../../../../redux/action";
 
 let deleteIconImg = document.createElement("img");
 deleteIconImg.src = deleteIcon;

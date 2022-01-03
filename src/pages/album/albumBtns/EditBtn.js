@@ -6,7 +6,7 @@ import { useQuery } from "../../../util/customHook";
 import styled from "styled-components";
 import MyTooltip from "../../../util/muiTooltips";
 import countryTrans from "../../../util/countryTrans";
-import { setTargetCountry } from "../../../util/redux/action";
+import { setTargetCountry } from "../../../redux/action";
 
 import MediaMessage from "../../edit/mediaMessage/MediaMessage";
 

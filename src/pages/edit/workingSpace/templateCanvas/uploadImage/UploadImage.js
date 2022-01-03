@@ -8,14 +8,14 @@ import Compressor from "compressorjs";
 import styled from "styled-components";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import Tooltip from "@mui/material/Tooltip";
-import { setCanvasState } from "../../../../../util/redux/action";
+import { setCanvasState } from "../../../../../redux/action";
 
 import deleteIcon from "../../../../../image/deleteIcon/delete_icon.png";
 import {
   setActiveCanvas,
   setActiveObj,
   setEditUndo,
-} from "../../../../../util/redux/action";
+} from "../../../../../redux/action";
 
 let deleteIconImg = document.createElement("img");
 deleteIconImg.src = deleteIcon;

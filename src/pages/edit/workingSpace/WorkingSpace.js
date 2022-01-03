@@ -21,7 +21,7 @@ import {
   setActiveObj,
   setEditUndo,
   setEditRedo,
-} from "../../../util/redux/action";
+} from "../../../redux/action";
 
 const WorkingSpaceDiv = styled.div`
   background-color: #b8c3d0;

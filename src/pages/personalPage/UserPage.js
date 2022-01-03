@@ -16,7 +16,7 @@ import Logout from "../signin/Logout";
 import Login from "../signin/Signin";
 import Album from "../album/Album";
 
-import { setTargetCountry } from "../../util/redux/action";
+import { setTargetCountry } from "../../redux/action";
 
 const UserPageDiv = styled.div`
   padding: 50px 80px;

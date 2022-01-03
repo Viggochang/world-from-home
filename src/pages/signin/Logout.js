@@ -5,7 +5,7 @@ import { useQuery } from "../../util/customHook";
 
 import styled from "styled-components";
 import { firebase } from "../../util/firebase";
-import { setMyUserId, setUserInfo } from "../../util/redux/action";
+import { setMyUserId, setUserInfo } from "../../redux/action";
 
 import logoutImg from "../../image/logout.jpeg";
 import { swalLogout } from "../../util/swal";

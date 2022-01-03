@@ -3,11 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styled from "styled-components";
 
-import {
-  setPageInfo,
-  setEditUndo,
-  setEditRedo,
-} from "../../../util/redux/action";
+import { setPageInfo, setEditUndo, setEditRedo } from "../../../redux/action";
 
 const ToolContainerDiv = styled.div`
   width: 200px;

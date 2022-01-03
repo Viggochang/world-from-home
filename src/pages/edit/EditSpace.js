@@ -22,7 +22,7 @@ import {
   setCanvasState,
   setEditUndo,
   setEditRedo,
-} from "../../util/redux/action";
+} from "../../redux/action";
 
 const AlertDiv = styled.div`
   margin: 20px calc(50% - 150px);
