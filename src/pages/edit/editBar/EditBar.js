@@ -20,6 +20,14 @@ import {
   updateTouristSpot,
 } from "../../../util/firebase";
 
+import UndoIcon from "@mui/icons-material/Undo";
+import RedoIcon from "@mui/icons-material/Redo";
+import PreviewIcon from "@mui/icons-material/Preview";
+import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+
 const TitleBarDiv = styled.div`
   width: 100vw;
   height: 38px;
@@ -86,7 +94,7 @@ export default function EditBar({
       el.style.display = preview ? "flex" : "none";
     });
 
-    previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
+    // previewBtnRef.current.innerText = preview ? "PREVIEW" : "Edit";
     setPreview(!preview);
 
     if (!preview) {
@@ -132,15 +140,78 @@ export default function EditBar({
   }
 
   const editHistoryBtn = [
-    { name: "UNDO", feature: () => handleEditHistory("UNDO") },
-    { name: "REDO", feature: () => handleEditHistory("REDO") },
+    {
+      key: "UNDO",
+      name: (
+        <>
+          <UndoIcon style={{ marginRight: "4px" }} />
+          UNDO
+        </>
+      ),
+      feature: () => handleEditHistory("UNDO"),
+    },
+    {
+      key: "REDO",
+      name: (
+        <>
+          <RedoIcon style={{ marginRight: "4px" }} />
+          REDO
+        </>
+      ),
+      feature: () => handleEditHistory("REDO"),
+    },
   ];
 
   const editBtn = [
-    { name: "PREVIEW", feature: handlePreview, ref: previewBtnRef },
-    { name: "SAVE", feature: handleSave, ref: null },
-    { name: "COMPLETE", feature: handleComplete, ref: null },
-    { name: "DISCARD", feature: handleDiscard, ref: null },
+    {
+      key: "PREVIEW",
+      name: preview ? (
+        <>
+          <EditIcon style={{ marginRight: "4px" }} />
+          EDIT
+        </>
+      ) : (
+        <>
+          <PreviewIcon style={{ marginRight: "4px" }} />
+          PREVIEW
+        </>
+      ),
+      feature: handlePreview,
+      ref: previewBtnRef,
+    },
+    {
+      key: "SAVE",
+      name: (
+        <>
+          <SaveIcon style={{ marginRight: "4px" }} />
+          SAVE
+        </>
+      ),
+      feature: handleSave,
+      ref: null,
+    },
+    {
+      key: "COMPLETE",
+      name: (
+        <>
+          <CheckBoxIcon style={{ marginRight: "4px" }} />
+          COMPLETE
+        </>
+      ),
+      feature: handleComplete,
+      ref: null,
+    },
+    {
+      key: "DISCARD",
+      name: (
+        <>
+          <DeleteForeverIcon style={{ marginRight: "4px" }} />
+          DISCARD
+        </>
+      ),
+      feature: handleDiscard,
+      ref: null,
+    },
   ];
 
   return (
@@ -149,17 +220,17 @@ export default function EditBar({
         <i className="fas fa-globe" />
         &ensp;{targetCountry.name}
       </Country>
-      {editHistoryBtn.map(({ name, feature }) => (
+      {editHistoryBtn.map(({ key, name, feature }) => (
         <EditHistoryBtn
-          key={name}
+          key={key}
           content={name}
           onClick={() => feature(albumIdEditing)}
         />
       ))}
 
-      {editBtn.map(({ name, feature, ref }) => (
+      {editBtn.map(({ key, name, feature, ref }) => (
         <EditBtn
-          key={name}
+          key={key}
           content={name}
           onClick={() => feature(albumIdEditing)}
           innerRef={ref}
