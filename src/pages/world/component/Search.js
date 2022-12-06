@@ -46,19 +46,16 @@ const Inputdiv = styled.input`
 
 export default function Search({ map, mapType, showCountry }) {
   const searchRef = useRef();
-  const [country2id, setCountry2id] = useState({});
+  const [search, setSearch] = useState("");
   const polygonSeries = useSelector((state) => state.polygonSeries);
 
-  useEffect(() => {
-    const country2id = Object.entries(countryTrans).reduce(
-      (acc, [key, { name_en }]) => {
-        acc[name_en] = key;
-        return acc;
-      },
-      {}
-    );
-    setCountry2id(country2id);
-  }, []);
+  const country2id = Object.entries(countryTrans).reduce(
+    (acc, [key, { name_en }]) => {
+      acc[name_en] = key;
+      return acc;
+    },
+    {}
+  );
 
   function handleEnter(event) {
     if (event.key === "Enter") {
@@ -66,16 +63,13 @@ export default function Search({ map, mapType, showCountry }) {
     }
   }
 
-  function handleSearch() {
-    if (country2id[searchRef.current.value]) {
+  function handleSearch(search) {
+    if (country2id[search]) {
       const currentActiveCountry = polygonSeries.mapPolygons.values.filter(
-        (country) =>
-          country.dataItem.dataContext.id ===
-          country2id[searchRef.current.value]
+        (country) => country.dataItem.dataContext.id === country2id[search]
       )[0];
       showCountry(currentActiveCountry);
       map.zoomToMapObject(currentActiveCountry);
-      searchRef.current.value = "";
     } else {
       searchRef.current.parentNode.style.outline = "4px #AE0000 solid";
     }
@@ -88,9 +82,12 @@ export default function Search({ map, mapType, showCountry }) {
         id="search-country"
         name="search-country"
         placeholder="Discover the world"
+        value={search}
         ref={searchRef}
         onChange={(e) => {
           e.target.parentNode.style.outline = "4px #b8c3d0 solid";
+          setSearch(e.target.value);
+          handleSearch(e.target.value);
         }}
       />
       <datalist id="country-choice">
