@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { useHistory } from "react-router";
 
@@ -91,7 +91,6 @@ export default function Friend({ friend: friendInfo, request, isMyPage }) {
   const acceptRef = useRef();
   const removeRef = useRef();
   const history = useHistory();
-  const dispatch = useDispatch();
 
   const myInfo = useSelector((state) => state.userInfo);
 

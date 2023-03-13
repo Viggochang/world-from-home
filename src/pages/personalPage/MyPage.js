@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { firebase } from "../../util/firebase";
 
 import Background from "./personalInformation/background/Background";
 import MyInformation from "./personalInformation/MyInformation";
@@ -103,11 +102,6 @@ export default function MyPage() {
   const myInfo = useSelector((state) => state.userInfo);
 
   const { id, background_photo } = myInfo;
-  firebase.auth().onAuthStateChanged((user) => {
-    if (!user) {
-      history.push({ pathname: "/" });
-    }
-  });
 
   function handleHome() {
     dispatch(setTargetCountry({}));

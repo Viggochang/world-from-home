@@ -1,11 +1,16 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setMyUserId, setUserInfo } from "../../redux/action";
+
 import styled from "styled-components";
-import { onAuthStateChanged } from "../../util/firebase";
+import { onAuthStateChanged, onSnapShotByUid } from "../../util/firebase";
 
 import SigninDiv from "../signin/Signin";
 import landingPageImg from "../../image/landingPage.jpeg";
 import { WelcomePageBtn } from "../../util/muiButton";
+
+const defaultUserId = process.env.REACT_APP_DEFAULT_USER_ID;
 
 const WelcomePageDiv = styled.div`
   width: 100vw;
@@ -85,6 +90,7 @@ const ButtonsDiv = styled.div`
 export default function WelcomePage() {
   const history = useHistory();
   const signinRef = useRef();
+  const dispatch = useDispatch();
   const [signIn, setSignIn] = useState(false);
 
   useEffect(() => {
@@ -96,6 +102,11 @@ export default function WelcomePage() {
   }
 
   function handleGuest() {
+    onSnapShotByUid(defaultUserId, (user_info) => {
+      dispatch(setUserInfo(user_info));
+    });
+    dispatch(setMyUserId(defaultUserId));
+
     history.push({ pathname: "home" });
   }
 
@@ -113,19 +124,18 @@ export default function WelcomePage() {
 
         <ButtonsDiv>
           <WelcomePageBtn content="Sign in" onClick={handleSignIn} />
-          <WelcomePageBtn
-            content={
-              signIn ? (
-                <>
+          {signIn && (
+            <WelcomePageBtn
+              content={
+                <React.Fragment>
                   Enter&ensp;
                   <i className="fas fa-plane" />
-                </>
-              ) : (
-                "Guest"
-              )
-            }
-            onClick={handleGuest}
-          />
+                </React.Fragment>
+              }
+              onClick={handleGuest}
+            />
+          )}
+          <WelcomePageBtn content="Guest" onClick={handleGuest} />
         </ButtonsDiv>
       </WelcomePageDiv>
       <SigninDiv signinRef={signinRef} />

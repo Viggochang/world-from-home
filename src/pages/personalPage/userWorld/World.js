@@ -21,7 +21,7 @@ const Chartdiv = styled.div`
   position: ${(props) => (props.userPage === "true" ? "static" : "fixed")};
 `;
 
-function World({ userInfo, mapType, setMap, userPage, map, showCountry }) {
+function World({ userInfo, mapType, setMap, userPage }) {
   const dispatch = useDispatch();
   const [myTravelCountries, setMyTravelCountries] = useState([]);
 

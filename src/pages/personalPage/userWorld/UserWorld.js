@@ -65,14 +65,10 @@ const BackBtn = styled.div`
 `;
 
 export default function UserWorld({ userInfo }) {
-  const [maskVisibility, setMaskVisibility] = useState("hidden");
-  const [maskOpacity, setMaskOpacity] = useState(0);
   const [map, setMap] = useState(undefined);
-  const [currentActive, setCurrentActive] = useState({});
 
   function handleBack() {
     map.goHome();
-    currentActive.isActive = false;
   }
 
   return (
@@ -81,12 +77,13 @@ export default function UserWorld({ userInfo }) {
       <UserPageDiv>
         <World
           userInfo={userInfo}
-          setCurrentActive={setCurrentActive}
-          setMap={setMap}
-          setMaskVisibility={setMaskVisibility}
-          setMaskOpacity={setMaskOpacity}
-          userPage={true}
           mapType={true}
+          setMap={setMap}
+          userPage={true}
+
+          // setCurrentActive={setCurrentActive}
+          // setMaskVisibility={setMaskVisibility}
+          // setMaskOpacity={setMaskOpacity}
         />
         <BackBtn onClick={handleBack}>
           <i className="fas fa-home" />

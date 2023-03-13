@@ -54,7 +54,7 @@ export default function Login({ signinRef }) {
   return (
     <SigninDiv ref={signinRef}>
       <ContentDiv>
-        <PhotoDiv></PhotoDiv>
+        <PhotoDiv />
         <SignInChoice signinRef={signinRef} />
       </ContentDiv>
     </SigninDiv>

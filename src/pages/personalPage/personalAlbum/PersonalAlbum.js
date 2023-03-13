@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router";
 import { useShowAlbum } from "../../../util/customHook";
 
 import styled from "styled-components";
@@ -111,7 +110,6 @@ export default function PersonalAlbum({ title, id, isMyPage }) {
   const [albumCountry, setAlbumCountry] = useState("All");
   const [albumOrder, setAlbumOrder] = useState("New");
   const [pending, setPending] = useState(false);
-  const history = useHistory();
 
   const order = {
     New: (a, b) => b.timestamp.seconds - a.timestamp.seconds,
